@@ -1,0 +1,450 @@
+{{define "modules/iot/his_data/his_data_wizard"}}
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+    <link href="{{OssUrl}}/resource/ajax/libs/smartwizard/smart_wizard_all.min.css" rel="stylesheet"/>
+
+    <style type="text/css">
+        /* 如果要让工具栏固定在页面底部,使用下面的样式,不需要的可以注释 */
+        .sw>.toolbar-bottom{
+            z-index: 100;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            position: fixed;
+            text-align: right;
+            background: #fff;
+            box-shadow: 0 -2px 6px 1px hsla(223,8%,83%,.5);
+            border-top: 1px solid #e3e4e8;
+        }
+        /* 如果设置了是否自动调节高度为false,需要加滚动条 */
+        .sw>.tab-content{
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        /* 解决工具栏无法固定底部的问题（如果页面没有animated类可以不写这部分代码） */
+        .animated {
+            animation-fill-mode: none;
+            -webkit-animation-fill-mode: none;
+            -moz-animation-fill-mode: none;
+            -o-animation-fill-mode: none;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>
+                        重新计算发电量
+                    </h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row select-list" style="padding-left: 15px; margin-bottom: 10px;">
+                        <ul>
+                            <li>
+                                站点名称： <input id="dpc_site_name"    readonly/>
+                                站点编号： <input id="dpc_site_no"    readonly/>
+                                开始日期： <input id="dpc_start"  readonly/>
+                                结束日期： <input id="dpc_end"    readonly/>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                    <div id="smartwizard">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#step-1"> 第一步 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#step-2"> 第二步 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#step-3"> 第三步 </a>
+                            </li>
+                            <!--								<li class="nav-item">-->
+                            <!--									<a class="nav-link" href="#step-4"> 第四步 </a>-->
+                            <!--								</li>-->
+                        </ul>
+                        <div class="tab-content">
+                            <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
+                                <div>
+                                    <h3></h3>
+                                    <form class="form form-horizontal m-t">
+
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label"></label>
+                                            <div class="col-sm-7">
+                                                <h3 class="col-sm-7"></h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label is-required">选择站点：</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="taobao">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" style="height: 32px">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                        </ul>
+                                                    </div>
+                                                    <!-- /btn-group -->
+                                                </div>
+                                            </div>
+                                            <label class="col-sm-4 control-label is-required"></label>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">开始时间：</label>
+                                            <div class="col-sm-4">
+                                                <input id="startDate" name="startDate" class="form-control" type="text">
+                                            </div>
+                                            <label class="col-sm-4 control-label is-required"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">结束时间：</label>
+                                            <div class="col-sm-4">
+                                                <input id="endDate" name="endDate" class="form-control" type="text">
+                                            </div>
+                                            <label class="col-sm-4 control-label is-required"></label>
+                                        </div>
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"></label>
+                                            <div class="col-sm-4">
+                                                <div id="btn_import1" class="btn btn-primary btn-rounded btn-block">重新导入绑定量</div>
+                                            </div>
+                                            <label class="col-sm-4 control-label"></label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
+                                <div>
+
+                                    <form class="form form-horizontal m-t">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label"></label>
+                                            <div class="col-sm-7">
+                                                <h3 class="col-sm-7">发电量详情数据</h3>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" >
+                                            <label class="col-sm-4 control-label"></label>
+                                            <div class="col-sm-4">
+                                                <div id="btn_import2" class="btn btn-primary btn-rounded btn-block" href="#">导入生成发电量明细表</div>
+                                            </div>
+                                            <label class="col-sm-4 control-label"></label>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                            <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
+                                <div>
+
+                                    <form class="form form-horizontal m-t">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label"></label>
+                                            <div class="col-sm-7">
+                                                <h3 class="col-sm-7">发电量结算数据</h3>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">结算月份：</label>
+                                            <div class="col-sm-4">
+                                                <input id="month" name="month" class="form-control" type="text">
+                                            </div>
+                                            <label class="col-sm-4 control-label is-required"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label"></label>
+                                            <div class="col-sm-4">
+                                                <div id="btn_import3" class="btn btn-primary btn-rounded btn-block" href="#">导入发电量结算表</div>
+                                            </div>
+                                            <label class="col-sm-4 control-label"></label>
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{template "footer" (OssUrl)}}
+
+<script>
+    $(document).ready(function() {
+        // 工具栏按钮
+        var btnFinish = $('<a id="btn-finish"></a>').text('完成')
+            .addClass('btn btn-info')
+            .on('click', function(){ submit(); });
+
+        // 下面两个按钮是为了因为插件默认的是botton,这里换成<a>,也可以选择用样式替换,或者不替换
+        var btnNext = $('<a id="btn-next"></a>').text('下一步')
+            .addClass('btn btn-info')
+            .on('click', function(){ $('#smartwizard').smartWizard("next");});
+        var btnPrev = $('<a id="btn-prev"></a>').text('上一步')
+            .addClass('btn btn-success disabled')
+            .on('click', function(){ $('#smartwizard').smartWizard("prev"); });
+        // 初始化表单向导组件
+        $('#smartwizard').smartWizard({
+            theme: 'dots', // default, arrows, dots, progress
+            autoAdjustHeight : false, // 自动调整高度, 默认true
+            enableURLhash:false, //开启URL hash,开启后点击浏览器前进后退按钮会执行下一步和上一步操作
+            transition: {
+                animation: 'slide-horizontal', // Effect on navigation, none/fade/slide-horizontal/slide-vertical/slide-swing
+            },
+            toolbarSettings: {
+                showNextButton: false,// 因为上面自定义了下一步按钮, 所以隐藏掉插件自带的按钮, 如果不使用自定义按钮, 需要改为true或者去掉该属性
+                showPreviousButton: false,// 因为上面自定义了上一步按钮, 所以隐藏掉插件自带的按钮, 如果不使用自定义按钮, 需要改为true或者去掉该属性
+                toolbarExtraButtons: [btnPrev,btnNext,btnFinish]// 扩展的按钮集合
+            }
+        });
+    });
+
+    function submit(){
+        window.location.reload()
+    }
+    // 显示步骤时将触发事件
+    $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+        // 下面按钮是工具栏的
+        $("#btn-prev").removeClass('disabled');
+        $("#btn-next").removeClass('disabled');
+        $("#btn-finish").removeClass('disabled');
+        if(stepPosition === 'first') {
+            $("#btn-prev").addClass('disabled');
+            $("#btn-finish").addClass('disabled');
+        } else if(stepPosition === 'last') {
+            $("#btn-next").addClass('disabled');
+        } else {
+            $("#btn-prev").removeClass('disabled');
+            $("#btn-next").removeClass('disabled');
+            $("#btn-finish").addClass('disabled');
+        }
+    });
+
+    // 该事件在离开某个步骤之前触发
+    $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepNumber, nextStepNumber, stepDirection) {
+        if(stepDirection == 'forward'){
+           setValue()
+            var form = $("#step-" + (currentStepNumber + 1)).find('.form');
+            if(form.length > 0){
+                return form.validate().form();
+            }
+            return true;
+        }
+        return true;
+    });
+
+
+</script>
+<script src="{{OssUrl}}/resource/ajax/libs/smartwizard/jquery.smartWizard.min.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/suggest/bootstrap-suggest.min.js"></script>
+
+<script>
+    //淘宝搜索建议测试
+    $("#taobao").bsSuggest({
+        allowNoKeyword: true, //是否允许无关键字时请求数据
+        multiWord: true, //以分隔符号分割的多关键字支持
+        separator: ",", //多关键字支持时的分隔符，默认为空格
+        getDataMethod: "url", //获取数据的方式，总是从 URL 获取
+        idField: "treeNo",
+        keyField: "treeName",
+        hideOnSelect:true,
+        effectiveFieldsAlias: {
+            id: "序号",
+            treeNo: "导航树编号",
+            treeName: "站点",
+            remark: "备注"
+        },
+        showHeader: true,
+        url:"/iot/hisData/sugSite?q=",
+        processData: function (json) { // url 获取数据时，对数据的处理，作为 getData 的回调函数
+            var i, len, data = {
+                value: []
+            };
+            console.log("==========================>"+JSON.stringify(json))
+            if (!json || !json.data || json.data.length == 0) {
+                return false;
+            }
+            console.log(json);
+            len = json.data.length;
+            for (i = 0; i < len; i++) {
+                data.value.push({
+                    "id": (i + 1),
+                    "treeNo": json.data[i].treeNo,
+                    "treeName": json.data[i].treeName,
+                    "remark": json.data[i].remark
+                });
+            }
+            console.log(data);
+            return data;
+        }
+    }).on('onSetSelectValue', function (e, keyword, data) {
+        console.log('onSetSelectValue: ', data);
+        $("#dpc_site_no").val(data.treeNo)
+        $("#dpc_site_name").val(data.treeName)
+
+    }).on('onUnsetSelectValue', function (e) {
+        console.log("onUnsetSelectValue",data);
+    });
+
+    function setValue(){
+        // debugger;
+        let s =  $("#startDate").val()
+        let e =  $("#endDate").val()
+
+        console.log("====================="+s)
+        $("#dpc_start").val(s)
+        $("#dpc_end").val(e)
+    }
+</script>
+
+<script>
+
+
+    function import2His(){
+        let treeNo = $("#dpc_site_no").val()
+        let startDate = $("#dpc_start").val()
+        let endDate   = $("#dpc_end").val()
+        if(treeNo=="" || startDate=="" || endDate==""){
+            $.modal.alert("请选择相关条件！")
+          return
+        }
+        $.modal.loading("正在处理中...");
+        $.ajax({
+            type: "post",
+            url: ctx + "/datasyn/csv2HisController/copyCsv2His",
+            data: {
+                "bizType":3,
+                "startDate": startDate,
+                "endDate": endDate,
+                "treeNo": treeNo
+            },
+            success: function (r) {
+                $.modal.closeLoading();
+                if (r.code == 200) {
+                    $.modal.alert("操作成功！"+r.msg);
+                    $('#btn-next').click();//下一步
+                } else {
+                    $.modal.msg(r.msg);
+                }
+            }
+            ,error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $.modal.closeLoading();
+            }
+        });
+    }
+    function import2AvgPowerDay(){
+        let treeNo = $("#dpc_site_no").val()
+        let startDate = $("#dpc_start").val()
+        let endDate   = $("#dpc_end").val()
+        if(treeNo=="" || startDate=="" || endDate==""){
+            $.modal.alert("请选择相关条件！")
+            return
+        }
+        $.modal.loading("正在处理中...");
+        $.ajax({
+            type: "post",
+            url: ctx + "/datasyn/hisDataController/copy_his_2_aggDevPowerDay",
+            data: {
+                "bizType":3,
+                "startDate": startDate,
+                "endDate": endDate,
+                "treeNo": treeNo
+            }
+            ,success: function (r) {
+                $.modal.closeLoading();
+                if (r.code == 200) {
+                    $.modal.alert("操作成功！"+r.msg);
+                    $('#btn-next').click();//下一步
+                } else {
+                    $.modal.msg("操作成功！"+r.msg);
+                }
+            }
+            ,error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $.modal.closeLoading();
+            }
+        });
+    }
+    function import2UnqSeqPower(){
+        let treeNo = $("#dpc_site_no").val()
+        let month   = $("#month").val()
+        if(treeNo==""){
+            layer.alert("请选择站点！")
+            return
+        }
+        if(month==""){
+            layer.alert("请选择月份！")
+            return
+        }
+        $.modal.loading("正在处理中...");
+        $.ajax({
+            type: "post",
+            url: ctx + "/datasyn/hisDataController/copy_his_2_UnqSeqPower",
+            data: {
+                "bizType":3,
+                "month": month,
+                "treeNo": treeNo
+            },
+            success: function (r) {
+                $.modal.closeLoading();
+                if (r.code == 200) {
+                    $.modal.alert("操作成功！"+r.msg);
+                    $('#btn-next').click();//下一步
+                } else {
+                    $('#btn-next').click();
+                }
+            }
+            ,error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $.modal.closeLoading();
+            }
+        });
+    }
+
+    $("#btn_import1").on('click', function(){ import2His(); });
+    $("#btn_import2").on('click', function(){ import2AvgPowerDay(); });
+    $("#btn_import3").on('click', function(){ import2UnqSeqPower(); });
+
+    layui.use('laydate', function () {
+        layui.laydate.render({
+             elem: '#startDate' //指定元素
+            ,format: 'yyyy-MM-dd' //可任意组合
+            ,done: function(value, date, endDate){
+                $("#dpc_start").val(value)
+            }
+        });
+        layui.laydate.render({
+            elem: '#endDate' //指定元素
+            ,format: 'yyyy-MM-dd' //可任意组合
+            ,done: function(value, date, endDate){
+                $("#dpc_end").val(value)
+            }
+        });
+
+        layui.laydate.render({
+            elem: '#month' //指定元素
+            ,type:'month'
+            ,done: function(value, date, endDate){
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
+{{end}}

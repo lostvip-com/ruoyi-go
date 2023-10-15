@@ -1,0 +1,99 @@
+{{define "system/dict/data/edit"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-dict-edit">
+        <input id="dictCode" name="dictCode" type="hidden" value="{{.dict.DictCode}}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字典标签：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dictLabel" id="dictLabel" value="{{.dict.DictLabel}}"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字典键值：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dictValue" id="dictValue" value="{{.dict.DictValue}}"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字典类型：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" readonly="true" value="{{.dict.DictType}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">样式属性：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="cssClass" name="cssClass" value="{{.dict.CssClass}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字典排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dictSort" value="{{.dict.DictSort}}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">回显样式：</label>
+            <div class="col-sm-8">
+                <select name="listClass" class="form-control m-b">
+                    <option value="">---请选择---</option>
+                    <option value="default" {{if eq .dict.ListClass "default"}}selected{{end}}>默认</option>
+                    <option value="primary" {{if eq .dict.ListClass "primary"}}selected{{end}}>主要</option>
+                    <option value="success" {{if eq .dict.ListClass "success"}}selected{{end}}>成功</option>
+                    <option value="info" {{if eq .dict.ListClass "info"}}selected{{end}}>信息</option>
+                    <option value="warning" {{if eq .dict.ListClass "warning"}}selected{{end}}>警告</option>
+                    <option value="danger" {{if eq .dict.ListClass "danger"}}selected{{end}}>危险</option>
+                </select>
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> table表格字典列显示样式属性</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">系统默认：</label>
+            <div class="col-sm-8">
+                {{getDictTypeRadio "sys_yes_no" "isDefault" .dict.IsDefault}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                {{getDictTypeRadio "sys_normal_disable" "status" .dict.DictValue}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea id="remark" name="remark" class="form-control">{{.dict.Remark}}</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script type="text/javascript">
+    var prefix = ctx + "/system/dict/data";
+
+    $("#form-dict-edit").validate({
+        rules: {
+            dictSort: {
+                digits: true
+            },
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-dict-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>
+{{end}}

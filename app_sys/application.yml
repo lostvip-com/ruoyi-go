@@ -1,0 +1,19 @@
+go:
+  application:
+    debug: true
+#  redis:
+#    host: redis1
+#    port: 6379
+#    password: qwer1234
+  datasource:
+#    driver: sqlite3
+#    master: data.db
+    driver: mysql
+    master: "root:root@tcp(127.0.0.1:3306)/ruoyi-go?charset=utf8"
+    slave: ""
+
+gen:
+  author: "lv"
+  moduleName: "biz"
+  packageName: "robvi"
+  autoRemovePre: true

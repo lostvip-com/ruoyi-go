@@ -1,0 +1,31 @@
+/*
+==========================================================================
+LV自动生成菜单SQL,只生成一次,按需修改.
+生成日期：{{.table.CreateTime}}
+生成路径: document/sql/{{.table.ModuleName}}/{{.table.BusinessName}}_menu.sql
+生成人：{{.table.FunctionAuthor}}
+==========================================================================
+*/
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}', '4', '1', '/{{.table.ModuleName}}/{{.table.BusinessName}}', 'C', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:view', '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '{{.table.FunctionName}}菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}查询', @parentId, '1',  '#',  'F', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:list',         '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '');
+
+insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}新增', @parentId, '2',  '#',  'F', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:add',          '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '');
+
+insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}修改', @parentId, '3',  '#',  'F', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:edit',         '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '');
+
+insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}删除', @parentId, '4',  '#',  'F', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:remove',       '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '');
+
+insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('{{.table.FunctionName}}导出', @parentId, '5',  '#',  'F', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:export',       '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '');

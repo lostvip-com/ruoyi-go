@@ -1,0 +1,30 @@
+// ==========================================================================
+// LV自动生成路由代码，只生成一次，按需修改,再次生成不会覆盖.
+// 生成日期：{{.table.CreateTime}}
+// 生成路径: app/controller/{{.table.ModuleName}}/{{.table.BusinessName}}_router.go
+// 生成人：{{.table.FunctionAuthor}}
+// ==========================================================================
+package {{.table.ModuleName}}
+
+import (
+	"{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/controller"
+	"{{.table.PackageName}}/app/service/middleware/auth"
+	"{{.table.PackageName}}/app/service/middleware/jwt"
+	"{{.table.PackageName}}/app/common/lvframe/router"
+)
+
+//加载路由
+func init() {
+	// 参数路由
+	g1 := router.New( "/{{.table.ModuleName}}/{{.table.BusinessName}}", auth.Auth)
+
+	web := controller.{{.table.ClassName}}Controller{}
+	g1.GET("/", "{{.table.ModuleName}}:{{.table.BusinessName}}:view", web.List)
+	g1.POST("/list", "{{.table.ModuleName}}:{{.table.BusinessName}}:list", web.ListAjax)
+	g1.GET("/add", "{{.table.ModuleName}}:{{.table.BusinessName}}:add", web.Add)
+	g1.POST("/add", "{{.table.ModuleName}}:{{.table.BusinessName}}:add", web.AddSave)
+	g1.POST("/remove", "{{.table.ModuleName}}:{{.table.BusinessName}}:remove", {web.Remove)
+	g1.GET("/edit", "{{.table.ModuleName}}:{{.table.BusinessName}}:edit", web.Edit)
+	g1.POST("/edit", "{{.table.ModuleName}}:{{.table.BusinessName}}:edit",web.EditSave)
+	g1.POST("/export", "{{.table.ModuleName}}:{{.table.BusinessName}}:export", web.Export)
+}

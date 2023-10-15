@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<title>健康一体机</title>
+<link href="style.css" title="style" rel="stylesheet" type="text/css" />
+<link id="clink" href="css/style-blue.css" title="style" rel="stylesheet" type="text/css" media="screen" />
+<script src="scripts/jquery.min.js" type="text/javascript"></script>
+<script src="scripts/jquery.masonry.min.js" type="text/javascript"></script>
+<script src="scripts/jquery.easing.1.3.js" type="text/javascript"></script>
+<script src="scripts/MetroJs.lt.js" type="text/javascript"></script>
+<script src="scripts/jquery.fancybox-1.3.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="scripts/jquery.flexslider-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="scripts/hoverintent.js" type="text/javascript" charset="utf-8"></script>
+<script src="scripts/organictabs.jquery.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="scripts/javascript.js" type="text/javascript"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body>
+<div id="bodypat">
+<section id="container">
+    <div id="colorchanger">
+    <a href="?theme=blue" class="cblue cbox" title="Blue Theme"><span class="blue">蓝色</span></a>
+    <a href="?theme=green" class="cgreen cbox" title="Green Theme"><span class="green">绿色</span></a>
+    <a href="?theme=magenta" class="cmagenta cbox" title="Magenta Theme"><span class="magenta">品红</span></a>
+    <a href="?theme=pink" class="cpink cbox" title="Pink Theme"><span class="pink">粉色</span></a>
+    <a href="?theme=mango" class="cmango cbox" title="Mango Theme"><span class="mango">橘色</span></a>
+    <h4>Theme Color Selector</h4>
+    </div>
+<!-- BEGIN HEADER -->
+<header class="clearfix">
+<!-- BEGIN LOGO -->
+<a id="headerlink" href="#" title="home"><img id="logo" src="images/logo.png" alt="logo" /><span id="sitename">数据采集终端</span></a>
+<!-- END LOGO -->
+
+<!-- BEGIN NAVIGATION -->
+<nav>
+<ul id="nav" class="clearfix">
+<!-- Menu Item 1 -->
+	<li class="current"><a href="index.html"><span>主页</span></a></li>
+<!-- Menu Item 2 -->
+    <li>
+    	<a href="#"><span>关于</span></a>
+        <ul>
+        	<li><a href="#"><span>使用说明</span></a></li>
+            <li><a href="#"><span>版权说明</span></a></li>
+        </ul>
+    </li>
+
+</nav>
+<!-- END NAVIGATION -->
+</header>
+<!-- END HEADER -->
+
+<!-- BEGIN MAIN PAGE CONTENT -->
+<section class="mainpage" title="新建档案">
+	<!-- BEGIN TOGGLE CONTENT -->
+	<div class="toggle-button">    <span>+</span>    </div>
+   
+</section><!-- end #mainpage -->
+
+    <!-- BEGIN FILTER -->
+    <div style="display: flex;justify-content: space-between;">
+        <ul id="search" style="display: flex; justify-content: flex-start;">
+            <li style="color: aliceblue;">  <label id="name" style="font-size: 22px;">张三</label>    &nbsp;&nbsp;&nbsp;&nbsp; <label id="idcard" style="font-size: 22px;">370323123456789098</label> </li>
+        </ul>
+
+        <ul id="search" style="display: flex; justify-content: flex-end;">
+            <form action=" " />
+            <input id="search-field" type="search" name="sitesearch"  placeholder="Search" />
+            <input type="submit" id="search-submit" value=" " />
+            </form>
+        </ul>
+        <!-- end #search -->
+
+        </div>
+    
+
+<!-- BEGIN TILE CONTENT -->
+<section id="content-mos" class="centered clearfix">
+
+<!-- Tile 1 -->
+    <div title="当前患者信息" class="tile large live" data-stops="0,25%,50%,75%,100%" data-speed="3000" data-delay="0" data-direction="horizontal" data-stack="true">
+        <div class="live-front">
+        	<img class="live-img" src="images/article1_right.png" alt="Article 1" />
+        </div>
+        <div class="live-back">
+        	<img class="live-img" src="images/article1_left.png" alt="Article 1" />
+        </div>
+        <span class="tile-date bluetxt"></span>
+        <span class="tile-cat teal">患者信息</span>
+    </div>
+	
+<!-- Tile 2 -->
+    <div title="档案记录" class="tile medium live" data-stops="0,75%,100%" data-speed="750" data-delay="1500">
+    	<div class="live-front blue">
+        	<img class="live-img" src="images/article2_1.png" alt="Article 2" />
+        </div>
+        <div class="live-back green">
+        	<img class="live-img" src="images/article2_2.png" alt="Article 2" />
+        </div>
+        <span class="tile-cat teal">历史档案</span>
+    </div>
+    
+
+<!-- Tile 13 -->
+<a href="#article-3" class="lightbox" rel="section" title="心图检查记录">
+    <div class="tile medium">
+        <img class="live-img" src="images/article3_tile.png" alt="Article 3" />
+        <span class="tile-date tealtxt"><span class="date">01</span></span>
+        <span class="tile-cat teal">心电图检查记录</span>
+    </div>
+</a>
+	
+
+<!-- Tile 4 -->
+<a href="#">
+    <div class="tile small">
+    <!-- <img class="live-img" src="images/portfolio/item2_sq.png" alt="Project Two" /> -->
+    </div>
+</a>
+  
+
+
+<!-- Tile 9 -->
+    <div class="tile small live exclude" data-stops="0,100%" data-speed="1000" data-delay="1500">
+    	<!-- <div class="live-front red">
+        <span class="tile-text">Solid Color</span>
+        </div>
+        <div class="live-back green">
+        <span class="tile-text">No Hover Effect</span>
+        </div> -->
+    </div>
+    
+<!-- Tile 10 -->
+<a href="#video-1" class="lightbox" rel="section" title="视频会诊">
+    <div class="tile small live" data-mode="flip" data-stops="100%" data-speed="750" data-delay="3000">
+    	<div class="live-front">
+        	<img class="live-img" src="images/video1.jpg" alt="Video 1" />
+        </div>
+        <div class="live-back blue">
+        	<img class="live-img" src="images/video.png" alt="Video Icon" />
+        </div>
+
+        <span class="tile-cat teal">视频会诊</span>
+    </div>
+</a>
+
+<!-- Tile 14 -->
+<a href="#portfolio-7" class="lightbox" rel="section" title="启动心电图检查软件">
+    <div class="tile small">
+    <img class="live-img" src="images/portfolio/item7_sq.png" alt="Project Seven" />
+    <span class="tile-cat teal">心电图检查</span>
+    </div>
+</a>
+	
+    
+<!-- Tile 15 -->
+<a href="http://validator.w3.org/check?uri=referer">
+    <div class="tile small live" data-stack="true" data-stops="0,100%" data-speed="750" data-delay="2500">
+    	<div class="live-front mango">
+        	<img class="live-img" src="images/html5.png" alt="HTML5 Icon" />
+        </div>
+        <div class="live-back lime">
+        	<img class="live-img" src="images/hyperlink.png" alt="Hyperlink Icon" />
+        </div>
+    </div>
+</a>
+
+<!-- Tile 16 -->
+<a href="#portfolio-8" class="lightbox" rel="section">
+    <div class="tile small">
+    <img class="live-img" src="images/portfolio/item8_sq.png" alt="Project Seven" />
+    </div>
+</a>
+	
+    
+<!-- END TILE CONTENT -->
+</section><!-- end #content-mos-->
+
+
+<section class="mainpage">
+<!-- END MAIN PAGE CONTENT -->
+
+<!-- BEGIN FOOTER -->
+<footer class="clearfix">
+
+<div id="footer-social">
+<!-- <a href="#"><span class="linkedin-mini"></span></a>
+<a href="#"><span class="pinterest-mini"></span></a>
+<a href="#"><span class="dribbble-mini"></span></a> -->
+</div><!-- end #footer-social -->
+
+<small>&copy; Copyright &copy; 2023. ROBVI All rights reserved.</small>
+</footer>
+<!-- END FOOTER -->
+
+</section><!-- end #container -->
+</div>
+
+<style>
+.copyrights{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}
+</style>
+<div class="copyrights" id="links20210126">
+	Collect from <a href="http://www.cssmoban.com/"  title="网站模板">模板之家</a>
+	<a href="https://www.chazidian.com/"  title="查字典">查字典</a>
+</div>
+</body>
+</html>

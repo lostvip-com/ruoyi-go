@@ -1,0 +1,69 @@
+// ==========================================================================
+// LV自动生成数据库操作代码，无需手动修改，重新生成会自动覆盖.
+// 生成日期：{{.table.CreateTime}}
+// 生成路径: app/modules/{{.table.ModuleName}}/model/{{.table.ClassName}}.go
+// 生成人：{{.table.FunctionAuthor}}
+// ==========================================================================
+
+package {{.table.BusinessName}}
+
+import (
+	"{{.table.PackageName}}/app/lvframe/db"
+	"time"
+)
+
+// 数据表映射结构体
+type {{.table.ClassName}} struct { {{range $index, $column := .table.Columns}}
+	{{if eq $column.IsPk "1"}} {{$column.GoField}}       {{if eq $column.GoType "Time"}}time.Time{{else}}{{$column.GoType}}{{end}}         `json:"{{$column.HtmlField}}" xorm:"not null pk autoincr comment('{{$column.ColumnComment}}') {{$column.ColumnType}}"`   {{else}} {{$column.GoField}}    {{if eq $column.GoType "Time"}}time.Time{{else}}{{$column.GoType}}{{end}}         `json:"{{$column.ColumnName}}" xorm:"comment('{{$column.ColumnComment}}') {{$column.ColumnType}}"`   {{end}} {{end}}
+}
+
+//映射数据表
+func (e *{{.table.ClassName}}) TableName() string {
+	return "{{.table.TableName}}"
+}
+
+// 插入数据
+func (e *{{.table.ClassName}}) Insert() (int64, error) {
+	return db.Instance().Engine().Table(TableName()).Insert(e)
+}
+
+// 更新数据
+func (e *{{.table.ClassName}}) Update() (int64, error) {
+	return db.Instance().Engine().Table(TableName()).ID(e.{{.table.PkColumn.GoField}}).Update(e)
+}
+
+// 删除
+func (e *{{.table.ClassName}}) Delete() (int64, error) {
+	return db.Instance().Engine().Table(TableName()).ID(e.{{.table.PkColumn.GoField}}).Delete(e)
+}
+
+//批量删除
+func (e *{{.table.ClassName}}) DeleteBatch(ids ...int64) (int64, error) {
+	return db.Instance().Engine().Table(TableName()).In("{{.table.PkColumn.ColumnName}}", ids).Delete(new({{.table.ClassName}}))
+}
+
+// 根据结构体中已有的非空数据来获得单条数据
+func (e *{{.table.ClassName}}) FindOne() (bool, error) {
+	return db.Instance().Engine().Table(TableName()).Get(e)
+}
+
+// 根据条件查询
+func (e *{{.table.ClassName}}) Find(where, order string) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
+	return list, err
+}
+
+//指定字段集合查询
+func (e *{{.table.ClassName}}) FindIn(column string, args ...interface{}) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(TableName()).In(column, args).Find(&list)
+	return list, err
+}
+
+//排除指定字段集合查询
+func (e *{{.table.ClassName}})  FindNotIn(column string, args ...interface{}) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
+	return list, err
+}

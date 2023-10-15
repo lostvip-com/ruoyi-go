@@ -1,0 +1,130 @@
+<!DOCTYPE html>{{$treeParentCode := .table.TreeParentCode}} {{$treeCode :=.table.TreeCode}} {{$businessName :=.table.BusinessName}} {{$treeName :=.table.TreeName}}
+<!--
+==========================================================================
+LV自动生成新增页面代码,只生成一次,按需修改.
+生成日期：{{.table.CreateTime}}
+生成路径: template/{{.table.ModuleName}}/{{.table.BusinessName}}/add.html
+生成人：{{.table.FunctionAuthor}}
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{printf `{{template "header" (OssUrl)}}`}}
+    <link href="{{printf `{{OssUrl}}`}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-{{$businessName}}-add">  {{range $index, $column := .table.Columns}} {{if and (eq $column.IsInsert "1") (ne $column.IsPk "1")}}
+            {{if and (ne $treeParentCode "") (eq $column.ColumnName $treeParentCode)}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="treeId" name="{{$treeParentCode}}" type="hidden" value="{{$businessName}}"/>
+                            <input class="form-control" type="text" onclick="select{{$businessName}}Tree()" id="treeName"
+                                   readonly="true" value="{{$treeName}}" {{if eq $column.IsRequired "1"}}required{{end}}>
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            {{else if eq $column.HtmlType "input"}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <input name="{{$column.HtmlField}}" class="form-control" type="text" {{if eq $column.IsRequired "1"}}required{{end}}>
+                    </div>
+                </div>
+            {{else if eq $column.HtmlType "select"}}  {{if eq $column.DictType ""}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <select name="{{$column.HtmlField}}" class="form-control m-b" {{if eq $column.IsRequired "1"}}required{{end}}>
+                            <option value="">所有</option>
+                        </select>
+                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                    </div>
+                </div> {{else}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        {{printf `{{getDictTypeSelect "%v" "%v" "%v" "" "" "所有" ""}}` $column.DictType $column.HtmlField $column.HtmlField}}
+                    </div>
+                </div>  {{end}}
+            {{else if eq $column.HtmlType "radio"}}  {{if eq $column.DictType ""}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <div class="radio-box">
+                            <input type="radio" name="{{$column.HtmlField}}" value="" {{if eq $column.IsRequired "1"}}required{{end}}>
+                            <label for="{{$column.HtmlField}}" text="未知"></label>
+                        </div>
+                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                    </div>
+                </div>  {{else}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        {{printf `{{getDictTypeRadio "%v" "%v" ""}}` $column.DictType $column.HtmlField}}
+                    </div>
+                </div>  {{end}}
+            {{else if eq $column.HtmlType "datetime"}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input name="{{$column.HtmlField}}" class="form-control" placeholder="yyyy-MM-dd" type="text" {{if eq $column.IsRequired "1"}}required{{end}}>
+                        </div>
+                    </div>
+                </div>
+            {{else if eq $column.HtmlType "textarea"}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
+                    <div class="col-sm-8">
+                        <textarea name="{{$column.HtmlField}}" class="form-control" {{if eq $column.IsRequired "1"}}required{{end}}></textarea>
+                    </div>
+                </div>
+            {{end}} {{end}} {{end}}
+    </form>
+</div>
+{{printf `{{template "footer" (OssUrl)}}`}}
+<script src="{{printf `{{OssUrl}}`}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+
+<script type="text/javascript">
+    var prefix = ctx + "/{{.table.ModuleName}}/{{.table.BusinessName}}";
+    $("#form-{{.table.BusinessName}}-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-{{.table.BusinessName}}-add').serialize());
+        }
+    }
+    {{range $index, $column := .table.Columns}} {{if eq $column.HtmlType "datetime"}}
+    $("input[name='{{$column.HtmlField}}']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });  {{end}} {{end}}
+    {{if eq .table.TplCategory "tree"}}
+    /** {{.table.FunctionName}} -新增-选择父部门树 */
+    function select{{.table.BusinessName}}Tree() {
+        var options = {
+            title: '{{.table.FunctionName}}选择',
+            width: "380",
+            url: prefix + "/select{{.table.BusinessName}}Tree/" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layer) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    } {{end}}
+</script>
+</body>
+</html>

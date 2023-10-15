@@ -1,0 +1,143 @@
+// ==========================================================================
+// LV自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
+// 生成日期：{{.table.CreateTime}}
+// 生成人：{{.table.FunctionAuthor}}
+// ==========================================================================
+package {{.table.BusinessName}}
+
+import (
+	"github.com/gin-gonic/gin"
+	"{{.table.PackageName}}/app/model"
+	{{.table.BusinessName}}Model "{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/model"
+	{{.table.BusinessName}}Service "{{.table.PackageName}}/app/service/{{.table.ModuleName}}/{{.table.BusinessName}}"
+	"{{.table.PackageName}}/app/lvframe/response"
+	"{{.table.PackageName}}/app/lvframe/utils/gconv"
+)
+
+type {{.table.ClassName}}Controller struct{}
+//列表页
+func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
+	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+}
+
+//列表分页数据
+func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
+	req := new({{.table.BusinessName}}Model.SelectPageReq)
+	//获取参数
+	if err := c.ShouldBind(req); err != nil {
+		response.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.BusinessName}}管理", req).WriteJsonExit()
+		return
+	}
+	rows := make([]{{.table.BusinessName}}Model.{{.table.ClassName}}, 0)
+	{{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	result, page, err := {{.table.BusinessName}}Service.SelectListByPage(req)
+
+	if err == nil && len(result) > 0 {
+		rows = result
+	}
+
+	response.BuildTable(c, page.Total, rows).WriteJsonExit()
+}
+
+//新增页面
+func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
+	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
+}
+
+//新增页面保存
+func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
+	req := new({{.table.BusinessName}}Model.AddReq)
+	//获取参数
+	if err := c.ShouldBind(req); err != nil {
+		response.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
+		return
+	}
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	id, err := {{.table.BusinessName}}Service.AddSave(req, c)
+
+	if err != nil || id <= 0 {
+		response.ErrorResp(c).SetBtype(model.Buniss_Add).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
+		return
+	}
+	response.SucessResp(c).SetData(id).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
+}
+
+//修改页面
+func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
+	id := gconv.Int64(c.Query("id"))
+
+	if id <= 0 {
+		response.ErrorTpl(c).WriteTpl(gin.H{
+			"desc": "参数错误",
+		})
+		return
+	}
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
+
+	if err != nil || entity == nil {
+		response.ErrorTpl(c).WriteTpl(gin.H{
+			"desc": "数据不存在",
+		})
+		return
+	}
+
+	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
+		"{{.table.BusinessName}}": entity,
+	})
+}
+
+//修改页面保存
+func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
+	req := new({{.table.BusinessName}}Model.EditReq)
+	//获取参数
+	if err := c.ShouldBind(req); err != nil {
+		response.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
+		return
+	}
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	rs, err := {{.table.BusinessName}}Service.EditSave(req, c)
+
+	if err != nil || rs <= 0 {
+		response.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
+		return
+	}
+	response.SucessResp(c).SetBtype(model.Buniss_Edit).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
+}
+
+//删除数据
+func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
+	req := new(model.RemoveReq)
+	//获取参数
+	if err := c.ShouldBind(req); err != nil {
+		response.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
+		return
+	}
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	rs := {{.table.BusinessName}}Service.DeleteRecordByIds(req.Ids)
+
+	if rs > 0 {
+		response.SucessResp(c).SetBtype(model.Buniss_Del).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
+	} else {
+		response.ErrorResp(c).SetBtype(model.Buniss_Del).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
+	}
+}
+
+//导出
+func (w {{.table.ClassName}}Controller) Export(c *gin.Context) {
+	req := new({{.table.BusinessName}}Model.SelectPageReq)
+	//获取参数
+	if err := c.ShouldBind(req); err != nil {
+		response.ErrorResp(c).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
+		return
+	}
+
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	url, err := {{.table.BusinessName}}Service.Export(req)
+
+	if err != nil {
+		response.ErrorResp(c).SetBtype(model.Buniss_Other).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
+		return
+	}
+	response.SucessResp(c).SetBtype(model.Buniss_Other).SetMsg(url).WriteJsonExit()
+}

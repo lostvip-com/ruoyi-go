@@ -1,0 +1,12 @@
+uploads/*
+logs/*
+*.exe
+.idea
+.idea/*
+*.out
+*.log
+main
+robnote
+temp
+tmp
+*.idx

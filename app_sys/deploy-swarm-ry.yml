@@ -1,0 +1,12 @@
+version: '3.3'    
+services:
+  sys:
+    image: reg.lostvip.com/sys:1.0
+    ports: 
+      - "8080:8080"
+    volumes:
+      - /mnt/nfs/ry/public/upload:/root/public/upload
+    deploy:
+      replicas: 2
+      restart_policy:  
+        condition: on-failure

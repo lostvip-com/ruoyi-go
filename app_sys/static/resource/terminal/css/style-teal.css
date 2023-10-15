@@ -1,0 +1,60 @@
+@charset "utf-8";
+/*-----------------------------------------------------------------------------
+Matrix Responsive HTML Template - Theme Colour
+-------------------------------------------------------------------------------
+Version : 1.0
+Date : 16 / 08 / 2012
+Author : Billy Foo
+-----------------------------------------------------------------------------*/
+a,
+.toggle-button:hover,
+.ac-tab:hover,
+ul#port-filter li,
+ul#port-filter li:hover,
+.about-person:hover,
+.price-pre,
+.price-post,
+.hl-txt1,
+.hl-txt2,
+.widget #tweeter li a{color:#00aaad;
+}
+.themecolortxt{
+	color:#00aaad !important;
+}
+ul#nav li.back,
+ul#nav > li li,
+.hl1,
+.hl3,
+#content-title,
+.title-highlight,
+#content .toggle-content,
+.flex-control-paging li a:hover,
+.flex-control-paging li a.flex-active,
+.page,
+.nextpagelink,
+.table-info ul li{
+	border-color:#00aaad;
+}
+.break,
+ul#nav li.current > a,
+ul#nav li li a,
+ul#nav:hover > li:hover > a,
+.hl2,
+.themecolor,
+.quote-bg1,
+.testimonial-1,
+.toggle-button,
+.ac-tab,
+.flexslider,
+.flex-title,
+.flex-control-paging li a,
+.pagination .current,
+ul#port-filter li.filter-current,
+.table-title,
+.widget h5,
+#search-field:focus,
+#search-submit:hover,
+#post-meta .tile-sidebar,
+.sidebreak{
+	background-color:#00aaad;
+}
