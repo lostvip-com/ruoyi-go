@@ -69,13 +69,9 @@
 >
 > swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
 >
->
+> 基于goframe若依版本： https://github.com/guolingege/yjgo
 
 ## 项目支持
-
-
-> 也可以请作者喝一杯咖啡:)
-
 
 
 ## QQ交流群
