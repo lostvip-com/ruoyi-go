@@ -78,4 +78,4 @@
 
 如有兴趣一起完善，进QQ群 43862272
 
-<img alt="" height="389" src="1.png" width="300" />
+<img alt="" height="389" src="https://github.com/lostvip-com/ruoyi-go/blob/main/QQ%E2%95%9A%E2%95%91.png" width="300" />
