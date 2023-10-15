@@ -41,7 +41,7 @@
 17.  案例演示：常用的前端组件整合演示。
 
 ## 登陆账号和密码
-> 演示1: http://demo.robnote.com <p> 
+> 演示1: http://demo.lostvip.com <p> 
 > 账号: admin / admin123  <p>
 >
 注意,本站未做任何防护,管理员有所有权限,请不要删除任何数据!
