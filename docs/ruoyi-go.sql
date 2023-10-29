@@ -44,7 +44,7 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES (5, 'sys_config', '参数配置表', 'config', 'crud', 'yj-app', 'module', 'config', '参数配置', 'yunjie', '', 'admin', '2020-03-26 20:35:17', 'admin', '2020-03-27 09:49:22', '455445454');
+INSERT INTO `gen_table` VALUES (5, 'sys_config', '参数配置表', 'config', 'crud', 'lostvip.com', 'module', 'config', '参数配置', 'yunjie', '', 'admin', '2020-03-26 20:35:17', 'admin', '2020-03-27 09:49:22', '455445454');
 INSERT INTO `gen_table` VALUES (6, 'sys_oper_log', '操作日志记录', 'SysOperLog', 'crud', 'robvi', 'biz', '', '操作日志记录', 'lv', '', 'admin', '2023-09-17 19:15:59', '', '2023-09-17 11:10:48', '');
 
 -- ----------------------------

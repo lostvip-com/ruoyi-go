@@ -9,9 +9,6 @@ package {{.table.BusinessName}}
 import (
 	"errors"
     "xorm.io/builder"
-    "{{.table.PackageName}}/app/lvframe/db"
-    "{{.table.PackageName}}/app/lvframe/utils/excel"
-    "{{.table.PackageName}}/app/lvframe/utils/page"
 )
 
 //新增页面请求参数

@@ -288,6 +288,7 @@ func (svc TableService) ImportGenTable(tableList *[]tool2.GenTable, operName str
 // 初始化表信息
 func (svc TableService) InitTable(table *tool2.GenTable, operName string) {
 	table.ClassName = svc.ConvertClassName(table.TbName)
+	table.BusinessName = svc.GetBusinessName(table.TbName)
 	table.PackageName = conf.Config().GetVipperCfg().GetString("gen.packageName")
 	table.ModuleName = conf.Config().GetVipperCfg().GetString("gen.moduleName")
 	table.FunctionName = strings.ReplaceAll(table.TableComment, "表", "")

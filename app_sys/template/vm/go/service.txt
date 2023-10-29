@@ -8,12 +8,7 @@ package {{.table.BusinessName}}
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"time"
-	{{.table.BusinessName}}Model "{{.table.PackageName}}/app/model/{{.table.ModuleName}}/{{.table.BusinessName}}"
-	userService "{{.table.PackageName}}/app/service/system/user"
-	"{{.table.PackageName}}/app/yjgframe/utils/convert"
-	"{{.table.PackageName}}/app/yjgframe/utils/page"
 )
 type {{.table.ClassName}}Service struct{}
 //根据主键查询数据

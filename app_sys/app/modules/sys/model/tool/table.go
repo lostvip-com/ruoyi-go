@@ -132,7 +132,7 @@ func SelectDbTableList(param *SelectPageReq) ([]GenTable, *page.Paging, error) {
 	}
 
 	model := db.Table("information_schema.tables")
-	model.Where("table_schema = (select db())")
+	model.Where("table_schema = (select database())")
 	model.Where("table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'")
 	model.Where("table_name NOT IN (select table_name from gen_table)")
 	if param != nil {
@@ -183,7 +183,7 @@ func SelectDbTableListByNames(tableNames []string) ([]GenTable, error) {
 	model.Select("0 as table_id, table_name, table_comment,'' as class_name,'' as tpl_category,'' as package_name,'' as module_name,'' as business_name,'' as function_name,'' as function_author,'' as options,'' as create_by, create_time,'' as update_by, update_time,'' as remark")
 	model.Where("table_name NOT LIKE 'qrtz_%'")
 	model.Where("table_name NOT LIKE 'gen_%'")
-	model.Where("table_schema = (select db())")
+	model.Where("table_schema = (select database())")
 	if len(tableNames) > 0 {
 		model.In("table_name", tableNames)
 	}
@@ -204,7 +204,7 @@ func SelectTableByName(tableName string) (*GenTable, error) {
 	model := db.Table("information_schema.tables")
 	model.Select("0 as table_id, table_name, table_comment,'' as class_name,'' as tpl_category,'' as package_name,'' as module_name,'' as business_name,'' as function_name,'' as function_author,'' as options,'' as create_by, create_time,'' as update_by, update_time,'' as remark")
 	model.Where("table_comment <> ''")
-	model.Where("table_schema = (select db())")
+	model.Where("table_schema = (select database())")
 	if tableName != "" {
 		model.Where("table_name = ?", tableName)
 	}

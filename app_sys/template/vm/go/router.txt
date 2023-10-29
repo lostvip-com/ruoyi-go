@@ -7,10 +7,11 @@
 package {{.table.ModuleName}}
 
 import (
-	"{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/controller"
-	"{{.table.PackageName}}/app/service/middleware/auth"
-	"{{.table.PackageName}}/app/service/middleware/jwt"
-	"{{.table.PackageName}}/app/common/lvframe/router"
+		"github.com/gin-gonic/gin"
+    	"lostvip.com/utils/gconv"
+    	"lostvip.com/utils/response"
+    	"net/http"
+    	"{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/model"
 )
 
 //加载路由

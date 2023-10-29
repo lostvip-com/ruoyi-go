@@ -7,6 +7,7 @@ import (
 	"lostvip.com/utils/convert"
 	"lostvip.com/utils/page"
 	"robvi/app/common/cache"
+	"strings"
 
 	config2 "robvi/app/modules/sys/model/system/config"
 	"robvi/app/modules/sys/service"
@@ -19,13 +20,25 @@ func GetCopyright() string {
 }
 
 func GetCtx() string {
-	ctx := conf.Config().GetContextPath()
-	return ctx
+	ctxPath := conf.Config().GetContextPath()
+	return ctxPath
+}
+
+func GetCtxPath(url string) string {
+	ctxPath := conf.Config().GetContextPath()
+	if !strings.HasPrefix(url, "http") {
+		if strings.HasPrefix(url, "/") {
+			ctxPath = ctxPath + url
+		} else {
+			ctxPath = ctxPath + "/" + url
+		}
+	}
+	return ctxPath
 }
 func GetOssUrl() string {
 	ossUrl := GetValueByKey("sys.resource.url")
-	if ossUrl == "" {
-		ossUrl = "/static"
+	if !strings.HasPrefix(ossUrl, "http") {
+		ossUrl = conf.Config().GetContextPath() + ossUrl
 	}
 	return ossUrl
 }

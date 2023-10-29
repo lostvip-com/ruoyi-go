@@ -8,7 +8,6 @@
 package {{.table.BusinessName}}
 
 import (
-	"{{.table.PackageName}}/app/lvframe/db"
 	"time"
 )
 

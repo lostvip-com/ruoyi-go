@@ -49,7 +49,7 @@ func SelectDbTableColumnsByName(tableName string) ([]Entity, error) {
 	var result []Entity
 
 	model := db.Table("information_schema.columns")
-	model.Where("table_schema = (select db())")
+	model.Where("table_schema = (select database())")
 	model.Where("table_name=?", tableName).OrderBy("ordinal_position")
 	model.Select("column_name, (case when (is_nullable = 'no' && column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type")
 	model.Find(&result)

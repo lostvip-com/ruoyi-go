@@ -6,25 +6,44 @@
 package {{.table.BusinessName}}
 
 import (
-	"github.com/gin-gonic/gin"
-	"{{.table.PackageName}}/app/model"
-	{{.table.BusinessName}}Model "{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/model"
-	{{.table.BusinessName}}Service "{{.table.PackageName}}/app/service/{{.table.ModuleName}}/{{.table.BusinessName}}"
-	"{{.table.PackageName}}/app/lvframe/response"
-	"{{.table.PackageName}}/app/lvframe/utils/gconv"
+    "github.com/gin-gonic/gin"
+    "{{.table.PackageName}}/utils/lib_net"
 )
-
 type {{.table.ClassName}}Controller struct{}
-//列表页
+
+///////////////////////////////////////////////////////////////////////////////////////
+// 页面部分
+// 列表分页数据
+///////////////////////////////////////////////////////////////////////////////////////
+//查询页
 func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+	response.BuildTpl(c, "modules/{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+}
+//新增页
+func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
+	response.BuildTpl(c, "modules/{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
+}
+//修改页
+func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
+	id := gconv.Int64(c.Query("id"))
+    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
+	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
+	if err != nil || entity == nil {
+		response.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
+		return
+	}
+	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
+		"{{.table.BusinessName}}": entity,
+	})
 }
 
-//列表分页数据
+///////////////////////////////////////////////////////////////////////////////////////
+// api接口
+// 列表分页数据
+///////////////////////////////////////////////////////////////////////////////////////
 func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 	req := new({{.table.BusinessName}}Model.SelectPageReq)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
+	if err := c.ShouldBind(req); err != nil {//获取参数
 		response.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.BusinessName}}管理", req).WriteJsonExit()
 		return
 	}
@@ -35,14 +54,9 @@ func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 	if err == nil && len(result) > 0 {
 		rows = result
 	}
-
 	response.BuildTable(c, page.Total, rows).WriteJsonExit()
 }
 
-//新增页面
-func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
-}
 
 //新增页面保存
 func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
@@ -62,30 +76,6 @@ func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
 	response.SucessResp(c).SetData(id).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
 }
 
-//修改页面
-func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
-
-	if id <= 0 {
-		response.ErrorTpl(c).WriteTpl(gin.H{
-			"desc": "参数错误",
-		})
-		return
-	}
-    {{.table.BusinessName}}Service :={{.table.ClassName}}Service{}
-	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
-
-	if err != nil || entity == nil {
-		response.ErrorTpl(c).WriteTpl(gin.H{
-			"desc": "数据不存在",
-		})
-		return
-	}
-
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
-		"{{.table.BusinessName}}": entity,
-	})
-}
 
 //修改页面保存
 func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
