@@ -1,0 +1,218 @@
+<!DOCTYPE html>       
+<!--
+==========================================================================
+LV自动生成修改页面代码,只生成一次,按需修改.
+生成日期：2023-10-29 22:05:20 +0800 CST
+生成路径: template/biz/patient/edit.html
+生成人：lv
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+    <link href="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-patient-edit">
+        <input name="id" value="{{.patient.Id}}" type="hidden">
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">姓名：</label>
+                <div class="col-sm-8">
+                    <input name="name" value="{{.patient.Name}}" class="form-control"  type="text" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">手机号：</label>
+                <div class="col-sm-8">
+                    <input name="phone" value="{{.patient.Phone}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">照片：</label>
+                <div class="col-sm-8">
+                    <input name="headUrl" value="{{.patient.HeadUrl}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">：</label>
+                <div class="col-sm-8">
+                    <input name="idcardPath" value="{{.patient.IdcardPath}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">证件号：</label>
+                <div class="col-sm-8">
+                    <input name="idcard" value="{{.patient.Idcard}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">床号：</label>
+                <div class="col-sm-8">
+                    <input name="bedNo" value="{{.patient.BedNo}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">责任医生Id：</label>
+                <div class="col-sm-8">
+                    <input name="doctorId" value="{{.patient.DoctorId}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">建档单位：</label>
+                <div class="col-sm-8">
+                    <input name="orgId" value="{{.patient.OrgId}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">建档单位地址：</label>
+                <div class="col-sm-8">
+                    <input name="orgAddress" value="{{.patient.OrgAddress}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">建档单位：</label>
+                <div class="col-sm-8">
+                    <input name="orgEstablish" value="{{.patient.OrgEstablish}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">：</label>
+                <div class="col-sm-8">
+                    <input name="familyId" value="{{.patient.FamilyId}}" class="form-control"  type="text" >
+                </div>
+            </div>
+             
+            <div class="form-group">
+                <label class="col-sm-3 control-label">性别：</label>
+                <div class="col-sm-8">
+                    <select name="sex" class="form-control m-b" >
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>  
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">生日：</label>
+                <div class="col-sm-8">
+                    <input name="birth" value="{{.patient.Birth}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">体重：</label>
+                <div class="col-sm-8">
+                    <input name="weight" value="{{.patient.Weight}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">身高：</label>
+                <div class="col-sm-8">
+                    <input name="height" value="{{.patient.Height}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">民族：</label>
+                <div class="col-sm-8">
+                    <input name="nation" value="{{.patient.Nation}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">籍贯：</label>
+                <div class="col-sm-8">
+                    <input name="nativePlace" value="{{.patient.NativePlace}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">现居地址：</label>
+                <div class="col-sm-8">
+                    <input name="address" value="{{.patient.Address}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">职业：</label>
+                <div class="col-sm-8">
+                    <input name="occupation" value="{{.patient.Occupation}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">联系人手机号：</label>
+                <div class="col-sm-8">
+                    <input name="contactorPhone" value="{{.patient.ContactorPhone}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">联系人：</label>
+                <div class="col-sm-8">
+                    <input name="contactorName" value="{{.patient.ContactorName}}" class="form-control"  type="text" required>
+                </div>
+            </div>
+                      
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注信息：</label>
+                <div class="col-sm-8">
+                    <input name="remark" value="{{.patient.Remark}}" class="form-control"  type="text" >
+                </div>
+            </div>
+             
+            <div class="form-group">
+                <label class="col-sm-3 control-label">建档单位：</label>
+                <div class="col-sm-8">
+                    <select name="deptId" class="form-control m-b" >
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>  
+          
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script src="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    var prefix = ctx + "/biz/patient";
+    $("#form-patient-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-patient-edit').serialize());
+        }
+    }
+                                                                                                      
+    $("input[name='createTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+            
+    $("input[name='updateTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+              
+    
+</script>
+</body>
+</html>

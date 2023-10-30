@@ -261,10 +261,10 @@ func GenCode(c *gin.Context) {
 	if err != nil {
 		response2.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 	}
-
+	var htmlMoudlePath = curDir + "/template/modules/" + entity.ModuleName
 	//add模板
 	if tmp, err := tableService.LoadTemplate("vm/html/add.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/add.html"}, "")
+		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/add.html"
 
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
@@ -277,8 +277,7 @@ func GenCode(c *gin.Context) {
 
 	//edit模板
 	if tmp, err := tableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/edit.html"}, "")
-
+		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/edit.html"
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
 			if err == nil {
@@ -290,7 +289,7 @@ func GenCode(c *gin.Context) {
 
 	//list模板
 	if tmp, err := tableService.LoadTemplate(listTmp, gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/list.html"}, "")
+		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/list.html"
 
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
@@ -304,7 +303,7 @@ func GenCode(c *gin.Context) {
 	if entity.TplCategory == "tree" {
 		//tree模板
 		if tmp, err := tableService.LoadTemplate("vm/html/tree.txt", gin.H{"table": entity}); err == nil {
-			fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/", "tree.html"}, "")
+			fileName := htmlMoudlePath + "/" + entity.BusinessName + "/tree.html"
 
 			if !file.Exists(fileName) {
 				f, err := file.Create(fileName)
@@ -315,10 +314,10 @@ func GenCode(c *gin.Context) {
 			}
 		}
 	}
-
+	var goModulePath = curDir + "/app/modules/" + entity.ModuleName
 	//entity模板
 	if tmp, err := tableService.LoadTemplate("vm/go/entity.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/model/", entity.ModuleName, "/", entity.BusinessName, "/", entity.BusinessName, "_entity.go"}, "")
+		fileName := goModulePath + "/model/" + entity.BusinessName + "_entity.go"
 		if file.Exists(fileName) {
 			os.RemoveAll(fileName)
 		}
@@ -332,8 +331,7 @@ func GenCode(c *gin.Context) {
 
 	//extend模板
 	if tmp, err := tableService.LoadTemplate("vm/go/extend.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/model/", entity.ModuleName, "/", entity.BusinessName, "/", entity.BusinessName, ".go"}, "")
-
+		fileName := goModulePath + "/model/" + entity.BusinessName + ".go"
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
 			if err == nil {
@@ -345,7 +343,7 @@ func GenCode(c *gin.Context) {
 
 	//service模板
 	if tmp, err := tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/service/", entity.ModuleName, "/", entity.BusinessName, "/", entity.BusinessName, "_service.go"}, "")
+		fileName := goModulePath + "/service/" + entity.BusinessName + "_service.go"
 
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
@@ -355,23 +353,21 @@ func GenCode(c *gin.Context) {
 			f.Close()
 		}
 	}
-
-	//router模板
-	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/controller/", entity.ModuleName, "/", entity.BusinessName, "_router.go"}, "")
-
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
-		}
-	}
-
 	//controller模板
 	if tmp, err := tableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/controller/", entity.ModuleName, "/", entity.BusinessName, "/", entity.BusinessName, "_controller.go"}, "")
+		fileName := goModulePath + "/controller/" + entity.BusinessName + "_controller.go"
+
+		if !file.Exists(fileName) {
+			f, err := file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
+		}
+	}
+	//router模板
+	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
+		fileName := goModulePath + "/" + entity.BusinessName + "_router.go"
 
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)

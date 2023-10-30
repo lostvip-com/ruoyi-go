@@ -3,8 +3,8 @@ package modules
 import (
 	"lostvip.com/router"
 	"robvi/app/middleware/jwt"
+	_ "robvi/app/modules/biz"
 	_ "robvi/app/modules/demo"
-	_ "robvi/app/modules/iot"
 	_ "robvi/app/modules/sys"
 	errorc "robvi/app/modules/sys/controller/system/error"
 	"robvi/app/modules/sys/controller/system/index"

@@ -1,26 +1,30 @@
 // ==========================================================================
 // LV自动生成业务逻辑层相关代码，只生成一次，按需修改,再次生成不会覆盖.
 // 生成日期：{{.table.CreateTime}}
-// 生成路径: app/service/{{.table.ModuleName}}/{{.table.BusinessName}}/{{.table.BusinessName}}_service.go
 // 生成人：{{.table.FunctionAuthor}}
 // ==========================================================================
-package {{.table.BusinessName}}
+package service
 
 import (
-	"errors"
-	"time"
+		"errors"
+    	"github.com/gin-gonic/gin"
+    	"lostvip.com/utils/convert"
+    	"lostvip.com/utils/page"
+    	"{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/model"
+    	"{{.table.PackageName}}/app/modules/sys/service"
+    	"time"
 )
 type {{.table.ClassName}}Service struct{}
 //根据主键查询数据
-func (svc {{.table.ClassName}}Service) SelectRecordById(id {{.table.PkColumn.GoType}}) (*{{.table.BusinessName}}Model.{{.table.ClassName}}, error) {
-	entity := &{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
+func (svc {{.table.ClassName}}Service) SelectRecordById(id {{.table.PkColumn.GoType}}) (*model.{{.table.ClassName}}, error) {
+	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
 	_, err := entity.FindOne()
 	return entity, err
 }
 
 //根据主键删除数据
 func (svc {{.table.ClassName}}Service) DeleteRecordById(id {{.table.PkColumn.GoType}}) bool {
-	rs, err := (&{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}).Delete()
+	rs, err := (&model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}).Delete()
 	if err == nil {
 		if rs > 0 {
 			return true
@@ -32,7 +36,8 @@ func (svc {{.table.ClassName}}Service) DeleteRecordById(id {{.table.PkColumn.GoT
 //批量删除数据记录
 func (svc {{.table.ClassName}}Service) DeleteRecordByIds(ids string) int64 {
 	ida := convert.ToInt64Array(ids, ",")
-	result, err := {{.table.BusinessName}}Model.DeleteBatch(ida...)
+    var entity *model.{{.table.ClassName}}
+	result, err := entity.DeleteBatch(ida...)
 	if err != nil {
 		return 0
 	}
@@ -40,13 +45,14 @@ func (svc {{.table.ClassName}}Service) DeleteRecordByIds(ids string) int64 {
 }
 
 //添加数据
-func (svc {{.table.ClassName}}Service) AddSave(req *{{.table.BusinessName}}Model.AddReq, c *gin.Context) ({{.table.PkColumn.GoType}}, error) {
-	var entity {{.table.BusinessName}}Model.{{.table.ClassName}}
-	{{range $index, $column := .table.Columns}} {{if eq $column.IsInsert "1"}}
-	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
+func (svc {{.table.ClassName}}Service) AddSave(req *model.Add{{.table.ClassName}}Req, c *gin.Context) ({{.table.PkColumn.GoType}}, error) {
+	var entity *model.{{.table.ClassName}}
+	{{range $index, $column := .table.Columns}}
+	{{if eq $column.IsInsert "1"}} {{if eq $column.IsPk "0"}} entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}} {{end}}
 	entity.CreateTime = time.Now()
 	entity.CreateBy = ""
 
+	var userService service.UserService
 	user := userService.GetProfile(c)
 
 	if user != nil {
@@ -58,8 +64,8 @@ func (svc {{.table.ClassName}}Service) AddSave(req *{{.table.BusinessName}}Model
 }
 
 //修改数据
-func (svc {{.table.ClassName}}Service) EditSave(req *{{.table.BusinessName}}Model.EditReq, c *gin.Context) (int64, error) {
-	entity := &{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
+func (svc {{.table.ClassName}}Service) EditSave(req *model.Edit{{.table.ClassName}}Req, c *gin.Context) (int64, error) {
+	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
 	ok, err := entity.FindOne()
 
 	if err != nil {
@@ -75,6 +81,7 @@ func (svc {{.table.ClassName}}Service) EditSave(req *{{.table.BusinessName}}Mode
 	entity.UpdateTime = time.Now()
 	entity.UpdateBy = ""
 
+	var userService service.UserService
 	user := userService.GetProfile(c)
 
 	if user == nil {
@@ -85,18 +92,21 @@ func (svc {{.table.ClassName}}Service) EditSave(req *{{.table.BusinessName}}Mode
 }
 
 //根据条件查询数据
-func (svc {{.table.ClassName}}Service) SelectListAll(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.{{.table.ClassName}}, error) {
-	return {{.table.BusinessName}}Model.SelectListAll(params)
+func (svc {{.table.ClassName}}Service) SelectListAll(params *model.Page{{.table.ClassName}}Req) ([]model.{{.table.ClassName}}, error) {
+	entity := model.{{.table.ClassName}}{}
+	return entity.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func (svc {{.table.ClassName}}Service) SelectListByPage(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.{{.table.ClassName}}, *page.Paging, error) {
-	return {{.table.BusinessName}}Model.SelectListByPage(params)
+func (svc {{.table.ClassName}}Service) SelectListByPage(params *model.Page{{.table.ClassName}}Req) ([]model.{{.table.ClassName}}, *page.Paging, error) {
+	entity := model.{{.table.ClassName}}{}
+	return entity.SelectListByPage(params)
 }
 
 // 导出excel
-func (svc {{.table.ClassName}}Service) Export(param *{{.table.BusinessName}}Model.SelectPageReq) (string, error) {
+func (svc {{.table.ClassName}}Service) Export(param *model.Page{{.table.ClassName}}Req) (string, error) {
 	head := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
 	col := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnName}}"{{else}},"{{$column.ColumnName}}"{{end}}{{end}}}
-	return {{.table.BusinessName}}Model.SelectListExport(param, head, col)
+	entity := model.{{.table.ClassName}}{}
+	return entity.SelectListExport(param, head, col)
 }

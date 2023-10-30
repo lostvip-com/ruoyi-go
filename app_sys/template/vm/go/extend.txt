@@ -1,13 +1,15 @@
 // ==========================================================================
 // LV自动生成model扩展代码列表、增、删，改、查、导出，只生成一次，按需修改,再次生成不会覆盖.
 // 生成日期：{{.table.CreateTime}}
-// 生成路径: app/modules/{{.table.ModuleName}}/model/{{.table.BusinessName}}.go
 // 生成人：{{.table.FunctionAuthor}}
 // ==========================================================================
-package {{.table.BusinessName}}
+package model
 
 import (
 	"errors"
+    "lostvip.com/db"
+    "lostvip.com/utils/excel"
+    "lostvip.com/utils/page"
     "xorm.io/builder"
 )
 
@@ -32,11 +34,7 @@ type Page{{.table.ClassName}}Req struct { {{range $index, $column := .table.Colu
 }
 
 //根据条件分页查询数据
-<<<<<<< HEAD
 func (e *{{.table.ClassName}}) SelectListByPage(param *Page{{.table.ClassName}}Req) ([]{{.table.ClassName}}, *page.Paging, error) {
-=======
-func (e *{{.table.ClassName}}) SelectListByPage(param *SelectPageReq) ([]{{.table.ClassName}}, *page.Paging, error) {
->>>>>>> 76d8b266c4e228f13e20a2540f643cbe4bb6481d
 	db := db.Instance().Engine()
     p := new(page.Paging)
 
@@ -81,17 +79,8 @@ func (e *{{.table.ClassName}}) SelectListByPage(param *SelectPageReq) ([]{{.tabl
 }
 
 // 导出excel
-<<<<<<< HEAD
 func (e *{{.table.ClassName}}) SelectListExport(param *Page{{.table.ClassName}}Req, head, col []string) (string, error) {
-=======
-func (e *{{.table.ClassName}}) SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
->>>>>>> 76d8b266c4e228f13e20a2540f643cbe4bb6481d
 	db := db.Instance().Engine()
-
-	if db == nil {
-		return "", errors.New("获取数据库连接失败")
-	}
-
 	build := builder.Select(col...).From("{{.table.TableName}}", "t")
 
 	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
@@ -117,24 +106,14 @@ func (e *{{.table.ClassName}}) SelectListExport(param *SelectPageReq, head, col 
 
 	sqlStr, _, _ := build.ToSQL()
 	arr, err := db.SQL(sqlStr).QuerySliceString()
-
 	path, err := excel.DownlaodExcel(head, arr)
 
 	return path, err
 }
 
 //获取所有数据
-<<<<<<< HEAD
 func (e *{{.table.ClassName}}) SelectListAll(param *Page{{.table.ClassName}}Req) ([]{{.table.ClassName}}, error) {
-=======
-func (e *{{.table.ClassName}}) SelectListAll(param *SelectPageReq) ([]{{.table.ClassName}}, error) {
->>>>>>> 76d8b266c4e228f13e20a2540f643cbe4bb6481d
 	db := db.Instance().Engine()
-
-	if db == nil {
-		return nil, errors.New("获取数据库连接失败")
-	}
-
 	model := db.Table("{{.table.TableName}}").Alias("t")
 
 	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
