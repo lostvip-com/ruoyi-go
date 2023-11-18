@@ -24,7 +24,7 @@
 		<div class="nav-close">
 			<i class="fa fa-times-circle"></i>
 		</div>
-		<a href="/index">
+		<a href="{{Ctx}}/index">
 			<li class="logo hidden-xs">
 				<span class="logo-lg"> RobNote </span>
 			</li>
@@ -55,7 +55,7 @@
 					<li>
 						{{if le (len $cmenu.Children) 0}}
 						<li>
-							<a class="menu-content menuItem" href="{{$cmenu.Url}}" data-refresh="false">
+							<a class="menu-content menuItem" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
 								<i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span>
 							</a>
 						</li>
@@ -66,7 +66,7 @@
 							<li>
 								{{if le (len $emenu.Children) 0}}
 								<li>
-									<a class="menu-content menuItem" href="{{$emenu.Url}}" data-refresh="false">
+									<a class="menu-content menuItem" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
 										<i class="{{$emenu.Icon}}"></i> <span class="nav-label">{{$emenu.MenuName}}</span>
 									</a>
 								</li>
@@ -75,7 +75,7 @@
 								<ul class="nav nav-four-level">
 									{{range $index, $fmenu := $emenu.Children}}
 									<li>
-										<a class="{{$fmenu.Target}}" href="{{$fmenu.Url}}">{{$fmenu.MenuName}}</a>
+										<a class="{{$fmenu.Target}}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
 									</li>
 									{{end}}
 								</ul>

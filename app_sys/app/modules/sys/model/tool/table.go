@@ -225,7 +225,7 @@ func (r *GenTable) SelectGenTableById(tableId int64) (*GenTable, error) {
 	model := db.Table(r.TableName()).Alias("t")
 	model.Join("LEFT", []string{"gen_table_column", "c"}, "t.table_id = c.table_id")
 	model.Where("t.table_id = ?", tableId)
-	model.Select("t.table_id, t.table_name, t.table_comment, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name, t.function_author, t.options, t.remark,c.column_id, c.column_name, c.column_comment, c.column_type, c.java_type, c.java_field, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort")
+	model.Select("t.table_id, t.table_name, t.table_comment, t.class_name, t.tpl_category, t.package_name, t.module_name, t.business_name, t.function_name, t.function_author, t.options, t.remark,c.column_id, c.column_name, c.column_comment, c.column_type, c.is_pk, c.is_increment, c.is_required, c.is_insert, c.is_edit, c.is_list, c.is_query, c.query_type, c.html_type, c.dict_type, c.sort")
 
 	var result GenTable
 	_, err := model.Get(&result)

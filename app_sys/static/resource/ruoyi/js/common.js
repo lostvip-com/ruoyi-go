@@ -573,7 +573,7 @@ $.ajaxSetup({
             $.modal.closeLoading();
         } else if (textStatus == "parsererror" || textStatus == "error") {
             console.log("------ ajaxSetup -> complete ---------------"+textStatus)
-            $.modal.alertWarning("服务器错误，请联系管理员！");
+            $.modal.alertWarning("服务器错误，请联系管理员！!");
             $.modal.enable();
             $.modal.closeLoading();
         }

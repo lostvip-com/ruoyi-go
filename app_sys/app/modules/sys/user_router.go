@@ -3,14 +3,14 @@ package sys
 import (
 	"lostvip.com/router"
 	"robvi/app/middleware/auth"
-	"robvi/app/middleware/jwt"
+	"robvi/app/middleware/token"
 	"robvi/app/modules/sys/controller/system/user"
 )
 
 // 加载路由
 func init() {
 	// 用户管理路由
-	g1 := router.New("/system/user", jwt.JWTAuthMiddleware(), auth.Auth)
+	g1 := router.New("/system/user", token.TokenMiddleware(), auth.Auth)
 	g1.GET("/", "system:user:view", user.List)
 	g1.POST("/list", "system:user:list", user.ListAjax)
 	g1.GET("/add", "system:user:add", user.Add)
@@ -23,7 +23,7 @@ func init() {
 	g1.POST("/resetPwd", "system:user:resetPwd", user.ResetPwdSave)
 
 	// 个人中心路由
-	g2 := router.New("/system/user/profile", jwt.JWTAuthMiddleware(), auth.Auth)
+	g2 := router.New("/system/user/profile", token.TokenMiddleware(), auth.Auth)
 	g2.GET("/", "", user.Profile)
 	g2.GET("/avatar", "", user.Avatar)
 	g2.GET("/resetPwd", "", user.EditPwd)

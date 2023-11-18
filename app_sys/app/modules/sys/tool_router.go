@@ -3,14 +3,14 @@ package sys
 import (
 	"lostvip.com/router"
 	"robvi/app/middleware/auth"
-	"robvi/app/middleware/jwt"
+	"robvi/app/middleware/token"
 	"robvi/app/modules/sys/controller/tool"
 )
 
 // 加载路由
 func init() {
 	// 服务监控
-	g1 := router.New("/tool", jwt.JWTAuthMiddleware(), auth.Auth)
+	g1 := router.New("/tool", token.TokenMiddleware(), auth.Auth)
 	g1.GET("/build", "tool:build:view", tool.Build)
 	g1.GET("/swagger", "tool:swagger:view", tool.Swagger)
 	g1.GET("/gen", "tool:gen:view", tool.Gen)
@@ -24,4 +24,7 @@ func init() {
 	g1.POST("/gen/column/list", "tool:gen:list", tool.ColumnList)
 	g1.GET("/gen/preview", "tool:gen:preview", tool.Preview)
 	g1.GET("/gen/genCode", "tool:gen:code", tool.GenCode)
+	//执行sql文件
+	g1.GET("/gen/execSqlFile", "tool:gen:code", tool.ExecSqlFile)
+
 }

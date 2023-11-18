@@ -2,16 +2,62 @@ package tool
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/qustavo/dotsql"
+	"lostvip.com/db"
+	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lib_file"
 	"lostvip.com/utils/response"
 	"net/http"
 	"os"
 	"os/exec"
 	"robvi/app/modules/sys/model"
+	menuModel "robvi/app/modules/sys/model/system/menu"
+	tool2 "robvi/app/modules/sys/model/tool"
 )
 
 // 表单构建
 func Build(c *gin.Context) {
 	response.BuildTpl(c, "tool/build").WriteTpl()
+}
+
+// swagger文档
+func ExecSqlFile(c *gin.Context) {
+	tableId := gconv.Int64(c.Query("tableId"))
+	//获取参数
+	if tableId <= 0 {
+		response.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("执行SQL文件错误", gin.H{"tableId": tableId})
+	}
+	tb := tool2.GenTable{}
+	po, err := tb.SelectGenTableById(tableId)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	curDir, _ := os.Getwd()
+	sqlFile := curDir + "/document/sql/" + po.ModuleName + "/" + po.TbName + "_menu.sql"
+
+	if !lib_file.FileExist(sqlFile) {
+		panic("生成代码后再执行此操作")
+	}
+	//err = db.ExecSqlFile(sqlFile)
+	// Loads queries from file
+	dot, err := dotsql.LoadFromFile(sqlFile)
+	// Run queries
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu")
+	menuName := po.FunctionName
+	sysmenu := menuModel.SysMenu{}
+	sysmenu.MenuName = menuName
+	_, err = sysmenu.FindOne()
+	pmenuId := sysmenu.MenuId
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu_button_create", pmenuId)
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu_button_retrieve", pmenuId)
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu_button_update", pmenuId)
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu_button_delete", pmenuId)
+	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu_button_export", pmenuId)
+	if err != nil {
+		panic(err)
+	}
+	response.Sucess(c, nil)
 }
 
 // swagger文档
@@ -27,8 +73,7 @@ func Swagger(c *gin.Context) {
 			c.Abort()
 			return
 		}
-
-		genPath := curDir + "/public/swagger"
+		genPath := curDir + "/static/swagger"
 		err = generateSwaggerFiles(genPath)
 		if err != nil {
 			response.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{

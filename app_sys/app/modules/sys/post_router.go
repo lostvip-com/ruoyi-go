@@ -3,14 +3,14 @@ package sys
 import (
 	"lostvip.com/router"
 	"robvi/app/middleware/auth"
-	"robvi/app/middleware/jwt"
+	"robvi/app/middleware/token"
 	"robvi/app/modules/sys/controller/system/post"
 )
 
 // 加载路由
 func init() {
 	// 岗位路由
-	g1 := router.New("/system/post", jwt.JWTAuthMiddleware(), auth.Auth)
+	g1 := router.New("/system/post", token.TokenMiddleware(), auth.Auth)
 
 	g1.GET("/", "system:post:view", post.List)
 	g1.POST("/list", "system:post:list", post.ListAjax)

@@ -15,7 +15,7 @@ type TableResp struct {
 // 返回一个成功的消息体
 func BuildTable(c *gin.Context, total int, rows interface{}) *TableResp {
 	msg := model.TableDataInfo{
-		Code:  0,
+		Code:  model.SUCCESS,
 		Msg:   "操作成功",
 		Total: total,
 		Rows:  rows,

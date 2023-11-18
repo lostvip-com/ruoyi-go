@@ -8,33 +8,32 @@ import (
 )
 
 type ConfigDefault struct {
+	VipperCfg *viper.Viper
 }
 
-var vipperCfg *viper.Viper
-
 func (e *ConfigDefault) GetVipperCfg() *viper.Viper {
-	return vipperCfg
+	return e.VipperCfg
 }
 
 func (e *ConfigDefault) LoadConf() {
-	vipperCfg = viper.New()
+	e.VipperCfg = viper.New()
 	if lib_file.FileExist("bootstrap.yml") || lib_file.FileExist("bootstrap.yaml") {
-		vipperCfg.SetConfigName("bootstrap")
-		vipperCfg.SetConfigType("yaml")
-		vipperCfg.AddConfigPath("./")
-		vipperCfg.ReadInConfig()
+		e.VipperCfg.SetConfigName("bootstrap")
+		e.VipperCfg.SetConfigType("yaml")
+		e.VipperCfg.AddConfigPath("./")
+		e.VipperCfg.ReadInConfig()
 	}
 	//加载第二个配置文件
 	if lib_file.FileExist("application.yml") || lib_file.FileExist("application.yaml") {
-		vipperCfg.SetConfigName("application")
-		vipperCfg.SetConfigType("yaml")
-		vipperCfg.AddConfigPath("./")
-		vipperCfg.MergeInConfig()
+		e.VipperCfg.SetConfigName("application")
+		e.VipperCfg.SetConfigType("yaml")
+		e.VipperCfg.AddConfigPath("./")
+		e.VipperCfg.MergeInConfig()
 	}
 }
 
 func (e *ConfigDefault) GetPort() int {
-	Port := vipperCfg.GetInt("server.port")
+	Port := e.VipperCfg.GetInt("server.port")
 	if Port == 0 {
 		Port = 8080
 	}
@@ -45,7 +44,7 @@ func (e *ConfigDefault) GetPort() int {
  * app port
  */
 func (e *ConfigDefault) GetServerPort() int {
-	port := vipperCfg.GetInt("server.port")
+	port := e.VipperCfg.GetInt("server.port")
 	if port == 0 {
 		port = 8080
 	}
@@ -56,7 +55,7 @@ func (e *ConfigDefault) GetServerPort() int {
  * app port
  */
 func (e *ConfigDefault) GetServerIP() string {
-	ip := vipperCfg.GetString("server.ip")
+	ip := e.VipperCfg.GetString("server.ip")
 	if ip == "" {
 		ip = lib_net.GetLocaHost()
 	}
@@ -64,12 +63,12 @@ func (e *ConfigDefault) GetServerIP() string {
 }
 
 func (e *ConfigDefault) GetContextPath() string {
-	path := vipperCfg.GetString("server.context-path")
+	path := e.VipperCfg.GetString("server.context-path")
 	return path
 }
 
 func (e *ConfigDefault) GetConf(key string) string {
-	v := vipperCfg.GetString(key)
+	v := e.VipperCfg.GetString(key)
 	return v
 }
 
@@ -77,7 +76,7 @@ var appName string
 
 func (e *ConfigDefault) GetAppName() string {
 	if appName == "" {
-		appName = vipperCfg.GetString("go.application.name")
+		appName = e.VipperCfg.GetString("go.application.name")
 		if appName == "" {
 			appName = "whoami"
 		}
@@ -85,49 +84,45 @@ func (e *ConfigDefault) GetAppName() string {
 	return appName
 }
 func (e *ConfigDefault) GetDriver() string {
-	driver := vipperCfg.GetString("go.datasource.driver")
+	driver := e.VipperCfg.GetString("go.datasource.driver")
 	if driver == "" {
 		driver = "sqlite3"
 	}
 	return driver
 }
 func (e *ConfigDefault) GetMaster() string {
-	master := vipperCfg.GetString("go.datasource.master")
+	master := e.VipperCfg.GetString("go.datasource.master")
 	if master == "" {
 		master = "data.db"
 	}
 	return master
 }
 func (e *ConfigDefault) GetSlave() string {
-	return vipperCfg.GetString("go.datasource.slave")
+	return e.VipperCfg.GetString("go.datasource.slave")
 }
 
-var debug bool
-
 func (e *ConfigDefault) IsDebug() bool {
-	if debug {
-		debug = vipperCfg.GetBool("go.application.debug")
-	}
+	debug := e.VipperCfg.GetBool("go.application.debug")
 	return debug
 }
 
 func (e *ConfigDefault) GetAppActive() string {
-	return vipperCfg.GetString("go.application.active")
+	return e.VipperCfg.GetString("go.application.active")
 }
 
 func (e *ConfigDefault) GetNacosAddrs() string {
-	return vipperCfg.GetString("go.cloud.nacos.discovery.server-addr")
+	return e.VipperCfg.GetString("go.cloud.nacos.discovery.server-addr")
 }
 
 func (e *ConfigDefault) GetNacosPort() int {
-	port := vipperCfg.GetInt("go.cloud.nacos.discovery.port")
+	port := e.VipperCfg.GetInt("go.cloud.nacos.discovery.port")
 	if port == 0 {
 		port = 8848
 	}
 	return port
 }
 func (e *ConfigDefault) GetNacosNamespace() string {
-	ns := vipperCfg.GetString("go.cloud.nacos.discovery.namespace")
+	ns := e.VipperCfg.GetString("go.cloud.nacos.discovery.namespace")
 	return ns
 }
 func (e *ConfigDefault) GetGroupDefault() string {

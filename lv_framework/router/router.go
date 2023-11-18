@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -62,7 +61,6 @@ func (group *routerGroup) Group(relativePath string, middleware ...gin.HandlerFu
 
 // 根据url获取权限字符串
 func FindPermission(url string) string {
-	fmt.Println(PermissionMap)
 	return PermissionMap[url]
 }
 

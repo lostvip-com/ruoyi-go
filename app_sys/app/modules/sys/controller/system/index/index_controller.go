@@ -17,12 +17,7 @@ import (
 
 // 后台框架首页
 func Index(c *gin.Context) {
-	var userService service.UserService
-	if userService.IsSignedIn(c) {
-		goIndex(c, "index")
-	} else {
-		c.Redirect(http.StatusFound, "login")
-	}
+	goIndex(c, "index")
 }
 
 func goIndex(c *gin.Context, indexPageDefault string) {
@@ -126,9 +121,7 @@ func SwitchSkin(c *gin.Context) {
 // 注销
 func Logout(c *gin.Context) {
 	var userService service.UserService
-	if userService.IsSignedIn(c) {
-		userService.SignOut(c)
-	}
+	userService.SignOut(c)
 	path := global.GetConfigInstance().GetContextPath()
 	c.SetCookie("token", "", -1, path, "", true, true)
 	c.Redirect(http.StatusFound, "login")

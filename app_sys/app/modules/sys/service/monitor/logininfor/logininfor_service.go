@@ -1,10 +1,10 @@
 package logininfor
 
 import (
+	"context"
+	"lostvip.com/myredis"
 	"lostvip.com/utils/convert"
-	"lostvip.com/utils/gconv"
 	"lostvip.com/utils/page"
-	"robvi/app/common/cache"
 	"robvi/app/global"
 	"robvi/app/modules/sys/model/monitor/logininfor"
 	"time"
@@ -58,12 +58,12 @@ func Export(param *logininfor.SelectPageReq) (string, error) {
 // 记录密码尝试次数
 func SetPasswordCounts(loginName string) int {
 	curTimes := 0
-	curTimeObj, _ := cache.Instance().Get(USER_NOPASS_TIME + loginName)
+	curTimeObj := myredis.GetInstance().Get(context.Background(), USER_NOPASS_TIME+loginName)
 	if curTimeObj != nil {
-		curTimes = gconv.Int(curTimeObj)
+		curTimes, _ = curTimeObj.Int()
 	}
 	curTimes = curTimes + 1
-	cache.Instance().Set(USER_NOPASS_TIME+loginName, curTimes, 1*time.Minute)
+	myredis.GetInstance().SetEx(context.Background(), USER_NOPASS_TIME+loginName, curTimes, 1*time.Minute)
 
 	if curTimes >= global.ErrTimes2Lock {
 		Lock(loginName)
@@ -74,33 +74,33 @@ func SetPasswordCounts(loginName string) int {
 // 记录密码尝试次数
 func GetPasswordCounts(loginName string) int {
 	curTimes := 0
-	curTimeObj, _ := cache.Instance().Get(USER_NOPASS_TIME + loginName)
+	curTimeObj := myredis.GetInstance().Get(context.Background(), USER_NOPASS_TIME+loginName)
 	if curTimeObj != nil {
-		curTimes = gconv.Int(curTimeObj)
+		curTimes, _ = curTimeObj.Int()
 	}
 	return curTimes
 }
 
 // 移除密码错误次数
 func RemovePasswordCounts(loginName string) {
-	cache.Instance().Delete(USER_NOPASS_TIME + loginName)
+	myredis.GetInstance().Del(context.Background(), USER_NOPASS_TIME+loginName)
 }
 
 // 锁定账号
 func Lock(loginName string) {
-	cache.Instance().Set(USER_LOCK+loginName, true, 30*time.Minute)
+	myredis.GetInstance().SetEx(context.Background(), USER_LOCK+loginName, true, 30*time.Minute)
 }
 
 // 解除锁定
 func Unlock(loginName string) {
-	cache.Instance().Delete(USER_LOCK + loginName)
+	myredis.GetInstance().Del(context.Background(), USER_LOCK+loginName)
 }
 
 // 检查账号是否锁定
 func CheckLock(loginName string) bool {
 	result := false
-	rs, _ := cache.Instance().Get(USER_LOCK + loginName)
-	if rs != nil {
+	rs := myredis.GetInstance().Get(context.Background(), USER_LOCK+loginName).Val()
+	if rs != "" {
 		result = true
 	}
 	return result

@@ -1,12 +1,13 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/conf"
+	"lostvip.com/myredis"
 	"lostvip.com/utils/convert"
 	"lostvip.com/utils/page"
-	"robvi/app/common/cache"
 	"strings"
 
 	config2 "robvi/app/modules/sys/model/system/config"
@@ -50,29 +51,19 @@ func AddInt(a, b int) int {
 
 // 根据键获取值
 func GetValueByKey(key string) string {
-	resultStr := ""
 	//从缓存读取
-	c := cache.Instance()
-	result, ok := c.Get(key)
-
-	if ok {
-		return result.(string)
-	}
-
-	if result == nil {
+	result := myredis.GetInstance().Get(context.Background(), key).Val()
+	if result == "" {
 		entity := &config2.Entity{ConfigKey: key}
 		ok, _ := entity.FindOne()
 		if !ok {
 			return ""
 		}
-
-		resultStr = entity.ConfigValue
-		c.Set(key, resultStr, 0)
-	} else {
-		resultStr = result.(string)
+		result = entity.ConfigValue
+		myredis.GetInstance().SetEx(context.Background(), key, result, 10*time.Minute)
 	}
 
-	return resultStr
+	return result
 }
 
 // 根据主键查询数据
@@ -91,8 +82,7 @@ func DeleteRecordById(id int64) bool {
 		if err == nil {
 			if result > 0 {
 				//从缓存删除
-				c := cache.Instance()
-				c.Delete(entity.ConfigKey)
+				myredis.GetInstance().Del(context.Background(), entity.ConfigKey)
 				return true
 			}
 		}
@@ -112,8 +102,7 @@ func DeleteRecordByIds(ids string) int64 {
 	if len(list) > 0 {
 		for _, item := range list {
 			//从缓存删除
-			c := cache.Instance()
-			c.Delete(item.ConfigKey)
+			myredis.GetInstance().Del(context.Background(), item.ConfigKey)
 		}
 	}
 
@@ -175,8 +164,7 @@ func EditSave(req *config2.EditReq, c *gin.Context) (int64, error) {
 	}
 
 	//保存到缓存
-	cache := cache.Instance()
-	cache.Set(entity.ConfigKey, entity.ConfigValue, 0)
+	myredis.GetInstance().SetEx(context.Background(), entity.ConfigKey, entity.ConfigValue, 10*time.Minute)
 
 	return rs, nil
 }

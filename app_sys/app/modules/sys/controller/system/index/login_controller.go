@@ -1,15 +1,17 @@
 package index
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
+	"lostvip.com/myredis"
 	"lostvip.com/utils/gconv"
 	"lostvip.com/utils/ip"
 	"lostvip.com/utils/lib_net"
+	"lostvip.com/utils/lib_secret"
 	"lostvip.com/utils/response"
-	"lostvip.com/utils/token"
 	"net/http"
 	"robvi/app/global"
 	logininforModel "robvi/app/modules/sys/model/monitor/logininfor"
@@ -89,7 +91,8 @@ func CheckLogin(c *gin.Context) {
 	} else {
 		//保存在线状态
 		cookie, _ := c.Request.Cookie("token")
-		token, _ := token.New(user.LoginName, user.UserId, user.TenantId).CreateToken()
+		//token, _ := token.New(user.LoginName, user.UserId, user.TenantId).CreateToken()
+		token := lib_secret.Md5(user.LoginName + time.UnixDate)
 		maxage := 3600 * 8
 		path := global.GetConfigInstance().GetContextPath()
 		if cookie == nil {
@@ -104,7 +107,7 @@ func CheckLogin(c *gin.Context) {
 		}
 		c.SetCookie(cookie.Name, token, maxage, path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		// 生成token
-		SaveUserToSession(user, c)
+		SaveUserToSession(token, user, c)
 		SaveLogs(c, &req, "登陆成功") //记录日志
 		response.SucessResp(c).SetData(token).SetMsg("登陆成功").WriteJsonExit()
 	}
@@ -126,17 +129,32 @@ func SaveLogs(c *gin.Context, req *RegisterReq, msg string) {
 }
 
 // 保存用户信息到session
-func SaveUserToSession(user *userModel.SysUser, c *gin.Context) {
-	tmp, _ := json.Marshal(user)
+func SaveUserToSession(token string, user *userModel.SysUser, c *gin.Context) {
+	loginIp := c.ClientIP()
+	loginLocation := ip.GetCityByIp(loginIp)
+	//记录到redis
+	redis := myredis.GetInstance()
+	ctx := context.Background()
+	fieldMap := make(map[string]interface{})
+	fieldMap["userName"] = user.UserName
+	fieldMap["userId"] = user.UserId
+	fieldMap["loginName"] = user.LoginName
+	fieldMap["avatar"] = user.Avatar
+	fieldMap["ip"] = loginIp
+	fieldMap["location"] = loginLocation
+	key := "login:" + token
+	redis.HMSet(ctx, key, fieldMap)
+	redis.Expire(ctx, key, time.Hour)
+	//其它
 	sessionId := user.UserId
+	tmp, _ := json.Marshal(user)
 	global.SessionList.Store(sessionId, string(tmp))
 	//save to db
 	userAgent := c.Request.Header.Get("User-Agent")
 	ua := user_agent.New(userAgent)
 	os := ua.OS()
 	browser, _ := ua.Browser()
-	loginIp := c.ClientIP()
-	loginLocation := ip.GetCityByIp(loginIp)
+
 	//移除登陆次数记录
 	logininforService.RemovePasswordCounts(user.UserName)
 	//

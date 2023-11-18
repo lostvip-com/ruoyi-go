@@ -24,7 +24,7 @@ func ListAjax(c *gin.Context) {
 		response2.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]menu2.Entity, 0)
+	rows := make([]menu2.SysMenu, 0)
 	result, err := menuService.SelectListAll(req)
 
 	if err == nil && len(result) > 0 {

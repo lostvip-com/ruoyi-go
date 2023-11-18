@@ -7,7 +7,7 @@ import (
 
 type UserOnline struct {
 	Sessionid      string    `json:"sessionId"  xorm:"not null default '' comment('用户会话id') VARCHAR(250)"`
-	Token          string    `json:"token"      xorm:"default '' comment('jwt token') VARCHAR(255)"`
+	Token          string    `json:"token"      xorm:"default '' comment('token token') VARCHAR(255)"`
 	LoginName      string    `json:"login_name" xorm:"default '' comment('登录账号') VARCHAR(50)"`
 	DeptName       string    `json:"dept_name"  xorm:"default '' comment('部门名称') VARCHAR(50)"`
 	Ipaddr         string    `json:"ipaddr" xorm:"default '' comment('登录IP地址') VARCHAR(50)"`

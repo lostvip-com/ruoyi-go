@@ -3,11 +3,10 @@ package menu
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"lostvip.com/db"
 	"lostvip.com/utils/convert"
 	"lostvip.com/utils/gconv"
 	"lostvip.com/utils/page"
-	"robvi/app/common/cache"
-	"robvi/app/global"
 	"robvi/app/modules/sys/model"
 	menu2 "robvi/app/modules/sys/model/system/menu"
 	"robvi/app/modules/sys/service"
@@ -21,19 +20,20 @@ func SelectRecordById(id int64) (*menu2.EntityExtend, error) {
 }
 
 // 根据条件查询数据
-func SelectListAll(params *menu2.SelectPageReq) ([]menu2.Entity, error) {
+func SelectListAll(params *menu2.SelectPageReq) ([]menu2.SysMenu, error) {
 	return menu2.SelectListAll(params)
 }
 
 // 根据条件分页查询数据
-func SelectListPage(params *menu2.SelectPageReq) (*[]menu2.Entity, *page.Paging, error) {
+func SelectListPage(params *menu2.SelectPageReq) (*[]menu2.SysMenu, *page.Paging, error) {
 	return menu2.SelectListPage(params)
 }
 
 // 根据主键删除数据
 func DeleteRecordById(id int64) bool {
-	rs, err := (&menu2.Entity{MenuId: id}).Delete()
+	rs, err := (&menu2.SysMenu{MenuId: id}).Delete()
 	if err == nil {
+		db.GetInstance().Engine().Exec("delete from sys_menu where parent_id=?", id)
 		if rs > 0 {
 			return true
 		}
@@ -44,7 +44,7 @@ func DeleteRecordById(id int64) bool {
 // 添加数据
 func AddSave(req *menu2.AddReq, c *gin.Context) (int64, error) {
 
-	var entity menu2.Entity
+	var entity menu2.SysMenu
 	entity.MenuName = req.MenuName
 	entity.Visible = req.Visible
 	entity.ParentId = req.ParentId
@@ -71,7 +71,7 @@ func AddSave(req *menu2.AddReq, c *gin.Context) (int64, error) {
 
 // 修改数据
 func EditSave(req *menu2.EditReq, c *gin.Context) (int64, error) {
-	entity := &menu2.Entity{MenuId: req.MenuId}
+	entity := &menu2.SysMenu{MenuId: req.MenuId}
 	ok, err := entity.FindOne()
 
 	if err != nil {
@@ -142,18 +142,6 @@ func SelectMenuNormalByUser(userId int64) (*[]menu2.EntityExtend, error) {
 
 // 获取管理员菜单数据
 func SelectMenuNormalAll() (*[]menu2.EntityExtend, error) {
-
-	//从缓存读取
-	c := cache.Instance()
-	tmp, f := c.Get(global.MENU_CACHE)
-
-	if f && tmp != nil {
-		rs, ok := tmp.([]menu2.EntityExtend)
-		if ok {
-			return &rs, nil
-		}
-	}
-
 	//从数据库中读取
 	var result []menu2.EntityExtend
 	result, err := menu2.SelectMenuNormalAll()
@@ -192,24 +180,12 @@ func SelectMenuNormalAll() (*[]menu2.EntityExtend, error) {
 
 		}
 	}
-
 	//存入缓存
-	cache.Instance().Set(global.MENU_CACHE, result, time.Hour)
 	return &result, nil
 }
 
 // 根据用户ID读取菜单数据
 func SelectMenusByUserId(userId string) (*[]menu2.EntityExtend, error) {
-	//从缓存读取
-	tmp, have := cache.Instance().Get(global.MENU_CACHE + userId)
-
-	if have && tmp != nil {
-		rs, ok := tmp.([]menu2.EntityExtend)
-		if ok {
-			return &rs, nil
-		}
-	}
-
 	//从数据库中读取
 	var result []menu2.EntityExtend
 	result, err := menu2.SelectMenusByUserId(userId)
@@ -254,7 +230,6 @@ func SelectMenusByUserId(userId string) (*[]menu2.EntityExtend, error) {
 	}
 
 	//存入缓存
-	cache.Instance().Set(global.MENU_CACHE+userId, result, time.Hour)
 	return &result, nil
 }
 

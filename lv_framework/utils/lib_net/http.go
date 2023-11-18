@@ -14,6 +14,12 @@ func GetParam(c *gin.Context, key string) string {
 		v = c.PostForm(key)
 		if v == "" {
 			v = c.GetHeader(key)
+			if v == "" {
+				cookie, err := c.Request.Cookie(key)
+				if err == nil { //3 从cookie取
+					v = cookie.Value
+				}
+			}
 		}
 	}
 	return v

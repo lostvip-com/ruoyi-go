@@ -6,9 +6,9 @@ import (
 	"lostvip.com/utils/page"
 )
 
-// Entity is the golang structure for table sys_menu.
+// SysMenu is the golang structure for table sys_menu.
 type EntityExtend struct {
-	Entity     `xorm:"extends"`
+	SysMenu    `xorm:"extends"`
 	ParentName string         `json:"parentName"` // 父菜单名称
 	Children   []EntityExtend `json:"children"`   // 子菜单
 }
@@ -84,7 +84,7 @@ func SelectRecordById(id int64) (*EntityExtend, error) {
 }
 
 // 根据条件分页查询数据
-func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectListPage(param *SelectPageReq) (*[]SysMenu, *page.Paging, error) {
 	db := db.Instance().Engine()
 	p := new(page.Paging)
 	if db == nil {
@@ -123,7 +123,7 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	model.Limit(p.Pagesize, p.StartNum)
 
-	var result []Entity
+	var result []SysMenu
 
 	err = model.Find(&result)
 
@@ -135,7 +135,7 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 }
 
 // 获取所有数据
-func SelectListAll(param *SelectPageReq) ([]Entity, error) {
+func SelectListAll(param *SelectPageReq) ([]SysMenu, error) {
 	db := db.Instance().Engine()
 
 	if db == nil {
@@ -163,7 +163,7 @@ func SelectListAll(param *SelectPageReq) ([]Entity, error) {
 		}
 	}
 	model.OrderBy("t.parent_id,t.order_num")
-	var result []Entity
+	var result []SysMenu
 
 	err := model.Find(&result)
 
@@ -235,7 +235,7 @@ func SelectMenuTree(roleId int64) ([]string, error) {
 	model.Where("rm.role_id = ?", roleId)
 	model.OrderBy("m.parent_id, m.order_num ")
 	model.Select("concat(m.menu_id, ifnull(m.perms,'')) as perms")
-	var list []Entity
+	var list []SysMenu
 	err := model.Find(&list)
 	if err != nil {
 		return nil, errors.New("读取数据失败")
@@ -251,8 +251,8 @@ func SelectMenuTree(roleId int64) ([]string, error) {
 }
 
 // 校验菜单名称是否唯一
-func CheckMenuNameUniqueAll(menuName string, parentId int64) (*Entity, error) {
-	var entity Entity
+func CheckMenuNameUniqueAll(menuName string, parentId int64) (*SysMenu, error) {
+	var entity SysMenu
 	entity.MenuName = menuName
 	entity.ParentId = parentId
 	ok, err := entity.FindOne()
@@ -264,8 +264,8 @@ func CheckMenuNameUniqueAll(menuName string, parentId int64) (*Entity, error) {
 }
 
 // 校验菜单名称是否唯一
-func CheckPermsUniqueAll(perms string) (*Entity, error) {
-	var entity Entity
+func CheckPermsUniqueAll(perms string) (*SysMenu, error) {
+	var entity SysMenu
 	entity.Perms = perms
 	ok, err := entity.FindOne()
 	if ok {

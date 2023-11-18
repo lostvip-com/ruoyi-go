@@ -87,22 +87,20 @@
                     sortable: true
                 },
                 {
-                    field: 'table_comment',
-                    title: '表描述',
+                    field: 'business_name',
+                    title: '业务名称',
                     sortable: true
                 },
+
                 {
                     field: 'class_name',
                     title: '实体类名称',
                     sortable: true
                 },
                 {
-                    field: 'create_time',
-                    title: '创建时间',
-                    sortable: true,
-                    formatter:function (value,row,index) {
-                        return value;
-                    }
+                    field: 'table_comment',
+                    title: '表描述',
+                    sortable: true
                 },
                 {
                     field: 'update_time',
@@ -121,6 +119,7 @@
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.table_id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.table_id + '\')"><i class="fa fa-remove"></i>删除</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="genCode(\'' + row.table_name + '\',\'' + row.table_id + '\')"><i class="fa fa-bug"></i>生成代码</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="importMenuSql(\'' + row.table_name + '\',\'' + row.table_id + '\')"><i class="fa fa-bug"></i>创建菜单</a> ');
                         return actions.join('');
                     }
                 }]
@@ -156,6 +155,25 @@
     }
 
     // 生成代码
+    function importMenuSql(tableName, tableId) {
+        $.modal.confirm("确定导入" + tableName + "表的菜单吗？", function () {
+            var url = prefix + "/execSqlFile?tableId=" + tableId;
+            $.modal.loading("正在执行相关SQL,请稍后...");
+            $.get(url, function (result) {
+                if (result.code == web_status.SUCCESS) {
+                        $.modal.confirm("操作成功，是否刷新界面以查看最新菜单？" + tableName + "表的菜单吗？", function () {
+                            parent.location.reload();
+                        });
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+                $.modal.closeLoading();
+            });
+        })
+    }
+
+
+    // 生成代码
     function genCode(tableName, tableId) {
         $.modal.confirm("确定要生成" + tableName + "表代码吗？", function () {
             var url = prefix + "/genCode?tableId=" + tableId;
@@ -170,7 +188,6 @@
             });
         })
     }
-
     //批量生成代码
     function batchGenCode() {
         var rows = $.table.selectColumns("tableName");

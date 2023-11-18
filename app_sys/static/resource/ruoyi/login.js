@@ -19,7 +19,7 @@ function captcha() {
         type: "get",
         url: url,
         success: function (r) {
-            if (r.code == "0") {
+            if (r.code == web_status.SUCCESS) {
                 $("#imgcode").attr("src", r.data);
                 $("#idkey").val(r.idkey);
             }
@@ -45,7 +45,7 @@ function login() {
             "rememberMe": rememberMe
         },
         success: function (r) {
-            if (r.code == 0) {
+            if (r.code == web_status.SUCCESS) {
                 window.location = ctx+'/index';
             } else {
                 if(r.data>=5){ //显示验证码

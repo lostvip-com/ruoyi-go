@@ -53,7 +53,7 @@
                     <a href="#"><i class="fa fa-home"></i> <span class="nav-label">首页</span>
                         <span  class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a class="menuItem" href="/system/main">Dashboard</a></li>
+                        <li><a class="menuItem" href="{{Ctx}}/system/main">Dashboard</a></li>
                     </ul>
                 </li>
 
@@ -78,7 +78,7 @@
                                     <li>
                                         {{if le (len $emenu.Children) 0}}
                                         <a class="{{$emenu.Target}}"
-                                           href="{{$emenu.Url}}">{{$emenu.MenuName}}</a>
+                                           href="{{getCtxPath $emenu.Url}}">{{$emenu.MenuName}}</a>
                                         {{else}}
                                         <a href="#">{{$emenu.MenuName}}<span
                                                 class="fa arrow"></span></a>
@@ -86,7 +86,7 @@
                                             {{range $index, $fmenu := $emenu.Children}}
                                             <li>
                                                 <a class="{{$fmenu.Target}}"
-                                                   href="{{$fmenu.Url}}">{{$fmenu.MenuName}}</a>
+                                                   href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
                                             </li>
                                             {{end}}
                                         </ul>

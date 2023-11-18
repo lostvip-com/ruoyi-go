@@ -192,7 +192,7 @@ func Preview(c *gin.Context) {
 
 	if entity.TplCategory == "tree" {
 		c.JSON(http.StatusOK, model.CommonRes{
-			Code:  0,
+			Code:  200,
 			Btype: model.Buniss_Other,
 			Data: gin.H{
 				addKey:        addValue,
@@ -209,7 +209,7 @@ func Preview(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, model.CommonRes{
-			Code:  0,
+			Code:  200,
 			Btype: model.Buniss_Other,
 			Data: gin.H{
 				addKey:        addValue,
@@ -380,7 +380,7 @@ func GenCode(c *gin.Context) {
 
 	//sql模板
 	if tmp, err := tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/document/sql/", entity.ModuleName, "/", entity.BusinessName, "_menu.sql"}, "")
+		fileName := strings.Join([]string{curDir, "/document/sql/", entity.ModuleName, "/", entity.TbName, "_menu.sql"}, "")
 
 		if !file.Exists(fileName) {
 			f, err := file.Create(fileName)
@@ -409,7 +409,7 @@ func DataList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, model.TableDataInfo{
-		Code:  0,
+		Code:  200,
 		Msg:   "操作成功",
 		Total: page.Total,
 		Rows:  rows,
@@ -462,7 +462,7 @@ func ColumnList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, model.TableDataInfo{
-		Code:  0,
+		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),
 		Rows:  rows,

@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/conf"
 	"lostvip.com/logme"
+	"lostvip.com/myredis"
 	"os"
-	"robvi/app/common/cache/redis"
 )
 
 var cfg *MyConfig
@@ -50,7 +50,7 @@ func resetCfg() {
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
 	}
-	redis.InitRedis()
+	myredis.GetInstance()
 	fmt.Println(conf.Config().GetAppName() + " ############# 数据库初始化完毕 ####################")
 	InitTables()
 	fmt.Println(conf.Config().GetAppName() + " ############# 修改表结构完毕 ####################")

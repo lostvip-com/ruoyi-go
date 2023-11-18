@@ -1,7 +1,7 @@
 version: '3.3'    
 services:
   sys:
-    image: reg.lostvip.com/sys:1.0
+    image: reg.lostvip.com/sys:1.1.0
     ports: 
       - "8080:8080"
     volumes:

@@ -56,7 +56,7 @@ func CaptchaImage(c *gin.Context) {
 	//以base64编码
 	//base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
 	c.JSON(http.StatusOK, model.CaptchaRes{
-		Code:  0,
+		Code:  200,
 		IdKey: idKeyC,
 		Data:  base64stringC,
 		Msg:   "操作成功",

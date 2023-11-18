@@ -82,8 +82,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	engine := gin.Default()
 	///////////////////////中间件处理start////////////////////////////////////////////////
 	engine.Use(gin.LoggerWithConfig(gin.LoggerConfig{}))
-	engine.Use(middleware2.CustomError)    // 自定义错误处理
-	engine.Use(gin.Recovery())             //全局异常处理
+	engine.Use(middleware2.RecoverError)   // 全局异常处理,自定义错误处理
 	engine.Use(middleware2.SetTraceId)     // traceId
 	engine.Use(middleware2.Options)        // 跨域处理
 	engine.Use(middleware2.LoggerToFile()) //日志
@@ -117,6 +116,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 			"Copyright":         config.GetCopyright,
 			"OssUrl":            config.GetOssUrl,
 			"Ctx":               config.GetCtx,
+			"getCtxPath":        config.GetCtxPath,
 			"addInt":            calcu.AddInt,
 		},
 		DisableCache: true,

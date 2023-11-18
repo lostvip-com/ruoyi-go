@@ -1,4 +1,4 @@
-package lib_net
+package response
 
 import (
 	"github.com/gin-gonic/gin"
@@ -57,11 +57,6 @@ func Error(c *gin.Context, err error) {
 }
 func ErrResp(c *gin.Context, res dto.Resp) {
 	c.AbortWithStatusJSON(http.StatusOK, res)
-}
-
-// 通常成功数据处理
-func Ok(c *gin.Context, data interface{}, msg string) {
-	Success(c, data, msg)
 }
 
 // 分页数据处理 ， 自动翻译 Tag locale标记的字段

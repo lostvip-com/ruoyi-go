@@ -21,6 +21,13 @@ var (
 	once     sync.Once
 )
 
+func GetInstance() *dbEngine {
+	if instance == nil {
+		instance = Instance()
+	}
+	return instance
+}
+
 // 初始化数据操作 driver为数据库类型
 func Instance() *dbEngine {
 	once.Do(func() {

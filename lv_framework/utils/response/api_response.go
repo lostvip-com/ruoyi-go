@@ -16,9 +16,30 @@ type ApiResp struct {
 }
 
 // 返回一个成功的消息体
+func Sucess(c *gin.Context, data interface{}) {
+	msg := model.CommonRes{
+		Code: 200,
+		Data: data,
+		Msg:  "操作成功",
+	}
+	c.JSON(http.StatusOK, msg)
+	c.Abort()
+}
+
+// 返回一个成功的消息体
+func Fail(c *gin.Context, msg string) {
+	ret := model.CommonRes{
+		Code: 500,
+		Msg:  msg,
+	}
+	c.JSON(http.StatusOK, ret)
+	c.Abort()
+}
+
+// 返回一个成功的消息体
 func SucessResp(c *gin.Context) *ApiResp {
 	msg := model.CommonRes{
-		Code:  0,
+		Code:  200,
 		Btype: model.Buniss_Other,
 		Msg:   "操作成功",
 	}

@@ -296,6 +296,7 @@ func (svc TableService) InitTable(table *tool2.GenTable, operName string) {
 	table.CreateBy = operName
 	table.TplCategory = "crud"
 	table.CreateTime = time.Now()
+	table.UpdateTime = table.CreateTime
 }
 
 // 初始化列属性字段

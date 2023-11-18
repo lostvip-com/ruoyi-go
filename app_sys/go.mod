@@ -6,7 +6,6 @@ require (
 	github.com/foolin/gin-template v0.0.0-20190415034731-41efedfb393b
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/go-xorm/xorm v0.7.9
-	github.com/gomodule/redigo v1.8.9
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mojocn/base64Captcha v1.2.2
 	github.com/mssola/user_agent v0.5.1
@@ -22,6 +21,8 @@ require (
 )
 
 require (
+
+    github.com/qustavo/dotsql v1.1.0 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -55,4 +56,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-go 1.20
+go 1.19

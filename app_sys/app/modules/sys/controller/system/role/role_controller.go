@@ -156,7 +156,7 @@ func UnallocatedList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, model.TableDataInfo{
-		Code:  0,
+		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),
 		Rows:  rows,
@@ -264,7 +264,7 @@ func AllocatedList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, model.TableDataInfo{
-		Code:  0,
+		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),
 		Rows:  rows,

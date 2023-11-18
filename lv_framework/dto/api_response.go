@@ -11,48 +11,6 @@ type ApiResp struct {
 	c *gin.Context
 }
 
-// 返回一个成功的消息体
-func SucessResp(c *gin.Context) *ApiResp {
-	msg := CommonRes{
-		Code:  0,
-		Btype: Buniss_Other,
-		Msg:   "操作成功",
-	}
-	var a = ApiResp{
-		r: &msg,
-		c: c,
-	}
-	return &a
-}
-
-// 返回一个错误的消息体
-func ErrorResp(c *gin.Context) *ApiResp {
-	msg := CommonRes{
-		Code:  500,
-		Btype: Buniss_Other,
-		Msg:   "操作失败",
-	}
-	var a = ApiResp{
-		r: &msg,
-		c: c,
-	}
-	return &a
-}
-
-// 返回一个拒绝访问的消息体
-func ForbiddenResp(c *gin.Context) *ApiResp {
-	msg := CommonRes{
-		Code:  403,
-		Btype: Buniss_Other,
-		Msg:   "无操作权限",
-	}
-	var a = ApiResp{
-		r: &msg,
-		c: c,
-	}
-	return &a
-}
-
 // 设置消息体的内容
 func (resp *ApiResp) SetMsg(msg string) *ApiResp {
 	resp.r.Msg = msg

@@ -1,16 +1,17 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/db"
+	"lostvip.com/myredis"
 	"lostvip.com/utils/convert"
-	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lib_net"
 	"lostvip.com/utils/lib_secret"
 	"lostvip.com/utils/page"
 	"lostvip.com/utils/random"
-	"robvi/app/common/cache"
 	"robvi/app/common/session"
 	"robvi/app/global"
 	"robvi/app/modules/sys/model/monitor/online"
@@ -246,14 +247,11 @@ func (svc UserService) IsAdmin(userId int64) bool {
 	}
 }
 
-// 判断用户是否已经登录
-func (svc UserService) IsSignedIn(c *gin.Context) bool {
-	userId, exist := c.Get(global.USER_ID)
-	fmt.Println("IsSignedIn----------->userId:", userId)
-	if exist {
-		return true
-	}
-	return false
+func (svc UserService) IsSignedIn(tokenStr string) bool {
+	key := "login:" + tokenStr
+	yes := myredis.GetInstance().Exists(context.Background(), key).Val()
+	fmt.Println("===============" + string(yes))
+	return yes > 0
 }
 
 // 用户登录，成功返回用户信息，否则返回nil; passport应当会md5值字符串
@@ -282,20 +280,12 @@ func (svc UserService) SignIn(loginnName, password string) (*user2.SysUser, erro
 }
 
 // 清空用户菜单缓存
-func (svc UserService) ClearMenuCache(user *user2.SysUser) {
-	if svc.IsAdmin(user.UserId) {
-		cache.Instance().Delete(global.MENU_CACHE)
-	} else {
-		cache.Instance().Delete(global.MENU_CACHE + gconv.String(user.UserId))
-	}
-}
 
 // 用户注销
 func (svc UserService) SignOut(c *gin.Context) error {
-	user := svc.GetProfile(c)
-	if user != nil {
-		svc.ClearMenuCache(user)
-	}
+	//user := svc.GetProfile(c)
+	tokenStr := lib_net.GetParam(c, "token")
+	myredis.GetInstance().Del(context.Background(), "login:"+tokenStr)
 	//userId := c.MustGet("userId").(int64)
 	return nil
 }

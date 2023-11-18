@@ -1,7 +1,11 @@
 package session
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
+	"lostvip.com/myredis"
+	"lostvip.com/utils/lib_net"
 	"robvi/app/global"
 	userModel "robvi/app/modules/sys/model/system/user"
 	"sync"
@@ -38,12 +42,14 @@ func IsSignedIn(c *gin.Context) bool {
 
 // 获得用户信息详情
 func GetProfile(c *gin.Context) *userModel.SysUser {
-	userId, exist := c.Get(global.USER_ID)
-	if exist == false {
+	tokenStr := lib_net.GetParam(c, "token")
+
+	userId := myredis.GetInstance().HMGet(context.Background(), "login:"+tokenStr, "userId").String()
+	if userId == "" {
 		return nil
 	}
 	user := userModel.SysUser{}
-	user.UserId = userId.(int64)
+	user.UserId = cast.ToInt64(userId)
 	_, err := user.FindOne()
 	if err != nil {
 		return nil

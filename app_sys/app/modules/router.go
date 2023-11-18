@@ -2,7 +2,7 @@ package modules
 
 import (
 	"lostvip.com/router"
-	"robvi/app/middleware/jwt"
+	"robvi/app/middleware/token"
 	_ "robvi/app/modules/biz"
 	_ "robvi/app/modules/demo"
 	_ "robvi/app/modules/sys"
@@ -13,7 +13,6 @@ import (
 func init() {
 	// 加载登陆路由
 	g0 := router.New("/")
-	g0.GET("/", "", index.Index)
 	g0.GET("/login", "", index.Login)
 	g0.POST("/login", "", index.CheckLogin)
 	g0.GET("/captchaImage", "", index.CaptchaImage)
@@ -21,7 +20,8 @@ func init() {
 	g0.GET("/404", "", errorc.NotFound)
 	g0.GET("/403", "", errorc.Unauth)
 	//下在要检测是否登陆
-	g1 := router.New("/", jwt.JWTAuthMiddleware())
+	g1 := router.New("/", token.TokenMiddleware())
+	g1.GET("/", "", index.Index)
 	g1.GET("/index", "", index.Index)
 	g1.GET("/index_left", "", index.Index)
 	g1.GET("/logout", "", index.Logout)

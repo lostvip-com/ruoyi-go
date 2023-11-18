@@ -8,7 +8,7 @@ import (
 
 func init() {
 	fmt.Println("############## iot init ########################")
-	//g1 := router.New( "/demo/form",jwt.JWTAuthMiddleware())
+	//g1 := router.New( "/demo/form",token.JWTAuthMiddleware())
 	hisData := controller.HisDataController{}
 	//g1 := router.New("/iot/hisData")
 	g1 := router.New("/")
