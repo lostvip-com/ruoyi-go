@@ -10,3 +10,9 @@ robnote
 temp
 tmp
 *.idx
+.vscode
+.vscode/*
+.vscode-test
+.vscode-test/*
+.DS_Store
+.DS_Store/*

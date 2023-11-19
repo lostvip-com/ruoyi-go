@@ -266,38 +266,38 @@ func GenCode(c *gin.Context) {
 	if tmp, err := tableService.LoadTemplate("vm/html/add.txt", gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/add.html"
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) { //改为直接覆盖
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//edit模板
 	if tmp, err := tableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/edit.html"
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) { //改为直接覆盖
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//list模板
 	if tmp, err := tableService.LoadTemplate(listTmp, gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/list.html"
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {//改为直接覆盖
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	if entity.TplCategory == "tree" {
@@ -305,13 +305,13 @@ func GenCode(c *gin.Context) {
 		if tmp, err := tableService.LoadTemplate("vm/html/tree.txt", gin.H{"table": entity}); err == nil {
 			fileName := htmlMoudlePath + "/" + entity.BusinessName + "/tree.html"
 
-			if !file.Exists(fileName) {
-				f, err := file.Create(fileName)
-				if err == nil {
-					f.WriteString(tmp)
-				}
-				f.Close()
+			//if !file.Exists(fileName) {
+			f, err := file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
 			}
+			f.Close()
+			//}
 		}
 	}
 	var goModulePath = curDir + "/app/modules/" + entity.ModuleName
@@ -332,63 +332,63 @@ func GenCode(c *gin.Context) {
 	//extend模板
 	if tmp, err := tableService.LoadTemplate("vm/go/extend.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/model/" + entity.BusinessName + ".go"
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {//改为直接覆盖
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//service模板
 	if tmp, err := tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/service/" + entity.BusinessName + "_service.go"
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 	//controller模板
 	if tmp, err := tableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/controller/" + entity.BusinessName + "_controller.go"
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 	//router模板
 	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/" + entity.BusinessName + "_router.go"
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//sql模板
 	if tmp, err := tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity}); err == nil {
 		fileName := strings.Join([]string{curDir, "/document/sql/", entity.ModuleName, "/", entity.TbName, "_menu.sql"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 	response2.SucessResp(c).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 }

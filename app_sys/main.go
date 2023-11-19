@@ -43,7 +43,7 @@ func main() {
 	fieldMap["field2"] = "val2"
 	redis.HMSet(ctx, "key", fieldMap)
 	redis.Expire(ctx, "key", 100*time.Second)
-	fmt.Println("------------myredis----------------------")
+	fmt.Println("------------myredis----------------------123")
 	data1 := redis.HGet(ctx, "mapKey1", "test")
 	fmt.Println(data1)
 	//后台服务状态

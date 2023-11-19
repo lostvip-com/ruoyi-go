@@ -592,6 +592,7 @@
     function selectDictTree(columnId, obj) {
         var dictType = $.common.nullToStr($(obj).parent().find("input").val());
         var url = ctx + "/system/dict/selectDictTree?columnId=" + columnId + "&dictType=" + dictType;
+        console.log("===========click selectDictTree==========url:"+url )
         var options = {
             title: '选择字典类型',
             width: "380",
@@ -602,10 +603,20 @@
     }
 
     function doSubmit(index, layero) {
-        var body = layer.getChildFrame('body', index);
+        // console.log("callback--->"+index)
+        // var body = layer.getChildFrame('body', index);
+        // console.log(body)
+        // var columnId = body.find('#columnId').val();
+        // console.log("columnId------------------------------>:"+columnId)
+        // var dictType = body.find('#dictType').val();
+        // console.log("dictType------------------------------>:"+dictType)
+        // layer.close(index);
+        // console.log("closelayer.close(index);------------------------------")
+        // $("#columns_dict_" + columnId).val(dictType);
+        var body = $.modal.getChildFrame(index);
         var columnId = body.find('#columnId').val();
         var dictType = body.find('#dictType').val();
-        layer.close(index);
+        $.modal.close(index);
         $("#columns_dict_" + columnId).val(dictType);
     }
 </script>

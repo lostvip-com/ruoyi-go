@@ -47,7 +47,6 @@ func (svc HisPatientService) DeleteRecordByIds(ids string) int64 {
 //添加数据
 func (svc HisPatientService) AddSave(req *model.AddHisPatientReq, c *gin.Context) (int64, error) {
 	var entity *model.HisPatient
-
 	
 	   
 	  entity.Name = req.Name  
@@ -78,7 +77,6 @@ func (svc HisPatientService) AddSave(req *model.AddHisPatientReq, c *gin.Context
 	 
 	  entity.Remark = req.Remark  
 	  entity.DeptId = req.DeptId  
-
 	entity.CreateTime = time.Now()
 	entity.CreateBy = ""
 

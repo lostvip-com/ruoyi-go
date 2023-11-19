@@ -90,5 +90,8 @@ func (db *dbEngine) Engine(dbType ...string) *xorm.Engine {
 			}
 		}
 	}
+	if db == nil {
+		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>master:\n " + conf.Config().GetMaster() + "\n ------------>slave:\n " + conf.Config().GetSlave())
+	}
 	return db.master
 }

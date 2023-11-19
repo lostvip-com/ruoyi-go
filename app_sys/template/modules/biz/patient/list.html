@@ -69,7 +69,7 @@ LV自动生成列表页面代码,只生成一次,按需修改.
     var editFlag = '{{hasPermi .uid "biz:patient:edit"}}';
     var removeFlag = '{{hasPermi .uid "biz:patient:remove"}}';
 
-                                                              
+                               var sexDatas = {{getDictTypeData "sys_user_sex"}};                                  
     var prefix = ctx + "/biz/patient";
 
     $(function () {
@@ -96,15 +96,7 @@ LV自动生成列表页面代码,只生成一次,按需修改.
                 {
                     field: 'phone',
                     title: '手机号'
-                },      
-                {
-                    field: 'headUrl',
-                    title: '照片'
-                },      
-                {
-                    field: 'idcardPath',
-                    title: ''
-                },      
+                },          
                 {
                     field: 'idcard',
                     title: '证件号'
@@ -112,75 +104,18 @@ LV自动生成列表页面代码,只生成一次,按需修改.
                 {
                     field: 'bedNo',
                     title: '床号'
-                },      
-                {
-                    field: 'doctorId',
-                    title: '责任医生Id'
-                },      
-                {
-                    field: 'orgId',
-                    title: '建档单位'
-                },      
-                {
-                    field: 'orgAddress',
-                    title: '建档单位地址'
-                },      
-                {
-                    field: 'orgEstablish',
-                    title: '建档单位'
-                },      
-                {
-                    field: 'familyId',
-                    title: ''
-                },      
+                },                
                 {
                     field: 'sex',
-                    title: '性别'
-                },      
+                    title: '性别',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(sexDatas, value);
+                    }
+                },       
                 {
                     field: 'birth',
                     title: '生日'
-                },      
-                {
-                    field: 'weight',
-                    title: '体重'
-                },      
-                {
-                    field: 'height',
-                    title: '身高'
-                },      
-                {
-                    field: 'nation',
-                    title: '民族'
-                },      
-                {
-                    field: 'nativePlace',
-                    title: '籍贯'
-                },      
-                {
-                    field: 'address',
-                    title: '现居地址'
-                },      
-                {
-                    field: 'occupation',
-                    title: '职业'
-                },      
-                {
-                    field: 'contactorPhone',
-                    title: '联系人手机号'
-                },      
-                {
-                    field: 'contactorName',
-                    title: '联系人'
-                },                
-                {
-                    field: 'remark',
-                    title: '备注信息'
-                },      
-                {
-                    field: 'deptId',
-                    title: '建档单位'
-                },    
+                },                                  
                 {
                     title: '操作',
                     align: 'center',

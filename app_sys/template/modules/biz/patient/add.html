@@ -107,12 +107,9 @@ LV自动生成新增页面代码,只生成一次,按需修改.
                 <div class="form-group">
                     <label class="col-sm-3 control-label">性别：</label>
                     <div class="col-sm-8">
-                        <select name="sex" class="form-control m-b" >
-                            <option value="">所有</option>
-                        </select>
-                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                        {{getDictTypeSelect "sys_user_sex" "sex" "sex" "" "" "所有" ""}}
                     </div>
-                </div> 
+                </div>  
                
             
                 <div class="form-group">

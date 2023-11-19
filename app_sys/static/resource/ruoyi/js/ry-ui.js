@@ -611,7 +611,7 @@ var table = {
                     showSearch: true,
                     showRefresh: true,
                     showColumns: true,
-                    expandAll: true,
+                    expandAll: false,
                     expandFirst: true
                 };
                 var options = $.extend(defaults, options);

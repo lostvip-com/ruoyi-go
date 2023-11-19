@@ -1,9 +1,9 @@
 version: '3.3'    
 services:
   sys:
-    image: reg.lostvip.com/sys:1.1.0
+    image: reg.lostvip.com/sys:1.2.0
     ports: 
-      - "8080:8080"
+      - "3001:3001"
     volumes:
       - /mnt/nfs/ry/public/upload:/root/public/upload
     deploy:

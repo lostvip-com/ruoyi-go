@@ -4,10 +4,10 @@ go:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: 123456
+    password: qwer1234
   datasource:
-#    driver: sqlite3
-#    master: data.db
+    #    driver: sqlite3
+    #    master: data.db
     driver: mysql
     master: "root:qwer1234@tcp(127.0.0.1:3307)/ruoyi-go?charset=utf8"
     slave: ""

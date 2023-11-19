@@ -36,7 +36,7 @@ func (w HisPatientController) Edit(c *gin.Context) {
 		response.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
 		return
 	}
-	response.BuildTpl(c, "biz/patient/edit.html").WriteTpl(gin.H{
+	response.BuildTpl(c, "modules/biz/patient/edit.html").WriteTpl(gin.H{
 		"patient": entity,
 	})
 }
