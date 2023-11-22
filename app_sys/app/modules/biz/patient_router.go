@@ -6,15 +6,15 @@
 package robvi
 
 import (
-        "lostvip.com/router"
-        "robvi/app/middleware/auth"
-        "robvi/app/modules/biz/controller"
+	"lostvip.com/web/router"
+	"robvi/app/middleware/auth"
+	"robvi/app/modules/biz/controller"
 )
 
-//加载路由
+// 加载路由
 func init() {
 	// 参数路由
-	g1 := router.New( "/biz/patient", auth.Auth)
+	g1 := router.New("/biz/patient", auth.Auth)
 
 	web := controller.HisPatientController{}
 	g1.GET("/", "biz:patient:view", web.List)
@@ -23,6 +23,6 @@ func init() {
 	g1.POST("/add", "biz:patient:add", web.AddSave)
 	g1.POST("/remove", "biz:patient:remove", web.Remove)
 	g1.GET("/edit", "biz:patient:edit", web.Edit)
-	g1.POST("/edit", "biz:patient:edit",web.EditSave)
+	g1.POST("/edit", "biz:patient:edit", web.EditSave)
 	g1.POST("/export", "biz:patient:export", web.Export)
 }

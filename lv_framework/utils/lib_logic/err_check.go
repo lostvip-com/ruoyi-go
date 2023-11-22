@@ -3,7 +3,7 @@ package lib_logic
 import (
 	"encoding/json"
 	"log"
-	"lostvip.com/dto"
+	"lostvip.com/web/dto"
 	"runtime"
 )
 

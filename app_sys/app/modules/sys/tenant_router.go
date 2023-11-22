@@ -7,7 +7,7 @@
 package sys
 
 import (
-	"lostvip.com/router"
+	"lostvip.com/web/router"
 	"robvi/app/middleware/auth"
 	"robvi/app/middleware/token"
 	"robvi/app/modules/sys/controller"

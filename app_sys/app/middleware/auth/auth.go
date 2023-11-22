@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/router"
+	"lostvip.com/web/router"
 	"net/http"
 	"robvi/app/global"
 	"robvi/app/modules/sys/model"

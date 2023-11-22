@@ -2,7 +2,7 @@ package robvi
 
 import (
 	"fmt"
-	"lostvip.com/router"
+	"lostvip.com/web/router"
 	"robvi/app/modules/biz/controller"
 )
 

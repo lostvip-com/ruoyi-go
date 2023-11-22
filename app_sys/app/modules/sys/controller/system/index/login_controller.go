@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
-	"lostvip.com/myredis"
+	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/gconv"
 	"lostvip.com/utils/ip"
 	"lostvip.com/utils/lib_net"

@@ -3,9 +3,9 @@ package global
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"lostvip.com/cache/myredis"
 	"lostvip.com/conf"
 	"lostvip.com/logme"
-	"lostvip.com/myredis"
 	"os"
 )
 

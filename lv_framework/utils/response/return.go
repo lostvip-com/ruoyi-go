@@ -2,7 +2,7 @@ package response
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/dto"
+	"lostvip.com/web/dto"
 	"net/http"
 )
 
@@ -60,7 +60,7 @@ func ErrResp(c *gin.Context, res dto.Resp) {
 }
 
 // 分页数据处理 ， 自动翻译 Tag locale标记的字段
-func PageOK(c *gin.Context, result interface{}, count int, msg string) {
+func PageOK(c *gin.Context, result interface{}, count int64, msg string) {
 	//slice := result.([]interface{})
 	//util.TranslateSliceByTag(slice)
 	data := map[string]interface{}{"list": result, "total": count}

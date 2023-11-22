@@ -1,7 +1,8 @@
-package db
+package ibatis
 
 import (
 	"fmt"
+	"lostvip.com/db"
 	"os"
 	"path/filepath"
 )
@@ -13,7 +14,7 @@ func ExecSqlFile(sqlFile string) error {
 		fmt.Println("XXXXXXXXXXXXXXXXXXX" + sqlFile)
 	}
 	sql := string(c)
-	session := GetInstance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 	session.Begin()
 	_, err := session.Exec(sql)
 	if err != nil {

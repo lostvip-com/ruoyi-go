@@ -2,14 +2,14 @@ package server
 
 import (
 	"fmt"
-	gintemplate "github.com/foolin/gin-template"
 	"github.com/spf13/cast"
 	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
 	"html/template"
 	"lostvip.com/conf"
-	middleware2 "lostvip.com/middleware"
-	"lostvip.com/router"
+	"lostvip.com/web/gintemplate"
+	"lostvip.com/web/middleware"
+	"lostvip.com/web/router"
 	"robvi/app/global"
 	"robvi/app/modules/sys/service/system/calcu"
 	"robvi/app/modules/sys/service/system/config"
@@ -55,11 +55,11 @@ func (mySvr *MyServer) Start() {
 	port := cast.ToString(conf.Config().GetServerPort())
 	fmt.Println("##############################################################")
 	fmt.Println("go.application.name: " + global.GetConfigInstance().GetAppName())
-	fmt.Println("go.datasource.driver: " + global.GetConfigInstance().GetDriver())
+	fmt.Println("go.datasource.master: " + global.GetConfigInstance().GetMaster())
 	//加载模板引擎
 	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path, "//", "/"))
-	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("http://127.0.0.l:" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
+	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("##############################################################")
 	server.ListenAndServe()
 }
@@ -82,10 +82,10 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	engine := gin.Default()
 	///////////////////////中间件处理start////////////////////////////////////////////////
 	engine.Use(gin.LoggerWithConfig(gin.LoggerConfig{}))
-	engine.Use(middleware2.RecoverError)   // 全局异常处理,自定义错误处理
-	engine.Use(middleware2.SetTraceId)     // traceId
-	engine.Use(middleware2.Options)        // 跨域处理
-	engine.Use(middleware2.LoggerToFile()) //日志
+	engine.Use(middleware.RecoverError)   // 全局异常处理,自定义错误处理
+	engine.Use(middleware.SetTraceId)     // traceId
+	engine.Use(middleware.Options)        // 跨域处理
+	engine.Use(middleware.LoggerToFile()) //日志
 	//engine.Use(middleware.RateLimit())  // 限流
 	//router.Use(gzip.Gzip(gzip.DefaultCompression)),开启后客户端无法收到，尚未解决此问题不要打开
 	//router.Use(Secure)

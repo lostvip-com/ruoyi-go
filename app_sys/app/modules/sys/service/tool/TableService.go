@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
 	"lostvip.com/conf"
 	"lostvip.com/db"
 	"lostvip.com/utils/convert"
@@ -605,7 +604,7 @@ func (svc TableService) LoadTemplate(templateName string, data interface{}) (str
 	if err != nil {
 		return "", err
 	}
-	b, err := ioutil.ReadFile(cur + "/template/" + templateName)
+	b, err := os.ReadFile(cur + "/template/" + templateName)
 	if err != nil {
 		return "", err
 	}

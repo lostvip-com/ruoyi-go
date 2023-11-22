@@ -2,7 +2,7 @@ package demo
 
 import (
 	"fmt"
-	"lostvip.com/router"
+	"lostvip.com/web/router"
 	"robvi/app/middleware/token"
 	"robvi/app/modules/demo/controller"
 )
@@ -11,6 +11,12 @@ func init() {
 	fmt.Println("############## demo init ################")
 	//g1 := router.New( "/demo/form",token.TokenMiddleware())
 	demo := controller.DemoController{}
+	g0 := router.New("/demo/db")
+	//mybatis
+	g0.GET("/mybatis1", "", demo.TestMybatis1)
+	g0.GET("/mybatis2", "", demo.TestMybatisStr2)
+	g0.GET("/redis", "", demo.TestRedis)
+	//page
 	g1 := router.New("/demo/form")
 	g1.GET("/autocomplete", "", demo.Autocomplete)
 	g1.GET("/basic", "", demo.Basic)

@@ -3,8 +3,8 @@ package token
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"lostvip.com/cache/myredis"
 	"lostvip.com/logme"
-	"lostvip.com/myredis"
 	"lostvip.com/utils/lib_net"
 	"net/http"
 	"robvi/app/global"

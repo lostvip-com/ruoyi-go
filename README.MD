@@ -1,8 +1,8 @@
-<<<<<<< HEAD
 ## 框架简介
 摒弃过度封装，代码风格极尽简洁，适合中小项目使用！<br>
 架构思路沿袭着若依的以辅助生成重复代码为主，不过度封装，生成的代码可以快速修改适应不同的需求。
 * 项目结构模仿springboot，简单改造后可注册到nacos中做为springcloud微服务的一员，对java开发人员友好。
+* 支持类mybatis查询，sql与go代码分离（基于golang的template语法实现）。
 * 提供相关服务配置脚本，可发布到 k8s、docker swarm中做为微服务使用。
 ## 核心技术及组件
 
@@ -48,14 +48,14 @@ main[]()
 ├── app_sys            // 系统管理模块
 │   └── app                      // go源码存放目录
 │   └── static                   // 静态文件目录
-│   └── template                 // GIN模板存入目录
+│   └── mapper                   // 类mybatis映射文件存放目录
+│   └── template                 // 模板存放目录
 │   └── bootstrap.yml            // 项目根配置文件，模仿springboot
 │   └── application.ym           // 项目配置文件，模仿springboot
 │   └── build.sh                 // 编译脚本，方便打包
-│   └── build.sh                 // 编译脚本，启用cgo,需要打包sqlite时有用
+│   └── build-cgo.sh             // 编译脚本，启用cgo,需要打包sqlite时有用
 │   └── build-linux.bat          // 编译脚本，windows环境交叉编译用
 │   └── data.db                  // 使用sqlite数据库时有用，只使用mysql可删除                             
-│   └── deploy-k3s.yml           // k8s/k3s 服务编排脚本
 │   └── deploy-swarm-ry.yml      // docker swarm 服务编排脚本
 │   └── Dockerfile               // Docker镜像文件
 ├── lv_framework       // 框架通用模块
@@ -103,11 +103,11 @@ gin run main.go
 <img alt="" height="400" src="https://github.com/lostvip-com/ruoyi-go/blob/main/docs/4.png" width="600" />
 
 ## 感谢(排名不分先后)
-> ORM框架  https://xorm.io/zh/docs/   
+> xorm  https://xorm.io/zh/docs/   
 > 
-> gin框架 [https://github.com/gin-gonic/gin](https://github.com/gin-gonic/gin)
+> web框架 [https://github.com/gin-gonic/gin](https://github.com/gin-gonic/gin)
 >
->cache    [https://github.com/patrickmn/go-cache](https://github.com/patrickmn/go-cache)
+> 缓存框架  https://github.com/redis/go-redis
 >
 > 配置文档   [https://github.com/BurntSushi/toml](https://github.com/BurntSushi/toml)
 >
@@ -117,7 +117,9 @@ gin run main.go
 >
 > swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
 >
-> goframe若依版本： https://github.com/guolingege/yjgo
+> goframe若依版本 https://github.com/guolingege/yjgo
+>
+> 热加载框架 https://github.com/codegangsta/gin
 
 ## 项目支持
 

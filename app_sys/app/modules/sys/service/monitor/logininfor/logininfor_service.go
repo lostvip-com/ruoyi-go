@@ -2,7 +2,7 @@ package logininfor
 
 import (
 	"context"
-	"lostvip.com/myredis"
+	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/convert"
 	"lostvip.com/utils/page"
 	"robvi/app/global"

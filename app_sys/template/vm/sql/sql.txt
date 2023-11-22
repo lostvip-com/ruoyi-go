@@ -2,7 +2,7 @@
 ==========================================================================
 LV自动生成菜单SQL,只生成一次,按需修改.
 生成日期：{{.table.CreateTime}}
-生成路径: document/sql/{{.table.ModuleName}}/{{.table.TbName}}_menu.sql
+生成路径: tmp/sql/{{.table.ModuleName}}/{{.table.TbName}}_menu.sql
 生成人：{{.table.FunctionAuthor}}
 ==========================================================================
 */

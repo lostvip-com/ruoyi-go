@@ -21,6 +21,23 @@ var (
 	once     sync.Once
 )
 
+/**
+ * 获取主库的实例
+ */
+func GetInstanceMaster() *xorm.Engine {
+	return GetInstance().Engine()
+}
+
+/**
+ * 获取从库的实例
+ */
+func GetInstanceSlave() *xorm.Engine {
+	return GetInstance().Engine("slave")
+}
+
+/**
+ * 单例方法
+ */
 func GetInstance() *dbEngine {
 	if instance == nil {
 		instance = Instance()

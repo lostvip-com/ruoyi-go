@@ -78,7 +78,7 @@ func (e *ConfigDefault) GetAppName() string {
 	if appName == "" {
 		appName = e.VipperCfg.GetString("go.application.name")
 		if appName == "" {
-			appName = "whoami"
+			appName = "lostvip"
 		}
 	}
 	return appName

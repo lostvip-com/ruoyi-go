@@ -2,8 +2,8 @@ package tool
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/qustavo/dotsql"
 	"lostvip.com/db"
+	"lostvip.com/db/ibatis"
 	"lostvip.com/utils/gconv"
 	"lostvip.com/utils/lib_file"
 	"lostvip.com/utils/response"
@@ -34,14 +34,14 @@ func ExecSqlFile(c *gin.Context) {
 	}
 
 	curDir, _ := os.Getwd()
-	sqlFile := curDir + "/document/sql/" + po.ModuleName + "/" + po.TbName + "_menu.sql"
+	sqlFile := curDir + "/tmp/sql/" + po.ModuleName + "/" + po.TbName + "_menu.sql"
 
 	if !lib_file.FileExist(sqlFile) {
 		panic("生成代码后再执行此操作")
 	}
 	//err = db.ExecSqlFile(sqlFile)
 	// Loads queries from file
-	dot, err := dotsql.LoadFromFile(sqlFile)
+	dot, err := ibatis.LoadFromFile(sqlFile)
 	// Run queries
 	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu")
 	menuName := po.FunctionName

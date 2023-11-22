@@ -3,9 +3,9 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/dto"
 	"lostvip.com/logme"
 	"lostvip.com/utils/response"
+	"lostvip.com/web/dto"
 	"net/http"
 	"strings"
 )

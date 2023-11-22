@@ -1,7 +1,7 @@
 package modules
 
 import (
-	"lostvip.com/router"
+	"lostvip.com/web/router"
 	"robvi/app/middleware/token"
 	_ "robvi/app/modules/biz"
 	_ "robvi/app/modules/demo"

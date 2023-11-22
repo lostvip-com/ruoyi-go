@@ -1,4 +1,4 @@
-{{define "modules/iot/his_data/his_data_wizard"}}
+<!DOCTYPE html>
 <html lang="zh">
 <head>
     {{template "header" (OssUrl)}}
@@ -38,17 +38,17 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <h5>
-                        重新计算发电量
+                        重新计算发电量(go反向代理到java服务)
                     </h5>
                 </div>
                 <div class="ibox-content">
                     <div class="row select-list" style="padding-left: 15px; margin-bottom: 10px;">
                         <ul>
                             <li>
-                                站点名称： <input id="dpc_site_name"    readonly/>
-                                站点编号： <input id="dpc_site_no"    readonly/>
-                                开始日期： <input id="dpc_start"  readonly/>
-                                结束日期： <input id="dpc_end"    readonly/>
+                                站点名称： <input id="dpc_site_name"  style="border: none;"  readonly/>
+                                站点编号： <input id="dpc_site_no"    style="border: none;"  readonly/>
+                                开始日期： <input id="dpc_start"  style="border: none;"  readonly/>
+                                结束日期： <input id="dpc_end"    style="border: none;"  readonly/>
                             </li>
 
                         </ul>
@@ -447,4 +447,3 @@
 </script>
 </body>
 </html>
-{{end}}
