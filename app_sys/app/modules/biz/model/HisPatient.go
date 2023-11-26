@@ -1,12 +1,13 @@
 // ==========================================================================
 // LV自动生成数据库操作代码，无需手动修改，重新生成会自动覆盖.
-// 生成日期：2023-10-29 22:05:20 +0800 CST
+// 生成日期：2023-11-26 16:09:17 +0800 CST
 // 生成人：lv
 // ==========================================================================
 
 package model
 
 import (
+    "robvi/app/common/model"
     "lostvip.com/db"
 	"time"
 )
@@ -16,15 +17,15 @@ type HisPatient struct {
 	 Id       int64         `json:"id" xorm:"not null pk autoincr comment('') bigint(32)"`    
 	 Name    string         `json:"name" xorm:"comment('姓名') varchar(32)"`    
 	 Phone    string         `json:"phone" xorm:"comment('手机号') varchar(11)"`    
-	 HeadUrl    string         `json:"head_url" xorm:"comment('照片') varchar(256)"`    
-	 IdcardPath    string         `json:"idcard_path" xorm:"comment('') varchar(128)"`    
-	 Idcard    string         `json:"idcard" xorm:"comment('证件号') varchar(18)"`    
-	 BedNo    string         `json:"bed_no" xorm:"comment('床号') varchar(32)"`    
 	 DoctorId    int64         `json:"doctor_id" xorm:"comment('责任医生Id') bigint(20)"`    
+	 Idcard    string         `json:"idcard" xorm:"comment('证件号') varchar(18)"`    
+	 HeadUrl    string         `json:"head_url" xorm:"comment('照片') varchar(256)"`    
+	 IdcardPath    string         `json:"idcard_path" xorm:"comment('身份证照片') varchar(128)"`    
+	 BedNo    string         `json:"bed_no" xorm:"comment('床号') varchar(32)"`    
 	 OrgId    int64         `json:"org_id" xorm:"comment('建档单位') bigint(20)"`    
 	 OrgAddress    string         `json:"org_address" xorm:"comment('建档单位地址') varchar(255)"`    
 	 OrgEstablish    string         `json:"org_establish" xorm:"comment('建档单位') varchar(32)"`    
-	 FamilyId    int64         `json:"family_id" xorm:"comment('') bigint(32)"`    
+	 FamilyId    int64         `json:"family_id" xorm:"comment('家庭ID') bigint(32)"`    
 	 Sex    string         `json:"sex" xorm:"comment('性别') varchar(1)"`    
 	 Birth    string         `json:"birth" xorm:"comment('生日') varchar(10)"`    
 	 Weight    int64         `json:"weight" xorm:"comment('体重') float(10,0)"`    
@@ -35,13 +36,13 @@ type HisPatient struct {
 	 Occupation    string         `json:"occupation" xorm:"comment('职业') varchar(32)"`    
 	 ContactorPhone    string         `json:"contactor_phone" xorm:"comment('联系人手机号') varchar(11)"`    
 	 ContactorName    string         `json:"contactor_name" xorm:"comment('联系人') varchar(128)"`    
-	 DelFlag    string         `json:"del_flag" xorm:"comment('') char(1)"`    
+	 DelFlag    string         `json:"del_flag" xorm:"comment('删除标识1删除0未删除') char(1)"`    
 	 CreateBy    string         `json:"create_by" xorm:"comment('创建人') varchar(32)"`    
-	 CreateTime    time.Time         `json:"create_time" xorm:"comment('创建时间') date"`    
+	 CreateTime    time.Time         `json:"create_time" xorm:"comment('创建时间') datetime"`    
 	 UpdateBy    string         `json:"update_by" xorm:"comment('更新者') varchar(32)"`    
-	 UpdateTime    time.Time         `json:"update_time" xorm:"comment('更新时间') date"`    
+	 UpdateTime    time.Time         `json:"update_time" xorm:"comment('更新时间') datetime"`    
 	 Remark    string         `json:"remark" xorm:"comment('备注信息') varchar(32)"`    
-	 DeptId    int64         `json:"dept_id" xorm:"comment('建档单位') bigint(20)"`    
+    model.BaseModel
 }
 
 //映射数据表

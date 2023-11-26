@@ -1,6 +1,6 @@
 // ==========================================================================
 // LV自动生成业务逻辑层相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：2023-10-29 22:05:20 +0800 CST
+// 生成日期：2023-11-26 16:09:17 +0800 CST
 // 生成人：lv
 // ==========================================================================
 package service
@@ -51,11 +51,11 @@ func (svc HisPatientService) AddSave(req *model.AddHisPatientReq, c *gin.Context
 	   
 	  entity.Name = req.Name  
 	  entity.Phone = req.Phone  
+	  entity.DoctorId = req.DoctorId  
+	  entity.Idcard = req.Idcard  
 	  entity.HeadUrl = req.HeadUrl  
 	  entity.IdcardPath = req.IdcardPath  
-	  entity.Idcard = req.Idcard  
 	  entity.BedNo = req.BedNo  
-	  entity.DoctorId = req.DoctorId  
 	  entity.OrgId = req.OrgId  
 	  entity.OrgAddress = req.OrgAddress  
 	  entity.OrgEstablish = req.OrgEstablish  
@@ -71,12 +71,11 @@ func (svc HisPatientService) AddSave(req *model.AddHisPatientReq, c *gin.Context
 	  entity.ContactorPhone = req.ContactorPhone  
 	  entity.ContactorName = req.ContactorName  
 	  entity.DelFlag = req.DelFlag  
-	 
-	 
-	 
-	 
+	  entity.CreateBy = req.CreateBy  
+	  entity.CreateTime = req.CreateTime  
+	  entity.UpdateBy = req.UpdateBy  
+	  entity.UpdateTime = req.UpdateTime  
 	  entity.Remark = req.Remark  
-	  entity.DeptId = req.DeptId  
 	entity.CreateTime = time.Now()
 	entity.CreateBy = ""
 
@@ -107,11 +106,11 @@ func (svc HisPatientService) EditSave(req *model.EditHisPatientReq, c *gin.Conte
 	   
 	entity.Name = req.Name  
 	entity.Phone = req.Phone  
+	entity.DoctorId = req.DoctorId  
+	entity.Idcard = req.Idcard  
 	entity.HeadUrl = req.HeadUrl  
 	entity.IdcardPath = req.IdcardPath  
-	entity.Idcard = req.Idcard  
 	entity.BedNo = req.BedNo  
-	entity.DoctorId = req.DoctorId  
 	entity.OrgId = req.OrgId  
 	entity.OrgAddress = req.OrgAddress  
 	entity.OrgEstablish = req.OrgEstablish  
@@ -125,9 +124,10 @@ func (svc HisPatientService) EditSave(req *model.EditHisPatientReq, c *gin.Conte
 	entity.Address = req.Address  
 	entity.Occupation = req.Occupation  
 	entity.ContactorPhone = req.ContactorPhone  
-	entity.ContactorName = req.ContactorName            
-	entity.Remark = req.Remark  
-	entity.DeptId = req.DeptId 
+	entity.ContactorName = req.ContactorName        
+	entity.UpdateBy = req.UpdateBy  
+	entity.UpdateTime = req.UpdateTime  
+	entity.Remark = req.Remark 
 	entity.UpdateTime = time.Now()
 	entity.UpdateBy = ""
 
@@ -155,8 +155,8 @@ func (svc HisPatientService) SelectListByPage(params *model.PageHisPatientReq) (
 
 // 导出excel
 func (svc HisPatientService) Export(param *model.PageHisPatientReq) (string, error) {
-	head := []string{  "" ,"姓名" ,"手机号" ,"照片" ,"" ,"证件号" ,"床号" ,"责任医生Id" ,"建档单位" ,"建档单位地址" ,"建档单位" ,"" ,"性别" ,"生日" ,"体重" ,"身高" ,"民族" ,"籍贯" ,"现居地址" ,"职业" ,"联系人手机号" ,"联系人" ,"" ,"创建人" ,"创建时间" ,"更新者" ,"更新时间" ,"备注信息" ,"建档单位"}
-	col := []string{  "id" ,"name" ,"phone" ,"head_url" ,"idcard_path" ,"idcard" ,"bed_no" ,"doctor_id" ,"org_id" ,"org_address" ,"org_establish" ,"family_id" ,"sex" ,"birth" ,"weight" ,"height" ,"nation" ,"native_place" ,"address" ,"occupation" ,"contactor_phone" ,"contactor_name" ,"del_flag" ,"create_by" ,"create_time" ,"update_by" ,"update_time" ,"remark" ,"dept_id"}
+	head := []string{  "" ,"姓名" ,"手机号" ,"责任医生Id" ,"证件号" ,"照片" ,"身份证照片" ,"床号" ,"建档单位" ,"建档单位地址" ,"建档单位" ,"家庭ID" ,"性别" ,"生日" ,"体重" ,"身高" ,"民族" ,"籍贯" ,"现居地址" ,"职业" ,"联系人手机号" ,"联系人" ,"删除标识1删除0未删除" ,"创建人" ,"创建时间" ,"更新者" ,"更新时间" ,"备注信息"}
+	col := []string{  "id" ,"name" ,"phone" ,"doctor_id" ,"idcard" ,"head_url" ,"idcard_path" ,"bed_no" ,"org_id" ,"org_address" ,"org_establish" ,"family_id" ,"sex" ,"birth" ,"weight" ,"height" ,"nation" ,"native_place" ,"address" ,"occupation" ,"contactor_phone" ,"contactor_name" ,"del_flag" ,"create_by" ,"create_time" ,"update_by" ,"update_time" ,"remark"}
 	entity := model.HisPatient{}
 	return entity.SelectListExport(param, head, col)
 }

@@ -9,7 +9,7 @@
 * ORM框架: XORM,简单易用，对原生用sql查询支持较好；</br>
 * Web服务框架: Gin 简单高效，模板可热加载;</br>
 * 前端技术: 模板引擎，服务端渲染;</br>
-* 缓存支持: go-cache、redis </br>
+* 缓存支持: redis </br>
 * 安全认证：支持通过jwt无状态 或 token有状态的安全校验。
 * 代码生成：在线生成代码，并一键导入菜单到业务模块。
 * 导出excel文件  tealeg/xlsx    
@@ -117,10 +117,11 @@ gin run main.go
 >
 > swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
 >
-> goframe若依版本 https://github.com/guolingege/yjgo
+> 若依goframe版 https://github.com/guolingege/yjgo
 >
 > 热加载框架 https://github.com/codegangsta/gin
-
+>
+> sql文件解析: https://github.com/qustavo/dotsql
 ## 项目支持
 
 

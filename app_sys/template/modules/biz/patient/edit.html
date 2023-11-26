@@ -2,7 +2,7 @@
 <!--
 ==========================================================================
 LV自动生成修改页面代码,只生成一次,按需修改.
-生成日期：2023-10-29 22:05:20 +0800 CST
+生成日期：2023-11-26 16:09:17 +0800 CST
 生成路径: template/biz/patient/edit.html
 生成人：lv
 ==========================================================================
@@ -32,16 +32,9 @@ LV自动生成修改页面代码,只生成一次,按需修改.
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">照片：</label>
+                <label class="col-sm-3 control-label">责任医生Id：</label>
                 <div class="col-sm-8">
-                    <input name="headUrl" value="{{.patient.HeadUrl}}" class="form-control"  type="text" >
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="col-sm-3 control-label">：</label>
-                <div class="col-sm-8">
-                    <input name="idcardPath" value="{{.patient.IdcardPath}}" class="form-control"  type="text" >
+                    <input name="doctorId" value="{{.patient.DoctorId}}" class="form-control"  type="text" >
                 </div>
             </div>
             
@@ -53,16 +46,23 @@ LV自动生成修改页面代码,只生成一次,按需修改.
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">床号：</label>
+                <label class="col-sm-3 control-label">照片：</label>
                 <div class="col-sm-8">
-                    <input name="bedNo" value="{{.patient.BedNo}}" class="form-control"  type="text" >
+                    <input name="headUrl" value="{{.patient.HeadUrl}}" class="form-control"  type="text" >
                 </div>
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">责任医生Id：</label>
+                <label class="col-sm-3 control-label">身份证照片：</label>
                 <div class="col-sm-8">
-                    <input name="doctorId" value="{{.patient.DoctorId}}" class="form-control"  type="text" >
+                    <input name="idcardPath" value="{{.patient.IdcardPath}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">床号：</label>
+                <div class="col-sm-8">
+                    <input name="bedNo" value="{{.patient.BedNo}}" class="form-control"  type="text" >
                 </div>
             </div>
             
@@ -88,7 +88,7 @@ LV自动生成修改页面代码,只生成一次,按需修改.
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">：</label>
+                <label class="col-sm-3 control-label">家庭ID：</label>
                 <div class="col-sm-8">
                     <input name="familyId" value="{{.patient.FamilyId}}" class="form-control"  type="text" >
                 </div>
@@ -163,23 +163,31 @@ LV自动生成修改页面代码,只生成一次,按需修改.
                     <input name="contactorName" value="{{.patient.ContactorName}}" class="form-control"  type="text" required>
                 </div>
             </div>
-                      
+                  
+            <div class="form-group">
+                <label class="col-sm-3 control-label">更新者：</label>
+                <div class="col-sm-8">
+                    <input name="updateBy" value="{{.patient.UpdateBy}}" class="form-control"  type="text" >
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">更新时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="updateTime" value="{{.patient.UpdateTime}}" class="form-control"
+                               placeholder="yyyy-MM-dd" type="text" >
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label class="col-sm-3 control-label">备注信息：</label>
                 <div class="col-sm-8">
                     <input name="remark" value="{{.patient.Remark}}" class="form-control"  type="text" >
                 </div>
             </div>
-             
-            <div class="form-group">
-                <label class="col-sm-3 control-label">建档单位：</label>
-                <div class="col-sm-8">
-                    <select name="deptId" class="form-control m-b" >
-                        <option value="">所有</option>
-                    </select>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                </div>
-            </div>  
           
     </form>
 </div>
@@ -208,7 +216,7 @@ LV自动生成修改页面代码,只生成一次,按需修改.
         minView: "month",
         autoclose: true
     });
-              
+          
     
 </script>
 </body>

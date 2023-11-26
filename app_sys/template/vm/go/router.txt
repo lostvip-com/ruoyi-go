@@ -6,7 +6,7 @@
 package {{.table.PackageName}}
 
 import (
-        "lostvip.com/router"
+        "lostvip.com/web/router"
         "{{.table.PackageName}}/app/middleware/auth"
         "{{.table.PackageName}}/app/modules/{{.table.ModuleName}}/controller"
 )

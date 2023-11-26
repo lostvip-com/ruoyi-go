@@ -4,7 +4,7 @@ go:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: 123456
+    password: qwer1234
   datasource:
     #    driver: sqlite3
     #    master: data.db

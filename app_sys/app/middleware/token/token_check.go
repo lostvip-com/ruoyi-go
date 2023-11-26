@@ -26,7 +26,7 @@ func TokenMiddleware() func(c *gin.Context) {
 			return
 		}
 		//续期一小时
-		myredis.GetInstance().Expire(context.Background(), tokenStr, time.Hour)
+		myredis.GetInstance().Expire(context.Background(), tokenStr, 8*time.Hour)
 		c.Next() // 后续的处理函数可以用过c.Get("username")来获取当前请求的用户信息
 	}
 }

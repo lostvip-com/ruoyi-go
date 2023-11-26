@@ -1,0 +1,148 @@
+<!DOCTYPE html>   
+<!--
+==========================================================================
+LV自动生成新增页面代码,只生成一次,按需修改.
+生成日期：2023-11-26 16:27:18 +0800 CST
+生成路径: template/biz/task/add.html
+生成人：lv
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+    <link href="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-task-add">     
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">工号：</label>
+                    <div class="col-sm-8">
+                        <input name="username" class="form-control" type="text" required>
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">密码：</label>
+                    <div class="col-sm-8">
+                        <input name="password" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">项  目  号：</label>
+                    <div class="col-sm-8">
+                        <input name="prjCode" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">任务内容：</label>
+                    <div class="col-sm-8">
+                        <input name="taskContent" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">开始日期：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input name="startDate" class="form-control" placeholder="yyyy-MM-dd" type="text" >
+                        </div>
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">结束日期：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input name="endDate" class="form-control" placeholder="yyyy-MM-dd" type="text" >
+                        </div>
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">本月工时：</label>
+                    <div class="col-sm-8">
+                        <input name="workDays" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">自动提交：</label>
+                    <div class="col-sm-8">
+                        <input name="autoSubmit" class="form-control" type="text" >
+                    </div>
+                </div>
+               
+              
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">任务状态，ready running end：</label>
+                    <div class="col-sm-8">
+                        <div class="radio-box">
+                            <input type="radio" name="status" value="" required>
+                            <label for="status" text="未知"></label>
+                        </div>
+                        <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                    </div>
+                </div>  
+               
+            
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序，大的优先：</label>
+                    <div class="col-sm-8">
+                        <input name="sort" class="form-control" type="text" >
+                    </div>
+                </div>
+                  
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script src="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+
+<script type="text/javascript">
+    var prefix = ctx + "/biz/task";
+    $("#form-task-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-task-add').serialize());
+        }
+    }
+               
+    $("input[name='startDate']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });    
+    $("input[name='endDate']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });            
+    $("input[name='updateTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });    
+    $("input[name='createTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });   
+    
+</script>
+</body>
+</html>

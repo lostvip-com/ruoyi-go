@@ -269,7 +269,10 @@ func (svc TableService) ImportGenTable(tableList *[]tool2.GenTable, operName str
 				return errors.New("获取列数据失败")
 			}
 
-			for _, column := range genTableColumns {
+			for index, column := range genTableColumns {
+				if index > 0 && index < 5 { // 默认前 前4个字段为查询用
+					column.IsQuery = "1"
+				}
 				svc.InitColumnField(&column, &table)
 				_, err = session.Table(tool2.TableName()).Insert(&column)
 				if err != nil {
@@ -351,11 +354,11 @@ func (svc TableService) InitColumnField(column *tool2.Entity, table *tool2.GenTa
 		}
 
 	}
-	//新增字段
+	//新增字段，不生成到界面上哐不需要人工编辑
 	if columnName == "create_by" || columnName == "create_time" || columnName == "update_by" || columnName == "update_time" {
 		column.IsRequired = "0"
 		column.IsInsert = "0"
-	} else {
+	} else { //需要生成到界面
 		column.IsRequired = "0"
 		column.IsInsert = "1"
 		if strings.Index(columnName, "name") >= 0 || strings.Index(columnName, "status") >= 0 {
@@ -379,15 +382,17 @@ func (svc TableService) InitColumnField(column *tool2.Entity, table *tool2.GenTa
 	} else {
 		column.IsList = "0"
 	}
-	// 查询字段
-	if tool2.IsNotQuery(columnName) {
-		column.IsQuery = "1"
-	} else {
-		column.IsQuery = "0"
+	// 黑名单
+	if column.IsQuery == "" {
+		column.IsQuery = "0" //默认非查询
+	} else { //检查黑名单
+		if tool2.IsNotQuery(columnName) {
+			column.IsQuery = "0"
+		}
 	}
 
 	// 查询字段类型
-	if svc.CheckNameColumn(columnName) {
+	if svc.IsStringType(column.ColumnType) {
 		column.QueryType = "LIKE"
 	} else {
 		column.QueryType = "EQ"
@@ -415,6 +420,20 @@ func (svc TableService) CheckSexColumn(columnName string) bool {
 		if columnName[start:end] == "sex" {
 			return true
 		}
+	}
+	return false
+}
+
+// 检查字段名后4位是否是type
+func (svc TableService) IsStringType(columnType string) bool {
+	if strings.HasPrefix(columnType, "char") {
+		return true
+	}
+	if strings.HasPrefix(columnType, "varchar") {
+		return true
+	}
+	if strings.HasPrefix(columnType, "text") {
+		return true
 	}
 	return false
 }

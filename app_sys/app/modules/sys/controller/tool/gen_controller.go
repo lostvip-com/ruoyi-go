@@ -317,7 +317,7 @@ func GenCode(c *gin.Context) {
 	var goModulePath = curDir + "/app/modules/" + entity.ModuleName
 	//entity模板
 	if tmp, err := tableService.LoadTemplate("vm/go/entity.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/model/" + entity.BusinessName + "_entity.go"
+		fileName := goModulePath + "/model/" + entity.ClassName + ".go"
 		if lib_file.Exists(fileName) {
 			os.RemoveAll(fileName)
 		}
@@ -331,7 +331,7 @@ func GenCode(c *gin.Context) {
 
 	//extend模板
 	if tmp, err := tableService.LoadTemplate("vm/go/extend.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/model/" + entity.BusinessName + ".go"
+		fileName := goModulePath + "/model/" + entity.ClassName + "DTO.go"
 		//if !file.Exists(fileName) {//改为直接覆盖
 		f, err := lib_file.Create(fileName)
 		if err == nil {
@@ -343,7 +343,7 @@ func GenCode(c *gin.Context) {
 
 	//service模板
 	if tmp, err := tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/service/" + entity.BusinessName + "_service.go"
+		fileName := goModulePath + "/service/" + entity.ClassName + "Service.go"
 
 		//if !file.Exists(fileName) {
 		f, err := lib_file.Create(fileName)
@@ -355,7 +355,7 @@ func GenCode(c *gin.Context) {
 	}
 	//controller模板
 	if tmp, err := tableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/controller/" + entity.BusinessName + "_controller.go"
+		fileName := goModulePath + "/controller/" + entity.ClassName + "Controller.go"
 
 		//if !file.Exists(fileName) {
 		f, err := lib_file.Create(fileName)
@@ -367,7 +367,7 @@ func GenCode(c *gin.Context) {
 	}
 	//router模板
 	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/" + entity.BusinessName + "_router.go"
+		fileName := goModulePath + "/" + entity.TbName + "_router.go"
 
 		//if !file.Exists(fileName) {
 		f, err := lib_file.Create(fileName)

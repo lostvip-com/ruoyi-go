@@ -93,5 +93,5 @@ func IsNotList(value string) bool {
 
 // 页面不需要查询字段
 func IsNotQuery(value string) bool {
-	return !IsExistInArray(value, COLUMNNAME_NOT_QUERY)
+	return IsExistInArray(value, COLUMNNAME_NOT_QUERY)
 }

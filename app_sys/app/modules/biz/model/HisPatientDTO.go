@@ -1,12 +1,13 @@
 // ==========================================================================
 // LV自动生成model扩展代码列表、增、删，改、查、导出，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：2023-10-29 22:05:20 +0800 CST
+// 生成日期：2023-11-26 16:09:17 +0800 CST
 // 生成人：lv
 // ==========================================================================
 package model
 
 import (
 	"errors"
+	"time"
     "lostvip.com/db"
     "lostvip.com/utils/excel"
     "lostvip.com/utils/page"
@@ -18,11 +19,11 @@ type AddHisPatientReq struct {
 	 
 	 Name  string   `form:"name" binding:"required"`  
 	 Phone  string   `form:"phone" `  
+	 DoctorId  int64   `form:"doctorId" `  
+	 Idcard  string   `form:"idcard" `  
 	 HeadUrl  string   `form:"headUrl" `  
 	 IdcardPath  string   `form:"idcardPath" `  
-	 Idcard  string   `form:"idcard" `  
 	 BedNo  string   `form:"bedNo" `  
-	 DoctorId  int64   `form:"doctorId" `  
 	 OrgId  int64   `form:"orgId" `  
 	 OrgAddress  string   `form:"orgAddress" `  
 	 OrgEstablish  string   `form:"orgEstablish" `  
@@ -38,12 +39,11 @@ type AddHisPatientReq struct {
 	 ContactorPhone  string   `form:"contactorPhone" `  
 	 ContactorName  string   `form:"contactorName" binding:"required"`  
 	 DelFlag  string   `form:"delFlag" `  
-	 
-	 
-	 
-	 
+	 CreateBy  string   `form:"createBy" `  
+	 CreateTime  time.Time   `form:"createTime" `  
+	 UpdateBy  string   `form:"updateBy" `  
+	 UpdateTime  time.Time   `form:"updateTime" `  
 	 Remark  string   `form:"remark" `  
-	 DeptId  int64   `form:"deptId" `  
 }
 
 //修改页面请求参数
@@ -51,11 +51,11 @@ type EditHisPatientReq struct {
       Id    int64  `form:"id" binding:"required"`    
       Name  string `form:"name" binding:"required"`   
       Phone  string `form:"phone" `   
+      DoctorId  int64 `form:"doctorId" `   
+      Idcard  string `form:"idcard" `   
       HeadUrl  string `form:"headUrl" `   
       IdcardPath  string `form:"idcardPath" `   
-      Idcard  string `form:"idcard" `   
       BedNo  string `form:"bedNo" `   
-      DoctorId  int64 `form:"doctorId" `   
       OrgId  int64 `form:"orgId" `   
       OrgAddress  string `form:"orgAddress" `   
       OrgEstablish  string `form:"orgEstablish" `   
@@ -69,18 +69,18 @@ type EditHisPatientReq struct {
       Address  string `form:"address" `   
       Occupation  string `form:"occupation" `   
       ContactorPhone  string `form:"contactorPhone" `   
-      ContactorName  string `form:"contactorName" binding:"required"`             
-      Remark  string `form:"remark" `   
-      DeptId  int64 `form:"deptId" `  
+      ContactorName  string `form:"contactorName" binding:"required"`         
+      UpdateBy  string `form:"updateBy" `   
+      UpdateTime  time.Time `form:"updateTime" `   
+      Remark  string `form:"remark" `  
 }
 
 //分页请求参数 
 type PageHisPatientReq struct {    
 	Name  string `form:"name"` //姓名   
-	Phone  string `form:"phone"` //手机号       
-	Idcard  string `form:"idcard"` //证件号   
-	BedNo  string `form:"bedNo"` //床号                                             
-	DeptId  int64 `form:"deptId"` //建档单位  
+	Phone  string `form:"phone"` //手机号   
+	DoctorId  int64 `form:"doctorId"` //责任医生Id   
+	Idcard  string `form:"idcard"` //证件号                                                
 	BeginTime  string `form:"beginTime"`  //开始时间
 	EndTime    string `form:"endTime"`    //结束时间
 	PageNum    int    `form:"pageNum"`    //当前页码
@@ -106,20 +106,16 @@ func (e *HisPatient) SelectListByPage(param *PageHisPatientReq) ([]HisPatient, *
 		
 		if param.Phone != "" {
 			model.Where("t.phone like ?", "%"+param.Phone+"%")
-		}        
+		}    
+		 
+		if param.DoctorId != 0 {
+			model.Where("t.doctor_id = ?", param.DoctorId)
+		}
+		    
 		
 		if param.Idcard != "" {
 			model.Where("t.idcard like ?", "%"+param.Idcard+"%")
-		}    
-		 
-		if param.BedNo != "" {
-			model.Where("t.bed_no = ?", param.BedNo)
-		}                                               
-		 
-		if param.DeptId != 0 {
-			model.Where("t.dept_id = ?", param.DeptId)
-		}
-		   
+		}                                                 
 		if param.BeginTime != "" {
 			model.Where("t.create_time >= ?", param.BeginTime)
 		}
@@ -155,20 +151,16 @@ func (e *HisPatient) SelectListExport(param *PageHisPatientReq, head, col []stri
 		
 		if param.Phone != "" {
 			build.Where(builder.Like{"t.phone", param.Phone})
-		}        
+		}    
+		 
+		if param.DoctorId != 0 {
+			build.Where(builder.Eq{"t.doctor_id": param.DoctorId})
+		}
+		    
 		
 		if param.Idcard != "" {
 			build.Where(builder.Like{"t.idcard", param.Idcard})
-		}    
-		 
-		if param.BedNo != "" {
-			build.Where(builder.Eq{"t.bed_no": param.BedNo})
-		}                                               
-		 
-		if param.DeptId != 0 {
-			build.Where(builder.Eq{"t.dept_id": param.DeptId})
-		}
-		   
+		}                                                 
 		if param.BeginTime != "" {
 			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
 		}
@@ -198,21 +190,16 @@ func (e *HisPatient) SelectListAll(param *PageHisPatientReq) ([]HisPatient, erro
 		
 		if param.Phone != "" {
 			model.Where("t.phone like ?", "%"+param.Phone+"%")
-		}        
+		}    
+		 
+		if param.DoctorId != 0 {
+			model.Where("t.doctor_id = ?", param.DoctorId)
+		}
+		   
 		
 		if param.Idcard != "" {
 			model.Where("t.idcard like ?", "%"+param.Idcard+"%")
-		}    
-		 
-		if param.BedNo != "" {
-			model.Where("t.bed_no = ?", param.BedNo)
-		} 
-		                                             
-		 
-		if param.DeptId != 0 {
-			model.Where("t.dept_id = ?", param.DeptId)
-		}
-		  
+		}                                                 
 		if param.BeginTime != "" {
 			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}

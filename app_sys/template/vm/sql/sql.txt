@@ -9,7 +9,7 @@ LV自动生成菜单SQL,只生成一次,按需修改.
 
 -- name: menu
 insert into sys_menu (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('{{.table.FunctionName}}', '4', '1', '/{{.table.ModuleName}}/{{.table.BusinessName}}', 'C', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:view', '#', 'admin', '2020-01-01', 'admin', '2020-01-01', '{{.table.FunctionName}}菜单');
+values('{{.table.FunctionName}}', '4', '1', '/{{.table.ModuleName}}/{{.table.BusinessName}}', 'C', '0', '{{.table.ModuleName}}:{{.table.BusinessName}}:view', 'fa fa-sticky-note-o', 'admin', '2020-01-01', 'admin', '2020-01-01', '{{.table.FunctionName}}菜单');
 
 -- name: menu_button_retrieve
 insert into sys_menu  (menu_name, parent_id, order_num, url, menu_type, visible, perms, icon, create_by, create_time, update_by, update_time, remark)
