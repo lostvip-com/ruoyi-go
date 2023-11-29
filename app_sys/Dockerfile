@@ -26,7 +26,7 @@ WORKDIR $WORKDIR
 RUN chmod +x $WORKDIR/main
 RUN pwd           # 查看当前工作目录
 RUN ls -al        # 查看工作目录的内容
-EXPOSE 8080 8080
+EXPOSE 3001 3001
 CMD ["/root/main"]
 
 

@@ -1,12 +1,14 @@
-version: '3.3'    
+version: '3.3'
 services:
   sys:
-    image: reg.lostvip.com/sys:1.2.0
-    ports: 
+    image: reg.lostvip.com/sys:${VER_APP}
+    ports:
       - "3001:3001"
     volumes:
       - /mnt/nfs/ry/public/upload:/root/public/upload
+      - /opt/web-svc/ruoyi-go/application.yml:/root/application.yml
     deploy:
       replicas: 2
-      restart_policy:  
+      restart_policy:
         condition: on-failure
+
