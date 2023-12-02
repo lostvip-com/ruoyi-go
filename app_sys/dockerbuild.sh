@@ -27,6 +27,6 @@ docker build -t  $IMG_NAME .
 docker push  $IMG_NAME
 echo "------ $IMG_NAME 构建完成 ---------------------------"
 
-docker stack deploy -c deploy-swarm-ry.yml g
+docker stack deploy -c ../docs/swarm/deploy-swarm-ry.yml g
 docker service ls
 echo " docker service logs -f $SVC_NAME "
