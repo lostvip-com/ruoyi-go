@@ -81,13 +81,14 @@ go run main.go
 ~~~
 启动完成后，在控制台会打印出访问地址： http://127.0.0.1:3001
 * 方式二： 使用第三方热加载组件
-> 前置条件： 安装热加载框架：
-> <br> go install github.com/codegangsta/gin@latest
+> 前置条件： cd 到 [app_sys](app_sys) 目录，安装热加载框架：
+> <br>  go get github.com/pilu/fresh
+> <br>  go install github.com/pilu/fresh
+
+启动
 ~~~
-gin run main.go
+fresh
 ~~~
-通过热加载框架gin代理访问： http://127.0.0.1:3000
-<br>注：此框架默认使用端口3000，被代理的应用的端口默认为3001
 ## 登陆账号和密码
 > 演示1: http://demo.lostvip.com <p> 
 > 账号: admin / admin123  <p>
@@ -119,7 +120,7 @@ gin run main.go
 >
 > 若依goframe版 https://github.com/guolingege/yjgo
 >
-> 热加载框架 https://github.com/codegangsta/gin
+> 热加载框架  http://github.com/pilu/fresh
 >
 > sql文件解析: https://github.com/qustavo/dotsql
 ## 项目支持
