@@ -4,9 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/db"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	role2 "robvi/app/modules/sys/model/system/role"
 	"robvi/app/modules/sys/model/system/role_dept"
 	"robvi/app/modules/sys/model/system/role_menu"
@@ -28,7 +27,7 @@ func SelectRecordAll(params *role2.SelectPageReq) ([]role2.EntityFlag, error) {
 }
 
 // 根据条件分页查询数据
-func SelectRecordPage(params *role2.SelectPageReq) ([]role2.Entity, *page.Paging, error) {
+func SelectRecordPage(params *role2.SelectPageReq) ([]role2.Entity, *lv_web.Paging, error) {
 	return role2.SelectListPage(params)
 }
 
@@ -72,7 +71,7 @@ func AddSave(req *role2.AddReq, c *gin.Context) (int64, error) {
 	}
 
 	if req.MenuIds != "" {
-		menus := convert.ToInt64Array(req.MenuIds, ",")
+		menus := lv_conv.ToInt64Array(req.MenuIds, ",")
 		if len(menus) > 0 {
 			roleMenus := make([]role_menu.Entity, 0)
 			for i := range menus {
@@ -132,7 +131,7 @@ func EditSave(req *role2.EditReq, c *gin.Context) (int64, error) {
 	}
 
 	if req.MenuIds != "" {
-		menus := convert.ToInt64Array(req.MenuIds, ",")
+		menus := lv_conv.ToInt64Array(req.MenuIds, ",")
 		if len(menus) > 0 {
 			roleMenus := make([]role_menu.Entity, 0)
 			for i := range menus {
@@ -194,7 +193,7 @@ func AuthDataScope(req *role2.DataScopeReq, c *gin.Context) (int64, error) {
 	}
 
 	if req.DeptIds != "" {
-		deptids := convert.ToInt64Array(req.DeptIds, ",")
+		deptids := lv_conv.ToInt64Array(req.DeptIds, ",")
 		if len(deptids) > 0 {
 			roleDepts := make([]role_dept.Entity, 0)
 			for i := range deptids {
@@ -221,7 +220,7 @@ func AuthDataScope(req *role2.DataScopeReq, c *gin.Context) (int64, error) {
 
 // 批量删除数据记录
 func DeleteRecordByIds(ids string) int64 {
-	idArr := convert.ToInt64Array(ids, ",")
+	idArr := lv_conv.ToInt64Array(ids, ",")
 	result, _ := role2.DeleteBatch(idArr...)
 	return result
 }
@@ -261,7 +260,7 @@ func SelectRoleContactVo(userId int64) ([]role2.EntityFlag, error) {
 
 // 批量选择用户授权
 func InsertAuthUsers(roleId int64, userIds string) int64 {
-	idarr := convert.ToInt64Array(userIds, ",")
+	idarr := lv_conv.ToInt64Array(userIds, ",")
 	var roleUserList []user_role.Entity
 	for _, str := range idarr {
 		var tmp user_role.Entity
@@ -286,15 +285,15 @@ func DeleteUserRoleInfo(userId, roleId int64) int64 {
 
 // 批量取消授权用户角色
 func DeleteUserRoleInfos(roleId int64, ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 
 	idStr := ""
 	for _, item := range idarr {
 		if item > 0 {
 			if idStr != "" {
-				idStr += "," + gconv.String(item)
+				idStr += "," + lv_conv.String(item)
 			} else {
-				idStr = gconv.String(item)
+				idStr = lv_conv.String(item)
 			}
 		}
 	}

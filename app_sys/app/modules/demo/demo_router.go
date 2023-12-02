@@ -16,7 +16,7 @@ func init() {
 	g0.GET("/mybatis1", "", demo.TestMybatis1)
 	g0.GET("/mybatis2", "", demo.TestMybatisStr2)
 	g0.GET("/redis", "", demo.TestRedis)
-	//page
+	//lv_web
 	g1 := router.New("/demo/form")
 	g1.GET("/autocomplete", "", demo.Autocomplete)
 	g1.GET("/basic", "", demo.Basic)
@@ -88,5 +88,5 @@ func init() {
 	g6.GET("/params", "", demo.Params)
 	g6.GET("/remember", "", demo.Remember)
 	g6.GET("/recorder", "", demo.Recorder)
-	g6.GET("/search", "", demo.Search)
+	g6.GET("/lv_sql", "", demo.Search)
 }

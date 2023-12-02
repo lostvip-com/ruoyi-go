@@ -1,7 +1,7 @@
 package tool
 
 import (
-	"lostvip.com/utils/convert"
+	"lostvip.com/utils/lv_conv"
 	tool2 "robvi/app/modules/sys/model/tool"
 )
 
@@ -40,7 +40,7 @@ func (svc TableColumnService) DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func (svc TableColumnService) DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	result, err := tool2.DeleteBatch(idarr...)
 	if err != nil {
 		return 0

@@ -9,8 +9,8 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/modules/sys/model/module/tenant"
 	"time"
 )
@@ -39,7 +39,7 @@ func (svc TenantService) DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func (svc TenantService) DeleteRecordByIds(ids string) int64 {
-	ida := convert.ToInt64Array(ids, ",")
+	ida := lv_conv.ToInt64Array(ids, ",")
 	result, err := tenant.DeleteBatch(ida...)
 	if err != nil {
 		return 0
@@ -121,7 +121,7 @@ func (svc TenantService) SelectListAll(params *tenant.SelectPageReq) ([]tenant.S
 }
 
 // 根据条件分页查询数据
-func (svc TenantService) SelectListByPage(params *tenant.SelectPageReq) ([]tenant.SysTenant, *page.Paging, error) {
+func (svc TenantService) SelectListByPage(params *tenant.SelectPageReq) ([]tenant.SysTenant, *lv_web.Paging, error) {
 	return tenant.SelectListByPage(params)
 }
 

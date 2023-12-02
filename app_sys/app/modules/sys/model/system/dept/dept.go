@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"lostvip.com/db"
-	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lv_conv"
 	"strings"
 )
 
@@ -116,11 +116,11 @@ func UpdateDeptChildren(deptId int64, newAncestors, oldAncestors string) {
 	idStr := ""
 
 	for _, dept := range deptList {
-		ancestors += " when " + gconv.String(dept.DeptId) + " then " + dept.Ancestors
+		ancestors += " when " + lv_conv.String(dept.DeptId) + " then " + dept.Ancestors
 		if idStr == "" {
-			idStr = gconv.String(dept.DeptId)
+			idStr = lv_conv.String(dept.DeptId)
 		} else {
-			idStr += "," + gconv.String(dept.DeptId)
+			idStr += "," + lv_conv.String(dept.DeptId)
 		}
 	}
 
@@ -213,10 +213,10 @@ func SelectDeptCount(deptId, parentId int64) int64 {
 	result := int64(0)
 	whereStr := "del_flag = '0'"
 	if deptId > 0 {
-		whereStr = whereStr + " and dept_id=" + gconv.String(deptId)
+		whereStr = whereStr + " and dept_id=" + lv_conv.String(deptId)
 	}
 	if parentId > 0 {
-		whereStr = whereStr + " and parent_id=" + gconv.String(parentId)
+		whereStr = whereStr + " and parent_id=" + lv_conv.String(parentId)
 	}
 
 	rs, err := db.Table(TableName()).Where(whereStr).Count()

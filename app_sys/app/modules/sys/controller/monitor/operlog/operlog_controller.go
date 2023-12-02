@@ -3,8 +3,8 @@ package operlog
 import (
 	"github.com/gin-gonic/gin"
 	"html/template"
-	"lostvip.com/utils/gconv"
-	response2 "lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/modules/sys/model"
 	oper_log2 "robvi/app/modules/sys/model/monitor/oper_log"
@@ -13,7 +13,7 @@ import (
 
 // 用户列表页
 func List(c *gin.Context) {
-	response2.BuildTpl(c, "monitor/operlog/list").WriteTpl()
+	lv_web.BuildTpl(c, "monitor/operlog/list").WriteTpl()
 }
 
 // 用户列表分页数据
@@ -35,7 +35,7 @@ func ListAjax(c *gin.Context) {
 		rows = *result
 	}
 
-	response2.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
 }
 
 // 清空记录
@@ -44,9 +44,9 @@ func Clean(c *gin.Context) {
 	rs, _ := operlogService.DeleteRecordAll()
 
 	if rs > 0 {
-		response2.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", "all").WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", "all").WriteJsonExit()
 	} else {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).Log("操作日志管理", "all").WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("操作日志管理", "all").WriteJsonExit()
 	}
 }
 
@@ -55,24 +55,24 @@ func Remove(c *gin.Context) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := operlogService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response2.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", req).WriteJsonExit()
 	} else {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("操作日志管理", req).WriteJsonExit()
 	}
 }
 
 // 记录详情
 func Detail(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
+	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -81,7 +81,7 @@ func Detail(c *gin.Context) {
 	operLog, err := operlogService.SelectRecordById(id)
 
 	if err != nil {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "数据不存在",
 		})
 		return
@@ -89,7 +89,7 @@ func Detail(c *gin.Context) {
 
 	jsonResult := template.HTML(operLog.JsonResult)
 	operParam := template.HTML(operLog.OperParam)
-	response2.BuildTpl(c, "monitor/operlog/detail").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "monitor/operlog/detail").WriteTpl(gin.H{
 		"operLog":    operLog,
 		"jsonResult": jsonResult,
 		"operParam":  operParam,
@@ -101,14 +101,14 @@ func Export(c *gin.Context) {
 	var req *oper_log2.SelectPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
 		return
 	}
 	url, err := operlogService.Export(req)
 
 	if err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
 	} else {
-		response2.SucessResp(c).SetMsg(url).Log("导出操作日志", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetMsg(url).Log("导出操作日志", req).WriteJsonExit()
 	}
 }

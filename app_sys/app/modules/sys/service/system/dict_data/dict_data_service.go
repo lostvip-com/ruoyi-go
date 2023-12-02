@@ -3,8 +3,8 @@ package dict_data
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	dict_data2 "robvi/app/modules/sys/model/system/dict_data"
 	"robvi/app/modules/sys/service"
 	"time"
@@ -28,7 +28,7 @@ func DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func DeleteRecordByIds(ids string) int64 {
-	ida := convert.ToInt64Array(ids, ",")
+	ida := lv_conv.ToInt64Array(ids, ",")
 	result, err := dict_data2.DeleteBatch(ida...)
 	if err != nil {
 		return 0
@@ -102,7 +102,7 @@ func SelectListAll(params *dict_data2.SelectPageReq) ([]dict_data2.Entity, error
 }
 
 // 根据条件分页查询角色数据
-func SelectListByPage(params *dict_data2.SelectPageReq) (*[]dict_data2.Entity, *page.Paging, error) {
+func SelectListByPage(params *dict_data2.SelectPageReq) (*[]dict_data2.Entity, *lv_web.Paging, error) {
 	return dict_data2.SelectListByPage(params)
 }
 

@@ -3,8 +3,8 @@ package logininfor
 import (
 	"context"
 	"lostvip.com/cache/myredis"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/global"
 	"robvi/app/modules/sys/model/monitor/logininfor"
 	"time"
@@ -14,7 +14,7 @@ const USER_NOPASS_TIME string = "user_nopass_"
 const USER_LOCK string = "user_lock_"
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *logininfor.SelectPageReq) (*[]logininfor.Entity, *page.Paging, error) {
+func SelectPageList(param *logininfor.SelectPageReq) (*[]logininfor.Entity, *lv_web.Paging, error) {
 	return logininfor.SelectPageList(param)
 }
 
@@ -38,7 +38,7 @@ func DeleteRecordById(id int64) bool {
 
 // 批量删除记录
 func DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	result, _ := logininfor.DeleteBatch(idarr...)
 	return result
 }

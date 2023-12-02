@@ -7,6 +7,7 @@ import (
 	gs "github.com/swaggo/gin-swagger"
 	"html/template"
 	"lostvip.com/conf"
+	"lostvip.com/logme"
 	"lostvip.com/web/gintemplate"
 	"lostvip.com/web/middleware"
 	"lostvip.com/web/router"
@@ -66,6 +67,7 @@ func (mySvr *MyServer) Start() {
 
 // 创建服务
 func New(addr string) *MyServer {
+	gin.DefaultWriter = logme.Log.Logger.Out
 	contextPath := conf.Config().GetContextPath()
 	var s MyServer
 	s.WriteTimeout = 60 * time.Second

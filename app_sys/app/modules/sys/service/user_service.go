@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/db"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/lib_net"
-	"lostvip.com/utils/lib_secret"
-	"lostvip.com/utils/page"
-	"lostvip.com/utils/random"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_gen"
+	"lostvip.com/utils/lv_net"
+	"lostvip.com/utils/lv_secret"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/common/session"
 	"robvi/app/global"
 	"robvi/app/modules/sys/model/monitor/online"
@@ -32,7 +32,7 @@ func (svc UserService) SelectRecordById(id int64) (*user2.SysUser, error) {
 }
 
 // 根据条件分页查询用户列表
-func (svc UserService) SelectRecordList(param *user2.SelectPageReq) ([]user2.UserListEntity, *page.Paging, error) {
+func (svc UserService) SelectRecordList(param *user2.SelectPageReq) ([]user2.UserListEntity, *lv_web.Paging, error) {
 	var deptService DeptService
 	var d = deptService.SelectDeptById(param.DeptId)
 	if d != nil { //数据权限
@@ -61,9 +61,9 @@ func (svc UserService) AddSave(req *user2.AddReq, c *gin.Context) (int64, error)
 	u.Remark = req.Remark
 
 	//生成密码
-	newSalt := random.GenerateSubId(6)
+	newSalt := lv_gen.GenerateSubId(6)
 	newToken := req.LoginName + req.Password + newSalt
-	newToken = lib_secret.MustEncryptString(newToken)
+	newToken = lv_secret.MustEncryptString(newToken)
 
 	u.Salt = newSalt
 	u.Password = newToken
@@ -90,7 +90,7 @@ func (svc UserService) AddSave(req *user2.AddReq, c *gin.Context) (int64, error)
 
 	//增加岗位数据
 	if req.PostIds != "" {
-		postIds := convert.ToInt64Array(req.PostIds, ",")
+		postIds := lv_conv.ToInt64Array(req.PostIds, ",")
 		userPosts := make([]user_post.Entity, 0)
 		for i := range postIds {
 			if postIds[i] > 0 {
@@ -112,7 +112,7 @@ func (svc UserService) AddSave(req *user2.AddReq, c *gin.Context) (int64, error)
 
 	//增加角色数据
 	if req.RoleIds != "" {
-		roleIds := convert.ToInt64Array(req.RoleIds, ",")
+		roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
 		userRoles := make([]user_role.Entity, 0)
 		for i := range roleIds {
 			if roleIds[i] > 0 {
@@ -173,7 +173,7 @@ func (svc UserService) EditSave(req *user2.EditReq, c *gin.Context) (int64, erro
 
 	//增加岗位数据
 	if req.PostIds != "" {
-		postIds := convert.ToInt64Array(req.PostIds, ",")
+		postIds := lv_conv.ToInt64Array(req.PostIds, ",")
 		userPosts := make([]user_post.Entity, 0)
 		for i := range postIds {
 			if postIds[i] > 0 {
@@ -196,7 +196,7 @@ func (svc UserService) EditSave(req *user2.EditReq, c *gin.Context) (int64, erro
 
 	//增加角色数据
 	if req.RoleIds != "" {
-		roleIds := convert.ToInt64Array(req.RoleIds, ",")
+		roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
 		userRoles := make([]user_role.Entity, 0)
 		for i := range roleIds {
 			if roleIds[i] > 0 {
@@ -231,7 +231,7 @@ func (svc UserService) DeleteRecordById(id int64) bool {
 
 // 批量删除用户记录
 func (svc UserService) DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	result, _ := user2.DeleteBatch(idarr...)
 	user_role.DeleteBatch(idarr...)
 	user_post.DeleteBatch(idarr...)
@@ -271,7 +271,7 @@ func (svc UserService) SignIn(loginnName, password string) (*user2.SysUser, erro
 	//校验密码
 	pwdNew := user.LoginName + password + user.Salt
 
-	pwdNew = lib_secret.MustEncryptString(pwdNew)
+	pwdNew = lv_secret.MustEncryptString(pwdNew)
 
 	if strings.Compare(user.Password, pwdNew) == -1 {
 		return nil, errors.New("密码错误")
@@ -284,7 +284,7 @@ func (svc UserService) SignIn(loginnName, password string) (*user2.SysUser, erro
 // 用户注销
 func (svc UserService) SignOut(c *gin.Context) error {
 	//user := svc.GetProfile(c)
-	tokenStr := lib_net.GetParam(c, "token")
+	tokenStr := lv_net.GetParam(c, "token")
 	myredis.GetInstance().Del(context.Background(), "login:"+tokenStr)
 	//userId := c.MustGet("userId").(int64)
 	return nil
@@ -419,16 +419,16 @@ func (svc UserService) UpdatePassword(profile *user2.PasswordReq, c *gin.Context
 
 	//校验密码
 	token := user.LoginName + profile.OldPassword + user.Salt
-	token = lib_secret.MustEncryptString(token)
+	token = lv_secret.MustEncryptString(token)
 
 	if token != user.Password {
 		return errors.New("原密码不正确")
 	}
 
 	//新校验密码
-	newSalt := random.GenerateSubId(6)
+	newSalt := lv_gen.GenerateSubId(6)
 	newToken := user.LoginName + profile.NewPassword + newSalt
-	newToken = lib_secret.MustEncryptString(newToken)
+	newToken = lv_secret.MustEncryptString(newToken)
 
 	user.Salt = newSalt
 	user.Password = newToken
@@ -449,9 +449,9 @@ func (svc UserService) ResetPassword(params *user2.ResetPwdReq) (bool, error) {
 		return false, errors.New("用户不存在")
 	}
 	//新校验密码
-	newSalt := random.GenerateSubId(6)
+	newSalt := lv_gen.GenerateSubId(6)
 	newToken := user.LoginName + params.Password + newSalt
-	newToken = lib_secret.MustEncryptString(newToken)
+	newToken = lv_secret.MustEncryptString(newToken)
 
 	user.Salt = newSalt
 	user.Password = newToken
@@ -469,7 +469,7 @@ func (svc UserService) CheckPassword(user *user2.SysUser, password string) bool 
 
 	//校验密码
 	token := user.LoginName + password + user.Salt
-	token = lib_secret.MustEncryptString(token)
+	token = lv_secret.MustEncryptString(token)
 
 	if strings.Compare(token, user.Password) == 0 {
 		return true

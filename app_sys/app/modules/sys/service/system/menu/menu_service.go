@@ -4,9 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/db"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/modules/sys/model"
 	menu2 "robvi/app/modules/sys/model/system/menu"
 	"robvi/app/modules/sys/service"
@@ -25,7 +24,7 @@ func SelectListAll(params *menu2.SelectPageReq) ([]menu2.SysMenu, error) {
 }
 
 // 根据条件分页查询数据
-func SelectListPage(params *menu2.SelectPageReq) (*[]menu2.SysMenu, *page.Paging, error) {
+func SelectListPage(params *menu2.SelectPageReq) (*[]menu2.SysMenu, *lv_web.Paging, error) {
 	return menu2.SelectListPage(params)
 }
 
@@ -107,7 +106,7 @@ func EditSave(req *menu2.EditReq, c *gin.Context) (int64, error) {
 
 // 批量删除数据记录
 func DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	result, err := menu2.DeleteBatch(idarr...)
 	if err != nil {
 		return 0
@@ -136,7 +135,7 @@ func SelectMenuNormalByUser(userId int64) (*[]menu2.EntityExtend, error) {
 	if userService.IsAdmin(userId) {
 		return SelectMenuNormalAll()
 	} else {
-		return SelectMenusByUserId(gconv.String(userId))
+		return SelectMenusByUserId(lv_conv.String(userId))
 	}
 }
 
@@ -343,7 +342,7 @@ func InitZtree(menuList *[]menu2.EntityExtend, roleMenuList *[]string, permsFlag
 		ztree.Name = transMenuName(obj.MenuName, permsFlag)
 		ztree.Pid = obj.ParentId
 		if isCheck {
-			tmp := gconv.String(obj.MenuId) + obj.Perms
+			tmp := lv_conv.String(obj.MenuId) + obj.Perms
 			tmpcheck := false
 			for j := range *roleMenuList {
 				if strings.Compare((*roleMenuList)[j], tmp) == 0 {

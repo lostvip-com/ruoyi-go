@@ -2,15 +2,15 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_web"
 )
 
 type DemoController struct{}
 
 func (w DemoController) Fontawesome(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/icon/fontawesome").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/icon/fontawesome").WriteTpl()
 }
 
 func (w DemoController) Glyphicons(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/icon/glyphicons").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/icon/glyphicons").WriteTpl()
 }

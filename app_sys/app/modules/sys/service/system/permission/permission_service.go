@@ -2,7 +2,7 @@ package permission
 
 import (
 	"html/template"
-	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lv_conv"
 	menuModel "robvi/app/modules/sys/model/system/menu"
 	"robvi/app/modules/sys/service"
 	menuService "robvi/app/modules/sys/service/system/menu"
@@ -30,7 +30,7 @@ func HasPermi(u interface{}, permission string) string {
 		return "disabled"
 	}
 
-	uid := gconv.Int64(u)
+	uid := lv_conv.Int64(u)
 	var userService service.UserService
 	if uid <= 0 {
 		return "disabled"
@@ -40,7 +40,7 @@ func HasPermi(u interface{}, permission string) string {
 	if userService.IsAdmin(uid) {
 		menus, _ = menuService.SelectMenuNormalAll()
 	} else {
-		menus, _ = menuService.SelectMenusByUserId(gconv.String(uid))
+		menus, _ = menuService.SelectMenusByUserId(lv_conv.String(uid))
 	}
 
 	if menus != nil && len(*menus) > 0 {

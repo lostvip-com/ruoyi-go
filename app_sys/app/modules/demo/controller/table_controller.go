@@ -2,81 +2,81 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/modules/sys/model"
 )
 
 func (w DemoController) Button(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/button").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/button").WriteTpl()
 }
 
 func (w DemoController) Child(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/child").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/child").WriteTpl()
 }
 
 func (w DemoController) Curd(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/curd").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/curd").WriteTpl()
 }
 
 func (w DemoController) Detail(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/detail").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/detail").WriteTpl()
 }
 
 func (w DemoController) Editable(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/editable").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/editable").WriteTpl()
 }
 
 func (w DemoController) Event(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/event").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/event").WriteTpl()
 }
 
 func (w DemoController) Export(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/export").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/export").WriteTpl()
 }
 
 func (w DemoController) FixedColumns(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/fixedColumns").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/fixedColumns").WriteTpl()
 }
 
 func (w DemoController) Footer(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/footer").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/footer").WriteTpl()
 }
 
 func (w DemoController) GroupHeader(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/groupHeader").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/groupHeader").WriteTpl()
 }
 
 func (w DemoController) Image(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/image").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/image").WriteTpl()
 }
 
 func (w DemoController) Multi(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/multi").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/multi").WriteTpl()
 }
 
 func (w DemoController) Other(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/other").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/other").WriteTpl()
 }
 
 func (w DemoController) PageGo(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/pageGo").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/pageGo").WriteTpl()
 }
 
 func (w DemoController) Params(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/params").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/params").WriteTpl()
 }
 
 func (w DemoController) Remember(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/remember").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/remember").WriteTpl()
 }
 
 func (w DemoController) Recorder(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/recorder").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/recorder").WriteTpl()
 }
 
 func (w DemoController) Search(c *gin.Context) {
-	response.BuildTpl(c, "modules/demo/table/search").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/table/lv_sql").WriteTpl()
 }
 
 type us struct {

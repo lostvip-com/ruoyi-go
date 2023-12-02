@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"log"
 	"lostvip.com/conf"
+	"lostvip.com/utils/lv_file"
 	"os"
 )
 
@@ -15,37 +18,56 @@ type MyLogrus struct {
 var Log *MyLogrus
 
 func InitLog(logfile string) {
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	pwd = pwd + "/logs"
+	lv_file.PathCreateIfNotExist(pwd)
 	if Log == nil {
 		Log = new(MyLogrus)
 		Log.Logger = logrus.New()
 	}
-	// 输出到标准输出，而不是默认的标准错误
-	// Log 为JSON而不是默认的ASCII格式。
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors: true,
+		FullTimestamp: true,
+	})
 	if conf.Config().IsDebug() {
 		fmt.Println("============ debug模式，输出日志到控制台 ============")
-		Log.Logger.SetOutput(os.Stdout)
 		Log.Logger.SetLevel(logrus.DebugLevel)
 	} else {
 		Log.Logger.SetLevel(logrus.InfoLevel)
 		fmt.Println("============ release模式，输出日志json到文件============")
-		file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		if err == nil {
-			Log.Logger.SetOutput(file)
-		} else {
-			Log.Logger.Info("Failed to log to file, using default stderr")
-		}
-		Log.Logger.SetFormatter(&logrus.JSONFormatter{})
+		//Log.Logger.SetFormatter(&logrus.JSONFormatter{})
 	}
-
-	Log.Logger.WithFields(logrus.Fields{
-		"animal": "walrus",
-		"size":   10,
-	}).Info("初始化测试! Log.WithFields(logrus.Field{}).Info : ！A group of walrus emerges from the ocean")
+	if conf.Config().GetValueStr("go.log.output") == "stdout" {
+		fmt.Println("============ debug模式，输出日志到控制台 ============")
+		log.SetOutput(os.Stdout)
+		Log.Logger.SetOutput(os.Stdout) //调用 logrus 的 SetOutput()函数
+	} else {
+		logger := &lumberjack.Logger{
+			Filename:   logfile,
+			MaxSize:    500,  // 日志文件最大 size, 单位是 MB
+			MaxBackups: 3,    // 最大过期日志保留的个数
+			MaxAge:     28,   //保留过期文件的最大时间间隔,单位是天
+			Compress:   true, // disabled by default,是否需要压缩滚动日志, 使用的 gzip 压缩
+		}
+		log.SetOutput(logger)
+		Log.Logger.SetOutput(logger) //调用 logrus 的 SetOutput()函数
+	}
 
 	Log.Logger.WithFields(logrus.Fields{
 		"omg":    true,
 		"number": 123456,
 	}).Warn("初始化测试！Log.WithFields(logrus.Field{}).Warn:  The group's number increased tremendously!")
+
+	//logrus.SetOutput(&logrus.RotateWriter{
+	//	Filename:   file.Name(),
+	//	MaxSize:    10 * 1024 * 1024, // 每个日志文件最大10MB
+	//	MaxBackups: 5,                // 最多保存5个旧日志文件
+	//	MaxAge:     30,               // 日志文件最多保存30天
+	//	LocalTime:  true,
+	//})
 
 	//Log.WithFields(logrus.Fields{
 	//	"number": 100,

@@ -7,9 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/conf"
 	"lostvip.com/db"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"os"
 	tool2 "robvi/app/modules/sys/model/tool"
 	"robvi/app/modules/sys/service"
@@ -44,7 +43,7 @@ func (svc TableService) DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func (svc TableService) DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	var table tool2.GenTable
 	result, err := table.DeleteBatch(idarr...)
 	if err != nil {
@@ -204,13 +203,13 @@ func (svc TableService) SetPkColumn(table *tool2.EntityExtend, columns []tool2.E
 }
 
 // 根据条件分页查询数据
-func (svc TableService) SelectListByPage(param *tool2.SelectPageReq) ([]tool2.GenTable, *page.Paging, error) {
+func (svc TableService) SelectListByPage(param *tool2.SelectPageReq) ([]tool2.GenTable, *lv_web.Paging, error) {
 	var table tool2.GenTable
 	return table.SelectListByPage(param)
 }
 
 // 查询据库列表
-func (svc TableService) SelectDbTableList(param *tool2.SelectPageReq) ([]tool2.GenTable, *page.Paging, error) {
+func (svc TableService) SelectDbTableList(param *tool2.SelectPageReq) ([]tool2.GenTable, *lv_web.Paging, error) {
 	return tool2.SelectDbTableList(param)
 }
 
@@ -344,9 +343,9 @@ func (svc TableService) InitColumnField(column *tool2.Entity, table *tool2.GenTa
 			end := strings.Index(tmp, ")")
 			result := tmp[start+1 : end]
 			arr := strings.Split(result, ",")
-			if len(arr) == 2 && gconv.Int(arr[1]) > 0 {
+			if len(arr) == 2 && lv_conv.Int(arr[1]) > 0 {
 				column.GoType = "float64"
-			} else if len(arr) == 1 && gconv.Int(arr[0]) <= 10 {
+			} else if len(arr) == 1 && lv_conv.Int(arr[0]) <= 10 {
 				column.GoType = "int"
 			} else {
 				column.GoType = "int64"
@@ -564,7 +563,7 @@ func (svc TableService) GetColumnLength(columnType string) int {
 	start := strings.Index(columnType, "(")
 	end := strings.Index(columnType, ")")
 	result := columnType[start+1 : end-1]
-	return gconv.Int(result)
+	return lv_conv.Int(result)
 }
 
 // 获取Go类别下拉框

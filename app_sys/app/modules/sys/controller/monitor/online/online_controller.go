@@ -2,7 +2,7 @@ package online
 
 import (
 	"github.com/gin-gonic/gin"
-	response2 "lostvip.com/utils/response"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/global"
 	online2 "robvi/app/modules/sys/model/monitor/online"
 	"robvi/app/modules/sys/service"
@@ -21,7 +21,7 @@ func List(c *gin.Context) {
 		onlineService.DeleteRecordNotInIds(sessinIdArr)
 	}
 
-	response2.BuildTpl(c, "monitor/online/list").WriteTpl()
+	lv_web.BuildTpl(c, "monitor/online/list").WriteTpl()
 }
 
 // 列表分页数据
@@ -29,7 +29,7 @@ func ListAjax(c *gin.Context) {
 	var req *online2.SelectPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	rows := make([]online2.UserOnline, 0)
@@ -39,23 +39,23 @@ func ListAjax(c *gin.Context) {
 		rows = result
 	}
 
-	response2.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
 }
 
 // 用户强退
 func ForceLogout(c *gin.Context) {
 	sessionId := c.PostForm("sessionId")
 	if sessionId == "" {
-		response2.ErrorResp(c).SetMsg("参数错误").Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg("参数错误").Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
 		return
 	}
 	var userService service.UserService
 	err := userService.ForceLogout(sessionId)
 	if err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
 		return
 	}
-	response2.SucessResp(c).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
+	lv_web.SucessResp(c).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
 }
 
 // 批量强退
@@ -63,7 +63,7 @@ func BatchForceLogout(c *gin.Context) {
 	var userService service.UserService
 	ids := c.Query("ids")
 	if ids == "" {
-		response2.ErrorResp(c).SetMsg("参数错误").Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg("参数错误").Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
 		return
 	}
 	ids = strings.ReplaceAll(ids, "[", "")
@@ -77,5 +77,5 @@ func BatchForceLogout(c *gin.Context) {
 			}
 		}
 	}
-	response2.SucessResp(c).Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
+	lv_web.SucessResp(c).Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
 }

@@ -6,12 +6,12 @@
 package controller
 
 import (
-    "github.com/gin-gonic/gin"
-    "lostvip.com/utils/gconv"
-    "lostvip.com/utils/response"
-    "robvi/app/modules/biz/model"
-    "robvi/app/modules/biz/service"
-    sysmodel "robvi/app/modules/sys/model"
+	"github.com/gin-gonic/gin"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
+	"robvi/app/modules/biz/model"
+	"robvi/app/modules/biz/service"
+	sysmodel "robvi/app/modules/sys/model"
 )
 type HisPatientController struct{}
 
@@ -21,22 +21,22 @@ type HisPatientController struct{}
 ///////////////////////////////////////////////////////////////////////////////////////
 //查询页
 func (w HisPatientController) List(c *gin.Context) {
-	response.BuildTpl(c, "modules/biz/patient/list.html").WriteTpl()
+	lv_web.BuildTpl(c, "modules/biz/patient/list.html").WriteTpl()
 }
 //新增页
 func (w HisPatientController) Add(c *gin.Context) {
-	response.BuildTpl(c, "modules/biz/patient/add.html").WriteTpl()
+	lv_web.BuildTpl(c, "modules/biz/patient/add.html").WriteTpl()
 }
 //修改页
 func (w HisPatientController) Edit(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
+	id := lv_conv.Int64(c.Query("id"))
     patientService :=service.HisPatientService{}
 	entity, err := patientService.SelectRecordById(id)
 	if err != nil || entity == nil {
-		response.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
+		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
 		return
 	}
-	response.BuildTpl(c, "modules/biz/patient/edit.html").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "modules/biz/patient/edit.html").WriteTpl(gin.H{
 		"patient": entity,
 	})
 }
@@ -48,7 +48,7 @@ func (w HisPatientController) Edit(c *gin.Context) {
 func (w HisPatientController) ListAjax(c *gin.Context) {
 	req := new(model.PageHisPatientReq)
 	if err := c.ShouldBind(req); err != nil {//获取参数
-		response.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
 		return
 	}
 	rows := make([]model.HisPatient, 0)
@@ -58,7 +58,7 @@ func (w HisPatientController) ListAjax(c *gin.Context) {
 	if err == nil && len(result) > 0 {
 		rows = result
 	}
-	response.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
 }
 
 
@@ -67,17 +67,17 @@ func (w HisPatientController) AddSave(c *gin.Context) {
 	req := new(model.AddHisPatientReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		response.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息新增数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息新增数据", req).WriteJsonExit()
 		return
 	}
     patientService :=service.HisPatientService{}
 	id, err := patientService.AddSave(req, c)
 
 	if err != nil || id <= 0 {
-		response.ErrorResp(c).Log("患者基本信息新增数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).Log("患者基本信息新增数据", req).WriteJsonExit()
 		return
 	}
-	response.SucessResp(c).SetData(id).Log("患者基本信息新增数据", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(id).Log("患者基本信息新增数据", req).WriteJsonExit()
 }
 
 
@@ -86,17 +86,17 @@ func (w HisPatientController) EditSave(c *gin.Context) {
 	req := new(model.EditHisPatientReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		response.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息修改数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息修改数据", req).WriteJsonExit()
 		return
 	}
     patientService :=service.HisPatientService{}
 	rs, err := patientService.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		response.ErrorResp(c).Log("患者基本信息修改数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).Log("患者基本信息修改数据", req).WriteJsonExit()
 		return
 	}
-	response.SucessResp(c).Log("患者基本信息修改数据", req).WriteJsonExit()
+	lv_web.SucessResp(c).Log("患者基本信息修改数据", req).WriteJsonExit()
 }
 
 //删除数据
@@ -104,16 +104,16 @@ func (w HisPatientController) Remove(c *gin.Context) {
 	req := new(sysmodel.RemoveReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		response.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息删除数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("患者基本信息删除数据", req).WriteJsonExit()
 		return
 	}
     patientService :=service.HisPatientService{}
 	rs := patientService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response.SucessResp(c).Log("患者基本信息删除数据", req).WriteJsonExit()
+		lv_web.SucessResp(c).Log("患者基本信息删除数据", req).WriteJsonExit()
 	} else {
-		response.ErrorResp(c).Log("患者基本信息删除数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).Log("患者基本信息删除数据", req).WriteJsonExit()
 	}
 }
 
@@ -122,7 +122,7 @@ func (w HisPatientController) Export(c *gin.Context) {
 	req := new(model.PageHisPatientReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		response.ErrorResp(c).Log("患者基本信息导出数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).Log("患者基本信息导出数据", req).WriteJsonExit()
 		return
 	}
 
@@ -130,8 +130,8 @@ func (w HisPatientController) Export(c *gin.Context) {
 	url, err := patientService.Export(req)
 
 	if err != nil {
-		response.ErrorResp(c).Log("患者基本信息导出数据", req).WriteJsonExit()
+		lv_web.ErrorResp(c).Log("患者基本信息导出数据", req).WriteJsonExit()
 		return
 	}
-	response.SucessResp(c).SetMsg(url).WriteJsonExit()
+	lv_web.SucessResp(c).SetMsg(url).WriteJsonExit()
 }

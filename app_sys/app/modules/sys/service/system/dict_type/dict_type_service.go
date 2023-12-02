@@ -3,8 +3,8 @@ package dict_type
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/modules/sys/model"
 	dict_type2 "robvi/app/modules/sys/model/system/dict_type"
 	"robvi/app/modules/sys/service"
@@ -31,7 +31,7 @@ func DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func DeleteRecordByIds(ids string) int64 {
-	ida := convert.ToInt64Array(ids, ",")
+	ida := lv_conv.ToInt64Array(ids, ",")
 	result, err := dict_type2.DeleteBatch(ida...)
 	if err != nil {
 		return 0
@@ -94,7 +94,7 @@ func SelectListAll(params *dict_type2.SelectPageReq) ([]dict_type2.Entity, error
 }
 
 // 根据条件分页查询角色数据
-func SelectListByPage(params *dict_type2.SelectPageReq) ([]dict_type2.Entity, *page.Paging, error) {
+func SelectListByPage(params *dict_type2.SelectPageReq) ([]dict_type2.Entity, *lv_web.Paging, error) {
 	return dict_type2.SelectListByPage(params)
 }
 

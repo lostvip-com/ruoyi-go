@@ -9,8 +9,8 @@ import (
 	"errors"
 	"time"
     "lostvip.com/db"
-    "lostvip.com/utils/excel"
-    "lostvip.com/utils/page"
+	"lostvip.com/utils/lv_office"
+	"lostvip.com/utils/lv_web"
     "xorm.io/builder"
 )
 
@@ -88,9 +88,9 @@ type PageHisPatientReq struct {
 }
 
 //根据条件分页查询数据
-func (e *HisPatient) SelectListByPage(param *PageHisPatientReq) ([]HisPatient, *page.Paging, error) {
+func (e *HisPatient) SelectListByPage(param *PageHisPatientReq) ([]HisPatient, *lv_web.Paging, error) {
 	db := db.Instance().Engine()
-    p := new(page.Paging)
+    p := new(lv_web.Paging)
 
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -130,7 +130,7 @@ func (e *HisPatient) SelectListByPage(param *PageHisPatientReq) ([]HisPatient, *
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
 	model.Limit(p.Pagesize, p.StartNum)
 
 	var result []HisPatient
@@ -172,7 +172,7 @@ func (e *HisPatient) SelectListExport(param *PageHisPatientReq, head, col []stri
 
 	sqlStr, _, _ := build.ToSQL()
 	arr, err := db.SQL(sqlStr).QuerySliceString()
-	path, err := excel.DownlaodExcel(head, arr)
+	path, err := lv_office.DownlaodExcel(head, arr)
 
 	return path, err
 }

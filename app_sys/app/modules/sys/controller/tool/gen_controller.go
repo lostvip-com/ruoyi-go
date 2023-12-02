@@ -3,9 +3,9 @@ package tool
 import (
 	"github.com/gin-gonic/gin"
 	"html/template"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/lib_file"
-	response2 "lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_file"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
 	"robvi/app/modules/sys/model"
@@ -17,7 +17,7 @@ import (
 
 // 生成代码列表页面
 func Gen(c *gin.Context) {
-	response2.BuildTpl(c, "tool/gen/list").WriteTpl()
+	lv_web.BuildTpl(c, "tool/gen/list").WriteTpl()
 }
 
 func GenList(c *gin.Context) {
@@ -25,7 +25,7 @@ func GenList(c *gin.Context) {
 	tableService := tool.TableService{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
 		return
 	}
 	rows := make([]tool2.GenTable, 0)
@@ -35,12 +35,12 @@ func GenList(c *gin.Context) {
 		rows = result
 	}
 
-	response2.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
 }
 
 // 导入数据表
 func ImportTable(c *gin.Context) {
-	response2.BuildTpl(c, "tool/gen/importTable").WriteTpl()
+	lv_web.BuildTpl(c, "tool/gen/importTable").WriteTpl()
 }
 
 // 删除数据
@@ -48,24 +48,24 @@ func Remove(c *gin.Context) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 		return
 	}
 	tableService := tool.TableService{}
 	rs := tableService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response2.SucessResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 	} else {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 	}
 }
 
 // 修改数据
 func Edit(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
+	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -73,7 +73,7 @@ func Edit(c *gin.Context) {
 	tableService := tool.TableService{}
 	entity, err := tableService.SelectRecordById(id)
 	if err != nil || entity == nil {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数不存在",
 		})
 		return
@@ -82,7 +82,7 @@ func Edit(c *gin.Context) {
 	queryTypeTpl := tableService.QueryTypeTpl()
 	htmlTypeTpl := tableService.HtmlTypeTpl()
 
-	response2.BuildTpl(c, "tool/gen/edit").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "tool/gen/edit").WriteTpl(gin.H{
 		"table":        entity,
 		"goTypeTpl":    template.HTML(goTypeTpl),
 		"queryTypeTpl": template.HTML(queryTypeTpl),
@@ -95,21 +95,21 @@ func EditSave(c *gin.Context) {
 	var req tool2.EditReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
 		return
 	}
 	tableService := tool.TableService{}
 	_, err := tableService.SaveEdit(&req, c)
 	if err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
 		return
 	}
-	response2.SucessResp(c).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model.Buniss_Edit).Log("生成代码", gin.H{"tableName": req.TableName}).WriteJsonExit()
 }
 
 // 预览代码
 func Preview(c *gin.Context) {
-	tableId := gconv.Int64(c.Query("tableId"))
+	tableId := lv_conv.Int64(c.Query("tableId"))
 	if tableId <= 0 {
 		c.JSON(http.StatusOK, model.CommonRes{
 			Code:  500,
@@ -229,7 +229,7 @@ func Preview(c *gin.Context) {
 
 // 生成代码
 func GenCode(c *gin.Context) {
-	tableId := gconv.Int64(c.Query("tableId"))
+	tableId := lv_conv.Int64(c.Query("tableId"))
 	if tableId <= 0 {
 		c.JSON(http.StatusOK, model.CommonRes{
 			Code:  500,
@@ -259,7 +259,7 @@ func GenCode(c *gin.Context) {
 	curDir, err := os.Getwd()
 
 	if err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 	}
 	var htmlMoudlePath = curDir + "/template/modules/" + entity.ModuleName
 	//add模板
@@ -267,7 +267,7 @@ func GenCode(c *gin.Context) {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/add.html"
 
 		//if !file.Exists(fileName) { //改为直接覆盖
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -279,7 +279,7 @@ func GenCode(c *gin.Context) {
 	if tmp, err := tableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/edit.html"
 		//if !file.Exists(fileName) { //改为直接覆盖
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -292,7 +292,7 @@ func GenCode(c *gin.Context) {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/list.html"
 
 		//if !file.Exists(fileName) {//改为直接覆盖
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -306,7 +306,7 @@ func GenCode(c *gin.Context) {
 			fileName := htmlMoudlePath + "/" + entity.BusinessName + "/tree.html"
 
 			//if !file.Exists(fileName) {
-			f, err := lib_file.Create(fileName)
+			f, err := lv_file.Create(fileName)
 			if err == nil {
 				f.WriteString(tmp)
 			}
@@ -318,11 +318,11 @@ func GenCode(c *gin.Context) {
 	//entity模板
 	if tmp, err := tableService.LoadTemplate("vm/go/entity.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/model/" + entity.ClassName + ".go"
-		if lib_file.Exists(fileName) {
+		if lv_file.Exists(fileName) {
 			os.RemoveAll(fileName)
 		}
 
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -333,7 +333,7 @@ func GenCode(c *gin.Context) {
 	if tmp, err := tableService.LoadTemplate("vm/go/extend.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/model/" + entity.ClassName + "DTO.go"
 		//if !file.Exists(fileName) {//改为直接覆盖
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -346,7 +346,7 @@ func GenCode(c *gin.Context) {
 		fileName := goModulePath + "/service/" + entity.ClassName + "Service.go"
 
 		//if !file.Exists(fileName) {
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -358,7 +358,7 @@ func GenCode(c *gin.Context) {
 		fileName := goModulePath + "/controller/" + entity.ClassName + "Controller.go"
 
 		//if !file.Exists(fileName) {
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -370,7 +370,7 @@ func GenCode(c *gin.Context) {
 		fileName := goModulePath + "/" + entity.TbName + "_router.go"
 
 		//if !file.Exists(fileName) {
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
@@ -381,20 +381,20 @@ func GenCode(c *gin.Context) {
 	//sql模板
 	if tmp, err := tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity}); err == nil {
 		tmpPath := curDir + "/tmp/sql"
-		if !lib_file.Exists(tmpPath) {
-			lib_file.Mkdir(tmpPath)
+		if !lv_file.Exists(tmpPath) {
+			lv_file.Mkdir(tmpPath)
 		}
 		fileName := strings.Join([]string{tmpPath, "/", entity.ModuleName, "/", entity.TbName, "_menu.sql"}, "")
 
 		//if !file.Exists(fileName) {
-		f, err := lib_file.Create(fileName)
+		f, err := lv_file.Create(fileName)
 		if err == nil {
 			f.WriteString(tmp)
 		}
 		f.Close()
 		//}
 	}
-	response2.SucessResp(c).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
+	lv_web.SucessResp(c).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 }
 
 // 查询数据库列表
@@ -402,7 +402,7 @@ func DataList(c *gin.Context) {
 	var req *tool2.SelectPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
 	}
 	tableService := tool.TableService{}
 	rows := make([]tool2.GenTable, 0)
@@ -424,12 +424,12 @@ func DataList(c *gin.Context) {
 func ImportTableSave(c *gin.Context) {
 	tables := c.PostForm("tables")
 	if tables == "" {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误tables未选中").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误tables未选中").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
 	}
 	var userService service.UserService
 	user := userService.GetProfile(c)
 	if user == nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("登陆超时").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("登陆超时").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
 	}
 
 	operName := user.LoginName
@@ -437,25 +437,25 @@ func ImportTableSave(c *gin.Context) {
 	tableArr := strings.Split(tables, ",")
 	tableList, err := tableService.SelectDbTableListByNames(tableArr)
 	if err != nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
 		return
 	}
 
 	if tableList == nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
 		return
 	}
 
 	tableService.ImportGenTable(&tableList, operName)
-	response2.SucessResp(c).Log("导入表结构", gin.H{"tables": tables}).WriteJsonExit()
+	lv_web.SucessResp(c).Log("导入表结构", gin.H{"tables": tables}).WriteJsonExit()
 }
 
 // 根据table_id查询表列数据
 func ColumnList(c *gin.Context) {
-	tableId := gconv.Int64(c.PostForm("tableId"))
+	tableId := lv_conv.Int64(c.PostForm("tableId"))
 	//获取参数
 	if tableId <= 0 {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", gin.H{"tableId": tableId})
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", gin.H{"tableId": tableId})
 	}
 	rows := make([]tool2.Entity, 0)
 	tableService := tool.TableService{}

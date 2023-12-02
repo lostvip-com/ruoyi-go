@@ -6,13 +6,13 @@
 package service
 
 import (
-		"errors"
-    	"github.com/gin-gonic/gin"
-    	"lostvip.com/utils/convert"
-    	"lostvip.com/utils/page"
-    	"robvi/app/modules/biz/model"
-    	"robvi/app/modules/sys/service"
-    	"time"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
+	"robvi/app/modules/biz/model"
+	"robvi/app/modules/sys/service"
+	"time"
 )
 type HisPatientService struct{}
 //根据主键查询数据
@@ -35,7 +35,7 @@ func (svc HisPatientService) DeleteRecordById(id int64) bool {
 
 //批量删除数据记录
 func (svc HisPatientService) DeleteRecordByIds(ids string) int64 {
-	ida := convert.ToInt64Array(ids, ",")
+	ida := lv_conv.ToInt64Array(ids, ",")
     var entity *model.HisPatient
 	result, err := entity.DeleteBatch(ida...)
 	if err != nil {
@@ -148,7 +148,7 @@ func (svc HisPatientService) SelectListAll(params *model.PageHisPatientReq) ([]m
 }
 
 //根据条件分页查询数据
-func (svc HisPatientService) SelectListByPage(params *model.PageHisPatientReq) ([]model.HisPatient, *page.Paging, error) {
+func (svc HisPatientService) SelectListByPage(params *model.PageHisPatientReq) ([]model.HisPatient, *lv_web.Paging, error) {
 	entity := model.HisPatient{}
 	return entity.SelectListByPage(params)
 }

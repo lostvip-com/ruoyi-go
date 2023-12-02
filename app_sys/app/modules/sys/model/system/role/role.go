@@ -3,8 +3,8 @@ package role
 import (
 	"errors"
 	"lostvip.com/db"
-	"lostvip.com/utils/excel"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_office"
+	"lostvip.com/utils/lv_web"
 	"time"
 	"xorm.io/builder"
 )
@@ -93,9 +93,9 @@ type EditReq struct {
 }
 
 // 根据条件分页查询角色数据
-func SelectListPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
+func SelectListPage(param *SelectPageReq) ([]Entity, *lv_web.Paging, error) {
 	db := db.Instance().Engine()
-	p := new(page.Paging)
+	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
 	}
@@ -134,7 +134,7 @@ func SelectListPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
 
 	if param.OrderByColumn != "" {
 		model.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")
@@ -186,7 +186,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 	sqlStr, _, _ := build.ToSQL()
 	arr, err := db.SQL(sqlStr).QuerySliceString()
 
-	path, err := excel.DownlaodExcel(head, arr)
+	path, err := lv_office.DownlaodExcel(head, arr)
 
 	return path, err
 }

@@ -6,13 +6,13 @@
 package service
 
 import (
-		"errors"
-    	"github.com/gin-gonic/gin"
-    	"lostvip.com/utils/convert"
-    	"lostvip.com/utils/page"
-    	"robvi/app/modules/biz/model"
-    	"robvi/app/modules/sys/service"
-    	"time"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
+	"robvi/app/modules/biz/model"
+	"robvi/app/modules/sys/service"
+	"time"
 )
 type DpcTaskService struct{}
 //根据主键查询数据
@@ -35,7 +35,7 @@ func (svc DpcTaskService) DeleteRecordById(id int64) bool {
 
 //批量删除数据记录
 func (svc DpcTaskService) DeleteRecordByIds(ids string) int64 {
-	ida := convert.ToInt64Array(ids, ",")
+	ida := lv_conv.ToInt64Array(ids, ",")
     var entity *model.DpcTask
 	result, err := entity.DeleteBatch(ida...)
 	if err != nil {
@@ -119,7 +119,7 @@ func (svc DpcTaskService) SelectListAll(params *model.PageDpcTaskReq) ([]model.D
 }
 
 //根据条件分页查询数据
-func (svc DpcTaskService) SelectListByPage(params *model.PageDpcTaskReq) ([]model.DpcTask, *page.Paging, error) {
+func (svc DpcTaskService) SelectListByPage(params *model.PageDpcTaskReq) ([]model.DpcTask, *lv_web.Paging, error) {
 	entity := model.DpcTask{}
 	return entity.SelectListByPage(params)
 }

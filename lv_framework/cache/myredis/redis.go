@@ -23,10 +23,10 @@ func GetInstance() *redis.Client {
 
 // 获取缓存单例
 func NewInstance(indexDb int) *redis.Client {
-	vipperCfg := conf.Config().GetVipperCfg()
-	addr := vipperCfg.GetString("go.redis.host")
-	port := vipperCfg.GetString("go.redis.port")
-	password := vipperCfg.GetString("go.redis.password")
+	conf := conf.Config()
+	addr := conf.GetValueStr("go.redis.host")
+	port := conf.GetValueStr("go.redis.port")
+	password := conf.GetValueStr("go.redis.password")
 	once.Do(func() {
 		rdb = redis.NewClient(&redis.Options{
 			Addr:     addr + ":" + port,
@@ -42,7 +42,7 @@ func NewInstance(indexDb int) *redis.Client {
 			  port: %v
 			  password: %v
              `
-		panic(fmt.Sprintf(msg, vipperCfg.GetString("go.redis.host"), vipperCfg.GetString("go.redis.port"), vipperCfg.GetString("go.redis.password")))
+		panic(fmt.Sprintf(msg, conf.GetValueStr("go.redis.host"), conf.GetValueStr("go.redis.port"), conf.GetValueStr("go.redis.password")))
 	}
 	return rdb
 }

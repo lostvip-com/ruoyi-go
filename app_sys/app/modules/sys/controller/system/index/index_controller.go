@@ -3,8 +3,8 @@ package index
 import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
 	"robvi/app/global"
@@ -37,7 +37,7 @@ func goIndex(c *gin.Context, indexPageDefault string) {
 			menus = tmp
 		}
 	} else {
-		tmp, err := menuService.SelectMenusByUserId(gconv.String(user.UserId))
+		tmp, err := menuService.SelectMenusByUserId(lv_conv.String(user.UserId))
 		if err == nil {
 			menus = tmp
 		}
@@ -68,7 +68,7 @@ func goIndex(c *gin.Context, indexPageDefault string) {
 	}
 	//"menuStyle", cookie.Value, 1000, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly
 	c.SetCookie(cookie.Name, menuStyle, cookie.MaxAge, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
-	response.BuildTpl(c, targetIndex).WriteTpl(gin.H{
+	lv_web.BuildTpl(c, targetIndex).WriteTpl(gin.H{
 		"avatar":    avatar,
 		"loginname": loginname,
 		"username":  username,
@@ -80,7 +80,7 @@ func goIndex(c *gin.Context, indexPageDefault string) {
 
 // 后台框架欢迎页面
 func Main(c *gin.Context) {
-	response.BuildTpl(c, "main").WriteTpl()
+	lv_web.BuildTpl(c, "main").WriteTpl()
 }
 
 // 下载 public/upload 文件头像之类
@@ -88,7 +88,7 @@ func Download(c *gin.Context) {
 	fileName := c.Query("fileName")
 	//delete := c.Query("delete")
 	if fileName == "" {
-		response.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -98,7 +98,7 @@ func Download(c *gin.Context) {
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
-		response.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -115,7 +115,7 @@ func Download(c *gin.Context) {
 
 // 切换皮肤
 func SwitchSkin(c *gin.Context) {
-	response.BuildTpl(c, "skin").WriteTpl()
+	lv_web.BuildTpl(c, "skin").WriteTpl()
 }
 
 // 注销

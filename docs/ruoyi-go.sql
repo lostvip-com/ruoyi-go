@@ -759,7 +759,7 @@ INSERT INTO `sys_menu` VALUES (41, '动态增删改查', 7, 15, '/demo/table/cur
 INSERT INTO `sys_menu` VALUES (42, '表格拖曳', 7, 16, '/demo/table/recorder', '', 'C', '0', 'demo:recorder:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (43, '行内编辑', 7, 17, '/demo/table/editable', '', 'C', '0', 'demo:editable:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (44, '其它操作', 7, 18, '/demo/table/other', '', 'C', '0', 'demo:other:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
-INSERT INTO `sys_menu` VALUES (45, '查询条件', 7, 1, '/demo/table/search', '', 'C', '0', 'demo:search:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
+INSERT INTO `sys_menu` VALUES (45, '查询条件', 7, 1, '/demo/table/lv_sql', '', 'C', '0', 'demo:lv_sql:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (46, '弹层组件', 8, 2, '/demo/modal/layer', '', 'C', '0', 'demo:layer:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (47, '弹层表格', 8, 3, '/demo/modal/table', '', 'C', '0', 'demo:table:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (48, '模态窗口', 8, 1, '/demo/modal/dialog', '', 'C', '0', 'demo:dialog:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');

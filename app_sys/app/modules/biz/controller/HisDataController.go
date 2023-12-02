@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/lib_net"
+	"lostvip.com/utils/lv_net"
 	"net/url"
 )
 
@@ -16,7 +16,7 @@ type HisDataController struct {
 //func (w HisDataController) SugSite(c *gin.Context) {
 //	fmt.Println(" ########## host: ")
 //	host := "127.0.0.1:7300"
-//	lib_net.ProxyWithUrlSame(c, host)
+//	lv_net.ProxyWithUrlSame(c, host)
 //	fmt.Println("=============over==================")
 //}
 
@@ -27,7 +27,7 @@ func (w HisDataController) SugSite(c *gin.Context) {
 	fmt.Println("=============SugSite start==================")
 	query := "q=" + url.QueryEscape(c.Query("q"))
 	url := "http://gateway1:8888/iotsettings/navtree/site"
-	lib_net.ProxyWithUrlDifferent(c, url, query)
+	lv_net.ProxyWithUrlDifferent(c, url, query)
 	fmt.Println("=============SugSite over==================")
 }
 
@@ -38,7 +38,7 @@ func (w HisDataController) SugSite(c *gin.Context) {
 func (w HisDataController) CopyCsv2His(c *gin.Context) {
 	host := "gateway1:8888"
 	fmt.Println("=============copy_his_2_aggDevPowerDay start================" + host)
-	lib_net.ProxyWithUrlSame(c, host)
+	lv_net.ProxyWithUrlSame(c, host)
 	fmt.Println("=========copy_his_2_aggDevPowerDay over==================")
 }
 
@@ -49,7 +49,7 @@ func (w HisDataController) CopyCsv2His(c *gin.Context) {
 func (w HisDataController) CopyHis2AggDevPowerDay(c *gin.Context) {
 	host := "gateway1:8888"
 	fmt.Println("=============copy_his_2_aggDevPowerDay start================" + host)
-	lib_net.ProxyWithUrlSame(c, host)
+	lv_net.ProxyWithUrlSame(c, host)
 	fmt.Println("=========copy_his_2_aggDevPowerDay over==================")
 }
 
@@ -62,6 +62,6 @@ func (w HisDataController) CopyHis2AggDevPowerDay(c *gin.Context) {
 func (w HisDataController) CopyHis2UnqSeqPower(c *gin.Context) {
 	host := "gateway1:8888"
 	fmt.Println("=============copy_his_2_aggDevPowerDay start================" + host)
-	lib_net.ProxyWithUrlSame(c, host)
+	lv_net.ProxyWithUrlSame(c, host)
 	fmt.Println("=========copy_his_2_aggDevPowerDay over==================")
 }

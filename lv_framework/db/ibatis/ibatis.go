@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cast"
 	"io"
 	"lostvip.com/logme"
-	"lostvip.com/utils/lib_file"
+	"lostvip.com/utils/lv_tpl"
 	"os"
 	"reflect"
 	"robvi/app/global"
@@ -68,7 +68,7 @@ func (e *IBatis) GetSql(tagName string, params interface{}) (string, error) {
 		logme.Log.Info("========>SQL:  " + query)
 	}
 	//动态解析
-	sql, err := lib_file.ParseTemplateStr(query, params)
+	sql, err := lv_tpl.ParseTemplateStr(query, params)
 	if err != nil {
 		panic(err)
 	}

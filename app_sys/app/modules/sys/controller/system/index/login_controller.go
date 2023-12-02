@@ -7,11 +7,10 @@ import (
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
 	"lostvip.com/cache/myredis"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/ip"
-	"lostvip.com/utils/lib_net"
-	"lostvip.com/utils/lib_secret"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_net"
+	"lostvip.com/utils/lv_secret"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/global"
 	logininforModel "robvi/app/modules/sys/model/monitor/logininfor"
@@ -38,16 +37,16 @@ type RegisterReq struct {
 func Login(c *gin.Context) {
 
 	if strings.EqualFold(c.Request.Header.Get("X-Requested-With"), "XMLHttpRequest") {
-		response.ErrorResp(c).SetMsg("未登录或登录超时。请重新登录").WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg("未登录或登录超时。请重新登录").WriteJsonExit()
 		return
 	}
-	clientIp := lib_net.GetClientRealIP(c)
+	clientIp := lv_net.GetClientRealIP(c)
 	errTimes := logininforService.GetPasswordCounts(clientIp)
 	codeShow := 0 //默认不显示验证码
 	if errTimes > 5 {
 		codeShow = 1
 	}
-	response.BuildTpl(c, "login").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "login").WriteTpl(gin.H{
 		"CodeShow": codeShow,
 	})
 }
@@ -57,22 +56,22 @@ func CheckLogin(c *gin.Context) {
 	var req = RegisterReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	clientIp := lib_net.GetClientRealIP(c)
+	clientIp := lv_net.GetClientRealIP(c)
 	errTimes4Ip := logininforService.GetPasswordCounts(clientIp)
 	if errTimes4Ip > 5 { //超过5次错误开始校验验证码
 		//比对验证码
 		verifyResult := base64Captcha.VerifyCaptcha(req.IdKey, req.ValidateCode)
 		if !verifyResult {
-			response.ErrorResp(c).SetData(errTimes4Ip).SetMsg("验证码不正确").WriteJsonExit()
+			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("验证码不正确").WriteJsonExit()
 			return
 		}
 	}
 	isLock := logininforService.CheckLock(req.UserName)
 	if isLock {
-		response.ErrorResp(c).SetMsg("账号已锁定，请30分钟后再试").WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg("账号已锁定，请30分钟后再试").WriteJsonExit()
 		return
 	}
 	var userService service.UserService
@@ -84,15 +83,15 @@ func CheckLogin(c *gin.Context) {
 		having := global.ErrTimes2Lock - errTimes4UserName
 		SaveLogs(c, &req, "账号或密码不正确") //记录日志
 		if having <= 5 {
-			response.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确,还有" + gconv.String(having) + "次之后账号将锁定").WriteJsonExit()
+			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确,还有" + lv_conv.String(having) + "次之后账号将锁定").WriteJsonExit()
 		} else {
-			response.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确!").WriteJsonExit()
+			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确!").WriteJsonExit()
 		}
 	} else {
 		//保存在线状态
 		cookie, _ := c.Request.Cookie("token")
 		//token, _ := token.New(user.LoginName, user.UserId, user.TenantId).CreateToken()
-		token := lib_secret.Md5(user.LoginName + time.UnixDate)
+		token := lv_secret.Md5(user.LoginName + time.UnixDate)
 		maxage := 3600 * 8
 		path := global.GetConfigInstance().GetContextPath()
 		if cookie == nil {
@@ -109,7 +108,7 @@ func CheckLogin(c *gin.Context) {
 		// 生成token
 		SaveUserToSession(token, user, c)
 		SaveLogs(c, &req, "登陆成功") //记录日志
-		response.SucessResp(c).SetData(token).SetMsg("登陆成功").WriteJsonExit()
+		lv_web.SucessResp(c).SetData(token).SetMsg("登陆成功").WriteJsonExit()
 	}
 }
 
@@ -122,7 +121,7 @@ func SaveLogs(c *gin.Context, req *RegisterReq, msg string) {
 	logininfor.Os = ua.OS()
 	logininfor.Browser, _ = ua.Browser()
 	logininfor.LoginTime = time.Now()
-	logininfor.LoginLocation = ip.GetCityByIp(logininfor.Ipaddr)
+	logininfor.LoginLocation = lv_net.GetCityByIp(logininfor.Ipaddr)
 	logininfor.Msg = msg
 	logininfor.Status = "0"
 	logininfor.Insert()
@@ -131,7 +130,7 @@ func SaveLogs(c *gin.Context, req *RegisterReq, msg string) {
 // 保存用户信息到session
 func SaveUserToSession(token string, user *userModel.SysUser, c *gin.Context) {
 	loginIp := c.ClientIP()
-	loginLocation := ip.GetCityByIp(loginIp)
+	loginLocation := lv_net.GetCityByIp(loginIp)
 	//记录到redis
 	redis := myredis.GetInstance()
 	ctx := context.Background()

@@ -7,7 +7,7 @@
 package online
 
 import (
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_web"
 	online2 "robvi/app/modules/sys/model/monitor/online"
 	"strings"
 )
@@ -54,6 +54,6 @@ func SelectListAll(params *online2.SelectPageReq) ([]online2.UserOnline, error) 
 }
 
 // 根据条件分页查询数据
-func SelectListByPage(params *online2.SelectPageReq) ([]online2.UserOnline, *page.Paging, error) {
+func SelectListByPage(params *online2.SelectPageReq) ([]online2.UserOnline, *lv_web.Paging, error) {
 	return online2.SelectListByPage(params)
 }

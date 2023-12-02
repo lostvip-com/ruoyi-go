@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	response2 "lostvip.com/utils/response"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/modules/sys/model"
 )
@@ -10,7 +10,7 @@ import (
 type OperateController struct{}
 
 func (w OperateController) Add(c *gin.Context) {
-	response2.BuildTpl(c, "modules/demo/operate/add").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/operate/add").WriteTpl()
 }
 
 func (w OperateController) Detail(c *gin.Context) {
@@ -24,7 +24,7 @@ func (w OperateController) Detail(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response2.BuildTpl(c, "modules/demo/operate/detail").WriteTpl(gin.H{"user": tmp})
+	lv_web.BuildTpl(c, "modules/demo/operate/detail").WriteTpl(gin.H{"user": tmp})
 }
 
 type User struct {
@@ -50,7 +50,7 @@ func (w OperateController) EditSave(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response2.SucessResp(c).SetData(tmp).Log("demo演示", gin.H{"UserId": 1}).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(tmp).Log("demo演示", gin.H{"UserId": 1}).WriteJsonExit()
 }
 
 func (w OperateController) Edit(c *gin.Context) {
@@ -64,15 +64,15 @@ func (w OperateController) Edit(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response2.BuildTpl(c, "modules/demo/operate/edit").WriteTpl(gin.H{"user": tmp})
+	lv_web.BuildTpl(c, "modules/demo/operate/edit").WriteTpl(gin.H{"user": tmp})
 }
 
 func (w OperateController) Other(c *gin.Context) {
-	response2.BuildTpl(c, "modules/demo/operate/other").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/operate/other").WriteTpl()
 }
 
 func (w OperateController) Table(c *gin.Context) {
-	response2.BuildTpl(c, "modules/demo/operate/table").WriteTpl()
+	lv_web.BuildTpl(c, "modules/demo/operate/table").WriteTpl()
 }
 
 func (w OperateController) List(c *gin.Context) {

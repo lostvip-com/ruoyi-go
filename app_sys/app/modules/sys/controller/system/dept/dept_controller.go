@@ -2,8 +2,8 @@ package dept
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/gconv"
-	response2 "lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/common/session"
 	"robvi/app/modules/sys/model"
@@ -13,7 +13,7 @@ import (
 
 // 列表页
 func List(c *gin.Context) {
-	response2.BuildTpl(c, "system/dept/list").WriteTpl()
+	lv_web.BuildTpl(c, "system/dept/list").WriteTpl()
 }
 
 // 列表分页数据
@@ -22,7 +22,7 @@ func ListAjax(c *gin.Context) {
 	var req = dept2.SelectPageReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 	profile := session.GetProfile(c)
@@ -40,7 +40,7 @@ func ListAjax(c *gin.Context) {
 
 // 新增页面
 func Add(c *gin.Context) {
-	pid := gconv.Int64(c.Query("pid"))
+	pid := lv_conv.Int64(c.Query("pid"))
 
 	if pid == 0 {
 		pid = 100
@@ -48,7 +48,7 @@ func Add(c *gin.Context) {
 	service := service.DeptService{}
 	tmp := service.SelectDeptById(pid)
 
-	response2.BuildTpl(c, "system/dept/add").WriteTpl(gin.H{"dept": tmp})
+	lv_web.BuildTpl(c, "system/dept/add").WriteTpl(gin.H{"dept": tmp})
 }
 
 // 新增页面保存
@@ -57,12 +57,12 @@ func AddSave(c *gin.Context) {
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	if service.CheckDeptNameUniqueAll(req.DeptName, req.ParentId) == "1" {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 		return
 	}
 	user := session.GetProfile(c)
@@ -73,17 +73,17 @@ func AddSave(c *gin.Context) {
 	rid, err := service.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	response2.SucessResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func Edit(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
+	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -92,13 +92,13 @@ func Edit(c *gin.Context) {
 	dept := service.SelectDeptById(id)
 
 	if dept == nil || dept.DeptId <= 0 {
-		response2.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "部门不存在",
 		})
 		return
 	}
 
-	response2.BuildTpl(c, "system/dept/edit").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "system/dept/edit").WriteTpl(gin.H{
 		"dept": dept,
 	})
 }
@@ -110,34 +110,34 @@ func EditSave(c *gin.Context) {
 	var req *dept2.EditReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	if service.CheckDeptNameUnique(req.DeptName, req.DeptId, req.ParentId) == "1" {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	response2.SucessResp(c).SetData(rs).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(rs).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 }
 
 // 删除数据
 func Remove(c *gin.Context) {
-	id := gconv.Int64(c.Query("id"))
+	id := lv_conv.Int64(c.Query("id"))
 	service := service.DeptService{}
 	rs := service.DeleteDeptById(id)
 
 	if rs > 0 {
-		response2.SucessResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	} else {
-		response2.ErrorResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	}
 }
 
@@ -151,16 +151,16 @@ func TreeData(c *gin.Context) {
 
 // 加载部门列表树选择页面
 func SelectDeptTree(c *gin.Context) {
-	deptId := gconv.Int64(c.Query("deptId"))
+	deptId := lv_conv.Int64(c.Query("deptId"))
 	service := service.DeptService{}
 	deptPoint := service.SelectDeptById(deptId)
 
 	if deptPoint != nil {
-		response2.BuildTpl(c, "system/dept/tree").WriteTpl(gin.H{
+		lv_web.BuildTpl(c, "system/dept/tree").WriteTpl(gin.H{
 			"dept": *deptPoint,
 		})
 	} else {
-		response2.BuildTpl(c, "system/dept/tree").WriteTpl()
+		lv_web.BuildTpl(c, "system/dept/tree").WriteTpl()
 	}
 }
 
@@ -168,11 +168,11 @@ func SelectDeptTree(c *gin.Context) {
 func RoleDeptTreeData(c *gin.Context) {
 	var service service.DeptService
 	tenantId := session.GetTenantId(c)
-	roleId := gconv.Int64(c.Query("roleId"))
+	roleId := lv_conv.Int64(c.Query("roleId"))
 	result, err := service.RoleDeptTreeData(roleId, tenantId)
 
 	if err != nil {
-		response2.ErrorResp(c).SetMsg(err.Error()).Log("菜单树", gin.H{"roleId": roleId})
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("菜单树", gin.H{"roleId": roleId})
 		return
 	}
 

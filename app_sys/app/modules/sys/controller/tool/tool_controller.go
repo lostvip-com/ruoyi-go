@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/db"
 	"lostvip.com/db/ibatis"
-	"lostvip.com/utils/gconv"
-	"lostvip.com/utils/lib_file"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_file"
+	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
 	"os/exec"
@@ -17,15 +17,15 @@ import (
 
 // 表单构建
 func Build(c *gin.Context) {
-	response.BuildTpl(c, "tool/build").WriteTpl()
+	lv_web.BuildTpl(c, "tool/build").WriteTpl()
 }
 
 // swagger文档
 func ExecSqlFile(c *gin.Context) {
-	tableId := gconv.Int64(c.Query("tableId"))
+	tableId := lv_conv.Int64(c.Query("tableId"))
 	//获取参数
 	if tableId <= 0 {
-		response.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("执行SQL文件错误", gin.H{"tableId": tableId})
+		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("执行SQL文件错误", gin.H{"tableId": tableId})
 	}
 	tb := tool2.GenTable{}
 	po, err := tb.SelectGenTableById(tableId)
@@ -36,7 +36,7 @@ func ExecSqlFile(c *gin.Context) {
 	curDir, _ := os.Getwd()
 	sqlFile := curDir + "/tmp/sql/" + po.ModuleName + "/" + po.TbName + "_menu.sql"
 
-	if !lib_file.FileExist(sqlFile) {
+	if !lv_file.IsFileExist(sqlFile) {
 		panic("生成代码后再执行此操作")
 	}
 	//err = db.ExecSqlFile(sqlFile)
@@ -57,7 +57,7 @@ func ExecSqlFile(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	response.Sucess(c, nil)
+	lv_web.Sucess(c, nil)
 }
 
 // swagger文档
@@ -67,7 +67,7 @@ func Swagger(c *gin.Context) {
 		//重新生成文档
 		curDir, err := os.Getwd()
 		if err != nil {
-			response.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+			lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 				"desc": "参数错误",
 			})
 			c.Abort()
@@ -76,7 +76,7 @@ func Swagger(c *gin.Context) {
 		genPath := curDir + "/static/swagger"
 		err = generateSwaggerFiles(genPath)
 		if err != nil {
-			response.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+			lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
 				"desc": "参数错误",
 			})
 			c.Abort()

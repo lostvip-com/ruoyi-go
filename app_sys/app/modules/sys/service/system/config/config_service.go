@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/conf"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_web"
 	"strings"
 
 	config2 "robvi/app/modules/sys/model/system/config"
@@ -92,7 +92,7 @@ func DeleteRecordById(id int64) bool {
 
 // 批量删除数据记录
 func DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	list, _ := config2.FindIn("config_id", idarr)
 	rs, err := config2.DeleteBatch(idarr...)
 	if err != nil {
@@ -175,7 +175,7 @@ func SelectListAll(params *config2.SelectPageReq) ([]config2.Entity, error) {
 }
 
 // 根据条件分页查询角色数据
-func SelectListByPage(params *config2.SelectPageReq) ([]config2.Entity, *page.Paging, error) {
+func SelectListByPage(params *config2.SelectPageReq) ([]config2.Entity, *lv_web.Paging, error) {
 	return config2.SelectListByPage(params)
 }
 

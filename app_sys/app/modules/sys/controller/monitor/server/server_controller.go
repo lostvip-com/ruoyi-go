@@ -8,9 +8,9 @@ import (
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
-	ip2 "lostvip.com/utils/ip"
-	"lostvip.com/utils/response"
-	time2 "lostvip.com/utils/time"
+	ip2 "lostvip.com/utils/lv_net"
+	time2 "lostvip.com/utils/lv_time"
+	"lostvip.com/utils/lv_web"
 	"os"
 	"runtime"
 	"strconv"
@@ -108,7 +108,7 @@ func Server(c *gin.Context) {
 		}
 	}
 
-	response.BuildTpl(c, "monitor/server/server").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "monitor/server/server").WriteTpl(gin.H{
 		"cpuNum":          cpuNum,
 		"cpuUsed":         cpuUsed,
 		"cpuAvg5":         cpuAvg5,

@@ -3,7 +3,7 @@ package tool
 import (
 	"errors"
 	"lostvip.com/db"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_web"
 )
 
 // Fill with you ideas below.
@@ -79,9 +79,9 @@ func (r *GenTable) SelectRecordById(id int64) (*EntityExtend, error) {
 }
 
 // 根据条件分页查询数据
-func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *page.Paging, error) {
+func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error) {
 	db := db.Instance().Engine()
-	p := new(page.Paging)
+	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
 	}
@@ -114,7 +114,7 @@ func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *page.Pag
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
 
 	model.Limit(p.Pagesize, p.StartNum)
 	var result []GenTable
@@ -124,9 +124,9 @@ func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *page.Pag
 }
 
 // 查询据库列表
-func SelectDbTableList(param *SelectPageReq) ([]GenTable, *page.Paging, error) {
+func SelectDbTableList(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error) {
 	db := db.Instance().Engine()
-	p := new(page.Paging)
+	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
 	}
@@ -161,7 +161,7 @@ func SelectDbTableList(param *SelectPageReq) ([]GenTable, *page.Paging, error) {
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
 
 	model.Select("table_name, table_comment, create_time, update_time")
 	model.Limit(p.Pagesize, p.StartNum)

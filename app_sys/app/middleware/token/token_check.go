@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/logme"
-	"lostvip.com/utils/lib_net"
+	"lostvip.com/utils/lv_net"
 	"net/http"
 	"robvi/app/global"
 	"robvi/app/modules/sys/service"
@@ -19,7 +19,7 @@ func TokenMiddleware() func(c *gin.Context) {
 		// 客户端携带Token有三种方式 1.放在请求头 2.放在请求体 3.放在URI
 		// 这里的具体实现方式要依据你的实际业务情况决定
 		logme.Log.Info("URL------------>" + c.Request.RequestURI)
-		tokenStr := lib_net.GetParam(c, "token")
+		tokenStr := lv_net.GetParam(c, "token")
 		isSignIn := user.IsSignedIn(tokenStr)
 		if !isSignIn {
 			c.Redirect(http.StatusFound, global.GetConfigInstance().GetContextPath()+"/login")

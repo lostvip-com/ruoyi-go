@@ -8,7 +8,7 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/db/ibatis"
 	"lostvip.com/logme"
-	"lostvip.com/utils/response"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/modules/biz/model"
 	"time"
 )
@@ -19,7 +19,7 @@ var SQL_FILE_PATIENT_MAPPER = "patient/his_patient_mapper.tpl"
 func (w DemoController) TestMybatis1(c *gin.Context) {
 	req := model.PageHisPatientReq{Name: "test", PageNum: 1, PageSize: 100}
 	if err := c.ShouldBind(req); err != nil { //获取参数
-		response.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
 		return
 	}
 
@@ -32,7 +32,7 @@ func (w DemoController) TestMybatis1(c *gin.Context) {
 	} else {
 		logme.Log.Info(list)
 	}
-	response.PageOK(c, list, total, "")
+	lv_web.PageOK(c, list, total, "")
 }
 
 func (w DemoController) TestMybatisStr2(c *gin.Context) {
@@ -50,7 +50,7 @@ func (w DemoController) TestMybatisStr2(c *gin.Context) {
 	} else {
 		logme.Log.Info(list)
 	}
-	response.PageOK(c, list, total, "")
+	lv_web.PageOK(c, list, total, "")
 }
 
 func (w DemoController) TestRedis(c *gin.Context) {
@@ -68,5 +68,5 @@ func (w DemoController) TestRedis(c *gin.Context) {
 	fmt.Println("------------myredis----------------------123")
 	data1 := redis.HGet(ctx, "mapKey1", "test")
 	fmt.Println(data1)
-	response.Sucess(c, data1)
+	lv_web.Sucess(c, data1)
 }

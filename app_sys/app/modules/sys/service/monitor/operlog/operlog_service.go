@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/convert"
-	"lostvip.com/utils/ip"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_net"
+	"lostvip.com/utils/lv_web"
 	"robvi/app/modules/sys/model"
 	"robvi/app/modules/sys/model/monitor/oper_log"
 	"robvi/app/modules/sys/service"
@@ -56,7 +56,7 @@ func Add(c *gin.Context, title, inContent string, outContent *model.CommonRes) e
 	operLog.Method = c.Request.Method
 	operLog.OperIp = c.ClientIP()
 
-	operLog.OperLocation = ip.GetCityByIp(operLog.OperIp)
+	operLog.OperLocation = lv_net.GetCityByIp(operLog.OperIp)
 	operLog.OperTime = time.Now()
 
 	_, err := operLog.Insert()
@@ -64,7 +64,7 @@ func Add(c *gin.Context, title, inContent string, outContent *model.CommonRes) e
 }
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *oper_log.SelectPageReq) (*[]oper_log.Entity, *page.Paging, error) {
+func SelectPageList(param *oper_log.SelectPageReq) (*[]oper_log.Entity, *lv_web.Paging, error) {
 	return oper_log.SelectPageList(param)
 }
 
@@ -88,7 +88,7 @@ func DeleteRecordById(id int64) bool {
 
 // 批量删除记录
 func DeleteRecordByIds(ids string) int64 {
-	idarr := convert.ToInt64Array(ids, ",")
+	idarr := lv_conv.ToInt64Array(ids, ",")
 	result, _ := oper_log.DeleteBatch(idarr...)
 	return result
 }

@@ -3,7 +3,7 @@ package menu
 import (
 	"errors"
 	"lostvip.com/db"
-	"lostvip.com/utils/page"
+	"lostvip.com/utils/lv_web"
 )
 
 // SysMenu is the golang structure for table sys_menu.
@@ -84,9 +84,9 @@ func SelectRecordById(id int64) (*EntityExtend, error) {
 }
 
 // 根据条件分页查询数据
-func SelectListPage(param *SelectPageReq) (*[]SysMenu, *page.Paging, error) {
+func SelectListPage(param *SelectPageReq) (*[]SysMenu, *lv_web.Paging, error) {
 	db := db.Instance().Engine()
-	p := new(page.Paging)
+	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
 	}
@@ -119,7 +119,7 @@ func SelectListPage(param *SelectPageReq) (*[]SysMenu, *page.Paging, error) {
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
 
 	model.Limit(p.Pagesize, p.StartNum)
 

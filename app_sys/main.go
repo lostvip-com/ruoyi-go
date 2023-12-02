@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	db "lostvip.com/db"
+	"lostvip.com/logme"
 	"lostvip.com/web/server"
 	"robvi/app/global"
 	_ "robvi/app/modules"
@@ -21,10 +22,10 @@ import (
 // @host localhost
 // @BasePath /api
 func main() {
-	//str, _ := gmd5.Encrypt("123456")
-	//println(">>>>>>>>>>>>>: " + str)
 	cfg := global.GetConfigInstance()
+	logme.InitLog("./logru.log")
 	if cfg.IsDebug() {
+		// Only log the warning severity or above.
 		gin.SetMode("debug")
 		db.Instance().Engine().ShowSQL(true)
 	}

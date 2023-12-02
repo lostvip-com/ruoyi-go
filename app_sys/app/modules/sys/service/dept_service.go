@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lv_conv"
 	"robvi/app/modules/sys/model"
 	dept2 "robvi/app/modules/sys/model/system/dept"
 	"strings"
@@ -44,7 +44,7 @@ func (svc *DeptService) AddSave(req *dept2.AddReq, c *gin.Context) (int64, error
 
 	_, err = dept0.Insert()
 	//这里跟原版不一样了，多加了一级自己的ID，以方便数据权限控制
-	dept0.Ancestors = parent.Ancestors + "," + gconv.String(dept0.DeptId)
+	dept0.Ancestors = parent.Ancestors + "," + lv_conv.String(dept0.DeptId)
 	return dept0.DeptId, err
 }
 
@@ -62,10 +62,10 @@ func (svc *DeptService) EditSave(req *dept2.EditReq, c *gin.Context) (int64, err
 		if pdept.Status != "0" {
 			return 0, errors.New("部门停用，不允许新增")
 		} else {
-			if !strings.HasSuffix(pdept.Ancestors, gconv.String(pdept.DeptId)) { //修复数据用，
-				pdept.Ancestors = pdept.Ancestors + "," + gconv.String(pdept.DeptId)
+			if !strings.HasSuffix(pdept.Ancestors, lv_conv.String(pdept.DeptId)) { //修复数据用，
+				pdept.Ancestors = pdept.Ancestors + "," + lv_conv.String(pdept.DeptId)
 			}
-			newAncestors := pdept.Ancestors + "," + gconv.String(dept0.DeptId) //上级的+自己的
+			newAncestors := pdept.Ancestors + "," + lv_conv.String(dept0.DeptId) //上级的+自己的
 			dept2.UpdateDeptChildren(dept0.DeptId, newAncestors, dept0.Ancestors)
 
 			dept0.DeptName = req.DeptName
@@ -177,7 +177,7 @@ func (svc *DeptService) InitZtree(deptList *[]dept2.SysDept, roleDeptList *[]str
 			ztree.Name = (*deptList)[i].DeptName
 			ztree.Title = (*deptList)[i].DeptName
 			if isCheck {
-				tmp := gconv.String((*deptList)[i].DeptId) + (*deptList)[i].DeptName
+				tmp := lv_conv.String((*deptList)[i].DeptId) + (*deptList)[i].DeptName
 				tmpcheck := false
 				for j := range *roleDeptList {
 					if strings.EqualFold((*roleDeptList)[j], tmp) {

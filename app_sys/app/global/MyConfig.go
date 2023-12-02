@@ -25,7 +25,6 @@ func GetConfigInstance() conf.IConfig {
 		cfg.LoadConf()
 		conf.RegisterCfg(cfg)
 		//日志
-		logme.InitLog("logs/logru.log")
 	}
 	return cfg
 }

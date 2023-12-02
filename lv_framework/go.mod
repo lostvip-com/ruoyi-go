@@ -20,4 +20,5 @@ require (
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/tealeg/xlsx v1.0.5 // indirect
 	golang.org/x/tools v0.7.0 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )

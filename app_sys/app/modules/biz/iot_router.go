@@ -12,7 +12,7 @@ func init() {
 	hisData := controller.HisDataController{}
 	//g1 := router.New("/iot/hisData")
 	g1 := router.New("/")
-	//page
+	//lv_web
 	g1.GET("/iot/hisData/toWizard", "", hisData.ToWizard)
 	//data
 	g1.GET("/iot/hisData/sugSite", "", hisData.SugSite)

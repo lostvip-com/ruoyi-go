@@ -38,4 +38,6 @@ type IConfig interface {
 	IsDebug() bool
 	GetVipperCfg() *viper.Viper
 	GetConf(key string) string
+	GetValueStr(key string) string
+	GetBool(key string) bool
 }

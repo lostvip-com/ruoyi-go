@@ -9,9 +9,11 @@
 * 没有interface接口
 * 支持nacos服务注册
 * 兼容springcloud服务
-
-
-
+* 支持在yaml文件中使用表达式从环境变量中取值，便于切换生产、开发、测试环境参数（模仿springboot）,如：
+~~~
+    host: ${"REDIS_HOST":"lostvip.com"}
+~~~
+如果环境变量中存在 REDIS_HOST 则使用环境变量中的值，否则使用默认值 lostvip.com .方便docker容器中切换。
 #### 二、目录结构  
 本着简单易用的原则，简化工程结构，没有dao层、没有过多的业务模块，以微服务做为业务处理单元。
 

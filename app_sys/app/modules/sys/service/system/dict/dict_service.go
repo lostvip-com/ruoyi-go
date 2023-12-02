@@ -3,7 +3,7 @@ package dict
 import (
 	"encoding/json"
 	"html/template"
-	"lostvip.com/utils/gconv"
+	"lostvip.com/utils/lv_conv"
 	dictDataModel "robvi/app/modules/sys/model/system/dict_data"
 	"strings"
 )
@@ -11,7 +11,7 @@ import (
 // 根据字典类型和字典键值查询字典数据信息
 func GetDictLabel(dictType string, dictValue interface{}) template.HTML {
 	result := ""
-	dictData := &dictDataModel.Entity{DictType: dictType, DictValue: gconv.String(dictValue)}
+	dictData := &dictDataModel.Entity{DictType: dictType, DictValue: lv_conv.String(dictValue)}
 	ok, _ := dictData.FindOne()
 	if ok {
 		result = dictData.DictLabel
@@ -34,15 +34,15 @@ func GetDictTypeRadio(dictType, name string, value interface{}) template.HTML {
 	htmlstr := ``
 
 	for _, item := range result {
-		if strings.Compare(item.DictValue, gconv.String(value)) == 0 {
+		if strings.Compare(item.DictValue, lv_conv.String(value)) == 0 {
 			htmlstr += `<div class="radio-box"><option value="` + item.DictValue + `">` + item.DictLabel + `</option>`
-			htmlstr += `<input type="radio" id="` + gconv.String(item.DictCode) + `" name="` + name + `" value="` + item.DictValue + `"
+			htmlstr += `<input type="radio" id="` + lv_conv.String(item.DictCode) + `" name="` + name + `" value="` + item.DictValue + `"
                            checked="checked">
-                    <label for="` + gconv.String(item.DictCode) + `" text="` + item.DictLabel + `"></label></div>`
+                    <label for="` + lv_conv.String(item.DictCode) + `" text="` + item.DictLabel + `"></label></div>`
 		} else {
 			htmlstr += `<div class="radio-box"><option value="` + item.DictValue + `">` + item.DictLabel + `</option>`
-			htmlstr += `<input type="radio" id="` + gconv.String(item.DictCode) + `" name="` + name + `" value="` + item.DictValue + `">
-                    <label for="` + gconv.String(item.DictCode) + `" text="` + item.DictLabel + `"></label></div>`
+			htmlstr += `<input type="radio" id="` + lv_conv.String(item.DictCode) + `" name="` + name + `" value="` + item.DictValue + `">
+                    <label for="` + lv_conv.String(item.DictCode) + `" text="` + item.DictLabel + `"></label></div>`
 		}
 	}
 
