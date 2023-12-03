@@ -20,7 +20,7 @@ type {{.table.ClassName}} struct { {{range $index, $column := .table.Columns}}
 
 //映射数据表
 func (e *{{.table.ClassName}}) TableName() string {
-	return "{{.table.TableName}}"
+	return "{{.table.TbName}}"
 }
 
 // 插入数据
