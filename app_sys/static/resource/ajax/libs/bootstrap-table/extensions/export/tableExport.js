@@ -31,7 +31,7 @@
         jspdf: {
           orientation:  'p',
           unit:         'pt',
-          format:       'a4',             // jspdf page format or 'bestfit' for autmatic paper format selection
+          format:       'a4',             // jspdf lv_web format or 'bestfit' for autmatic paper format selection
           margins:      {left: 20, right: 10, top: 10, bottom: 10},
           onDocCreated: null,
           autotable: {
@@ -94,7 +94,7 @@
         tfootSelector:     'tr',          // set empty ('') to prevent export of tfoot rows
         theadSelector:     'tr',
         tableName:         'Table',
-        type:              'csv',         // 'csv', 'tsv', 'txt', 'sql', 'json', 'xml', 'excel', 'doc', 'png' or 'pdf'
+        type:              'csv',         // 'csv', 'tsv', 'txt', 'sql', 'json', 'xml', 'lv_office', 'doc', 'png' or 'pdf'
         worksheetName:     ''
       };
 
@@ -538,7 +538,7 @@
                            '<?mso-application progid="Excel.Sheet"?>\r' +
                            '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\r' +
                            ' xmlns:o="urn:schemas-microsoft-com:office:office"\r' +
-                           ' xmlns:x="urn:schemas-microsoft-com:office:excel"\r' +
+                           ' xmlns:x="urn:schemas-microsoft-com:office:lv_office"\r' +
                            ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\r' +
                            ' xmlns:html="http://www.w3.org/TR/REC-html40">\r' +
                               '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">\r' +
@@ -547,7 +547,7 @@
                               '<OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">\r' +
                               '  <AllowPNG/>\r' +
                               '</OfficeDocumentSettings>\r' +
-                              '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">\r' +
+                              '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:lv_office">\r' +
                               '  <WindowHeight>9000</WindowHeight>\r' +
                               '  <WindowWidth>13860</WindowWidth>\r' +
                               '  <WindowTopX>0</WindowTopX>\r' +
@@ -576,12 +576,12 @@
           xmlssDocFile += '<Worksheet ss:Name="' + docNames[j] + '" ss:RightToLeft="' + (defaults.excelRTL ? '1' : '0') + '">\r' +
                             docDatas[j];
           if (defaults.excelRTL) {
-            xmlssDocFile += '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">\r' +
+            xmlssDocFile += '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:lv_office">\r' +
                               '<DisplayRightToLeft/>\r' +
                             '</WorksheetOptions>\r';
           }
           else
-            xmlssDocFile += '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"/>\r';
+            xmlssDocFile += '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:lv_office"/>\r';
           xmlssDocFile += '</Worksheet>\r';
         }
 

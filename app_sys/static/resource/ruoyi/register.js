@@ -2,7 +2,7 @@
 $(function() {
     validateRule();
     $('.imgcode').click(function() {
-        var url = ctx + "/captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
+        var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
         $(".imgcode").attr("src", url);
     });
 });
@@ -20,7 +20,7 @@ function register() {
     var validateCode = $("input[name='validateCode']").val();
     $.ajax({
         type: "post",
-        url: ctx + "/register",
+        url: ctx + "register",
         data: {
             "loginName": username,
             "password": password,
@@ -35,7 +35,7 @@ function register() {
             	function(index) {
             	    //关闭弹窗
             	    layer.close(index);
-            	    location.href = ctx + '/login';
+            	    location.href = ctx + 'login';
             	});
             } else {
             	$.modal.closeLoading();

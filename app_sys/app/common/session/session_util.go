@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cast"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/lv_net"
-	"robvi/app/global"
-	userModel "robvi/app/modules/sys/model/system/user"
+	"robvi/app/common/global"
+	userModel "robvi/app/sys/model/system/user"
 	"sync"
 )
 

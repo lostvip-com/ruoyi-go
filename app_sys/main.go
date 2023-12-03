@@ -7,12 +7,9 @@ import (
 	db "lostvip.com/db"
 	"lostvip.com/logme"
 	"lostvip.com/web/server"
-	"robvi/app/global"
-	_ "robvi/app/modules"
-	"robvi/app/modules/sys/model/module/tenant"
-	"robvi/app/modules/sys/model/system/dept"
-	"robvi/app/modules/sys/model/system/post"
-	"robvi/app/modules/sys/model/system/user"
+	_ "robvi/app"
+	"robvi/app/biz/model"
+	"robvi/app/common/global"
 )
 
 // @title LV 自动生成API文档
@@ -29,7 +26,7 @@ func main() {
 		gin.SetMode("debug")
 		db.Instance().Engine().ShowSQL(true)
 	}
-	db.Instance().Engine().Sync2(dept.SysDept{}, tenant.SysTenant{}, user.SysUser{}, post.SysPost{})
+	db.Instance().Engine().Sync2(model.DpcTask{}, model.DpcTaskItem{})
 	//后台服务状态
 	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	httpSvr.Start()

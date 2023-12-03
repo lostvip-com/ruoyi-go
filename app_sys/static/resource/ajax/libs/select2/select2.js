@@ -7,7 +7,7 @@
  */
 ;(function (factory) {
   if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous modules.
+    // AMD. Register as an anonymous module.
     define(['jquery'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // Node/CommonJS
@@ -67,7 +67,7 @@ var requirejs, require, define;
     }
 
     /**
-     * Given a relative modules name, like ./something, normalize it to
+     * Given a relative module name, like ./something, normalize it to
      * a real name that can be mapped to a path.
      * @param {String} name the relative name
      * @param {String} baseName a real name that the name arg is relative
@@ -98,7 +98,7 @@ var requirejs, require, define;
             if (name[0].charAt(0) === '.' && baseParts) {
                 //Convert baseName to array, and lop off the last part,
                 //so that . matches that 'directory' and not name of the baseName's
-                //modules. For instance, baseName of 'one/two/three', maps to
+                //module. For instance, baseName of 'one/two/three', maps to
                 //'one/two/three.js', but we want the directory, 'one/two' for
                 //this normalization.
                 normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
@@ -328,11 +328,11 @@ var requirejs, require, define;
         relName = relName || name;
         relParts = makeRelParts(relName);
 
-        //Call the callback to define the modules, if necessary.
+        //Call the callback to define the module, if necessary.
         if (callbackType === 'undefined' || callbackType === 'function') {
             //Pull out the defined dependencies and pass the ordered
             //values to the callback.
-            //Default to [require, exports, modules] if no deps
+            //Default to [require, exports, module] if no deps
             deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
             for (i = 0; i < deps.length; i += 1) {
                 map = makeMap(deps[i], relParts);
@@ -342,11 +342,11 @@ var requirejs, require, define;
                 if (depName === "require") {
                     args[i] = handlers.require(name);
                 } else if (depName === "exports") {
-                    //CommonJS modules spec 1.1
+                    //CommonJS module spec 1.1
                     args[i] = handlers.exports(name);
                     usingExports = true;
                 } else if (depName === "module") {
-                    //CommonJS modules spec 1.1
+                    //CommonJS module spec 1.1
                     cjsModule = args[i] = handlers.module(name);
                 } else if (hasProp(defined, depName) ||
                            hasProp(waiting, depName) ||
@@ -363,7 +363,7 @@ var requirejs, require, define;
             ret = callback ? callback.apply(defined[name], args) : undefined;
 
             if (name) {
-                //If setting exports via "modules" is in play,
+                //If setting exports via "module" is in play,
                 //favor that over return value and exports. After that,
                 //favor a non-undefined return value over exports use.
                 if (cjsModule && cjsModule.exports !== undef &&
@@ -375,8 +375,8 @@ var requirejs, require, define;
                 }
             }
         } else if (name) {
-            //May just be an object definition for the modules. Only
-            //worry about defining if have a modules name.
+            //May just be an object definition for the module. Only
+            //worry about defining if have a module name.
             defined[name] = callback;
         }
     };
@@ -387,10 +387,10 @@ var requirejs, require, define;
                 //callback in this case is really relName
                 return handlers[deps](callback);
             }
-            //Just return the modules wanted. In this scenario, the
-            //deps arg is the modules name, and second arg (if passed)
+            //Just return the module wanted. In this scenario, the
+            //deps arg is the module name, and second arg (if passed)
             //is just the relName.
-            //Normalize modules name, if it contains . or ..
+            //Normalize module name, if it contains . or ..
             return callDep(makeMap(deps, makeRelParts(callback)).f);
         } else if (!deps.splice) {
             //deps is a config object, not an array.
@@ -450,16 +450,16 @@ var requirejs, require, define;
     };
 
     /**
-     * Expose modules registry for debugging and tooling
+     * Expose module registry for debugging and tooling
      */
     requirejs._defined = defined;
 
     define = function (name, deps, callback) {
         if (typeof name !== 'string') {
-            throw new Error('See almond README: incorrect modules build, no modules name');
+            throw new Error('See almond README: incorrect module build, no module name');
         }
 
-        //This modules may not have dependencies
+        //This module may not have dependencies
         if (!deps.splice) {
             //deps is not an array, so probably means
             //an object literal or factory function for
@@ -6098,7 +6098,7 @@ S2.define('jquery.select2',[
   // We know that all of the modules exist above this, so we're safe
   var select2 = S2.require('jquery.select2');
 
-  // Hold the AMD modules references on the jQuery function that was just loaded
+  // Hold the AMD module references on the jQuery function that was just loaded
   // This allows Select2 to use the internal loader outside of this file, such
   // as in the language files.
   jQuery.fn.select2.amd = S2;

@@ -381,7 +381,7 @@ var table = {
                     $.modal.loading("正在导出数据，请稍候...");
                     $.post(table.options.exportUrl, dataParam, function(result) {
                         if (result.code == web_status.SUCCESS) {
-                            window.location.href = ctx + "/common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                            window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
                         } else if (result.code == web_status.WARNING) {
                             $.modal.alertWarning(result.msg)
                         } else {
@@ -395,7 +395,7 @@ var table = {
             importTemplate: function() {
                 $.get(activeWindow().table.options.importTemplateUrl, function(result) {
                     if (result.code == web_status.SUCCESS) {
-                        window.location.href = ctx + "/common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
                     } else if (result.code == web_status.WARNING) {
                         $.modal.alertWarning(result.msg)
                     } else {
@@ -611,7 +611,7 @@ var table = {
                     showSearch: true,
                     showRefresh: true,
                     showColumns: true,
-                    expandAll: false,
+                    expandAll: true,
                     expandFirst: true
                 };
                 var options = $.extend(defaults, options);
@@ -1002,7 +1002,6 @@ var table = {
             },
             // 打开遮罩层
             loading: function (message) {
-                //console.log("--------$.blockUI(-----------loading windows ignore --------------------------")
                 $.blockUI({ message: '<div class="loaderbox"><div class="loading-activity"></div> ' + message + '</div>' });
             },
             // 关闭遮罩层

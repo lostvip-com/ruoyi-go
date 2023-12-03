@@ -92,7 +92,7 @@
             this.$element.data('active', val);
             if (this.autoSelect || val) {
                 var newVal = this.updater(val);
-                // Updater can be set to any random functions via "options" parameter in constructor above.
+                // Updater can be set to any lv_gen functions via "options" parameter in constructor above.
                 // Add null check for cases when updater returns void or undefined.
                 if (!newVal) {
                     newVal = '';
@@ -112,7 +112,7 @@
             this.$element.data('active', val);
             if (this.autoSelect || val) {
                 var newVal = this.updater(val);
-                // Updater can be set to any random functions via "options" parameter in constructor above.
+                // Updater can be set to any lv_gen functions via "options" parameter in constructor above.
                 // Add null check for cases when updater returns void or undefined.
                 if (!newVal) {
                     newVal = '';

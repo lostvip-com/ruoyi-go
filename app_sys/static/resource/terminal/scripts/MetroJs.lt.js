@@ -75,16 +75,16 @@ $.fn.metrojs.preloadImages = function (callback) {
         preloadImages: false,                   // should the images arrays be preloaded
         fadeSlideSwap: false,                   // fade any image swaps on slides (e.g. mode: 'slide', stops:'50%', frontImages: ['img1.jpg', 'img2.jpg'])
         appendBack: true,                       // appends the .last tile if one doesnt exist (slide and flip only)
-        triggerDelay: function (idx) {          // used by flip-list to decide how random the tile flipping should be
+        triggerDelay: function (idx) {          // used by flip-list to decide how lv_gen the tile flipping should be
             return Math.random() * 3000;
         },
         alwaysTrigger: false,                   // used by flip-list to decide if all tiles are triggered every time
         frontImages: null,                      // a list of images to use for the front
-        frontIsRandom: true,                    // should images be chosen at random or in order
+        frontIsRandom: true,                    // should images be chosen at lv_gen or in order
         frontIsBackgroundImage: false,          // set the src attribute or css background-image property
         frontIsInGrid: false,                   // only chooses one item for each iteration in flip-list
         backImages: null,                       // a list of images to use for the back
-        backIsRandom: true,                     // should images be chosen at random or in order
+        backIsRandom: true,                     // should images be chosen at lv_gen or in order
         backIsBackgroundImage: false,           // set the src attribute or css background-image property
         backIsInInGrid: false,                  // only chooses one item for each iteration in flip-list
         flipListOnHover: false,                 // should items in flip-list flip and stop when hovered
@@ -471,7 +471,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                         window.setTimeout(function () {
                             var index = staticCount;
                             if (swapFrontSource && stgs.frontIsRandom) {
-                                //make sure the random bag is ready
+                                //make sure the lv_gen bag is ready
                                 if (frontRandomBag.length == 0) {
                                     for (var i = 0; i < stgs.frontImages.length; i++) {
                                         //make sure there's not an immediate repeat
@@ -509,7 +509,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                         $firstContainer.animate(uCss, tdata.speed, function () {
                             var index = staticCount;
                             if (swapFrontSource && stgs.frontIsRandom) {
-                                //make sure the random bag is ready
+                                //make sure the lv_gen bag is ready
                                 if (frontRandomBag.length == 0) {
                                     for (var i = 0; i < stgs.frontImages.length; i++) {
                                         //make sure there's not an immediate repeat
@@ -594,7 +594,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                         var isRandom = stgs.backIsRandom;
                                         var index = staticIndexBack;
                                         if (isRandom) {
-                                            //make sure the random bag is ready
+                                            //make sure the lv_gen bag is ready
                                             if (backRandomBag.length == 0) {
                                                 for (var i = 0; i < stgs.backImages.length; i++) {
                                                     //make sure there's not an immediate repeat
@@ -639,7 +639,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                         var isRandom = stgs.frontIsRandom;
                                         var index = staticIndexFront;
                                         if (isRandom) {
-                                            //make sure the random bag is ready
+                                            //make sure the lv_gen bag is ready
                                             if (frontRandomBag.length == 0) {
                                                 for (var i = 0; i < stgs.frontImages.length; i++) {
                                                     //make sure there's not an immediate repeat
@@ -687,7 +687,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                     var isRandom = stgs.frontIsRandom;
                                     var index = staticIndexFront;
                                     if (isRandom) {
-                                        //make sure the random bag is ready
+                                        //make sure the lv_gen bag is ready
                                         if (frontRandomBag.length == 0) {
                                             for (var i = 0; i < stgs.frontImages.length; i++) {
                                                 //make sure there's not an immediate repeat
@@ -724,7 +724,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                     var isRandom = stgs.backIsRandom;
                                     var index = staticIndexBack;
                                     if (isRandom) {
-                                        //make sure the random bag is ready
+                                        //make sure the lv_gen bag is ready
                                         if (backRandomBag.length == 0) {
                                             for (var i = 0; i < stgs.backImages.length; i++) {
                                                 //make sure there's not an immediate repeat
@@ -822,7 +822,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                         var isBground = stgs.frontIsBackgroundImage;
                                         var frontImages = stgs.frontImages;
                                         if (isRandom && !isInGrid) {
-                                            //make sure the random bag is ready
+                                            //make sure the lv_gen bag is ready
                                             if (fBag.length == 0) {
                                                 for (var i = 0; i < stgs.frontImages.length; i++) {
                                                     fBag[i] = i;
@@ -853,7 +853,7 @@ $.fn.metrojs.preloadImages = function (callback) {
                                         var isBground = stgs.backIsBackgroundImage;
                                         var backImages = stgs.backImages;
                                         if (isRandom && !isInGrid) {
-                                            //make sure the random bag is ready
+                                            //make sure the lv_gen bag is ready
                                             if (bBag.length == 0) {
                                                 for (var i = 0; i < stgs.backImages.length; i++) {
                                                     bBag[i] = i;

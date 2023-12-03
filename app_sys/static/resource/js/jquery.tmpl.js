@@ -9,7 +9,7 @@
  */
 (function( factory ) {
 	if (typeof define === 'function' && define.amd) {
-		// Loading from AMD script loader. Register as an anonymous modules.
+		// Loading from AMD script loader. Register as an anonymous module.
 		define( ['jquery'], factory );
 	} else {
 		// Browser using plain <script> tag

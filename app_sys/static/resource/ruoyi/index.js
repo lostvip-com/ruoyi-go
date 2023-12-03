@@ -309,8 +309,8 @@ $(function() {
             var str1 = '<iframe class="RuoYi_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" data-refresh="' + isRefresh + '" seamless></iframe>';
             $('.mainContent').find('iframe.RuoYi_iframe').hide().parents('.mainContent').append(str1);
 
-            // $.modal.loading("数据加载中，请稍候...");
-            console.log('-------- $.modal.loading 已经注释----------')
+            $.modal.loading("数据加载中，请稍候...");
+
             $('.mainContent iframe:visible').on('load', function() {
             	$.modal.closeLoading();
             });
@@ -507,7 +507,7 @@ $(function() {
     // 锁定屏幕
     $('#lockScreen').on('click', function () {
     	storage.set('lockPath', $('.page-tabs-content').find('.active').attr('data-id'));
-    	location.href  = ctx + "/lockscreen";
+    	location.href  = ctx + "lockscreen";
     });
 
     // 页签刷新按钮

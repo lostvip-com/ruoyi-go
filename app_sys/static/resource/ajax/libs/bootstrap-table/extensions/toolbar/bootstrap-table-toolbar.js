@@ -98,7 +98,7 @@
 
     $.extend($.fn.bootstrapTable.locales, {
         formatAdvancedSearch: function() {
-            return 'Advanced search';
+            return 'Advanced lv_sql';
         },
         formatAdvancedCloseButton: function() {
             return "Close";
@@ -206,6 +206,6 @@
         this.options.pageNumber = 1;
         this.onSearch(event);
         this.updatePagination();
-        this.trigger('column-advanced-search', $field, text);
+        this.trigger('column-advanced-lv_sql', $field, text);
     };
 }(jQuery);

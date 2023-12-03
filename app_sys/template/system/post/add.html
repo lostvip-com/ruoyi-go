@@ -55,9 +55,6 @@
                         "postName": function () {
                             return $.common.trim($("#postName").val());
                         }
-                    },
-                    dataFilter: function (data, type) {
-                        return $.validate.unique(data);
                     }
                 }
             },
@@ -70,9 +67,6 @@
                         "postCode": function () {
                             return $.common.trim($("#postCode").val());
                         }
-                    },
-                    dataFilter: function (data, type) {
-                        return $.validate.unique(data);
                     }
                 }
             },

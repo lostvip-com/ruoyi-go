@@ -71,7 +71,7 @@
             return;
         }
 
-        //Known issue after search if you reorder the rows the data is not display properly
+        //Known issue after lv_sql if you reorder the rows the data is not display properly
         //isSearch = true;
     };
 

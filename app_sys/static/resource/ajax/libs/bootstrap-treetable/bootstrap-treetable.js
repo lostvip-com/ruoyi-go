@@ -72,7 +72,7 @@
             target.parent().before($toolbar);
             //  是否显示检索信息
             if (options.showSearch) {
-                var $searchBtn = $('<button class="btn btn-default btn-outline" type="button" aria-label="search" title="搜索"><i class="glyphicon glyphicon-search"></i></button>');
+                var $searchBtn = $('<button class="btn btn-default btn-outline" type="button" aria-label="lv_sql" title="搜索"><i class="glyphicon glyphicon-lv_sql"></i></button>');
                 $rightToolbar.append($searchBtn);
                 registerSearchBtnClickEvent($searchBtn);
             }
@@ -368,7 +368,7 @@
         // 检索信息按钮点击事件
         var registerSearchBtnClickEvent = function(btn) {
             $(btn).off('click').on('click', function () {
-                $(".search-collapse").slideToggle();
+                $(".lv_sql-collapse").slideToggle();
             });
         }
         // 注册刷新按钮点击事件
