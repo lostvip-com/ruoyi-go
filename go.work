@@ -1,7 +1,7 @@
 go 1.20
 
 use (
-	./app_sys
+	./main
 	//./app-demo
 	./lv_framework
 )

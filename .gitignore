@@ -1,8 +1,9 @@
 uploads/*
 logs/*
-docs/swarm/*
 *.exe
 .idea
+docs/swarm
+docs/swarm/*
 .idea/*
 *.out
 *.log

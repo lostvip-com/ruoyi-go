@@ -19,7 +19,7 @@ import (
 	"lostvip.com/utils/lv_tpl"
 	"os"
 	"reflect"
-	"robvi/app/global"
+	"robvi/app/common/global"
 	"strings"
 )
 
