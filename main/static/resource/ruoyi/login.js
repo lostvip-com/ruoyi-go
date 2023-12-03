@@ -44,9 +44,13 @@ function login() {
             "idkey": idkey,
             "rememberMe": rememberMe
         },
-        success: function (r) {
+        success: function (r){
+            console.log("login<====",r)
+            debugger
             if (r.code == web_status.SUCCESS) {
-                window.location = ctx+'/index';
+                let target =  ctx+'/index?token='+r.data
+                console.log("即将跳转："+target)
+                window.location =target ;
             } else {
                 if(r.data>=5){ //显示验证码
                   $("#vcode").show()
