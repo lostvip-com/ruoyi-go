@@ -1,0 +1,87 @@
+{{define "monitor/operlog/detail"}}
+    <!DOCTYPE html>
+    <html lang="zh">
+    <head>
+        {{template "header" (OssUrl)}}
+        <link href="{{OssUrl}}/resource/ajax/libs/jsonview/jquery.jsonview.css" rel="stylesheet"/>
+    </head>
+    <body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m-t" id="signupForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作模块：</label>
+                <div class="form-control-static">
+                    {{.operLog.Title}} / {{getDictLabel "sys_oper_type" .operLog.BusinessType}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">登录信息：</label>
+                <div class="form-control-static">
+                    {{.operLog.OperName}} / {{.operLog.DeptName}} / {{.operLog.OperIp}} / {{.operLog.OperLocation}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">请求地址：</label>
+                <div class="form-control-static">
+                    {{.operLog.OperUrl}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">请求方式：</label>
+                <div class="form-control-static">
+                    {{.operLog.RequestMethod}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">操作方法：</label>
+                <div class="form-control-static">
+                    {{.operLog.Method}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">请求参数：</label>
+                <div class="form-control-static">
+                    <pre id="operParam"></pre>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">返回参数：</label>
+                <div class="form-control-static">
+                    <pre id="jsonResult"></pre>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">状态：</label>
+                <div class="{{if eq .operLog.Status  0}}label label-primary{{else}}label label-danger{{end}}">
+                    {{if eq .operLog.Status  0}}正常{{else}}异常{{end}}
+                </div>
+            </div>
+            <div class="form-group" style="display:{{if eq .operLog.Status  0}}none{{else}}block{{end}}">
+                <label class="col-sm-2 control-label">异常信息：</label>
+                <div class="form-control-static">
+                    {{.operLog.ErrorMsg}}
+                </div>
+            </div>
+        </form>
+    </div>
+    {{template "footer" (OssUrl)}}
+    <script src="{{OssUrl}}/resource/ajax/libs/jsonview/jquery.jsonview.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var operParam = {{.operParam}};
+            if ($.common.isNotEmpty(operParam) && operParam.length < 2000) {
+                $("#operParam").JSONView(operParam);
+            } else {
+                $("#operParam").text(operParam);
+            }
+            var jsonResult = {{.jsonResult}};
+            if ($.common.isNotEmpty(jsonResult) && jsonResult.length < 2000) {
+                $("#jsonResult").JSONView(jsonResult);
+            } else {
+                $("#jsonResult").text(jsonResult);
+            }
+        });
+    </script>
+    </body>
+    </html>
+{{end}}

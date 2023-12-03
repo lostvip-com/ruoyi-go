@@ -7,7 +7,7 @@ docs/swarm/*
 .idea/*
 *.out
 *.log
-main
+main/main
 robnote
 temp
 tmp

@@ -1,0 +1,78 @@
+{{define "monitor/job/detail"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+    <form class="form-horizontal m-t" id="jobForm">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务序号：</label>
+            <div class="form-control-static">
+                {{.job.JobId}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务名称：</label>
+            <div class="form-control-static">
+                {{.job.JobName}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务分组：</label>
+            <div class="form-control-static">
+                {{.job.JobGroup}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行方法名：</label>
+            <div class="form-control-static">
+                {{.job.InvokeTarget}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行参数：</label>
+            <div class="form-control-static">
+                {{.job.JobParams}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行表达式：</label>
+            <div class="form-control-static">
+                {{.job.CronExpression}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行策略：</label>
+            <div class="form-control-static">
+                {{if eq .job.MisfirePolicy "0"}}
+                    默认策略
+                {{else if eq .job.MisfirePolicy "1"}}
+                    立即执行
+                {{else if eq .job.MisfirePolicy "2"}}
+                    执行一次
+                {{else if eq .job.MisfirePolicy "3"}}
+                    放弃执行
+                {{end}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">并发执行：</label>
+            <div class="form-control-static" class="{{if eq .job.Concurrent "0"}}'label label-primary'{{else}}'label label-danger'{{end}}">
+                {{if eq .job.Concurrent "0"}}允许{{else}}禁止{{end}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行状态：</label>
+            <div class="form-control-static" class="{{if eq .job.Status "0"}}'label label-primary'{{else}}'label label-danger'{{end}}">
+                {{if eq .job.Status "0"}}正常{{else}}暂停{{end}}
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
+{{end}}

@@ -1,0 +1,138 @@
+{{define "system/dept/edit"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-dept-edit">
+        <input id="deptId" name="deptId" type="hidden" value="{{.dept.DeptId}}"/>
+        <input id="treeId" name="parentId" type="hidden" value="{{.dept.ParentId}}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">上级部门：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input class="form-control" type="text" id="treeName" onclick="selectDeptTree()" readonly="true"
+                           value="{{.dept.ParentName}}">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">部门名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="deptName" value="{{.dept.DeptName}}" id="deptName"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">显示排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="orderNum" value="{{.dept.OrderNum}}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">负责人：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="leader" value="{{.dept.Leader}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">联系电话：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="phone" value="{{.dept.Phone}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">邮箱：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="email" value="{{.dept.Email}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">部门状态：</label>
+            <div class="col-sm-8">
+                {{getDictTypeRadio "sys_normal_disable" "status" .dept.Status}}
+            </div>
+        </div>
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script type="text/javascript">
+    var prefix = ctx + "/system/dept";
+
+    $("#form-dept-edit").validate({
+        onkeyup: false,
+        rules: {
+            deptName: {
+                remote: {
+                    url: prefix + "/checkDeptNameUnique",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        "deptId": function () {
+                            return $("#deptId").val();
+                        },
+                        "parentId": function () {
+                            return $("input[name='parentId']").val();
+                        },
+                        "deptName": function () {
+                            return $.common.trim($("#deptName").val());
+                        }
+                    }
+                }
+            },
+            orderNum: {
+                digits: true
+            },
+            email: {
+                email: true,
+            },
+            phone: {
+                isPhone: true,
+            },
+        },
+        messages: {
+            "deptName": {
+                remote: "部门已经存在"
+            }
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-dept-edit').serialize());
+        }
+    }
+
+    /*部门管理-修改-选择部门树*/
+    function selectDeptTree() {
+        var deptId = $("#treeId").val();
+        if (deptId > 0) {
+            var options = {
+                title: '部门选择',
+                width: "380",
+                url: prefix + "/selectDeptTree?treeId=" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        } else {
+            $.modal.alertError("父部门不能选择");
+        }
+    }
+
+    function doSubmit(index, layero) {
+        var tree = layero.find("iframe")[0].contentWindow.$._tree;
+        if ($.tree.notAllowLastLevel(tree)) {
+            var body = layer.getChildFrame('body', index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            layer.close(index);
+        }
+    }
+</script>
+</body>
+</html>
+{{end}}

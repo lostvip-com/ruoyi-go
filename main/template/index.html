@@ -1,0 +1,337 @@
+{{define "index"}}
+<html lang="zh">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<title>系统首页</title>
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="{{OssUrl}}/resource/favicon.ico" rel="shortcut icon"/>
+	<link href="{{OssUrl}}/resource/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/css/jquery.contextMenu.min.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/css/font-awesome.min.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/css/animate.min.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/css/style.min.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/css/skins.css" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/ruoyi/css/ry-ui.css?v=4.6.1" rel="stylesheet"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg " style="overflow: hidden">
+<div id="wrapper">
+
+	<!--左侧导航开始-->
+	<nav class="navbar-default navbar-static-side" role="navigation">
+		<div class="nav-close">
+			<i class="fa fa-times-circle"></i>
+		</div>
+		<a href="{{Ctx}}/index">
+			<li class="logo hidden-xs">
+				<span class="logo-lg"> RobNote </span>
+			</li>
+		</a>
+		<div class="slimScrollDiv" style="position: relative; width: auto; height: 96%;"><div class="sidebar-collapse tab-content" id="side-menu" style="width: auto; height: 96%;">
+			<div class="user-panel">
+				<a class="menuItem noactive" title="个人中心" href="{{Ctx}}/system/user/profile">
+					<div class="hide">个人中心</div>
+					<div class="pull-left image">
+						<img src="{{OssUrl}}{{.avatar}}" class="img-circle" alt="User Image">
+					</div>
+				</a>
+				<div class="pull-left info">
+					<p>{{.loginname}}</p>
+					<a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+					<a href="{{Ctx}}/logout" style="padding-left:5px;"><i class="fa fa-sign-out text-danger"></i>
+						注销</a>
+				</div>
+			</div>
+
+			<!-- 左侧菜单 -->
+			{{range $index0, $menu := .menus}}
+
+			<div class="tab-pane fade height-full" id="menu_{{addInt $index0 1}}">
+				<ul class="nav">
+					{{range $index00, $cmenu := $menu.Children}}
+
+					<li>
+						{{if le (len $cmenu.Children) 0}}
+						<li>
+							<a class="menu-content menuItem" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
+								<i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span>
+							</a>
+						</li>
+						{{else}}
+						<a href="#"><i class="{{$cmenu.Icon}}"></i>{{$cmenu.MenuName}}<span class="fa arrow"></span></a>
+						<ul class="nav nav-third-level">
+							{{range $index, $emenu := $cmenu.Children}}
+							<li>
+								{{if le (len $emenu.Children) 0}}
+								<li>
+									<a class="menu-content menuItem" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
+										<i class="{{$emenu.Icon}}"></i> <span class="nav-label">{{$emenu.MenuName}}</span>
+									</a>
+								</li>
+								{{else}}
+								<a href="#">{{$emenu.MenuName}}<span class="fa arrow"></span></a>
+								<ul class="nav nav-four-level">
+									{{range $index, $fmenu := $emenu.Children}}
+									<li>
+										<a class="{{$fmenu.Target}}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
+									</li>
+									{{end}}
+								</ul>
+								{{end}}
+							</li>
+							{{end}}
+						</ul>
+						{{end}}
+					</li>
+
+					{{end}}
+				</ul>
+			</div>
+
+			{{end}}
+
+
+			<!-- 左侧菜单-首页菜单 -->
+			<div class="tab-pane fade height-full" id="index">
+				<ul class="nav">
+					<li>
+						<a class="menuItem" href="{{Ctx}}/system/main" data-index="19">
+							<i class="fa fa-home"></i> <span class="nav-label">首页</span></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		</div>
+	</nav>
+	<!--左侧导航结束-->
+
+	<!--右侧部分开始-->
+	<div id="page-wrapper" class="gray-bg dashbard-1">
+		<div class="row border-bottom">
+			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+				<div class="navbar-header">
+					<a class="navbar-minimalize minimalize-styl-2" style="color:#FFF;" href="#" title="收起菜单">
+						<i class="fa fa-bars"></i>
+					</a>
+				</div>
+				<!-- 顶部栏 hidden-xs -->
+				<div id="navMenu">
+					<ul class="nav navbar-toolbar nav-tabs navbar-left">
+						<!-- 顶部菜单列表 -->
+						{{range $index, $menu := .menus}}
+						{{if eq $menu.ParentId 0}}
+						<li role="presentation" id="tab_{{addInt $index 1}}" class="">
+
+							<a data-toggle="tab" href="#menu_{{addInt $index 1}}" aria-expanded="false">
+								<i class="{{$menu.Icon}}"></i> <span>{{$menu.MenuName}}</span>
+							</a>
+
+						</li>
+						{{end}}
+						{{end}}
+					</ul>
+				</div>
+				<!-- 右侧栏 -->
+				<ul class="nav navbar-top-links navbar-right welcome-message">
+
+					<li><a title="全屏显示" href="javascript:void(0)" id="fullScreen"><i class="fa fa-arrows-alt"></i> 全屏显示</a>
+					</li>
+
+					<li class="dropdown user-menu">
+						<a href="javascript:void(0)" class="dropdown-toggle" data-hover="dropdown">
+							<img src="{{OssUrl}}{{.avatar}}" class="user-image">
+							<span class="hidden-xs">{{.username}}</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="mt5">
+								<a href="{{Ctx}}/system/user/profile" class="menuItem">
+									<i class="fa fa-user"></i> 个人中心</a>
+							</li>
+							<li>
+								<a onclick="resetPwd()">
+									<i class="fa fa-key"></i> 修改密码</a>
+							</li>
+							<li>
+								<a onclick="switchSkin()">
+									<i class="fa fa-dashboard"></i> 切换主题</a>
+							</li>
+<!--							<li>-->
+<!--								<a onclick="toggleMenu()">-->
+<!--									<i class="fa fa-toggle-off"></i> 左侧菜单</a>-->
+<!--							</li>-->
+							<li class="divider"></li>
+							<li>
+								<a href="{{Ctx}}/logout">
+									<i class="fa fa-sign-out"></i> 退出登录</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+
+				<!-- end 右侧栏 -->
+			</nav>
+		</div>
+
+		<div class="row content-tabs">
+			<button class="roll-nav roll-left tabLeft">
+				<i class="fa fa-backward"></i>
+			</button>
+			<nav class="page-tabs menuTabs">
+				<div class="page-tabs-content">
+					<a href="javascript:;" class="active menuTab" data-id="{{Ctx}}/system/main">首页</a>
+				</div>
+			</nav>
+			<button class="roll-nav roll-right tabRight">
+				<i class="fa fa-forward"></i>
+			</button>
+			<a href="javascript:void(0);" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+		</div>
+		<a id="ax_close_max" class="ax_close_max" href="#" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
+		<div class="row mainContent" id="content-main">
+			<iframe class="RuoYi_iframe" name="iframe0" width="100%" height="100%" data-id="{{Ctx}}/system/main"
+					src="{{Ctx}}/system/main" frameborder="0" seamless></iframe>
+		</div>
+
+
+		<div class="footer">
+			<div class="pull-right">{{Copyright}}</div>
+		</div>
+	</div>
+	<!--右侧部分结束-->
+</div>
+<!-- 全局js -->
+<script src="{{OssUrl}}/resource/js/jquery.min.js"></script>
+
+<script src="{{OssUrl}}/resource/js/bootstrap.min.js"></script>
+<script src="{{OssUrl}}/resource/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="{{OssUrl}}/resource/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="{{OssUrl}}/resource/js/jquery.contextMenu.min.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/blockUI/jquery.blockUI.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/layer/layer.min.js"></script>
+<script src="{{OssUrl}}/resource/ruoyi/js/ry-ui.js?v=4.1.0"></script>
+<script src="{{OssUrl}}/resource/ruoyi/js/common.js?v=4.1.0"></script>
+<script src="{{OssUrl}}/resource/ruoyi/index.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/fullscreen/jquery.fullscreen.js"></script>
+<script src="{{OssUrl}}/resource/js/resize-tabs.js"></script>
+<script>
+	window.history.forward(1);
+	var ctx = "{{Ctx}}";
+	var lockscreen = null;
+	if(lockscreen){window.top.location=ctx+"/lockscreen";}
+	// 皮肤缓存
+	let skin = storage.get("skin");
+	// history（表示去掉地址的#）否则地址以"#"形式展示
+	let mode = "history";
+	// 历史访问路径缓存
+	let historyPath = storage.get("historyPath");
+	// 是否页签与菜单联动
+	let isLinkage = true;
+   console.log("=====>skin:",skin)
+	// 本地主题优先，未设置取系统配置
+	if($.common.isNotEmpty(skin)){
+		$("body").addClass(skin.split('|')[0]);
+		$("body").addClass(skin.split('|')[1]);
+	} else {
+		$("body").addClass("theme-light");
+		$("body").addClass("skin-blue");
+	}
+
+	function resetPwd() {
+		var url = ctx + '/system/user/profile/resetPwd';
+		$.modal.open("重置密码", url, '770', '380');
+	}
+	/* 切换主题 */
+	function switchSkin() {
+		layer.open({
+			type : 2,
+			shadeClose : true,
+			title : "切换主题",
+			area : ["530px", "386px"],
+			content : [ctx + "/system/switchSkin", 'no']
+		})
+	}
+
+	/* 切换菜单 */
+	// function toggleMenu() {
+	// 	$.modal.confirm("确认要切换成左侧菜单吗？", function() {
+	// 		window.location.href="/?menuStyle=index_left";
+	// 	})
+	// }
+
+	/** 刷新时访问路径页签 */
+	function applyPath(url) {
+		var $dataObj = $('a[href$="' + decodeURI(url) + '"]');
+		$dataObj.click();
+		if (!$dataObj.hasClass("noactive")) {
+			$dataObj.parent("li").addClass("selected").parents("li").addClass("active").end().parents("ul").addClass("in");
+		}
+		// 顶部菜单同步处理
+		var tabStr = $dataObj.parents(".tab-pane").attr("id");
+		if ($.common.isNotEmpty(tabStr)) {
+			var sepIndex = tabStr.lastIndexOf('_');
+			var menuId = tabStr.substring(sepIndex + 1, tabStr.length);
+			$("#tab_" + menuId + " a").click();
+		}
+	}
+
+	$(function() {
+		var lockPath = storage.get('lockPath');
+		if($.common.equals("history", mode) && window.performance.navigation.type == 1) {
+			var url = storage.get('publicPath');
+			if ($.common.isNotEmpty(url)) {
+				applyPath(url);
+			} else {
+				$(".navbar-toolbar li a").eq(0).click();
+			}
+		} else if($.common.isNotEmpty(lockPath)) {
+			applyPath(lockPath);
+			storage.remove('lockPath');
+		} else {
+			var hash = location.hash;
+			if ($.common.isNotEmpty(hash)) {
+				var url = hash.substring(1, hash.length);
+				applyPath(url);
+			} else {
+				if($.common.equals("history", mode)) {
+					storage.set('publicPath', "");
+				}
+				$(".navbar-toolbar li a").eq(0).click();
+			}
+		}
+
+		/* 初始密码提示 */
+		if(false) {
+			layer.confirm("您的密码还是初始密码，请修改密码！", {
+				icon: 0,
+				title: "安全提示",
+				btn: ['确认'	, '取消'],
+				offset: ['30%']
+			}, function (index) {
+				resetPwd();
+				layer.close(index);
+			});
+		}
+
+		/* 过期密码提示 */
+		if(false) {
+			layer.confirm("您的密码已过期，请尽快修改密码！", {
+				icon: 0,
+				title: "安全提示",
+				btn: ['确认'	, '取消'],
+				offset: ['30%']
+			}, function (index) {
+				resetPwd();
+				layer.close(index);
+			});
+		}
+
+		$("[data-toggle='tooltip']").tooltip();
+	});
+</script>
+
+
+</body>
+</html>
+{{end}}

@@ -1,0 +1,144 @@
+// ==========================================================================
+// LV自动生成model扩展代码列表、增、删，改、查、导出，只生成一次，按需修改,再次生成不会覆盖.
+// 生成日期：{{.table.CreateTime}}
+// 生成人：{{.table.FunctionAuthor}}
+// ==========================================================================
+package model
+
+import (
+	"errors"
+	"time"
+    "lostvip.com/db"
+    "lostvip.com/utils/excel"
+    "lostvip.com/utils/page"
+    "xorm.io/builder"
+)
+
+//新增页面请求参数
+type Add{{.table.ClassName}}Req struct { {{range $index, $column := .table.Columns}}
+	{{if and (eq $column.IsInsert "1") (ne $column.IsPk "1")}} {{$column.GoField}}  {{if eq $column.GoType "Time"}}time.Time{{else}}{{$column.GoType}}{{end}}   `form:"{{$column.HtmlField}}" {{if eq $column.IsRequired "1"}}binding:"required"{{end}}` {{end}} {{end}}
+}
+
+//修改页面请求参数
+type Edit{{.table.ClassName}}Req struct {
+      {{.table.PkColumn.GoField}}    {{.table.PkColumn.GoType}}  `form:"{{.table.PkColumn.HtmlField}}" binding:"required"` {{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}}
+      {{$column.GoField}}  {{if eq $column.GoType "Time"}}time.Time{{else}}{{$column.GoType}}{{end}} `form:"{{$column.HtmlField}}" {{if eq $column.IsRequired "1"}}binding:"required"{{end}}` {{end}} {{end}}
+}
+
+//分页请求参数 {{$pkColumn := .table.PkColumn}}
+type Page{{.table.ClassName}}Req struct { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+	{{$column.GoField}}  {{if eq $column.GoType "Time"}}time.Time{{else}}{{$column.GoType}}{{end}} `form:"{{$column.HtmlField}}"` //{{$column.ColumnComment}} {{end}} {{end}}
+	BeginTime  string `form:"beginTime"`  //开始时间
+	EndTime    string `form:"endTime"`    //结束时间
+	PageNum    int    `form:"pageNum"`    //当前页码
+	PageSize   int    `form:"pageSize"`   //每页数
+}
+
+//根据条件分页查询数据
+func (e *{{.table.ClassName}}) SelectListByPage(param *Page{{.table.ClassName}}Req) ([]{{.table.ClassName}}, *page.Paging, error) {
+	db := db.Instance().Engine()
+    p := new(page.Paging)
+
+	if db == nil {
+		return nil, p, errors.New("获取数据库连接失败")
+	}
+
+	model := db.Table("{{.table.TableName}}").Alias("t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} like ?", "%"+param.{{$column.GoField}}+"%")
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		}
+		{{end}} {{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			model.Where("t.create_time >= ?", param.BeginTime)
+		}
+
+		if param.EndTime != "" {
+			 model.Where("t.create_time<=?", param.EndTime)
+		}
+	}
+
+	total, err := model.Clone().Count()
+	if err != nil {
+		return nil, p, errors.New("读取行数失败")
+	}
+
+	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	model.Limit(p.Pagesize, p.StartNum)
+
+	var result []{{.table.ClassName}}
+    err = model.Find(&result)
+    return result, p, err
+}
+
+// 导出excel
+func (e *{{.table.ClassName}}) SelectListExport(param *Page{{.table.ClassName}}Req, head, col []string) (string, error) {
+	db := db.Instance().Engine()
+	build := builder.Select(col...).From("{{.table.TableName}}", "t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			build.Where(builder.Like{"t.{{$column.ColumnName}}", param.{{$column.GoField}}})
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			build.Where(builder.Eq{"t.{{$column.ColumnName}}": param.{{$column.GoField}}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			build.Where(builder.Eq{"t.{{$column.ColumnName}}": param.{{$column.GoField}}})
+		}
+		{{end}} {{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
+		}
+
+		if param.EndTime != "" {
+			build.Where(builder.Lte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.EndTime + "','%y%m%d')"})
+		}
+	}
+
+	sqlStr, _, _ := build.ToSQL()
+	arr, err := db.SQL(sqlStr).QuerySliceString()
+	path, err := excel.DownlaodExcel(head, arr)
+
+	return path, err
+}
+
+//获取所有数据
+func (e *{{.table.ClassName}}) SelectListAll(param *Page{{.table.ClassName}}Req) ([]{{.table.ClassName}}, error) {
+	db := db.Instance().Engine()
+	model := db.Table("{{.table.TableName}}").Alias("t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} like ?", "%"+param.{{$column.GoField}}+"%")
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		}{{end}}
+		{{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+		}
+
+		if param.EndTime != "" {
+			model.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+		}
+	}
+
+	var result []{{.table.ClassName}}
+	err := model.Find(&result)
+	return result, err
+}

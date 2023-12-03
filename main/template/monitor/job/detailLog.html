@@ -1,0 +1,58 @@
+{{define "monitor/job/detailLog"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+    <form class="form-horizontal m-t" id="jobLogForm">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">日志序号：</label>
+            <div class="form-control-static">
+                {{.jobLog.JobLogId}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务名称：</label>
+            <div class="form-control-static">
+                {{.jobLog.JobName}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务分组：</label>
+            <div class="form-control-static">
+                {{.jobLog.JobGroup}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行方法名：</label>
+            <div class="form-control-static">
+                {{.jobLog.invokeTarget}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">日志信息：</label>
+            <div class="form-control-static">
+                {{.jobLog.JobMessage}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">执行状态：</label>
+            <div class="form-control-static" class="{{if eq .jobLog.Status "0"}}'label label-primary'{{else}}'label label-danger'{{end}}">
+                {{if eq .jobLog.Status "0"}}正常{{else}}失败{{end}}
+            </div>
+        </div>
+        <div class="form-group" style="display:{{if eq .jobLog.Status "0"}}none{{else}}block{{end}}">
+            <label class="col-sm-3 control-label">异常信息：</label>
+            <div class="form-control-static">
+                {{.jobLog.JobLogId}}
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
+{{end}}

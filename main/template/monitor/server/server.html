@@ -1,0 +1,256 @@
+{{define "monitor/server/server"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>CPU</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-hover no-margins">
+                            <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>核心数</td>
+                                <td>{{.cpuNum}}个</td>
+                            </tr>
+                            <tr>
+                                <td>CPU使用率</td>
+                                <td>{{.cpuUsed}}%</td>
+                            </tr>
+                            <tr>
+                                <td>Load Avg 5</td>
+                                <td>{{.cpuAvg5}}</td>
+                            </tr>
+                            <tr>
+                                <td>Load Avg 15</td>
+                                <td>{{.cpuAvg15}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>内存</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            <a class="close-link"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <table class="table table-hover no-margins">
+                            <thead>
+                            <tr>
+                                <th>属性</th>
+                                <th>内存</th>
+                                <th>GO</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>总内存</td>
+                                <td>{{.memTotal}}MB</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>已用内存</td>
+                                <td>{{.memUsed}}MB</td>
+                                <td>{{.goUsed}}MB</td>
+                            </tr>
+                            <tr>
+                                <td>剩余内存</td>
+                                <td>{{.memFree}}MB</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>使用率</td>
+                                <td class="{{if gt .memUsage 80.0}}text-danger{{end}}">{{.memUsage}}%</td>
+                                <td>-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>服务器信息</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <tbody>
+                                    <tr>
+                                        <td>服务器名称</td>
+                                        <td>{{.sysComputerName}}</td>
+                                        <td>操作系统</td>
+                                        <td>{{.sysOsName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>服务器IP</td>
+                                        <td>{{.sysComputerIp}}</td>
+                                        <td>系统架构</td>
+                                        <td>{{.sysOsArch}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Go信息</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <tbody>
+                                    <tr>
+                                        <td>语言环境</td>
+                                        <td>{{.goName}}</td>
+                                        <td>版本</td>
+                                        <td>{{.goVersion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动时间</td>
+                                        <td>{{.goStartTime}}</td>
+                                        <td>运行时长</td>
+                                        <td>{{.goRunTime}}小时</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">安装路径</td>
+                                        <td colspan="3">{{.goHome}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">项目路径</td>
+                                        <td colspan="3">{{.goUserDir}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>磁盘状态</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                    <tr>
+                                        <th>盘符路径</th>
+                                        <th>文件系统</th>
+                                        <th>总大小</th>
+                                        <th>可用大小</th>
+                                        <th>已用大小</th>
+                                        <th>已用百分比</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{range $index, $disk := .disklist}}
+                                        <tr>
+                                            <td>{{$disk.Path}}</td>
+                                            <td>{{$disk.Fstype}}</td>
+                                            <td>{{$disk.Total}}MB</td>
+                                            <td>{{$disk.Free}}MB</td>
+                                            <td>{{$disk.Used}}MB</td>
+                                            <td class="{{if gt $disk.UsedPercent 80.0}}text-danger{{end}}">{{$disk.UsedPercent}}%</td>
+                                        </tr>
+                                    {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{{template "footer" (OssUrl)}}
+<script>
+    $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
+        var div_ibox = $(this).closest("div.ibox"),
+            e = $(this).find("i"),
+            i = div_ibox.find("div.ibox-content");
+        i.slideToggle(200),
+            e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"),
+            div_ibox.toggleClass("").toggleClass("border-bottom"),
+            setTimeout(function () {
+                div_ibox.resize();
+            }, 50);
+    }), $(".close-link").click(function () {
+        var div_ibox = $(this).closest("div.ibox");
+        div_ibox.remove()
+    });
+</script>
+</html>
+{{end}}

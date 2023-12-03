@@ -1,0 +1,274 @@
+{{define "demo/form/button"}}
+<html lang="zh">
+<head>
+<style type="text/css">
+/* 如果要让工具栏固定在页面底部,使用下面的样式,不需要的可以注释 */
+.sw>.toolbar-bottom{
+	z-index: 100;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+    position: fixed;
+    text-align: right;
+    background: #fff;
+    box-shadow: 0 -2px 6px 1px hsla(223,8%,83%,.5);
+    border-top: 1px solid #e3e4e8;
+}
+/* 如果设置了是否自动调节高度为false,需要加滚动条 */
+.sw>.tab-content{
+	overflow-x: hidden;
+    overflow-y: auto;
+}
+/* 解决工具栏无法固定底部的问题（如果页面没有animated类可以不写这部分代码） */
+.animated {
+    animation-fill-mode: none;
+    -webkit-animation-fill-mode: none;
+    -moz-animation-fill-mode: none;
+    -o-animation-fill-mode: none;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>
+							重新计算发电量
+						</h5>
+					</div>
+					<div class="ibox-content">
+						<div class="row select-list" style="padding-left: 15px; margin-bottom: 10px;">
+							<ul>
+								<li>
+									已选站点： <input id="dpc_site"  contenteditable="false" />
+									开始日期： <input id="dpc_start" contenteditable="false" />
+									结束日期： <input id="dpc_end"   contenteditable="false" />
+								</li>
+
+							</ul>
+
+						</div>
+						<div id="smartwizard">
+							<ul class="nav">
+								<li class="nav-item">
+									<a class="nav-link" href="#step-1"> 第一步 </a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#step-2"> 第二步 </a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#step-3"> 第三步 </a>
+								</li>
+<!--								<li class="nav-item">-->
+<!--									<a class="nav-link" href="#step-4"> 第四步 </a>-->
+<!--								</li>-->
+							</ul>
+							<div class="tab-content">
+								<div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
+									<div>
+										<h3></h3>
+										<form class="form form-horizontal m-t">
+
+											<div class="form-group">
+												<label class="col-sm-5 control-label"></label>
+												<div class="col-sm-7">
+													<h3 class="col-sm-7"></h3>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-4 control-label is-required">站点：</label>
+												<div class="col-sm-8">
+													<input id="treeNo" name="treeNo" class="form-control" type="text" required>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">开始时间：</label>
+												<div class="col-sm-8">
+													<input id="startDate" name="startDate" class="form-control time-input" type="text">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">结束时间：</label>
+												<div class="col-sm-8">
+													<input id="endDate" name="endDate" class="form-control time-input" type="text">
+												</div>
+											</div>
+											<div class="form-group">
+												<a class="btn btn-primary btn-rounded btn-block" href="#">导入数据</a>
+											</div>
+
+										</form>
+									</div>
+								</div>
+								<div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
+									<div>
+
+										<form class="form form-horizontal m-t">
+											<div class="form-group">
+												<label class="col-sm-5 control-label"></label>
+												<div class="col-sm-7">
+													<h3 class="col-sm-7"></h3>
+												</div>
+											</div>
+										<div class="form-group">
+												<a class="btn btn-primary btn-rounded btn-block" href="#">发电量详情数据-重算</a>
+										</div>
+										</form>
+
+									</div>
+								</div>
+								<div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
+									<div>
+
+										<form class="form form-horizontal m-t">
+											<div class="form-group">
+												<label class="col-sm-5 control-label"></label>
+												<div class="col-sm-7">
+													<h3 class="col-sm-7"></h3>
+												</div>
+											</div>
+											<div class="form-group">
+												<a class="btn btn-primary btn-rounded btn-block" href="#">发电量结算表数据-重算</a>
+											</div>
+										</form>
+
+									</div>
+
+								</div>
+
+<!--								<div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">-->
+<!--									<div class="m-t-md">-->
+<!--										<h3>测试多行显示</h3>-->
+<!--										<form class="form form-horizontal m-t">-->
+<!--											<div class="form-group">-->
+<!--												<div class="col-sm-12">-->
+<!--													<a class="btn btn-danger" id=""> 完成 </a>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</form>-->
+<!--									</div>-->
+<!--								</div>-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<script>
+		$(document).ready(function() {
+			// 工具栏按钮
+            var btnFinish = $('<a id="btn-finish"></a>').text('完成')
+                                             .addClass('btn btn-info')
+                                             .on('click', function(){ submit(); });
+            // var btnCancel = $('<a id="btn-cancel"></a>').text('取消')
+            //                                  .addClass('btn btn-danger')
+            //                                  .on('click', function(){ $('#smartwizard').smartWizard("reset"); });
+           	// 下面两个按钮是为了因为插件默认的是botton,这里换成<a>,也可以选择用样式替换,或者不替换
+            var btnNext = $('<a id="btn-next"></a>').text('下一步')
+											 .addClass('btn btn-info')
+											 .on('click', function(){ $('#smartwizard').smartWizard("next");});
+			var btnPrev = $('<a id="btn-prev"></a>').text('上一步')
+											 .addClass('btn btn-success disabled')
+											 .on('click', function(){ $('#smartwizard').smartWizard("prev"); });
+            // 初始化表单向导组件
+            $('#smartwizard').smartWizard({
+                theme: 'dots', // default, arrows, dots, progress
+                autoAdjustHeight : false, // 自动调整高度, 默认true
+                enableURLhash:false, //开启URL hash,开启后点击浏览器前进后退按钮会执行下一步和上一步操作
+                transition: {
+                    animation: 'slide-horizontal', // Effect on navigation, none/fade/slide-horizontal/slide-vertical/slide-swing
+                },
+                toolbarSettings: {
+                	showNextButton: false,// 因为上面自定义了下一步按钮, 所以隐藏掉插件自带的按钮, 如果不使用自定义按钮, 需要改为true或者去掉该属性
+    				showPreviousButton: false,// 因为上面自定义了上一步按钮, 所以隐藏掉插件自带的按钮, 如果不使用自定义按钮, 需要改为true或者去掉该属性
+                    toolbarExtraButtons: [btnPrev,btnNext,btnFinish]// 扩展的按钮集合
+                }
+            });
+		});
+		
+		function submit(){
+			var data = {};
+			$('.form').each(function (index, form){
+				// 这里可以使用$.common.formToJSON(formId);  需要在form上加id
+                $.each($(form).serializeArray(), function(i, field) {
+                 	 if(data[field.name]) {
+                 		data[field.name] += ("," + field.value);
+					 } else {
+						data[field.name] = field.value;
+                     }
+                });
+			});
+			alert(JSON.stringify(data))
+		}
+		// 显示步骤时将触发事件
+        $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+        	// 下面按钮是快速操作栏的
+        	$("#prev-btn").removeClass('disabled');
+            $("#next-btn").removeClass('disabled');
+        	// 下面按钮是工具栏的
+        	$("#btn-prev").removeClass('disabled');
+            $("#btn-next").removeClass('disabled');
+            $("#btn-finish").removeClass('disabled');
+            if(stepPosition === 'first') {
+            	$("#prev-btn").addClass('disabled');// 快速操作栏（演示用）
+            	$("#btn-prev").addClass('disabled');
+				$("#btn-finish").addClass('disabled');
+            } else if(stepPosition === 'last') {
+            	$("#next-btn").addClass('disabled');// 快速操作栏（演示用）
+                $("#btn-next").addClass('disabled');
+            } else {
+            	$("#prev-btn").removeClass('disabled');// 快速操作栏（演示用）
+                $("#next-btn").removeClass('disabled');// 快速操作栏（演示用）
+                $("#btn-prev").removeClass('disabled');
+                $("#btn-next").removeClass('disabled');
+                $("#btn-finish").addClass('disabled');
+            }
+        });
+		
+		// 该事件在离开某个步骤之前触发
+		$("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepNumber, nextStepNumber, stepDirection) {
+			if(stepDirection == 'forward'){
+				var form = $("#step-" + (currentStepNumber + 1)).find('.form');
+				if(form.length > 0){
+					return form.validate().form();
+				}
+				return true;
+			}
+			return true;
+		});
+		
+		$("#theme-selector").on("change", function() {
+			// Change theme
+			var options = {
+
+			};
+
+			return true;
+		});
+
+		$("#reset-btn").on("click", function() {
+            // Reset wizard
+            $('#smartwizard').smartWizard("reset");
+            return true;
+        });
+
+        $("#prev-btn").on("click", function() {
+            // Navigate previous
+            $('#smartwizard').smartWizard("prev");
+            return true;
+        });
+
+        $("#next-btn").on("click", function() {
+            // Navigate next
+            $('#smartwizard').smartWizard("next");
+            return true;
+        });
+
+	</script>
+</body>
+</html>
