@@ -56,6 +56,7 @@ func (mySvr *MyServer) Start() {
 	port := cast.ToString(conf.Config().GetServerPort())
 	fmt.Println("##############################################################")
 	fmt.Println("go.application.name: " + global.GetConfigInstance().GetAppName())
+	fmt.Println("go.redis.host: " + global.GetConfigInstance().GetValueStr("go.redis.host"))
 	fmt.Println("go.datasource.master: " + global.GetConfigInstance().GetMaster())
 	//加载模板引擎
 	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path, "//", "/"))
