@@ -74,7 +74,7 @@ main[]()
 * sqlite：默认使用sqlite数据库，可不做任何修改
 * mysql： 导入docs中的sql文件，修改application.yml中的mysql相关信息
 
-### 2. cd 进入app_sys目录启动应用
+### 2. cd 进入main目录启动应用
 * 方式一 ：常规启动
 ~~~
 go run main.go
