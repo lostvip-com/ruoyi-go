@@ -81,7 +81,7 @@ go run main.go
 ~~~
 启动完成后，在控制台会打印出访问地址： http://127.0.0.1:3001
 * 方式二： 使用第三方热加载组件
-> 前置条件： cd 到 [app_sys](main) 目录，安装热加载框架：
+> 前置条件： cd 到 [main](main) 目录，安装热加载框架：
 > <br>  go get github.com/pilu/fresh
 > <br>  go install github.com/pilu/fresh
 
