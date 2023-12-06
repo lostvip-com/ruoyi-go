@@ -65,7 +65,7 @@ func (e *IBatis) GetSql(tagName string, params interface{}) (string, error) {
 		panic("tpl文件格式错误!")
 	}
 	if cfg.IsDebug() {
-		logme.Log.Info("========>SQL:  " + query)
+		logme.Info("========>SQL:  " + query)
 	}
 	//动态解析
 	sql, err := lv_tpl.ParseTemplateStr(query, params)
@@ -121,7 +121,7 @@ func (e *IBatis) GetCountSql() string {
 	}
 	sql := " select count(1) from (" + e.CurrBaseSql + ") t "
 	if cfg.IsDebug() {
-		logme.Log.Info("========>SQL: \n " + sql)
+		logme.Info("========>SQL: \n " + sql)
 	}
 	return sql
 }

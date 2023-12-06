@@ -7,8 +7,8 @@
     <meta name="description" content="若依后台管理框架">
     <link href="{{OssUrl}}/resource/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="{{OssUrl}}/resource/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
-    <link href="{{OssUrl}}/resource/css/style.min.css" th:href="@{/css/style.min.css}" rel="stylesheet"/>
-    <link href="{{OssUrl}}/resource/css/login.min.css" th:href="@{/css/login.min.css}" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/login.css" th:href="@{/css/login.css}" rel="stylesheet"/>
     <link href="{{OssUrl}}/resource/ruoyi/css/ry-ui.css" th:href="@{/ruoyi/css/ry-ui.css?v=4.6.1}" rel="stylesheet"/>
     <!-- 360浏览器急速模式 -->
     <meta name="renderer" content="webkit">
@@ -26,23 +26,22 @@
             <div class="col-sm-7">
                 <div class="signin-info">
                     <div class="logopanel m-b">
-                        <h1><img alt="[ 欢迎使用 ]" style="width: 64px;height: 64px" src="{{OssUrl}}/resource/logo.png"></h1>
+{{/*                        <h1><img alt="[ 欢迎使用 ]" style="width: 64px;height: 64px" src="{{OssUrl}}/resource/logo.png"></h1>*/}}
                     </div>
                     <div class="m-b"></div>
-                    <h4> <strong>后台管理系统</strong></h4>
-                    <ul class="m-b">
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> SpringBoot</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Mybatis</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Shiro</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Thymeleaf</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Bootstrap</li>
+                    <h2> <strong>Lostvip管理系统</strong></h2>
+                    <ul class="m-b login-left">
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> GO</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> GIN</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> XORM</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Boorstrap</li>
                     </ul>
-                    <strong th:if="${@config.getKey('sys.account.registerUser')}">还没有账号？ <a th:href="@{/register}">立即注册&raquo;</a></strong>
+{{/*                    <strong th:if="${@config.getKey('sys.account.registerUser')}">还没有账号？ <a th:href="@{/register}">立即注册&raquo;</a></strong>*/}}
                 </div>
             </div>
             <div class="col-sm-5">
                 <form id="signupForm" autocomplete="off">
-                    <h4 class="no-margins">用户登录：</h4>
+                    <h3 class="no-margins">用户登录：</h3>
                     <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value=""    />
                     <input type="password" name="password" class="form-control pword"     placeholder="密码"   value="" />
 
@@ -64,7 +63,7 @@
                     <div class="checkbox-custom" style="margin-top: 10px">
 				        <input type="checkbox" id="rememberme" name="rememberme"> <label for="rememberme">记住我</label>
 				    </div>
-                    <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍后...">登录</button>
+                    <button class="login-left btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍后...">登录</button>
                 </form>
             </div>
         </div>

@@ -1,15 +1,12 @@
 server:
-  #注意，端口设置为3001是为了使用golang的热加载框架gin ：
-  # go install github.com/codegangsta/gin@latest
-  # 此框架的默认端口是3000，代理的应用端口默认3001
-  port: 3001
+  port: ${PORT:3001}
 #  context-path: /go
 copyright: © 2023 lostvip.com Copyright
 ## 注释以下配置时，不会使用 nacos #################
-## 开户后会到nacos中加载  app-biz-dev.yml
+## 开户后会到nacos中加载  app-mywork-dev.yml
 #go:
 #  application:
-#    name:  app-biz     # 微服务名
+#    name:  app-mywork     # 微服务名
 #    active: dev
 #    debug: true
 #  cloud:

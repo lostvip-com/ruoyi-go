@@ -28,7 +28,10 @@ func (e *ConfigDefault) GetValueStr(key string) string {
 	if strings.HasPrefix(val, "$") { //存在动态表达式
 		val = strings.TrimSpace(val)             //去空格
 		val = lv_conv.SubStr(val, 2, len(val)-1) //去掉 ${}
-		index := strings.Index(val, ":")         //ssz:按第一个: 分割，前半部分是占位符，后半部分是默认值
+		if strings.HasPrefix(val, "\"") {
+			panic("${...} format error !!!")
+		}
+		index := strings.Index(val, ":") //ssz:按第一个: 分割，前半部分是占位符，后半部分是默认值
 		val0 := lv_conv.SubStr(val, 0, index)
 		val0 = os.Getenv(val0) //从环境变量中取值,替换
 		if val0 == "" {        //未设置环境变量,使用默认值
@@ -88,23 +91,15 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 	return e.vipperCfg
 }
 
-func (e *ConfigDefault) GetPort() int {
-	Port := e.vipperCfg.GetInt("server.port")
-	if Port == 0 {
-		Port = 8080
-	}
-	return Port
-}
-
 /**
  * app port
  */
 func (e *ConfigDefault) GetServerPort() int {
-	port := e.vipperCfg.GetInt("server.port")
-	if port == 0 {
-		port = 8080
+	port := e.GetValueStr("server.port")
+	if port == "" {
+		port = "8080"
 	}
-	return port
+	return cast.ToInt(port)
 }
 
 /**

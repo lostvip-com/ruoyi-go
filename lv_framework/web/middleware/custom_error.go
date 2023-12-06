@@ -28,14 +28,14 @@ func RecoverError(c *gin.Context) {
 				c.AbortWithStatusJSON(http.StatusOK, errTypeObj)
 				lv_web.ErrResp(c, errTypeObj)
 			case error: // 原始的错误
-				logme.Log.Error(c, "CustomError XXXXXXXXXX: ", errTypeObj)
+				logme.Error(c, "CustomError XXXXXXXXXX: ", errTypeObj)
 				lv_web.Error(c, errTypeObj)
 			default:
-				logme.Log.Error(c, "default CustomErrorXXXXXXXXXX: ", errTypeObj)
+				logme.Error(c, "default CustomErrorXXXXXXXXXX: ", errTypeObj)
 				lv_web.Err(c, "未知错误!")
 			}
 		} else {
-			logme.Log.Info(c, "-----------request over----------")
+			logme.Info(c, "-----------request over----------")
 		}
 	}()
 	c.Next()

@@ -18,9 +18,8 @@ func TokenMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		// 客户端携带Token有三种方式 1.放在请求头 2.放在请求体 3.放在URI
 		// 这里的具体实现方式要依据你的实际业务情况决定
-
+		logme.Info("URL------------>" + c.Request.RequestURI)
 		tokenStr := lv_net.GetParam(c, "token")
-		logme.Log.Info("token:" + tokenStr + "  URL------------>" + c.Request.RequestURI)
 		isSignIn := user.IsSignedIn(tokenStr)
 		if !isSignIn {
 			c.Redirect(http.StatusFound, global.GetConfigInstance().GetContextPath()+"/login")

@@ -44,7 +44,7 @@ func NewInstance(indexDb int) *redis.Client {
 			  password: %v
              `
 		host := conf.GetValueStr("go.redis.host")
-		logme.Log.Error(fmt.Sprintf(msg, host, conf.GetValueStr("go.redis.port"), conf.GetValueStr("go.redis.password")))
+		logme.Error(fmt.Sprintf(msg, host, conf.GetValueStr("go.redis.port"), conf.GetValueStr("go.redis.password")))
 		panic("redis 错误:" + host + " port:" + port)
 	}
 	return rdb

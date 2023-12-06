@@ -2,9 +2,9 @@ package app
 
 import (
 	"lostvip.com/web/router"
-	_ "robvi/app/biz"
 	"robvi/app/common/middleware/token"
 	_ "robvi/app/demo"
+	_ "robvi/app/mywork"
 	_ "robvi/app/system"
 	controller2 "robvi/app/system/controller"
 )

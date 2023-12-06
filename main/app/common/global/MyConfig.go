@@ -41,11 +41,11 @@ func (e *MyConfig) LoadConf() {
 
 func resetCfg() {
 	if conf.Config().IsDebug() {
-		logme.Log.Warn(conf.Config().GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
+		logme.Warn(conf.Config().GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
 		os.Setenv(conf.KEY_SWAGGER_OFF, "")
 	} else {
-		logme.Log.Warn(conf.Config().GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
+		logme.Warn(conf.Config().GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
 	}

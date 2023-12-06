@@ -8,7 +8,6 @@ import (
 	"lostvip.com/logme"
 	"lostvip.com/web/server"
 	_ "robvi/app"
-	"robvi/app/biz/model"
 	"robvi/app/common/global"
 )
 
@@ -20,13 +19,13 @@ import (
 // @BasePath /api
 func main() {
 	cfg := global.GetConfigInstance()
-	logme.InitLog("./logru.log")
+	logme.InitLog("logru.log")
 	if cfg.IsDebug() {
 		// Only log the warning severity or above.
 		gin.SetMode("debug")
 		db.Instance().Engine().ShowSQL(true)
 	}
-	db.Instance().Engine().Sync2(model.DpcTask{}, model.DpcTaskItem{})
+	//db.Instance().Engine().Sync2(model.DpcTask{}, model.DpcTaskItem{})
 	//后台服务状态
 	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	httpSvr.Start()

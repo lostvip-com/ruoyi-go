@@ -68,7 +68,7 @@ func (mySvr *MyServer) Start() {
 
 // 创建服务
 func New(addr string) *MyServer {
-	gin.DefaultWriter = logme.Log.Logger.Out
+	gin.DefaultWriter = logme.GetLog().Out
 	contextPath := conf.Config().GetContextPath()
 	var s MyServer
 	s.WriteTimeout = 60 * time.Second

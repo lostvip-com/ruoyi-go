@@ -23,7 +23,7 @@ esac # end case
 SVC_NAME=g_sys
 IMG_NAME=reg.lostvip.com/sys:$VER_APP
 echo "------ $image 构建开始 ---------------------------"
-docker build -t  $IMG_NAME --no-cache ./
+docker build -t  $IMG_NAME .
 docker push  $IMG_NAME
 echo "------ $IMG_NAME 构建完成 ---------------------------"
 
