@@ -1,6 +1,6 @@
 module lostvip.com
 
-go 1.16
+go 1.20
 
 require (
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/go-xorm/xorm v0.7.9 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/morrisxyang/xreflect v0.0.0-20231001053442-6df0df9858ba // indirect
 	github.com/redis/go-redis/v9 v9.3.0 // indirect
@@ -21,4 +22,5 @@ require (
 	github.com/tealeg/xlsx v1.0.5 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
+	xorm.io/builder v0.3.13 // indirect
 )

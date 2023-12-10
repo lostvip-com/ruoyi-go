@@ -113,18 +113,16 @@ func SelectPostsByUserId(userId int64) ([]post.EntityFlag, error) {
 	if err != nil || postAll == nil {
 		return nil, errors.New("未查询到岗位数据")
 	}
-
 	userPost, err := post.SelectPostsByUserId(userId)
 
-	if err != nil || userPost == nil {
-		return nil, errors.New("未查询到用户岗位数据")
-	} else {
-		for i := range postAll {
-			for j := range userPost {
-				if userPost[j].PostId == postAll[i].PostId {
-					postAll[i].Flag = true
-					break
-				}
+	for i := range postAll {
+		if userPost == nil {
+			break
+		}
+		for j := range userPost {
+			if userPost[j].PostId == postAll[i].PostId {
+				postAll[i].Flag = true
+				break
 			}
 		}
 	}

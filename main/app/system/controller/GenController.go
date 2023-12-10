@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"lostvip.com/db"
-	"lostvip.com/db/ibatis"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_file"
 	"lostvip.com/utils/lv_web"
@@ -47,7 +46,7 @@ func (w *GenController) ExecSqlFile(c *gin.Context) {
 	}
 	//err = db.ExecSqlFile(sqlFile)
 	// Loads queries from file
-	dot, err := ibatis.LoadFromFile(sqlFile)
+	dot, err := db.LoadFromFile(sqlFile)
 	// Run queries
 	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu")
 	menuName := po.FunctionName

@@ -58,3 +58,8 @@ func SimpleCopyProperties(dst, src interface{}) (err error) {
 
 	return nil
 }
+
+func IsMap(data interface{}) bool {
+	t := reflect.TypeOf(data)
+	return t.Kind() == reflect.Map
+}

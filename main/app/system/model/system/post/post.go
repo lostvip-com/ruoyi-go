@@ -56,6 +56,7 @@ type SelectPageReq struct {
 	IsAsc         string `form:"isAsc"`         //排序方式
 	PageNum       int    `form:"pageNum"`       //当前页码
 	PageSize      int    `form:"pageSize"`      //每页数
+	Remark        string `form:"remark"`        //每页数
 }
 
 // 检查编码请求参数

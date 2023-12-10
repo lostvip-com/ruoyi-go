@@ -44,7 +44,7 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES (13, 'his_patient', '患者基本信息', 'HisPatient', 'crud', 'robvi', 'biz', 'patient', '患者基本信息', 'lv', '', 'admin', '2023-10-29 22:05:20', 'admin', '2023-10-30 19:15:28', '');
+INSERT INTO `gen_table` VALUES (13, 'his_patient', '患者基本信息', 'HisPatient', 'crud', 'robvi', 'mywork', 'patient', '患者基本信息', 'lv', '', 'admin', '2023-10-29 22:05:20', 'admin', '2023-10-30 19:15:28', '');
 
 -- ----------------------------
 -- Table structure for gen_table_column
@@ -1025,24 +1025,24 @@ INSERT INTO `sys_menu` VALUES (1062, '字典详情', 105, 5, '#', '', 'F', '0', 
 INSERT INTO `sys_menu` VALUES (1064, '监控平台', 4, 1, 'https://lostvip.com', 'menuItem', 'C', '0', '', 'fa fa-globe', '', '2021-06-19 23:12:45', '', '2023-10-17 14:10:02', '');
 INSERT INTO `sys_menu` VALUES (1065, '搜索自动补全', 6, 100, 'demo/form/autocomplete', 'menuItem', 'C', '', '', 'fa fa-sticky-note-o', '', '2023-09-18 10:15:49', '', '2023-09-18 10:17:03', '');
 INSERT INTO `sys_menu` VALUES (1066, '发电量重算', 4, 100, 'iot/hisData/toWizard', 'menuItem', 'C', '', '', 'fa fa-sticky-note-o', '', '2023-09-18 21:42:44', '', '2023-09-19 21:36:52', '');
-INSERT INTO `sys_menu` VALUES (1082, '患者基本信息', 4, 1, '/biz/patient', '', 'C', '0', 'biz:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
-INSERT INTO `sys_menu` VALUES (1083, '患者基本信息新增', 1082, 2, '#', '', 'F', '0', 'biz:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1084, '患者基本信息查询', 1082, 1, '#', '', 'F', '0', 'biz:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1085, '患者基本信息修改', 1082, 3, '#', '', 'F', '0', 'biz:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1086, '患者基本信息删除', 1082, 4, '#', '', 'F', '0', 'biz:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1087, '患者基本信息导出', 1082, 5, '#', '', 'F', '0', 'biz:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1106, '患者基本信息', 4, 1, '/biz/patient', '', 'C', '0', 'biz:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
-INSERT INTO `sys_menu` VALUES (1107, '患者基本信息新增', 1106, 2, '#', '', 'F', '0', 'biz:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1108, '患者基本信息查询', 1106, 1, '#', '', 'F', '0', 'biz:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1109, '患者基本信息修改', 1106, 3, '#', '', 'F', '0', 'biz:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1110, '患者基本信息删除', 1106, 4, '#', '', 'F', '0', 'biz:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1111, '患者基本信息导出', 1106, 5, '#', '', 'F', '0', 'biz:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1112, '患者基本信息', 4, 1, '/biz/patient', '', 'C', '0', 'biz:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
-INSERT INTO `sys_menu` VALUES (1113, '患者基本信息新增', 1112, 2, '#', '', 'F', '0', 'biz:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1114, '患者基本信息查询', 1112, 1, '#', '', 'F', '0', 'biz:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1115, '患者基本信息修改', 1112, 3, '#', '', 'F', '0', 'biz:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1116, '患者基本信息删除', 1112, 4, '#', '', 'F', '0', 'biz:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES (1117, '患者基本信息导出', 1112, 5, '#', '', 'F', '0', 'biz:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1082, '患者基本信息', 4, 1, '/mywork/patient', '', 'C', '0', 'mywork:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
+INSERT INTO `sys_menu` VALUES (1083, '患者基本信息新增', 1082, 2, '#', '', 'F', '0', 'mywork:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1084, '患者基本信息查询', 1082, 1, '#', '', 'F', '0', 'mywork:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1085, '患者基本信息修改', 1082, 3, '#', '', 'F', '0', 'mywork:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1086, '患者基本信息删除', 1082, 4, '#', '', 'F', '0', 'mywork:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1087, '患者基本信息导出', 1082, 5, '#', '', 'F', '0', 'mywork:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1106, '患者基本信息', 4, 1, '/mywork/patient', '', 'C', '0', 'mywork:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
+INSERT INTO `sys_menu` VALUES (1107, '患者基本信息新增', 1106, 2, '#', '', 'F', '0', 'mywork:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1108, '患者基本信息查询', 1106, 1, '#', '', 'F', '0', 'mywork:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1109, '患者基本信息修改', 1106, 3, '#', '', 'F', '0', 'mywork:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1110, '患者基本信息删除', 1106, 4, '#', '', 'F', '0', 'mywork:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1111, '患者基本信息导出', 1106, 5, '#', '', 'F', '0', 'mywork:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1112, '患者基本信息', 4, 1, '/mywork/patient', '', 'C', '0', 'mywork:patient:view', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '患者基本信息菜单');
+INSERT INTO `sys_menu` VALUES (1113, '患者基本信息新增', 1112, 2, '#', '', 'F', '0', 'mywork:patient:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1114, '患者基本信息查询', 1112, 1, '#', '', 'F', '0', 'mywork:patient:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1115, '患者基本信息修改', 1112, 3, '#', '', 'F', '0', 'mywork:patient:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1116, '患者基本信息删除', 1112, 4, '#', '', 'F', '0', 'mywork:patient:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1117, '患者基本信息导出', 1112, 5, '#', '', 'F', '0', 'mywork:patient:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
 
 -- ----------------------------
 -- Table structure for sys_notice

@@ -6,51 +6,55 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/db"
-	"lostvip.com/db/ibatis"
-	"lostvip.com/logme"
 	"lostvip.com/utils/lv_web"
 	"robvi/app/system/model/system/post"
 	"time"
 )
 
 // 相对于mapper目录的路径
-var SQL_FILE_PATIENT_MAPPER = "sys_post/sys_post_mapper.tpl"
+var SQL_FILE_PATIENT = "sys_post/sys_post_mapper.tpl"
 
-func (w DemoController) TestMybatis1(c *gin.Context) {
-	req := post.SelectPageReq{PostName: "test", PageNum: 1, PageSize: 100}
-	if err := c.ShouldBind(req); err != nil { //获取参数
+/**
+ * 基于ibatis 的分页查询演示
+ */
+func (w DemoController) Mybatis3(c *gin.Context) {
+	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+	if err := c.ShouldBind(&req); err != nil { //获取参数
+		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		return
+	}
+	resp := db.GetPageByNamedSql[post.SysPost](SQL_FILE_PATIENT, "test", req)
+	lv_web.PageOK(c, resp)
+}
+
+func (w DemoController) Mybatis1(c *gin.Context) {
+	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+	if err := c.ShouldBind(&req); err != nil { //获取参数
+		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		return
+	}
+	ibatis := db.NewIBatis(SQL_FILE_PATIENT)
+	sql := ibatis.GetLimitSql("test", req)
+	list := db.ListByNamedSql[post.SysPost](sql, req)
+	count := db.CountByNamedSql(ibatis.GetCountSql(), req)
+	lv_web.PageOK2(c, list, count)
+}
+
+func (w DemoController) Mybatis2(c *gin.Context) {
+	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
 		return
 	}
 
-	ibatis, err := ibatis.NewIBatis(SQL_FILE_PATIENT_MAPPER)
-	list := []post.SysPost{}
-	err = db.GetInstanceMaster().SQL(ibatis.GetLimitSql("test", req)).Find(&list)
-	total, err := db.GetInstanceMaster().SQL(ibatis.GetCountSql()).Count()
+	ibatis := db.NewIBatis(SQL_FILE_PATIENT)
+	sql := ibatis.GetLimitSql("test", req)
+	listMap, err := db.GetInstance().ListByNamedSql(sql, req, true)
+	count, err := db.GetInstance().CountByNamedSql(ibatis.GetCountSql(), req)
 	if err != nil {
 		panic(err)
-	} else {
-		logme.Info(list)
 	}
-	lv_web.PageOK(c, list, total, "")
-}
-
-func (w DemoController) TestMybatisStr2(c *gin.Context) {
-	p := map[string]any{"name": "test", "pageSize": 200, "pageNum": 1}
-	ibatis, err := ibatis.NewIBatis(SQL_FILE_PATIENT_MAPPER)
-	list, err := db.GetInstanceMaster().QueryString(ibatis.GetLimitSql("test", p))
-	if err != nil {
-		panic(err)
-	} else {
-		logme.Info(list)
-	}
-	total, err := db.GetInstanceMaster().SQL(ibatis.GetCountSql()).Count()
-	if err != nil {
-		panic(err)
-	} else {
-		logme.Info(list)
-	}
-	lv_web.PageOK(c, list, total, "")
+	lv_web.PageOK2(c, listMap, count)
 }
 
 func (w DemoController) TestRedis(c *gin.Context) {

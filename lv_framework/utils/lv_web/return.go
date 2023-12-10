@@ -60,11 +60,13 @@ func ErrResp(c *gin.Context, res dto.Resp) {
 }
 
 // 分页数据处理 ， 自动翻译 Tag locale标记的字段
-func PageOK(c *gin.Context, result interface{}, count int64, msg string) {
-	//slice := result.([]interface{})
-	//util.TranslateSliceByTag(slice)
-	data := map[string]interface{}{"list": result, "total": count}
-	Success(c, data, msg)
+func PageOK(c *gin.Context, result dto.RespPage) {
+	c.AbortWithStatusJSON(http.StatusOK, result)
+}
+
+// 分页数据处理 ， 自动翻译 Tag locale标记的字段
+func PageOK2(c *gin.Context, rows any, total int64) {
+	c.AbortWithStatusJSON(http.StatusOK, gin.H{"code": 200, "msg": "success", "rows": rows, "total": total})
 }
 
 ///**

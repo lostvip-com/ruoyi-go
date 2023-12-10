@@ -20,8 +20,8 @@ body.bg_terminal {
 }
 
 .signinpanel {
-	width:750px;
-	margin:10% auto 0;
+	width:800px;
+	margin:16% auto 0;
 	color:rgba(255,255,255,.95)
 }
 .signinpanel .logopanel {
@@ -37,7 +37,7 @@ body.bg_terminal {
 }
 .signinpanel .form-control {
 	display:block;
-	margin-top:15px
+	margin-top:20px
 }
 .signinpanel .uname {
 	background:#fff url(../img/user.png) no-repeat 95% center;
@@ -51,7 +51,7 @@ body.bg_terminal {
     background: #fff no-repeat 95% center;color:#333; margin:0 0 15px 0;
 }
 .signinpanel .btn {
-	margin-top:15px
+	margin-top:20px
 }
 .signinpanel form {
 	background:rgba(255,255,255,.2);
@@ -66,10 +66,10 @@ body.bg_terminal {
 }
 .signup-footer {
 	border-top:solid 1px rgba(255,255,255,.3);
-	margin:20px 0;
-	padding-top:15px
+	margin:40px 0;
+	padding-top:20px
 }
-@media screen and (max-width:768px) {
+@media screen and (max-width:900px) {
 	.signinpanel,.signuppanel {
 	margin:0 auto;
 	width:380px!important;
@@ -100,7 +100,7 @@ body.bg_terminal {
 .checkbox-custom {
     position: relative;
     padding: 0 15px 0 25px;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
     display: inline-block;
 }
 /*
@@ -144,8 +144,8 @@ body.bg_terminal {
     margin-top: -5px;
     font-size: 11px;
     line-height: 1;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     color: #333;
 }
 .checkbox-custom label {
@@ -163,9 +163,12 @@ body.bg_terminal {
 .form-control{
 	border-radius: 1px!important;
 	padding: 6px 12px!important;
-	height: 34px!important;
+	height: 42px!important;
 }
 
 .form-control:focus{
     border-color: #1ab394 !important;
+}
+.login-left{
+	font-size: 22px;
 }

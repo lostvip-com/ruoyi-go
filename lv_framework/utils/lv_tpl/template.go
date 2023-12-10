@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"lostvip.com/utils/lv_secret"
 	"os"
+	"strings"
 	"text/template"
 )
 
@@ -39,9 +40,10 @@ func ParseTemplateStr(templateStr string, data interface{}) (string, error) {
 		return "", nil
 	}
 	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, data) //将string与模板合成，变量name的内容会替换掉{{OssUrl}}
+	err = tmpl.Execute(buffer, data) //替换模板变量
 	if err != nil {
 		return "", nil
 	}
-	return buffer.String(), nil
+	str := strings.ReplaceAll(buffer.String(), "\n", " ")
+	return str, nil
 }

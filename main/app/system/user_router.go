@@ -4,36 +4,38 @@ import (
 	"lostvip.com/web/router"
 	"robvi/app/common/middleware/auth"
 	"robvi/app/common/middleware/token"
-	user2 "robvi/app/system/controller/system/user"
+	"robvi/app/system/controller"
 )
 
 // 加载路由
 func init() {
 	// 用户管理路由
 	g1 := router.New("/system/user", token.TokenMiddleware(), auth.Auth)
-	g1.GET("/", "system:user:view", user2.List)
-	g1.POST("/list", "system:user:list", user2.ListAjax)
-	g1.GET("/add", "system:user:add", user2.Add)
-	g1.POST("/add", "system:user:add", user2.AddSave)
-	g1.POST("/remove", "system:user:remove", user2.Remove)
-	g1.GET("/edit", "system:user:edit", user2.Edit)
-	g1.POST("/edit", "system:user:edit", user2.EditSave)
-	g1.POST("/export", "system:user:export", user2.Export)
-	g1.GET("/resetPwd", "system:user:resetPwd", user2.ResetPwd)
-	g1.POST("/resetPwd", "system:user:resetPwd", user2.ResetPwdSave)
+	user := controller.UserController{}
+	g1.GET("/", "system:user:view", user.List)
+	g1.POST("/list", "system:user:list", user.ListAjax)
+	g1.GET("/add", "system:user:add", user.Add)
+	g1.POST("/add", "system:user:add", user.AddSave)
+	g1.POST("/remove", "system:user:remove", user.Remove)
+	g1.GET("/edit", "system:user:edit", user.Edit)
+	g1.POST("/edit", "system:user:edit", user.EditSave)
+	g1.POST("/export", "system:user:export", user.Export)
+	g1.GET("/resetPwd", "system:user:resetPwd", user.ResetPwd)
+	g1.POST("/resetPwd", "system:user:resetPwd", user.ResetPwdSave)
 
 	// 个人中心路由
 	g2 := router.New("/system/user/profile", token.TokenMiddleware(), auth.Auth)
-	g2.GET("/", "", user2.Profile)
-	g2.GET("/avatar", "", user2.Avatar)
-	g2.GET("/resetPwd", "", user2.EditPwd)
-	g2.POST("/update", "", user2.Update)
-	g2.POST("/resetSavePwd", "", user2.UpdatePassword)
-	g2.POST("/checkEmailUnique", "", user2.CheckEmailUnique)
-	g2.POST("/checkPhoneUnique", "", user2.CheckPhoneUnique)
-	g2.POST("/checkLoginNameUnique", "", user2.CheckLoginNameUnique)
-	g2.POST("/checkEmailUniqueAll", "", user2.CheckEmailUniqueAll)
-	g2.POST("/checkPhoneUniqueAll", "", user2.CheckPhoneUniqueAll)
-	g2.POST("/checkPassword", "", user2.CheckPassword)
-	g2.POST("/updateAvatar", "", user2.UpdateAvatar)
+	profile := controller.ProfileController{}
+	g2.GET("/", "", profile.Profile)
+	g2.GET("/avatar", "", profile.Avatar)
+	g2.GET("/resetPwd", "", profile.EditPwd)
+	g2.POST("/update", "", profile.Update)
+	g2.POST("/resetSavePwd", "", profile.UpdatePassword)
+	g2.POST("/checkEmailUnique", "", profile.CheckEmailUnique)
+	g2.POST("/checkPhoneUnique", "", profile.CheckPhoneUnique)
+	g2.POST("/checkLoginNameUnique", "", profile.CheckLoginNameUnique)
+	g2.POST("/checkEmailUniqueAll", "", profile.CheckEmailUniqueAll)
+	g2.POST("/checkPhoneUniqueAll", "", profile.CheckPhoneUniqueAll)
+	g2.POST("/checkPassword", "", profile.CheckPassword)
+	g2.POST("/updateAvatar", "", profile.UpdateAvatar)
 }
