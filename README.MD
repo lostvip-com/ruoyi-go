@@ -6,17 +6,17 @@
 * 提供相关服务配置脚本，可发布到 k8s、docker swarm中做为微服务使用。
 ## 核心技术及组件
 
-* DAO层架: xorm,简单易用; sqlx,支持namedSQL点位符查询；</br>
-* Web服务框架: Gin 简单高效，模板可热加载;</br>
-* 前端技术: 模板引擎，服务端渲染;</br>
-* 缓存支持: redis </br>
-* 安全认证：支持通过jwt无状态 或 token有状态的安全校验。
-* 代码生成：在线生成代码，并一键导入菜单到业务模块。
-* 导出excel文件  tealeg/xlsx    
-* api文档生成    swaggo/swag      
-* 图形验证码     base64Captcha    
-* 服务器监控     gopsutil       
-* 若依前端组件   RuoYi      v4.7.0
+* DAO层架: xorm,简单易用; sqlx,支持namedSQL占位符查询.</br>
+* Web服务框架: Gin 简单高效，模板可热加载.</br>
+* 前端技术: 模板引擎，服务端渲染.</br>
+* 缓存支持: redis .</br>
+* 安全认证：支持通过jwt无状态 或 token有状态的安全校验.
+* 代码生成：在线生成代码，并一键导入菜单到业务模块.
+* 导出excel文件  tealeg/xlsx.
+* api文档生成    swaggo/swag.      
+* 图形验证码     base64Captcha.    
+* 服务器监控     gopsutil.   
+* 若依前端组件   RuoYi  v4.7.0 .
 
 ## 内置功能
 
