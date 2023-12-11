@@ -5,7 +5,7 @@ import (
 	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	userModel "robvi/app/system/model/system/user"
 	"robvi/app/system/service"
 	"strconv"

@@ -5,8 +5,8 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"net/http"
+	"robvi/app/common/model"
 	"robvi/app/common/session"
-	"robvi/app/system/model"
 	"robvi/app/system/model/system/dept"
 	"robvi/app/system/service"
 )

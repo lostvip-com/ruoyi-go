@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/monitor/logininfor"
 	logininforService "robvi/app/system/service/monitor/logininfor"
 )

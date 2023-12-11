@@ -6,7 +6,7 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/menu"
 	"robvi/app/system/service"
 	"strings"

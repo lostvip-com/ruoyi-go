@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"robvi/app/common/global"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/menu"
 	"robvi/app/system/service"
 	configService "robvi/app/system/service/system/config"

@@ -6,7 +6,7 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/monitor/oper_log"
 	operlogService "robvi/app/system/service/monitor/operlog"
 )

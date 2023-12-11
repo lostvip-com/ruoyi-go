@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/dept"
 	"strings"
 	"time"

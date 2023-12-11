@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/dict_type"
 	"robvi/app/system/service"
 	"time"

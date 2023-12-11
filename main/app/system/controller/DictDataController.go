@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/dict_data"
 	dictService "robvi/app/system/service/system/dict_data"
 )

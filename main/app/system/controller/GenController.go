@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	menuModel "robvi/app/system/model/system/menu"
 	tool3 "robvi/app/system/model/tool"
 	"robvi/app/system/service"

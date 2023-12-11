@@ -5,7 +5,7 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/model/system/dict_type"
 	dictTypeService "robvi/app/system/service/system/dict_type"
 )
