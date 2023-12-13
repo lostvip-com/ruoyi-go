@@ -4,6 +4,10 @@
 * 项目结构模仿springboot，简单改造后可注册到nacos中做为springcloud微服务的一员，对java开发人员友好。
 * 支持类mybatis查询，sql与go代码分离（基于golang的template语法实现）。
 * 提供相关服务配置脚本，可发布到 k8s、docker swarm中做为微服务使用。
+* 支持在yaml文件中使用表达式从环境变量中取值，便于切换生产、开发、测试环境参数（模仿springboot）,如：
+~~~
+    host: ${REDIS_HOST:lostvip.com}
+~~~
 ## 核心技术及组件
 
 * DAO层架: xorm,简单易用; sqlx,支持namedSQL占位符查询.</br>
