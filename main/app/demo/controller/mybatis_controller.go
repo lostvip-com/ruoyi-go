@@ -12,7 +12,7 @@ import (
 )
 
 // 相对于mapper目录的路径
-var SQL_FILE_PATIENT = "sys_post/sys_post_mapper.tpl"
+var SQL_FILE_POST = "sys_post/sys_post_mapper.tpl"
 
 /**
  * 基于ibatis 的分页查询演示
@@ -23,7 +23,7 @@ func (w DemoController) Mybatis3(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	resp := db.GetPageByNamedSql[post.SysPost](SQL_FILE_PATIENT, "test", req)
+	resp := db.GetPageByNamedSql[post.SysPost](SQL_FILE_POST, "test", req)
 	lv_web.PageOK(c, resp)
 }
 
@@ -33,7 +33,7 @@ func (w DemoController) Mybatis1(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	ibatis := db.NewIBatis(SQL_FILE_PATIENT)
+	ibatis := db.NewIBatis(SQL_FILE_POST)
 	sql := ibatis.GetLimitSql("test", req)
 	list := db.ListByNamedSql[post.SysPost](sql, req)
 	count := db.CountByNamedSql(ibatis.GetCountSql(), req)
@@ -47,7 +47,7 @@ func (w DemoController) Mybatis2(c *gin.Context) {
 		return
 	}
 
-	ibatis := db.NewIBatis(SQL_FILE_PATIENT)
+	ibatis := db.NewIBatis(SQL_FILE_POST)
 	sql := ibatis.GetLimitSql("test", req)
 	listMap, err := db.GetInstance().ListByNamedSql(sql, req, true)
 	count, err := db.GetInstance().CountByNamedSql(ibatis.GetCountSql(), req)

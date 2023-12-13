@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 )
 
 // 通用api响应

@@ -4,15 +4,15 @@ go:
   log:
     output: stdout #生产环境要注释，不会记录到文件
   redis:
-    host: ${REDIS_HOST:"192.168.88.114"}
+    host: ${REDIS_HOST:"127.0.0.1"}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:"qwer1234"}
+    password: ${REDIS_PWD:"Ssz123!"}
   datasource:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
     #master: "root:qwer1234@tcp(127.0.0.1:3307)/ruoyi-go?charset=utf8"
-    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.88.114:3306)/ruoyi-go?charset=utf8"}
+    master: ${MYSQL_MASTER:"root:qwer1234@tcp(127.0.0.1:3306)/ruoyi-go?charset=utf8"}
     slave: ""
 
 gen:

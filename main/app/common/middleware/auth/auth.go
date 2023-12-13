@@ -5,7 +5,7 @@ import (
 	"lostvip.com/web/router"
 	"net/http"
 	"robvi/app/common/global"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 	"robvi/app/system/service"
 	menuService "robvi/app/system/service/system/menu"
 	"strings"

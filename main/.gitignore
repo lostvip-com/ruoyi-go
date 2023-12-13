@@ -6,6 +6,7 @@
 .idea/
 .settings/
 .vscode/
+docs/swarm/*
 vender/
 tmp/
 logs/

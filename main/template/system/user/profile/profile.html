@@ -1,12 +1,12 @@
+{{define "system/user/profile/profile"}}
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" >
 <head>
-	<th:block th:include="include :: header('用户个人信息')" />
-    <style type="text/css">.user-info-head{position:relative;display:inline-block;}.user-info-head:hover:after{content:'\f030';position:absolute;left:0;right:0;top:0;bottom:0;color:#eee;background:rgba(0,0,0,0.5);font-family:FontAwesome;font-size:24px;font-style:normal;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;cursor:pointer;line-height:110px;border-radius:50%;}</style>
+    {{template "header" (OssUrl)}}
 </head>
 
 <body class="gray-bg" style="font: 14px Helvetica Neue, Helvetica, PingFang SC, 微软雅黑, Tahoma, Arial, sans-serif !important;">
-    <input id="userId" name="userId" type="hidden" th:value="${user.userId}" />
+    <input id="userId" name="userId" type="hidden" value="{{.user.UserId}}" />
     <section class="section-content">
     <div class="row">
         <div class="col-sm-3 pr5">
@@ -16,29 +16,34 @@
                 </div>
                 <div class="ibox-content">
                     <div class="text-center">
-                        <p class="user-info-head" onclick="avatar()"><img class="img-circle img-lg" th:src="(${#strings.isEmpty(user.avatar)}) ? @{/img/profile.jpg} : @{${user.avatar}}" th:onerror="'this.src=\'' + @{'/img/profile.jpg'} + '\''"></p>
+                        <p>
+                            {{if eq .user.Avatar ""}}
+                            <img class="img-circle img-lg" src="{{OssUrl}}/resource/img/profile.jpg"></p>
+                            {{else}}
+                                <img class="img-circle img-lg" src="{{OssUrl}}{{.user.Avatar}}"></p>
+                        {{end}}
                         <p><a href="javascript:avatar()">修改头像</a></p>
                     </div>
                     <ul class="list-group list-group-striped">
                         <li class="list-group-item"><i class="fa fa-user"></i>
                             <b class="font-noraml">登录名称：</b>
-                            <p class="pull-right">[[${user.loginName}]]</p>
+                            <p class="pull-right">{{.user.LoginName}}</p>
                         </li>
                         <li class="list-group-item"><i class="fa fa-phone"></i>
                             <b  class="font-noraml">手机号码：</b>
-                            <p class="pull-right">[[${user.phonenumber}]]</p>
+                            <p class="pull-right">{{.user.Phonenumber}}</p>
                         </li>
-                        <li class="list-group-item" th:if="${user.dept?.deptName != null}"><i class="fa fa-group"></i>
+                        <li class="list-group-item"><i class="fa fa-group"></i>
                             <b  class="font-noraml">所属部门：</b>
-                            <p class="pull-right" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;width:120px;">[[${user.dept?.deptName}]] / [[${#strings.defaultString(postGroup,'无岗位')}]]</p>
+                            <p class="pull-right" ></p>
                         </li>
                         <li class="list-group-item"><i class="fa fa-envelope-o"></i>
                             <b  class="font-noraml">邮箱地址：</b>
-                            <p class="pull-right" th:title="${user.email}">[[${#strings.abbreviate(user.email, 16)}]]</p>
+                            <p class="pull-right" >{{.user.Email}}</p>
                         </li>
                         <li class="list-group-item"><i class="fa fa-calendar"></i>
                             <b  class="font-noraml">创建时间：</b>
-                            <p class="pull-right">[[${#dates.format(user.createTime, 'yyyy-MM-dd')}]]</p>
+                            <p class="pull-right" >{{.user.CreateTime}}</p>
                         </li>
                     </ul>
                 </div>
@@ -58,37 +63,37 @@
                         </ul>
                         <div class="tab-content">
                             <!--用户信息-->
-                            <div class="tab-pane active" id="user_info" th:object="${user}">
+                            <div class="tab-pane active" id="user_info">
                                 <form class="form-horizontal" id="form-user-edit">
                                     <!--隐藏ID-->
                                     <input name="id" id="id" type="hidden">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">用户名称：</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="userName" th:field="*{userName}" placeholder="请输入用户名称">
+                                            <input type="text" class="form-control" id="userName" name="userName" value="{{.user.UserName}}" placeholder="请输入用户名称">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">手机号码：</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="phonenumber" maxlength="11" th:field="*{phonenumber}" placeholder="请输入手机号码">
+                                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" maxlength="11" value="{{.user.Phonenumber}}" placeholder="请输入手机号码">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">邮箱：</label>
                                         <div class="col-sm-10">
-                                            <input type="text" maxlength="50" class="form-control" name="email" th:field="*{email}" placeholder="请输入邮箱">
+                                            <input type="text" class="form-control" id="email" name="email" value="{{.user.Email}}" placeholder="请输入邮箱">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">性别：</label>
                                         <div class="col-sm-10">
                                             <div class="radio-box">
-												<input type="radio" id="radio1" th:field="*{sex}" name="sex" value="0">
+												<input type="radio" id="radio1" value="{{.user.Sex}}" name="sex" value="0">
 												<label for="radio1">男</label>
 											</div>
 											<div class="radio-box">
-												<input type="radio" id="radio2" th:field="*{sex}" name="sex" value="1">
+												<input type="radio" id="radio2" value="{{.user.Sex}}" name="sex" value="1">
 												<label for="radio2">女</label>
 											</div>
                                         </div>
@@ -115,16 +120,6 @@
                                         <label class="col-sm-2 control-label">新密码：</label>
                                         <div class="col-sm-10">
                                             <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="请输入新密码">
-                                            <th:block th:with="chrtype=${@config.getKey('sys.account.chrtype')}"> 
-						                        <th:block th:if="${chrtype != '0'}">
-						                            <span class="help-block m-b-none">
-								                        <th:block th:if="${chrtype == '1'}"><i class="fa fa-info-circle" style="color: red;"></i>  密码只能为0-9数字 </th:block>
-								                        <th:block th:if="${chrtype == '2'}"><i class="fa fa-info-circle" style="color: red;"></i>  密码只能为a-z和A-Z字母</th:block>
-								                        <th:block th:if="${chrtype == '3'}"><i class="fa fa-info-circle" style="color: red;"></i>  密码必须包含（字母，数字）</th:block>
-								                        <th:block th:if="${chrtype == '4'}"><i class="fa fa-info-circle" style="color: red;"></i>  密码必须包含（字母，数字，特殊字符!@#$%^&*()-=_+）</th:block>
-						                            </span>
-                                                </th:block>
-						                    </th:block>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -149,33 +144,14 @@
     </div>
 	</section>
     
-    <th:block th:include="include :: footer" />
+    {{template "footer" (OssUrl)}}
     <script>
 	    /*用户管理-头像*/
 	    function avatar() {
-	        var url = ctx + 'system/user/profile/avatar';
-	        top.layer.open({
-        		type: 2,
-        		area: [$(window).width() + 'px', $(window).height() + 'px'],
-        		fix: false,
-        		//不固定
-        		maxmin: true,
-        		shade: 0.3,
-        		title: "修改头像",
-        		content: url,
-        		btn: ['确定', '关闭'],
-        	    // 弹层外区域关闭
-        		shadeClose: true,
-        		yes: function(index, layero) {
-                    var iframeWin = layero.find('iframe')[0];
-                    iframeWin.contentWindow.submitHandler(index, layero);
-                },
-        	    cancel: function(index) {
-        	        return true;
-        	    }
-        	});
+	        var url = ctx + '/system/user/profile/avatar';
+	        $.modal.open("修改头像", url);
 	    }
-
+	    
 	    /*用户信息-修改*/
 	    $("#form-user-edit").validate({
 			onkeyup: false,
@@ -187,7 +163,7 @@
 					required:true,
 		            email:true,
 		            remote: {
-		                url: ctx + "system/user/checkEmailUnique",
+		                url: ctx + "/system/user/profile/checkEmailUnique",
 		                type: "post",
 		                dataType: "json",
 		                data: {
@@ -204,7 +180,7 @@
 					required:true,
 					isPhone:true,
 		            remote: {
-		                url: ctx + "system/user/checkPhoneUnique",
+                        url: ctx + "/system/user/profile/checkPhoneUnique",
 		                type: "post",
 		                dataType: "json",
 		                data: {
@@ -236,7 +212,7 @@
 		
 		function submitUserInfo() {
 	        if ($.validate.form()) {
-	        	$.operate.saveModal(ctx + "system/user/profile/update", $('#form-user-edit').serialize());
+	        	$.operate.saveModal(ctx + "/system/user/profile/update", $('#form-user-edit').serialize());
 	        }
 	    }
 	    
@@ -247,7 +223,7 @@
 				oldPassword:{
 					required:true,
 					remote: {
-	                    url: ctx + "system/user/profile/checkPassword",
+	                    url: ctx + "/system/user/profile/checkPassword",
 	                    type: "get",
 	                    dataType: "json",
 	                    data: {
@@ -287,12 +263,11 @@
 		});
 		
 		function submitChangPassword () {
-			var chrtype = [[${#strings.defaultString(@config.getKey('sys.account.chrtype'), 0)}]];
-			var password = $("#newPassword").val();
-	        if ($.validate.form("form-user-resetPwd") && checkpwd(chrtype, password)) {
-	        	$.operate.saveModal(ctx + "system/user/profile/resetPwd", $('#form-user-resetPwd').serialize());
+	        if ($.validate.form("form-user-resetPwd")) {
+	        	$.operate.saveModal(ctx + "/system/user/profile/resetSavePwd", $('#form-user-resetPwd').serialize());
 	        }
 	    }
 	</script>
 </body>
 </html>
+{{end}}

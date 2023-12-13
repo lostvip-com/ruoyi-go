@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/system/model"
+	"robvi/app/common/model"
 )
 
 func (w DemoController) Button(c *gin.Context) {
