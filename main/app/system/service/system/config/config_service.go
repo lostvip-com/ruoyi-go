@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/conf"
+	"lostvip.com/logme"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"robvi/app/system/model/system/config"
@@ -29,12 +30,14 @@ func GetCtxPath(url string) string {
 	ctxPath := conf.Config().GetContextPath()
 	if !strings.HasPrefix(url, "http") {
 		if strings.HasPrefix(url, "/") {
-			ctxPath = ctxPath + url
+			url = ctxPath + url
 		} else {
-			ctxPath = ctxPath + "/" + url
+			url = ctxPath + "/" + url
 		}
+	} else {
+		logme.Info("外链：" + ctxPath)
 	}
-	return ctxPath
+	return url
 }
 func GetOssUrl() string {
 	ossUrl := GetValueByKey("sys.resource.url")
