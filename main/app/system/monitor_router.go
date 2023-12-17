@@ -14,7 +14,7 @@ func init() {
 	serverController := controller.ServiceController{}
 	g1.GET("/", "monitor:server:view", serverController.Server)
 
-	//登陆日志
+	//登录日志
 	g2 := router.New("/monitor/logininfor", token.TokenMiddleware(), auth.Auth)
 	loginInforController := controller.LoginInforController{}
 	g2.GET("/", "monitor:logininfor:view", loginInforController.List)

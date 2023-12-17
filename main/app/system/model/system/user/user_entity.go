@@ -19,8 +19,8 @@ type SysUser struct {
 	Salt        string    `json:"salt" xorm:"default '' comment('盐加密') VARCHAR(20)"`
 	Status      string    `json:"status" xorm:"default '0' comment('帐号状态（0正常 1停用）') CHAR(1)"`
 	DelFlag     string    `json:"del_flag" xorm:"default '0' comment('删除标志（0代表存在 2代表删除）') CHAR(1)"`
-	LoginIp     string    `json:"login_ip" xorm:"default '' comment('最后登陆IP') VARCHAR(50)"`
-	LoginDate   time.Time `json:"login_date" xorm:"comment('最后登陆时间') DATETIME"`
+	LoginIp     string    `json:"login_ip" xorm:"default '' comment('最后登录IP') VARCHAR(50)"`
+	LoginDate   time.Time `json:"login_date" xorm:"comment('最后登录时间') DATETIME"`
 	CreateBy    string    `json:"create_by" xorm:"default '' comment('创建者') VARCHAR(64)"`
 	CreateTime  time.Time `json:"create_time" xorm:"comment('创建时间') DATETIME"`
 	UpdateBy    string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`

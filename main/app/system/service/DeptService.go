@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/dept"
 	"strings"
 	"time"
@@ -125,7 +125,7 @@ func (svc *DeptService) SelectChildrenDeptById(deptId int64) []*dept.SysDept {
 }
 
 // 加载部门列表树
-func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]model.Ztree, error) {
+func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]model_cmn.Ztree, error) {
 	list, err := dept.SelectDeptList(parentId, deptName, status, tenantId)
 	if err != nil {
 		return nil, err
@@ -141,8 +141,8 @@ func (svc *DeptService) SelectDeptList(parentId int64, deptName, status string, 
 }
 
 // 根据角色ID查询部门（数据权限）
-func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model.Ztree, error) {
-	var result *[]model.Ztree
+func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model_cmn.Ztree, error) {
+	var result *[]model_cmn.Ztree
 	deptList, err := dept.SelectDeptList(0, "", "", tenantId)
 	if err != nil {
 		return nil, err
@@ -162,8 +162,8 @@ func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model
 }
 
 // 对象转部门树
-func (svc *DeptService) InitZtree(deptList *[]dept.SysDept, roleDeptList *[]string) *[]model.Ztree {
-	var result []model.Ztree
+func (svc *DeptService) InitZtree(deptList *[]dept.SysDept, roleDeptList *[]string) *[]model_cmn.Ztree {
+	var result []model_cmn.Ztree
 	isCheck := false
 	if roleDeptList != nil && len(*roleDeptList) > 0 {
 		isCheck = true
@@ -171,7 +171,7 @@ func (svc *DeptService) InitZtree(deptList *[]dept.SysDept, roleDeptList *[]stri
 
 	for i := range *deptList {
 		if (*deptList)[i].Status == "0" {
-			var ztree model.Ztree
+			var ztree model_cmn.Ztree
 			ztree.Id = (*deptList)[i].DeptId
 			ztree.Pid = (*deptList)[i].ParentId
 			ztree.Name = (*deptList)[i].DeptName

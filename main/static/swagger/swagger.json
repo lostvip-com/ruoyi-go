@@ -19,7 +19,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "登陆",
+                "summary": "登录",
                 "responses": {
                     "200": {
                         "description": "OK",

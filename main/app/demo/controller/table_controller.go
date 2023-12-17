@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 )
 
 func (w DemoController) Button(c *gin.Context) {
@@ -106,7 +106,7 @@ func (w DemoController) List(c *gin.Context) {
 		tmp.UserEmail = "111@qq.com"
 		rows = append(rows, tmp)
 	}
-	c.JSON(http.StatusOK, model.TableDataInfo{
+	c.JSON(http.StatusOK, model_cmn.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),

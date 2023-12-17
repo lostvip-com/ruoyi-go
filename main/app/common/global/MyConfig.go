@@ -58,14 +58,14 @@ func resetCfg() {
 
 func InitTables() {
 	fmt.Println("------------ demo 自动建表 ------------")
-	//setTableOption("App信息").AutoMigrate(model.BizApp{})
-	//setTableOption("评论信息").AutoMigrate(model.AppComments{})
-	//setTableOption("网友建议").AutoMigrate(model.AppSuggest{})
-	//setTableOption("跳绳结果").AutoMigrate(model.BizMember{})
+	//setTableOption("App信息").AutoMigrate(model_cmn.BizApp{})
+	//setTableOption("评论信息").AutoMigrate(model_cmn.AppComments{})
+	//setTableOption("网友建议").AutoMigrate(model_cmn.AppSuggest{})
+	//setTableOption("跳绳结果").AutoMigrate(model_cmn.BizMember{})
 	////2023
-	//setTableOption("跳绳结果").AutoMigrate(model.SptRope{})
-	//setTableOption("50m短跑结果").AutoMigrate(model.SptRun{})
-	//setTableOption("体适能结果").AutoMigrate(model.SptFitness{})
+	//setTableOption("跳绳结果").AutoMigrate(model_cmn.SptRope{})
+	//setTableOption("50m短跑结果").AutoMigrate(model_cmn.SptRun{})
+	//setTableOption("体适能结果").AutoMigrate(model_cmn.SptFitness{})
 	//2022
 	fmt.Println("------------ end 自动建表 ------------")
 }

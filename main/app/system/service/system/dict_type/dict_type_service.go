@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/dict_type"
 	"robvi/app/system/service"
 	"time"
@@ -140,12 +140,12 @@ func CheckDictTypeUnique(configKey string, dictId int64) string {
 }
 
 // 查询字典类型树
-func SelectDictTree(params *dict_type.SelectPageReq) *[]model.Ztree {
-	var result []model.Ztree
+func SelectDictTree(params *dict_type.SelectPageReq) *[]model_cmn.Ztree {
+	var result []model_cmn.Ztree
 	dictList, err := dict_type.SelectListAll(params)
 	if err == nil && dictList != nil {
 		for _, item := range dictList {
-			var tmp model.Ztree
+			var tmp model_cmn.Ztree
 			tmp.Id = item.DictId
 			tmp.Name = transDictName(item)
 			tmp.Title = item.DictType

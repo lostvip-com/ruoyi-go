@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	// 加载登陆路由
+	// 加载登录路由
 	g0 := router.New("/")
 	login := controller2.LoginController{}
 	g0.GET("/login", "", login.Login)
@@ -20,7 +20,7 @@ func init() {
 	g0.GET("/500", "", errorc.Error)
 	g0.GET("/404", "", errorc.NotFound)
 	g0.GET("/403", "", errorc.Unauth)
-	//下在要检测是否登陆
+	//下在要检测是否登录
 	g1 := router.New("/", token.TokenMiddleware())
 	main := controller2.MainController{}
 	g1.GET("/", "", main.Index)

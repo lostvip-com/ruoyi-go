@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/monitor/logininfor"
 	logininforService "robvi/app/system/service/monitor/logininfor"
 )
@@ -37,19 +37,19 @@ func (w *LoginInforController) ListAjax(c *gin.Context) {
 
 // 删除数据
 func (w *LoginInforController) Remove(c *gin.Context) {
-	var req *model.RemoveReq
+	var req *model_cmn.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("登陆日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("登录日志管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := logininforService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("登陆日志管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("登录日志管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("登陆日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("登录日志管理", req).WriteJsonExit()
 	}
 }
 
@@ -59,9 +59,9 @@ func (w *LoginInforController) Clean(c *gin.Context) {
 	rs, _ := logininforService.DeleteRecordAll()
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("登陆日志管理", "all").WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("登录日志管理", "all").WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("登陆日志管理", "all").WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("登录日志管理", "all").WriteJsonExit()
 	}
 }
 
@@ -70,16 +70,16 @@ func (w *LoginInforController) Export(c *gin.Context) {
 	var req *logininfor.SelectPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出登陆日志", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出登录日志", req).WriteJsonExit()
 		return
 	}
 
 	url, err := logininforService.Export(req)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出登陆日志", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出登录日志", req).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetMsg(url).Log("导出登陆日志", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetMsg(url).Log("导出登录日志", req).WriteJsonExit()
 	}
 }
 

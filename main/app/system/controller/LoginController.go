@@ -1,22 +1,17 @@
 package controller
 
 import (
-	"context"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
-	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_secret"
 	"lostvip.com/utils/lv_web"
 	"net/http"
 	global2 "robvi/app/common/global"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	logininforModel "robvi/app/system/model/monitor/logininfor"
-	"robvi/app/system/model/monitor/online"
-	userModel "robvi/app/system/model/system/user"
 	"robvi/app/system/service"
 	logininforService "robvi/app/system/service/monitor/logininfor"
 	"strings"
@@ -36,7 +31,7 @@ type RegisterReq struct {
 	IdKey        string `form:"idkey" `
 }
 
-// 登陆页面
+// 登录页面
 func (w *LoginController) Login(c *gin.Context) {
 
 	if strings.EqualFold(c.Request.Header.Get("X-Requested-With"), "XMLHttpRequest") {
@@ -54,7 +49,7 @@ func (w *LoginController) Login(c *gin.Context) {
 	})
 }
 
-// 验证登陆
+// 验证登录
 func (w *LoginController) CheckLogin(c *gin.Context) {
 	var req = RegisterReq{}
 	//获取参数
@@ -109,9 +104,10 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 		}
 		c.SetCookie(cookie.Name, token, maxage, path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		// 生成token
-		w.SaveUserToSession(token, user, c)
-		w.SaveLogs(c, &req, "登陆成功") //记录日志
-		lv_web.SucessResp(c).SetData(token).SetMsg("登陆成功").WriteJsonExit()
+		var svc service.SessionService
+		svc.SaveUserToSession(token, user, c)
+		w.SaveLogs(c, &req, "登录成功") //记录日志
+		lv_web.SucessResp(c).SetData(token).SetMsg("登录成功").WriteJsonExit()
 	}
 }
 
@@ -128,51 +124,6 @@ func (w *LoginController) SaveLogs(c *gin.Context, req *RegisterReq, msg string)
 	logininfor.Msg = msg
 	logininfor.Status = "0"
 	logininfor.Insert()
-}
-
-// 保存用户信息到session
-func (w *LoginController) SaveUserToSession(token string, user *userModel.SysUser, c *gin.Context) {
-	loginIp := c.ClientIP()
-	loginLocation := lv_net.GetCityByIp(loginIp)
-	//记录到redis
-	redis := myredis.GetInstance()
-	ctx := context.Background()
-	fieldMap := make(map[string]interface{})
-	fieldMap["userName"] = user.UserName
-	fieldMap["userId"] = user.UserId
-	fieldMap["loginName"] = user.LoginName
-	fieldMap["avatar"] = user.Avatar
-	fieldMap["ip"] = loginIp
-	fieldMap["location"] = loginLocation
-	key := "login:" + token
-	redis.HMSet(ctx, key, fieldMap)
-	redis.Expire(ctx, key, time.Hour)
-	//其它
-	sessionId := user.UserId
-	tmp, _ := json.Marshal(user)
-	global2.SessionList.Store(sessionId, string(tmp))
-	//save to db
-	userAgent := c.Request.Header.Get("User-Agent")
-	ua := user_agent.New(userAgent)
-	os := ua.OS()
-	browser, _ := ua.Browser()
-
-	//移除登陆次数记录
-	logininforService.RemovePasswordCounts(user.UserName)
-	//
-	var userOnline online.UserOnline
-	userOnline.LoginName = user.UserName
-	userOnline.Browser = browser
-	userOnline.Os = os
-	userOnline.DeptName = ""
-	userOnline.Ipaddr = loginIp
-	userOnline.ExpireTime = 1440
-	userOnline.StartTimestamp = time.Now()
-	userOnline.LastAccessTime = time.Now()
-	userOnline.Status = "on_line"
-	userOnline.LoginLocation = loginLocation
-	userOnline.Delete()
-	userOnline.Insert()
 }
 
 // 图形验证码
@@ -223,7 +174,7 @@ func (w *LoginController) CaptchaImage(c *gin.Context) {
 	//idKeyD, capD := base64Captcha.GenerateCaptcha("", configD)
 	//以base64编码
 	//base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
-	c.JSON(http.StatusOK, model.CaptchaRes{
+	c.JSON(http.StatusOK, model_cmn.CaptchaRes{
 		Code:  200,
 		IdKey: idKeyC,
 		Data:  base64stringC,

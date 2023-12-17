@@ -5,7 +5,7 @@ import (
 	"lostvip.com/web/router"
 	"net/http"
 	"robvi/app/common/global"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/service"
 	menuService "robvi/app/system/service/system/menu"
 	"strings"
@@ -14,7 +14,7 @@ import (
 // 鉴权中间件，只有登录成功之后才能通过
 func Auth(c *gin.Context) {
 	var userService service.UserService
-	//判断是否登陆
+	//判断是否登录
 	//根据url判断是否有权限
 	url := c.Request.URL.Path
 	strEnd := url[len(url)-1 : len(url)]
@@ -53,7 +53,7 @@ func Auth(c *gin.Context) {
 		if !hasPermission {
 			ajaxString := c.Request.Header.Get("X-Requested-With")
 			if strings.EqualFold(ajaxString, "XMLHttpRequest") {
-				c.JSON(http.StatusOK, model.CommonRes{
+				c.JSON(http.StatusOK, model_cmn.CommonRes{
 					Code: 403,
 					Msg:  "您没有操作权限",
 				})

@@ -5,7 +5,7 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/common/session"
 	"robvi/app/system/model/system/dept"
 	"robvi/app/system/service"
@@ -28,9 +28,6 @@ func (w *DeptController) ListAjax(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	profile := session.GetProfile(c)
-	req.TenantId = profile.TenantId
-
 	rows := make([]dept.SysDept, 0)
 	result, err := service.SelectListAll(&req)
 
@@ -60,33 +57,28 @@ func (w *DeptController) AddSave(c *gin.Context) {
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	if service.CheckDeptNameUniqueAll(req.DeptName, req.ParentId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 		return
-	}
-	user := session.GetProfile(c)
-	isAdmin := session.IsAdminUser(user)
-	if isAdmin == false { //非管理员，以当前用户所属租户为限
-		req.TenantId = user.TenantId
 	}
 	rid, err := service.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func (w *DeptController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -95,7 +87,7 @@ func (w *DeptController) Edit(c *gin.Context) {
 	dept := service.SelectDeptById(id)
 
 	if dept == nil || dept.DeptId <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "部门不存在",
 		})
 		return
@@ -113,22 +105,22 @@ func (w *DeptController) EditSave(c *gin.Context) {
 	var req *dept.EditReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	if service.CheckDeptNameUnique(req.DeptName, req.DeptId, req.ParentId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(rs).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(rs).SetBtype(model_cmn.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 }
 
 // 删除数据
@@ -138,9 +130,9 @@ func (w *DeptController) Remove(c *gin.Context) {
 	rs := service.DeleteDeptById(id)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	}
 }
 

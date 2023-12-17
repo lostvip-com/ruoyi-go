@@ -7,18 +7,18 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	oper_log2 "robvi/app/system/model/monitor/oper_log"
 	service2 "robvi/app/system/service"
 	"time"
 )
 
 // 新增记录
-func Add(c *gin.Context, title, inContent string, outContent *model.CommonRes) error {
+func Add(c *gin.Context, title, inContent string, outContent *model_cmn.CommonRes) error {
 	var userService service2.UserService
 	user := userService.GetProfile(c)
 	if user == nil {
-		return errors.New("用户未登陆")
+		return errors.New("用户未登录")
 	}
 
 	var operLog oper_log2.Entity

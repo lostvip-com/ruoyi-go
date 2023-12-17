@@ -18,7 +18,7 @@ var SQL_FILE_POST = "sys_post/sys_post_mapper.tpl"
  * 基于ibatis 的分页查询演示
  */
 func (w DemoController) Mybatis3(c *gin.Context) {
-	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
@@ -28,7 +28,7 @@ func (w DemoController) Mybatis3(c *gin.Context) {
 }
 
 func (w DemoController) Mybatis1(c *gin.Context) {
-	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return

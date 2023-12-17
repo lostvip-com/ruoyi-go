@@ -66,7 +66,7 @@ type CheckPasswordReq struct {
 
 // 查询用户列表请求参数
 type SelectPageReq struct {
-	LoginName   string `form:"loginName"`     //登陆名
+	LoginName   string `form:"loginName"`     //登录名
 	Status      string `form:"status"`        //状态
 	Phonenumber string `form:"phonenumber"`   //手机号码
 	BeginTime   string `form:"beginTime"`     //数据范围
@@ -96,8 +96,8 @@ type UserListEntity struct {
 	Salt        string    `json:"salt" xorm:"default '' comment('盐加密') VARCHAR(20)"`
 	Status      string    `json:"status" xorm:"default '0' comment('帐号状态（0正常 1停用）') CHAR(1)"`
 	DelFlag     string    `json:"del_flag" xorm:"default '0' comment('删除标志（0代表存在 2代表删除）') CHAR(1)"`
-	LoginIp     string    `json:"login_ip" xorm:"default '' comment('最后登陆IP') VARCHAR(50)"`
-	LoginDate   time.Time `json:"login_date" xorm:"comment('最后登陆时间') DATETIME"`
+	LoginIp     string    `json:"login_ip" xorm:"default '' comment('最后登录IP') VARCHAR(50)"`
+	LoginDate   time.Time `json:"login_date" xorm:"comment('最后登录时间') DATETIME"`
 	CreateBy    string    `json:"create_by" xorm:"default '' comment('创建者') VARCHAR(64)"`
 	CreateTime  time.Time `json:"create_time" xorm:"comment('创建时间') DATETIME"`
 	UpdateBy    string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`
@@ -373,7 +373,7 @@ func CheckPhoneUniqueAll(phone string) bool {
 	}
 }
 
-// 根据登陆名查询用户信息
+// 根据登录名查询用户信息
 func SelectUserByLoginName(loginName string) (*SysUser, error) {
 	var entity SysUser
 	entity.LoginName = loginName

@@ -6,7 +6,7 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/menu"
 	"robvi/app/system/service"
 	"strings"
@@ -115,8 +115,8 @@ func DeleteRecordByIds(ids string) int64 {
 }
 
 // 加载所有菜单列表树
-func MenuTreeData(userId int64) (*[]model.Ztree, error) {
-	var result *[]model.Ztree
+func MenuTreeData(userId int64) (*[]model_cmn.Ztree, error) {
+	var result *[]model_cmn.Ztree
 	menuList, err := SelectMenuNormalByUser(userId)
 	if err != nil {
 		return nil, err
@@ -306,8 +306,8 @@ func CheckPermsUnique(perms string, menuId int64) string {
 }
 
 // 根据角色ID查询菜单
-func RoleMenuTreeData(roleId, userId int64) (*[]model.Ztree, error) {
-	var result *[]model.Ztree
+func RoleMenuTreeData(roleId, userId int64) (*[]model_cmn.Ztree, error) {
+	var result *[]model_cmn.Ztree
 	menuList, err := SelectMenuNormalByUser(userId)
 	if err != nil {
 		return nil, err
@@ -328,15 +328,15 @@ func RoleMenuTreeData(roleId, userId int64) (*[]model.Ztree, error) {
 }
 
 // 对象转菜单树
-func InitZtree(menuList *[]menu.EntityExtend, roleMenuList *[]string, permsFlag bool) (*[]model.Ztree, error) {
-	var result []model.Ztree
+func InitZtree(menuList *[]menu.EntityExtend, roleMenuList *[]string, permsFlag bool) (*[]model_cmn.Ztree, error) {
+	var result []model_cmn.Ztree
 	isCheck := false
 	if roleMenuList != nil && len(*roleMenuList) > 0 {
 		isCheck = true
 	}
 
 	for _, obj := range *menuList {
-		var ztree model.Ztree
+		var ztree model_cmn.Ztree
 		ztree.Title = obj.MenuName
 		ztree.Id = obj.MenuId
 		ztree.Name = transMenuName(obj.MenuName, permsFlag)

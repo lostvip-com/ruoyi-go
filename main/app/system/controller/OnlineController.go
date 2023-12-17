@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/global"
 	"robvi/app/system/model/monitor/online"
 	"robvi/app/system/service"
 	onlineService "robvi/app/system/service/monitor/online"
@@ -17,9 +16,9 @@ type OnlineController struct {
 func (w *OnlineController) List(c *gin.Context) {
 	sessinIdArr := make([]string, 0)
 
-	global.SessionList.Range(func(k, v interface{}) bool {
-		return true
-	})
+	//global.SessionList.Range(func(k, v interface{}) bool {
+	//	return true
+	//})
 	if len(sessinIdArr) > 0 {
 		onlineService.DeleteRecordNotInIds(sessinIdArr)
 	}
@@ -52,7 +51,7 @@ func (w *OnlineController) ForceLogout(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg("参数错误").Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
 		return
 	}
-	var userService service.UserService
+	var userService service.SessionService
 	err := userService.ForceLogout(sessionId)
 	if err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
@@ -63,7 +62,7 @@ func (w *OnlineController) ForceLogout(c *gin.Context) {
 
 // 批量强退
 func (w *OnlineController) BatchForceLogout(c *gin.Context) {
-	var userService service.UserService
+	var userService service.SessionService
 	ids := c.Query("ids")
 	if ids == "" {
 		lv_web.ErrorResp(c).SetMsg("参数错误").Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()

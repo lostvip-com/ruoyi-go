@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/config"
 	configService "robvi/app/system/service/system/config"
 )
@@ -43,19 +43,19 @@ func (w *ConfigController) AddSave(c *gin.Context) {
 	req := new(config.AddReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
 	if configService.CheckConfigKeyUniqueAll(req.ConfigKey) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("参数键名已存在").Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("参数键名已存在").Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
 	rid, err := configService.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("参数管理", req).WriteJsonExit()
 		return
 	}
 	lv_web.SucessResp(c).SetData(rid).Log("参数管理", req).WriteJsonExit()
@@ -65,7 +65,7 @@ func (w *ConfigController) AddSave(c *gin.Context) {
 func (w *ConfigController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -74,7 +74,7 @@ func (w *ConfigController) Edit(c *gin.Context) {
 	entity, err := configService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "数据不存在",
 		})
 		return
@@ -90,39 +90,39 @@ func (w *ConfigController) EditSave(c *gin.Context) {
 	req := new(config.EditReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
 	if configService.CheckConfigKeyUnique(req.ConfigKey, req.ConfigId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("参数键名已存在").Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("参数键名已存在").Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := configService.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("参数管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(model.Buniss_Edit).Log("参数管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("参数管理", req).WriteJsonExit()
 }
 
 // 删除数据
 func (w *ConfigController) Remove(c *gin.Context) {
-	req := new(model.RemoveReq)
+	req := new(model_cmn.RemoveReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := configService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("参数管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("参数管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("参数管理", req).WriteJsonExit()
 	}
 }
 
@@ -137,11 +137,11 @@ func (w *ConfigController) Export(c *gin.Context) {
 	url, err := configService.Export(req)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Other).Log("参数管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Other).Log("参数管理", req).WriteJsonExit()
 		return
 	}
 
-	lv_web.SucessResp(c).SetBtype(model.Buniss_Other).SetMsg(url).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Other).SetMsg(url).WriteJsonExit()
 }
 
 // 检查参数键名是否已经存在不包括本参数

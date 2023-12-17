@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model"
-	"robvi/app/common/session"
+	"robvi/app/common/model_cmn"
 	postModel "robvi/app/system/model/system/post"
 	roleModel "robvi/app/system/model/system/role"
 	userModel "robvi/app/system/model/system/user"
@@ -30,8 +29,6 @@ func (w *UserController) ListAjax(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 		return
 	}
-	tenantId := session.GetProfile(c).TenantId
-	req.TenantId = tenantId
 	rows := make([]userModel.UserListEntity, 0)
 	var userService service2.UserService
 	result, page, err := userService.SelectRecordList(req)
@@ -72,38 +69,38 @@ func (w *UserController) AddSave(c *gin.Context) {
 	var req *userModel.AddReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("新增用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("新增用户", req).WriteJsonExit()
 		return
 	}
 	var userService service2.UserService
-	//判断登陆名是否已注册
+	//判断登录名是否已注册
 	isHadName := userService.CheckLoginName(req.LoginName)
 	if isHadName {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("登陆名已经存在").Log("新增用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("登录名已经存在").Log("新增用户", req).WriteJsonExit()
 		return
 	}
 
 	//判断手机号码是否已注册
 	isHadPhone := userService.CheckPhoneUniqueAll(req.Phonenumber)
 	if isHadPhone {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("手机号码已经存在").Log("新增用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("手机号码已经存在").Log("新增用户", req).WriteJsonExit()
 		return
 	}
 
 	//判断邮箱是否已注册
 	isHadEmail := userService.CheckEmailUniqueAll(req.Email)
 	if isHadEmail {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("邮箱已经存在").Log("新增用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("邮箱已经存在").Log("新增用户", req).WriteJsonExit()
 		return
 	}
 
 	uid, err := userService.AddSave(req, c)
 
 	if err != nil || uid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("新增用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("新增用户", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(uid).SetBtype(model.Buniss_Add).Log("新增用户", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(uid).SetBtype(model_cmn.Buniss_Add).Log("新增用户", req).WriteJsonExit()
 }
 
 // 用户修改页面
@@ -111,7 +108,7 @@ func (w *UserController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -120,7 +117,7 @@ func (w *UserController) Edit(c *gin.Context) {
 	user, err := userService.SelectRecordById(id)
 
 	if err != nil || user == nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "用户不存在",
 		})
 		return
@@ -163,7 +160,7 @@ func (w *UserController) Edit(c *gin.Context) {
 func (w *UserController) ResetPwd(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("userId"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -172,7 +169,7 @@ func (w *UserController) ResetPwd(c *gin.Context) {
 	user, err := userService.SelectRecordById(id)
 
 	if err != nil || user == nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "用户不存在",
 		})
 		return
@@ -186,15 +183,15 @@ func (w *UserController) ResetPwd(c *gin.Context) {
 func (w *UserController) ResetPwdSave(c *gin.Context) {
 	var req *userModel.ResetPwdReq
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
 	}
 	var userService service2.UserService
 	result, err := userService.ResetPassword(req)
 
 	if err != nil || !result {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Edit).Log("重置密码", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("重置密码", req).WriteJsonExit()
 	}
 }
 
@@ -203,48 +200,48 @@ func (w *UserController) EditSave(c *gin.Context) {
 	var req *userModel.EditReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("修改用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("修改用户", req).WriteJsonExit()
 		return
 	}
 	var userService service2.UserService
 	//判断手机号码是否已注册
 	isHadPhone := userService.CheckPhoneUnique(req.UserId, req.Phonenumber)
 	if isHadPhone {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("手机号码已经存在").Log("修改用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("手机号码已经存在").Log("修改用户", req).WriteJsonExit()
 		return
 	}
 
 	//判断邮箱是否已注册
 	isHadEmail := userService.CheckEmailUnique(req.UserId, req.Email)
 	if isHadEmail {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("邮箱已经存在").Log("修改用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("邮箱已经存在").Log("修改用户", req).WriteJsonExit()
 		return
 	}
 
 	uid, err := userService.EditSave(req, c)
 
 	if err != nil || uid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
 		return
 	}
 
-	lv_web.SucessResp(c).SetData(uid).SetBtype(model.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(uid).SetBtype(model_cmn.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
 }
 
 // 删除数据
 func (w *UserController) Remove(c *gin.Context) {
-	var req *model.RemoveReq
+	var req *model_cmn.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("删除用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("删除用户", req).WriteJsonExit()
 	}
 	var userService service2.UserService
 	rs := userService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetData(rs).SetBtype(model.Buniss_Del).Log("删除用户", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetData(rs).SetBtype(model_cmn.Buniss_Del).Log("删除用户", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("删除用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("删除用户", req).WriteJsonExit()
 	}
 }
 

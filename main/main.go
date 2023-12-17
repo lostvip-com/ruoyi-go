@@ -9,6 +9,7 @@ import (
 	"lostvip.com/web/server"
 	_ "robvi/app"
 	"robvi/app/common/global"
+	"robvi/app/mywork/model"
 )
 
 // @title LV 自动生成API文档
@@ -25,7 +26,7 @@ func main() {
 		gin.SetMode("debug")
 		db.Instance().Engine().ShowSQL(true)
 	}
-	//db.Instance().Engine().Sync2(model.DpcTask{}, model.DpcTaskItem{})
+	db.Instance().Engine().Sync2(model.DpcTask{})
 	//后台服务状态
 	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	httpSvr.Start()

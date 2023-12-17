@@ -4,11 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
 	"robvi/app/common/global"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/menu"
 	"robvi/app/system/service"
 	configService "robvi/app/system/service/system/config"
@@ -91,7 +92,7 @@ func (w *MainController) Download(c *gin.Context) {
 	fileName := c.Query("fileName")
 	//delete := c.Query("delete")
 	if fileName == "" {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -101,7 +102,7 @@ func (w *MainController) Download(c *gin.Context) {
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -123,8 +124,12 @@ func (w *MainController) SwitchSkin(c *gin.Context) {
 
 // 注销
 func (w *MainController) Logout(c *gin.Context) {
-	var userService service.UserService
-	userService.SignOut(c)
+	var user service.SessionService
+	tokenStr := lv_net.GetParam(c, "token")
+	err := user.SignOut(tokenStr)
+	if err != nil {
+		return
+	}
 	path := global.GetConfigInstance().GetContextPath()
 	c.SetCookie("token", "", -1, path, "", true, true)
 	c.Redirect(http.StatusFound, "login")

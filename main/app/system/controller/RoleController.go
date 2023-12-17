@@ -5,7 +5,7 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"net/http"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 	"robvi/app/system/model/system/role"
 	userModel "robvi/app/system/model/system/user"
 	"robvi/app/system/service"
@@ -47,34 +47,34 @@ func (w *RoleController) AddSave(c *gin.Context) {
 	var req *role.AddReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	if roleService.CheckRoleNameUniqueAll(req.RoleName) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	if roleService.CheckRoleKeyUniqueAll(req.RoleKey) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	rid, err := roleService.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("角色管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(rid).SetBtype(model.Buniss_Add).Log("角色管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(rid).SetBtype(model_cmn.Buniss_Add).Log("角色管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func (w *RoleController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -83,7 +83,7 @@ func (w *RoleController) Edit(c *gin.Context) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil || role == nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "角色不存在",
 		})
 		return
@@ -99,34 +99,34 @@ func (w *RoleController) EditSave(c *gin.Context) {
 	var req *role.EditReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	if roleService.CheckRoleNameUnique(req.RoleName, req.RoleId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	if roleService.CheckRoleKeyUnique(req.RoleKey, req.RoleId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := roleService.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("角色管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(model.Buniss_Edit).SetData(rs).Log("角色管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).SetData(rs).Log("角色管理", req).WriteJsonExit()
 }
 
 // 分配用户添加
 func (w *RoleController) SelectUser(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -135,7 +135,7 @@ func (w *RoleController) SelectUser(c *gin.Context) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "角色不存在",
 		})
 	} else {
@@ -158,7 +158,7 @@ func (w *RoleController) UnallocatedList(c *gin.Context) {
 		rows = userList
 	}
 
-	c.JSON(http.StatusOK, model.TableDataInfo{
+	c.JSON(http.StatusOK, model_cmn.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),
@@ -168,19 +168,19 @@ func (w *RoleController) UnallocatedList(c *gin.Context) {
 
 // 删除数据
 func (w *RoleController) Remove(c *gin.Context) {
-	var req *model.RemoveReq
+	var req *model_cmn.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := roleService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).SetData(rs).Log("角色管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("角色管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).Log("角色管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("角色管理", req).WriteJsonExit()
 	}
 }
 
@@ -206,7 +206,7 @@ func (w *RoleController) AuthDataScope(c *gin.Context) {
 	roleId := lv_conv.Int64(c.Query("id"))
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "角色不存在",
 		})
 	} else {
@@ -242,7 +242,7 @@ func (w *RoleController) AuthUser(c *gin.Context) {
 	roleId := lv_conv.Int64(c.Query("id"))
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		lv_web.BuildTpl(c, model.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "角色不存在",
 		})
 	} else {
@@ -266,7 +266,7 @@ func (w *RoleController) AllocatedList(c *gin.Context) {
 		rows = userList
 	}
 
-	c.JSON(http.StatusOK, model.TableDataInfo{
+	c.JSON(http.StatusOK, model_cmn.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),
@@ -280,14 +280,14 @@ func (w *RoleController) SelectAll(c *gin.Context) {
 	userIds := c.PostForm("userIds")
 
 	if roleId <= 0 {
-		lv_web.ErrorResp(c).SetMsg("参数错误1").SetBtype(model.Buniss_Add).Log("角色管理", gin.H{
+		lv_web.ErrorResp(c).SetMsg("参数错误1").SetBtype(model_cmn.Buniss_Add).Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
 		return
 	}
 	if userIds == "" {
-		lv_web.ErrorResp(c).SetMsg("参数错误2").SetBtype(model.Buniss_Add).Log("角色管理", gin.H{
+		lv_web.ErrorResp(c).SetMsg("参数错误2").SetBtype(model_cmn.Buniss_Add).Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
@@ -296,12 +296,12 @@ func (w *RoleController) SelectAll(c *gin.Context) {
 
 	rs := roleService.InsertAuthUsers(roleId, userIds)
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Add).Log("角色管理", gin.H{
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Add).Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Add).Log("角色管理", gin.H{
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
@@ -315,12 +315,12 @@ func (w *RoleController) CancelAll(c *gin.Context) {
 	userIds := c.PostForm("userIds")
 	if roleId > 0 && userIds != "" {
 		roleService.DeleteUserRoleInfos(roleId, userIds)
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("角色管理", gin.H{
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg("参数错误").Log("角色管理", gin.H{
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg("参数错误").Log("角色管理", gin.H{
 			"roleId":  roleId,
 			"userIds": userIds,
 		}).WriteJsonExit()
@@ -333,12 +333,12 @@ func (w *RoleController) Cancel(c *gin.Context) {
 	userId := lv_conv.Int64(c.PostForm("userId"))
 	if roleId > 0 && userId > 0 {
 		roleService.DeleteUserRoleInfo(userId, roleId)
-		lv_web.SucessResp(c).SetBtype(model.Buniss_Del).Log("角色管理", gin.H{
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("角色管理", gin.H{
 			"roleId": roleId,
 			"userId": userId,
 		}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model.Buniss_Del).SetMsg("参数错误").Log("角色管理", gin.H{
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg("参数错误").Log("角色管理", gin.H{
 			"roleId": roleId,
 			"userId": userId,
 		}).WriteJsonExit()
