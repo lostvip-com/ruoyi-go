@@ -11,7 +11,7 @@ type TplResp struct {
 	tpl string
 }
 
-//返回一个tpl响应
+// 返回一个tpl响应
 func BuildTpl(c *gin.Context, tpl string) *TplResp {
 	var t = TplResp{
 		c:   c,
@@ -20,7 +20,7 @@ func BuildTpl(c *gin.Context, tpl string) *TplResp {
 	return &t
 }
 
-//返回一个错误的tpl响应
+// 返回一个错误的tpl响应
 func ErrorTpl(c *gin.Context) *TplResp {
 	var t = TplResp{
 		c:   c,
@@ -29,7 +29,7 @@ func ErrorTpl(c *gin.Context) *TplResp {
 	return &t
 }
 
-//返回一个无操作权限tpl响应
+// 返回一个无操作权限tpl响应
 func ForbiddenTpl(c *gin.Context) *TplResp {
 	var t = TplResp{
 		c:   c,
@@ -38,11 +38,11 @@ func ForbiddenTpl(c *gin.Context) *TplResp {
 	return &t
 }
 
-//输出页面模板
+// 输出页面模板
 func (resp *TplResp) WriteTpl(params ...gin.H) {
 	//session := sessions.Default(resp.c)
-	//uid := session.Get(model.USER_ID)
-	uid :=1
+	//uid := session.Get(model_cmn.USER_ID)
+	uid := 1
 	if params == nil || len(params) == 0 {
 		resp.c.HTML(http.StatusOK, resp.tpl, gin.H{"uid": uid})
 	} else {

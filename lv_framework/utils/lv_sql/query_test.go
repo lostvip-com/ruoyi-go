@@ -47,8 +47,8 @@ package lv_sql
 //		ResolveSearchQuery("mysql", d, condition)
 //		fmt.Println(condition)
 //
-//		var data model.Settings
-//		var list []model.Settings
+//		var data model_cmn.Settings
+//		var list []model_cmn.Settings
 //		database.GormDB.Model(&data).
 //			Scopes(
 //				MakeCondition(data),

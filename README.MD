@@ -93,7 +93,7 @@ go run main.go
 ~~~
 fresh
 ~~~
-## 登陆账号和密码
+## 登录账号和密码
 > 演示1: http://demo.lostvip.com <p> 
 > 账号: admin / admin123  <p>
 >

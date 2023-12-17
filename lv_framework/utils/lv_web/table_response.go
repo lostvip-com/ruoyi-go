@@ -3,19 +3,19 @@ package lv_web
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"robvi/app/common/model"
+	"robvi/app/common/model_cmn"
 )
 
 // 通用api响应
 type TableResp struct {
-	t *model.TableDataInfo
+	t *model_cmn.TableDataInfo
 	c *gin.Context
 }
 
 // 返回一个成功的消息体
 func BuildTable(c *gin.Context, total int, rows interface{}) *TableResp {
-	msg := model.TableDataInfo{
-		Code:  model.SUCCESS,
+	msg := model_cmn.TableDataInfo{
+		Code:  model_cmn.SUCCESS,
 		Msg:   "操作成功",
 		Total: total,
 		Rows:  rows,

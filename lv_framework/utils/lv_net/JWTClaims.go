@@ -69,14 +69,14 @@ func VerifyAction(strToken string) (*JWTClaims, error) {
 
 	if !ok {
 		fmt.Println("VerifyAction-----not ok--------------》claims:", claims, "---ok:", ok)
-		return nil, errors.New("请重新登陆")
+		return nil, errors.New("请重新登录")
 	}
 
 	fmt.Println("VerifyAction------ok-------------》claims:", claims, "---ok:", ok)
 
 	if err := token.Claims.Valid(); err != nil {
 		fmt.Println("token.Claims.Valid()-------------------》err:", err)
-		return nil, errors.New("Token无效，请重新登陆")
+		return nil, errors.New("Token无效，请重新登录")
 	}
 	fmt.Println(" end VerifyAction-------------------》claims:", claims, "---error:", err)
 	return claims, err
