@@ -15,5 +15,5 @@ func IsAdminUser(user *userModel.SysUser) bool {
 
 // 获得用户信息详情
 func GetTenantId(c *gin.Context) int64 {
-	return 1
+	return 0
 }
