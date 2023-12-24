@@ -27,46 +27,46 @@ func TableName() string {
 
 // 插入数据
 func (r *SysPost) Insert() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).Insert(r)
+	return db.GetInstance().Engine().Table(TableName()).Insert(r)
 }
 
 // 更新数据
 func (r *SysPost) Update() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).ID(r.PostId).Update(r)
+	return db.GetInstance().Engine().Table(TableName()).ID(r.PostId).Update(r)
 }
 
 // 删除
 func (r *SysPost) Delete() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).ID(r.PostId).Delete(r)
+	return db.GetInstance().Engine().Table(TableName()).ID(r.PostId).Delete(r)
 }
 
 // 批量删除
 func DeleteBatch(ids ...int64) (int64, error) {
-	return db.Instance().Engine().Table(TableName()).In("post_id", ids).Delete(new(SysPost))
+	return db.GetInstance().Engine().Table(TableName()).In("post_id", ids).Delete(new(SysPost))
 }
 
 // 根据结构体中已有的非空数据来获得单条数据
 func (r *SysPost) FindOne() (bool, error) {
-	return db.Instance().Engine().Table(TableName()).Get(r)
+	return db.GetInstance().Engine().Table(TableName()).Get(r)
 }
 
 // 根据条件查询
 func Find(where, order string) ([]SysPost, error) {
 	var list []SysPost
-	err := db.Instance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
 	return list, err
 }
 
 // 指定字段集合查询
 func FindIn(column string, args ...interface{}) ([]SysPost, error) {
 	var list []SysPost
-	err := db.Instance().Engine().Table(TableName()).In(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).In(column, args).Find(&list)
 	return list, err
 }
 
 // 排除指定字段集合查询
 func FindNotIn(column string, args ...interface{}) ([]SysPost, error) {
 	var list []SysPost
-	err := db.Instance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
 	return list, err
 }

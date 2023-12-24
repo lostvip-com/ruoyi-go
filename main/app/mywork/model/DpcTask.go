@@ -14,18 +14,21 @@ import (
 
 // 数据表映射结构体
 type DpcTask struct {
-	Id                  int64     `json:"id" xorm:"not null pk autoincr comment('ID') int(11)"`
-	Username            string    `json:"username" xorm:"comment('工号') varchar(16)"`
-	Password            string    `json:"password" xorm:"comment('密码') varchar(32)"`
-	PrjCode             string    `json:"prj_code" xorm:"comment('项  目  号') varchar(16)"`
-	TaskContent         string    `json:"task_content" xorm:"comment('任务内容') varchar(64)"`
-	StartDate           time.Time `json:"start_date" xorm:"comment('开始日期') date"`
-	EndDate             time.Time `json:"end_date" xorm:"comment('结束日期') date"`
-	WorkDays            int64     `json:"work_days" xorm:"comment('本月工时') int(11)"`
-	AutoSubmit          string    `json:"auto_submit" xorm:"comment('自动提交') char(1)"`
-	Status              int64     `json:"status" xorm:"comment('任务状态') tinyint(16)"`
-	Sort                int64     `json:"sort" xorm:"comment('排序，大的优先') int(11)"`
-	model_cmn.BaseModel `xorm:"extends"`
+	Id          int64     `gorm:"primary_key;auto_increment;ID;"     json:"id"  form:"id"`
+	Username    string    `gorm:"varchar(16);comment:工号;" json:"username" form:"username"`
+	Password    string    `gorm:"varchar(32);comment:密码;" json:"password" form:"password"`
+	PrjCode     string    `gorm:"varchar(16);comment:项  目  号;" json:"prjCode" form:"prjCode"`
+	TaskContent string    `gorm:"varchar(64);comment:任务内容;" json:"taskContent" form:"taskContent"`
+	StartDate   time.Time `gorm:"date;comment:开始日期;" json:"startDate" form:"startDate"`
+	EndDate     time.Time `gorm:"date;comment:结束日期;" json:"endDate" form:"endDate"`
+	WorkDays    int64     `gorm:"int(11);comment:本月工时;" json:"workDays" form:"workDays"`
+	AutoSubmit  string    `gorm:"char(1);comment:自动提交;" json:"autoSubmit" form:"autoSubmit"`
+	Status      string    `gorm:"char(1);comment:任务状态;" json:"status" form:"status"`
+	Sort        int       `gorm:"int(11);comment:排序，大的优先;" json:"sort" form:"sort"`
+	DelFlag     string    `gorm:"char(1);comment:删除标识1删除0未删除;" json:"delFlag" form:"delFlag"`
+	CreateBy    string    `gorm:"varchar(32);comment:创建人;" json:"createBy" form:"createBy"`
+	UpdateBy    string    `gorm:"varchar(32);comment:更新者;" json:"updateBy" form:"updateBy"`
+	model_cmn.Model
 }
 
 // 映射数据表
@@ -34,21 +37,22 @@ func (e *DpcTask) TableName() string {
 }
 
 // 增
-func (e *DpcTask) Insert() (int64, error) {
-	return db.Instance().Engine().Table("dpc_task").Insert(e)
+func (e *DpcTask) Save() error {
+	return db.GetMasterGorm().Save(e).Error
 }
 
 // 查
-func (e *DpcTask) FindOne() (bool, error) {
-	return db.Instance().Engine().Table("dpc_task").Get(e)
+func (e *DpcTask) FindById() error {
+	err := db.GetMasterGorm().Find(e, e.Id).Error
+	return err
 }
 
 // 改
-func (e *DpcTask) Update() (int64, error) {
-	return db.Instance().Engine().Table("dpc_task").ID(e.Id).Update(e)
+func (e *DpcTask) Updates() error {
+	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 删
-func (e *DpcTask) Delete() (int64, error) {
-	return db.Instance().Engine().Table("dpc_task").ID(e.Id).Delete(e)
+func (e *DpcTask) Delete() error {
+	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
 }

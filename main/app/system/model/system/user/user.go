@@ -138,7 +138,7 @@ type EditReq struct {
 
 // 根据条件分页查询用户列表
 func SelectPageList(param *SelectPageReq) ([]UserListEntity, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -198,7 +198,7 @@ func SelectPageList(param *SelectPageReq) ([]UserListEntity, *lv_web.Paging, err
 
 // 导出excel
 func SelectExportList(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return "", errors.New("获取数据库连接失败")
 	}
@@ -242,7 +242,7 @@ func SelectExportList(param *SelectPageReq, head, col []string) (string, error) 
 
 // 根据条件分页查询已分配用户角色列表
 func SelectAllocatedList(roleId int64, loginName, phonenumber string) ([]SysUser, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -274,7 +274,7 @@ func SelectAllocatedList(roleId int64, loginName, phonenumber string) ([]SysUser
 
 // 根据条件分页查询未分配用户角色列表
 func SelectUnallocatedList(roleId int64, loginName, phonenumber string) ([]SysUser, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -303,7 +303,7 @@ func SelectUnallocatedList(roleId int64, loginName, phonenumber string) ([]SysUs
 
 // 检查邮箱是否已使用
 func CheckEmailUnique(userId int64, email string) bool {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return false
 	}
@@ -321,7 +321,7 @@ func CheckEmailUnique(userId int64, email string) bool {
 
 // 检查邮箱是否存在,存在返回true,否则false
 func CheckEmailUniqueAll(email string) bool {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return false
 	}
@@ -339,7 +339,7 @@ func CheckEmailUniqueAll(email string) bool {
 
 // 检查手机号是否已使用,存在返回true,否则false
 func CheckPhoneUnique(userId int64, phone string) bool {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return false
 	}
@@ -357,7 +357,7 @@ func CheckPhoneUnique(userId int64, phone string) bool {
 
 // 检查手机号是否已使用 ,存在返回true,否则false
 func CheckPhoneUniqueAll(phone string) bool {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return false
 	}

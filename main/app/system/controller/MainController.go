@@ -98,7 +98,7 @@ func (w *MainController) Download(c *gin.Context) {
 		return
 	}
 	curDir, err := os.Getwd()
-	filepath := curDir + "/public/upload/" + fileName
+	filepath := curDir + "/static/upload/" + fileName
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {

@@ -67,7 +67,7 @@ type SelectPageReq struct {
 
 // 根据条件分页查询数据
 func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -142,7 +142,7 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 
 // 导出excel
 func SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return "", errors.New("获取数据库连接失败")
@@ -202,7 +202,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 
 // 获取所有数据
 func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -260,5 +260,5 @@ func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 
 // 批量删除除参数以外的数据
 func DeleteNotIn(ids ...string) (int64, error) {
-	return db.Instance().Engine().Table(TableName()).NotIn("sessionId", ids).Delete(new(UserOnline))
+	return db.GetInstance().Engine().Table(TableName()).NotIn("sessionId", ids).Delete(new(UserOnline))
 }

@@ -1,40 +1,41 @@
-// ==========================================================================
+//	==========================================================================
+//
 // LV自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：2023-12-17 19:23:47 +0800 CST
-// 生成人：lv
+// 生成日期：{{.table.CreateTime}}
+// 生成人：{{.table.FunctionAuthor}}
 // ==========================================================================
 package controller
 
 import (
-    "github.com/gin-gonic/gin"
-    "lostvip.com/utils/lv_conv"
-    "lostvip.com/utils/lv_web"
-    "robvi/app/mywork/dto"
-    "robvi/app/mywork/model"
-    "robvi/app/mywork/service"
-    "robvi/app/common/model_cmn"
+	"github.com/gin-gonic/gin"
+	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_web"
+	"robvi/app/common/model_cmn"
+	"robvi/app/mywork/service"
+	"robvi/app/mywork/vo"
+	sysService "robvi/app/system/service"
 )
+
 type DpcTaskController struct{}
 
-///////////////////////////////////////////////////////////////////////////////////////
-// 页面部分
-// 列表分页数据
-///////////////////////////////////////////////////////////////////////////////////////
-//查询页
+// List 查询页
 func (w DpcTaskController) List(c *gin.Context) {
 	lv_web.BuildTpl(c, "mywork/task/list.html").WriteTpl()
 }
-//新增页
+
+// Add 新增页
 func (w DpcTaskController) Add(c *gin.Context) {
 	lv_web.BuildTpl(c, "mywork/task/add.html").WriteTpl()
 }
-//修改页
+
+// Edit 修改页
 func (w DpcTaskController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
-    taskService :=service.DpcTaskService{}
-	entity, err := taskService.SelectRecordById(id)
+	taskService := service.DpcTaskService{}
+	entity, err := taskService.FindById(id)
 	if err != nil || entity == nil {
-		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
+		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在"})
 		return
 	}
 	lv_web.BuildTpl(c, "mywork/task/edit.html").WriteTpl(gin.H{
@@ -42,97 +43,65 @@ func (w DpcTaskController) Edit(c *gin.Context) {
 	})
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-// api接口
-// 列表分页数据
-///////////////////////////////////////////////////////////////////////////////////////
+//	========================================================================
+//
+// api
+// =========================================================================
+// ListAjax 新增页面保存
 func (w DpcTaskController) ListAjax(c *gin.Context) {
-	req := new(dto.PageDpcTaskReq)
-	if err := c.ShouldBind(req); err != nil {//获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("task管理", req).WriteJsonExit()
-		return
-	}
-	rows := make([]model.DpcTask, 0)
-	taskService :=service.DpcTaskService{}
-	result, page, err := taskService.SelectListByPage(req)
-
-	if err == nil && len(result) > 0 {
-		rows = result
-	}
-	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
+	req := new(vo.PageDpcTaskReq)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	taskService := service.DpcTaskService{}
+	result, total, _ := taskService.ListByPage(req)
+	lv_web.SucessPage(c, result, total)
 }
 
-
-//新增页面保存
+// AddSave 新增页面保存
 func (w DpcTaskController) AddSave(c *gin.Context) {
-	req := new(dto.AddDpcTaskReq)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("新增数据", req).WriteJsonExit()
-		return
-	}
-    taskService :=service.DpcTaskService{}
-	id, err := taskService.AddSave(req, c)
-
-	if err != nil || id <= 0 {
-		lv_web.ErrorResp(c).Log("新增数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).SetData(id).Log("新增数据", req).WriteJsonExit()
+	req := new(vo.AddDpcTaskReq)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	var userService sysService.UserService
+	user := userService.GetProfile(c)
+	var svc service.DpcTaskService
+	id, err := svc.AddSave(req, user)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.SucessData(c, id)
 }
 
-
-//修改页面保存
+// EditSave 修改页面保存
 func (w DpcTaskController) EditSave(c *gin.Context) {
-	req := new(dto.EditDpcTaskReq)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("修改数据", req).WriteJsonExit()
-		return
-	}
-    taskService :=service.DpcTaskService{}
-	rs, err := taskService.EditSave(req, c)
-
-	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).Log("修改数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).Log("修改数据", req).WriteJsonExit()
+	req := new(vo.EditDpcTaskReq)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	var userService sysService.UserService
+	user := userService.GetProfile(c)
+	taskService := service.DpcTaskService{}
+	err = taskService.EditSave(req, user)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.Success(c, nil, "success")
 }
 
-//删除数据
+// Remove 删除数据
 func (w DpcTaskController) Remove(c *gin.Context) {
 	req := new(model_cmn.RemoveReq)
-	//获取参数
 	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("删除数据", req).WriteJsonExit()
+		panic(err)
 		return
 	}
-    taskService :=service.DpcTaskService{}
-	rs := taskService.DeleteRecordByIds(req.Ids)
-
-	if rs > 0 {
-		lv_web.SucessResp(c).Log("删除数据", req).WriteJsonExit()
-	} else {
-		lv_web.ErrorResp(c).Log("删除数据", req).WriteJsonExit()
-	}
+	taskService := service.DpcTaskService{}
+	rs := taskService.DeleteByIds(req.Ids)
+	lv_web.SuccessData(c, rs)
 }
 
-//导出
+// Export 导出
 func (w DpcTaskController) Export(c *gin.Context) {
-	req := new(dto.PageDpcTaskReq)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).Log("导出数据", req).WriteJsonExit()
-		return
-	}
-
-    taskService :=service.DpcTaskService{}
-	url, err := taskService.Export(req)
-
-	if err != nil {
-		lv_web.ErrorResp(c).Log("导出数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).SetMsg(url).WriteJsonExit()
+	req := new(vo.PageDpcTaskReq)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	taskService := service.DpcTaskService{}
+	url, err := taskService.ExportAll(req)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.SucessDataMsg(c, url, url)
 }

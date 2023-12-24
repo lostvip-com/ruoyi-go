@@ -2,15 +2,17 @@
 摒弃过度封装，代码风格极尽简洁，适合中小项目使用！<br>
 架构思路沿袭着若依的以辅助生成重复代码为主，不过度封装，生成的代码可以快速修改适应不同的需求。
 * 项目结构模仿springboot，简单改造后可注册到nacos中做为springcloud微服务的一员，对java开发人员友好。
-* 支持类mybatis查询，sql与go代码分离（基于golang的template语法实现）。
+* 支持类mybatis查询，sql与go代码分离（基于gorm + golang的template语法实现）。
 * 提供相关服务配置脚本，可发布到 k8s、docker swarm中做为微服务使用。
 * 支持在yaml文件中使用表达式从环境变量中取值，便于切换生产、开发、测试环境参数（模仿springboot）,如：
+* 1.x版本是基于xorm开发，2.0之后的版本将全面切换到gorm。
+* 
 ~~~
     host: ${REDIS_HOST:lostvip.com}
 ~~~
 ## 核心技术及组件
 
-* DAO层架: xorm,简单易用; sqlx,支持namedSQL占位符查询.</br>
+* DAO层架: gorm,简单易用,支持namedSQL占位符查询.</br>
 * Web服务框架: Gin 简单高效，模板可热加载.</br>
 * 前端技术: 模板引擎，服务端渲染.</br>
 * 缓存支持: redis .</br>

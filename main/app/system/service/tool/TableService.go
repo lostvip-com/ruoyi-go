@@ -12,6 +12,7 @@ import (
 	"os"
 	"robvi/app/system/model/tool"
 	"robvi/app/system/service"
+	"robvi/app/system/service/system/calcu"
 	"strings"
 	"text/template"
 	"time"
@@ -51,7 +52,7 @@ func (svc TableService) DeleteRecordByIds(ids string) int64 {
 	}
 
 	if result > 0 {
-		db.Instance().Engine().SQL("delete from gen_table where table_id in (?)", idarr)
+		db.GetInstance().Engine().SQL("delete from gen_table where table_id in (?)", idarr)
 	}
 
 	return result
@@ -122,7 +123,7 @@ func (svc TableService) SaveEdit(req *tool.EditReq, c *gin.Context) (int64, erro
 		table.UpdateBy = user.LoginName
 	}
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 
 	tanErr := session.Begin()
 
@@ -243,7 +244,7 @@ func (svc TableService) SelectGenTableByName(tableName string) (*tool.GenTable, 
 // 导入表结构
 func (svc TableService) ImportGenTable(tableList *[]tool.GenTable, operName string) error {
 	if tableList != nil && operName != "" {
-		session := db.Instance().Engine().NewSession()
+		session := db.GetInstance().Engine().NewSession()
 		err := session.Begin()
 		defer session.Close()
 
@@ -290,14 +291,18 @@ func (svc TableService) ImportGenTable(tableList *[]tool.GenTable, operName stri
 func (svc TableService) InitTable(table *tool.GenTable, operName string) {
 	table.ClassName = svc.ConvertClassName(table.TbName)
 	table.BusinessName = svc.GetBusinessName(table.TbName)
+	table.FunctionName = table.BusinessName
 	table.PackageName = conf.Config().GetVipperCfg().GetString("gen.packageName")
 	table.ModuleName = conf.Config().GetVipperCfg().GetString("gen.moduleName")
-	table.FunctionName = strings.ReplaceAll(table.TableComment, "表", "")
 	table.FunctionAuthor = conf.Config().GetVipperCfg().GetString("gen.author")
 	table.CreateBy = operName
 	table.TplCategory = "crud"
 	table.CreateTime = time.Now()
 	table.UpdateTime = table.CreateTime
+	table.TableComment = strings.ReplaceAll(table.TableComment, "表", "")
+	if table.TableComment == "" {
+		table.TableComment = table.ClassName
+	}
 }
 
 // 初始化列属性字段
@@ -325,7 +330,7 @@ func (svc TableService) InitColumnField(column *tool.Entity, table *tool.GenTabl
 		}
 	} else if tool.IsTimeObject(dataType) {
 		//字段为时间类型
-		column.GoType = "Time"
+		column.GoType = "time.Time"
 		column.HtmlType = "datetime"
 	} else if tool.IsNumberObject(dataType) {
 		//字段为数字类型
@@ -574,7 +579,7 @@ func (svc TableService) GoTypeTpl() string {
     <option value="int64" {{if goType==="int64"}}selected{{/if}}>int64</option>
     <option value="int" {{if goType==="int"}}selected{{/if}}>int</option>
     <option value="string" {{if goType==="string"}}selected{{/if}}>string</option>
-    <option value="Time" {{if goType==="Time"}}selected{{/if}}>Time</option>
+    <option value="time.Time" {{if goType==="time.Time"}}selected{{/if}}>time.Time</option>
     <option value="float64" {{if goType==="float64"}}selected{{/if}}>float64</option>
     <option value="byte" {{if goType==="byte"}}selected{{/if}}>byte</option>
 </select>
@@ -628,7 +633,12 @@ func (svc TableService) LoadTemplate(templateName string, data interface{}) (str
 	}
 	templateStr := string(b)
 
-	tmpl, err := template.New(templateName).Parse(templateStr) //建立一个模板，内容是"hello, {{OssUrl}}"
+	// 创建函数映射
+	funcs := template.FuncMap{
+		"contains": calcu.Contains,
+	}
+
+	tmpl, err := template.New(templateName).Funcs(funcs).Parse(templateStr) //建立一个模板，内容是"hello, {{OssUrl}}"
 	if err != nil {
 		return "", nil
 	}

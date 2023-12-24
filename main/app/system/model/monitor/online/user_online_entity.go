@@ -27,17 +27,17 @@ func TableName() string {
 
 // 插入数据
 func (r *UserOnline) Insert() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).Insert(r)
+	return db.GetInstance().Engine().Table(TableName()).Insert(r)
 }
 
 // 更新数据
 func (r *UserOnline) Update() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).ID(r.Sessionid).Update(r)
+	return db.GetInstance().Engine().Table(TableName()).ID(r.Sessionid).Update(r)
 }
 
 // 删除
 func (r *UserOnline) Delete() (int64, error) {
-	rs, err := db.Instance().Engine().Exec("delete from sys_user_online where sessionId = ?", r.Sessionid)
+	rs, err := db.GetInstance().Engine().Exec("delete from sys_user_online where sessionId = ?", r.Sessionid)
 	if err != nil {
 		return 0, err
 	}
@@ -46,31 +46,31 @@ func (r *UserOnline) Delete() (int64, error) {
 
 // 批量删除
 func DeleteBatch(ids ...string) (int64, error) {
-	return db.Instance().Engine().Table(TableName()).In("sessionId", ids).Delete(new(UserOnline))
+	return db.GetInstance().Engine().Table(TableName()).In("sessionId", ids).Delete(new(UserOnline))
 }
 
 // 根据结构体中已有的非空数据来获得单条数据
 func (r *UserOnline) FindOne() (bool, error) {
-	return db.Instance().Engine().Table(TableName()).Get(r)
+	return db.GetInstance().Engine().Table(TableName()).Get(r)
 }
 
 // 根据条件查询
 func Find(where, order string) ([]UserOnline, error) {
 	var list []UserOnline
-	err := db.Instance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
 	return list, err
 }
 
 // 指定字段集合查询
 func FindIn(column string, args ...interface{}) ([]UserOnline, error) {
 	var list []UserOnline
-	err := db.Instance().Engine().Table(TableName()).In(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).In(column, args).Find(&list)
 	return list, err
 }
 
 // 排除指定字段集合查询
 func FindNotIn(column string, args ...interface{}) ([]UserOnline, error) {
 	var list []UserOnline
-	err := db.Instance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
 	return list, err
 }

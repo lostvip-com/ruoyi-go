@@ -25,7 +25,7 @@ var COLUMNNAME_NOT_QUERY = []string{"id", "create_by", "create_time", "del_flag"
 
 // 查询业务字段列表
 func SelectGenTableColumnListByTableId(tableId int64) ([]Entity, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -40,7 +40,7 @@ func SelectGenTableColumnListByTableId(tableId int64) ([]Entity, error) {
 
 // 根据表名称查询列信息
 func SelectDbTableColumnsByName(tableName string) ([]Entity, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")

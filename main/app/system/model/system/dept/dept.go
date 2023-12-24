@@ -63,7 +63,7 @@ type CheckDeptNameALLReq struct {
 
 // 根据部门ID查询信息
 func SelectDeptById(id int64) (*SysDeptExtend, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -78,7 +78,7 @@ func SelectDeptById(id int64) (*SysDeptExtend, error) {
 
 // 根据ID查询所有子部门
 func SelectChildrenDeptById(deptId int64) []*SysDept {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil
@@ -125,7 +125,7 @@ func UpdateDeptChildren(deptId int64, newAncestors, oldAncestors string) {
 	}
 
 	ancestors += " end "
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return
@@ -138,7 +138,7 @@ func UpdateDeptChildren(deptId int64, newAncestors, oldAncestors string) {
 // 查询部门管理数据
 func SelectDeptList(parentId int64, deptName, status string, tenantId int64) ([]SysDept, error) {
 	var result []SysDept
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -165,7 +165,7 @@ func SelectDeptList(parentId int64, deptName, status string, tenantId int64) ([]
 
 // 根据角色ID查询部门
 func SelectRoleDeptTree(roleId int64) ([]string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -189,7 +189,7 @@ func SelectRoleDeptTree(roleId int64) ([]string, error) {
 
 // 查询部门是否存在用户
 func CheckDeptExistUser(deptId int64) bool {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return false
 	}
@@ -205,7 +205,7 @@ func CheckDeptExistUser(deptId int64) bool {
 
 // 查询部门人数
 func SelectDeptCount(deptId, parentId int64) int64 {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return 0
 	}
@@ -243,25 +243,25 @@ func CheckDeptNameUniqueAll(deptName string, parentId int64) (*SysDept, error) {
 // 根据条件查询
 func Find(where, order string) ([]SysDept, error) {
 	var list []SysDept
-	err := db.Instance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).Where(where).OrderBy(order).Find(&list)
 	return list, err
 }
 
 // 指定字段集合查询
 func FindIn(column string, args ...interface{}) ([]SysDept, error) {
 	var list []SysDept
-	err := db.Instance().Engine().Table(TableName()).In(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).In(column, args).Find(&list)
 	return list, err
 }
 
 // 排除指定字段集合查询
 func FindNotIn(column string, args ...interface{}) ([]SysDept, error) {
 	var list []SysDept
-	err := db.Instance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
+	err := db.GetInstance().Engine().Table(TableName()).NotIn(column, args).Find(&list)
 	return list, err
 }
 
 // 批量删除
 func DeleteBatch(ids ...int64) (int64, error) {
-	return db.Instance().Engine().Table(TableName()).In("dept_id", ids).Delete(new(SysDept))
+	return db.GetInstance().Engine().Table(TableName()).In("dept_id", ids).Delete(new(SysDept))
 }

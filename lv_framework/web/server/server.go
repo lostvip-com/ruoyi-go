@@ -121,6 +121,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 			"Ctx":               config.GetCtx,
 			"getCtxPath":        config.GetCtxPath,
 			"addInt":            calcu.AddInt,
+			"contains":          calcu.Contains,
 		},
 		DisableCache: true,
 	})

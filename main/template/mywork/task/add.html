@@ -90,8 +90,10 @@ LV自动生成新增页面代码,只生成一次,按需修改.
                     <label class="col-sm-3 control-label">任务状态：</label>
                     <div class="col-sm-8">
                         <div class="radio-box">
-                            <input type="radio" name="status" value="" required>
-                            <label for="status" text="未知"></label>
+                            <label for="status1" text="未开启"></label>
+                            <input type="radio" name="status"  id="status1" value="0" required>
+                            <label for="status2" text="已开启"></label>
+                            <input type="radio" name="status"  id="status2" value="1" required>
                         </div>
                         <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
                     </div>

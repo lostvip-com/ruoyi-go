@@ -76,7 +76,7 @@ func (svc UserService) AddSave(req *user.AddReq, c *gin.Context) (int64, error) 
 
 	u.DelFlag = "0"
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 	err := session.Begin()
 
 	_, err = session.Table(user.TableName()).Insert(&u)
@@ -159,7 +159,7 @@ func (svc UserService) EditSave(req *user.EditReq, c *gin.Context) (int64, error
 		u.UpdateBy = updateUser.LoginName
 	}
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 	tanErr := session.Begin()
 
 	_, tanErr = session.Table(user.TableName()).ID(u.UserId).Update(u)

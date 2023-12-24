@@ -24,9 +24,12 @@ func main() {
 	if cfg.IsDebug() {
 		// Only log the warning severity or above.
 		gin.SetMode("debug")
-		db.Instance().Engine().ShowSQL(true)
+		db.GetInstance().Engine().ShowSQL(true)
 	}
-	db.Instance().Engine().Sync2(model.DpcTask{})
+	err := db.GetMasterGorm().AutoMigrate(model.DpcTask{})
+	if err != nil {
+		return
+	}
 	//后台服务状态
 	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	httpSvr.Start()

@@ -83,7 +83,7 @@ type CheckPostNameALLReq struct {
 
 // 根据条件分页查询数据
 func SelectListByPage(param *SelectPageReq) ([]SysPost, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -136,7 +136,7 @@ func SelectListByPage(param *SelectPageReq) ([]SysPost, *lv_web.Paging, error) {
 
 // 导出excel
 func SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return "", errors.New("获取数据库连接失败")
@@ -176,7 +176,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 
 // 获取所有数据
 func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -213,7 +213,7 @@ func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
 
 // 根据用户ID查询岗位
 func SelectPostsByUserId(userId int64) ([]EntityFlag, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")

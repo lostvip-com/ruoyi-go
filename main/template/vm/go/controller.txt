@@ -1,7 +1,8 @@
-// ==========================================================================
-// LV自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：{{.table.CreateTime}}
-// 生成人：{{.table.FunctionAuthor}}
+//	=========================================================================
+//
+// LV自动生成控制器相关代码，只生成一次，按需修改,默认再次生成不会覆盖.
+// date：{{.table.CreateTime}}
+// author：{{.table.FunctionAuthor}}
 // ==========================================================================
 package controller
 
@@ -9,30 +10,27 @@ import (
     "github.com/gin-gonic/gin"
     "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_web"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/dto"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/model"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/service"
+    "lostvip.com/utils/lv_logic"
     "{{.table.PackageName}}/app/common/model_cmn"
+    "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
+    "{{.table.PackageName}}/app/{{.table.ModuleName}}/service"
+    sysService "{{.table.PackageName}}/app/system/service"
 )
 type {{.table.ClassName}}Controller struct{}
 
-///////////////////////////////////////////////////////////////////////////////////////
-// 页面部分
-// 列表分页数据
-///////////////////////////////////////////////////////////////////////////////////////
-//查询页
+// List 查询页
 func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
 	lv_web.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
 }
-//新增页
+// Add 新增页
 func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
 	lv_web.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
 }
-//修改页
+// Edit 修改页
 func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
     {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
+	entity, err := {{.table.BusinessName}}Service.FindById(id)
 	if err != nil || entity == nil {
 		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
 		return
@@ -42,97 +40,66 @@ func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
 	})
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-// api接口
-// 列表分页数据
-///////////////////////////////////////////////////////////////////////////////////////
+//	========================================================================
+//
+// api
+// =========================================================================
+
+// ListAjax 新增页面保存
 func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
-	req := new(dto.Page{{.table.ClassName}}Req)
-	if err := c.ShouldBind(req); err != nil {//获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.BusinessName}}管理", req).WriteJsonExit()
-		return
-	}
-	rows := make([]model.{{.table.ClassName}}, 0)
-	{{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	result, page, err := {{.table.BusinessName}}Service.SelectListByPage(req)
-
-	if err == nil && len(result) > 0 {
-		rows = result
-	}
-	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
+	req := new(vo.Page{{.table.ClassName}}Req)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	var svc service.{{.table.ClassName}}Service
+	result, total, _ := svc.ListByPage(req)
+	lv_web.SucessPage(c, result, total)
 }
 
-
-//新增页面保存
+// AddSave 新增页面保存
 func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
-	req := new(dto.Add{{.table.ClassName}}Req)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
-		return
-	}
-    {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	id, err := {{.table.BusinessName}}Service.AddSave(req, c)
+	req := new(vo.Add{{.table.ClassName}}Req)
+    err := c.ShouldBind(req)
+    lv_logic.HasErrAndPanic(err)
+	var svc service.{{.table.ClassName}}Service
 
-	if err != nil || id <= 0 {
-		lv_web.ErrorResp(c).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).SetData(id).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
+    var userService sysService.UserService
+    user := userService.GetProfile(c)
+	id, err := svc.AddSave(req, user)
+    lv_logic.HasErrAndPanic(err)
+	lv_web.SucessData(c, id)
 }
 
-
-//修改页面保存
+// EditSave 修改页面保存
 func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
-	req := new(dto.Edit{{.table.ClassName}}Req)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
-		return
-	}
-    {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	rs, err := {{.table.BusinessName}}Service.EditSave(req, c)
+	req := new(vo.Edit{{.table.ClassName}}Req)
+	err := c.ShouldBind(req)
+    lv_logic.HasErrAndPanic(err)
+    var svc service.{{.table.ClassName}}Service
 
-	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
+    var userService sysService.UserService
+    user := userService.GetProfile(c)
+	err = svc.EditSave(req, user)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.Success(c, nil, "success")
 }
 
-//删除数据
+// Remove 删除数据
 func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
 	req := new(model_cmn.RemoveReq)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
-		return
-	}
-    {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	rs := {{.table.BusinessName}}Service.DeleteRecordByIds(req.Ids)
-
-	if rs > 0 {
-		lv_web.SucessResp(c).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
-	} else {
-		lv_web.ErrorResp(c).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
-	}
+	err := c.ShouldBind(req)
+    lv_logic.HasErrAndPanic(err)
+	var svc service.{{.table.ClassName}}Service
+	rs := svc.DeleteByIds(req.Ids)
+	lv_web.SuccessData(c, rs)
 }
 
-//导出
+// 导出
 func (w {{.table.ClassName}}Controller) Export(c *gin.Context) {
-	req := new(dto.Page{{.table.ClassName}}Req)
-	//获取参数
-	if err := c.ShouldBind(req); err != nil {
-		lv_web.ErrorResp(c).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
-		return
-	}
-
-    {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
-	url, err := {{.table.BusinessName}}Service.Export(req)
-
-	if err != nil {
-		lv_web.ErrorResp(c).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).SetMsg(url).WriteJsonExit()
+	req := new(vo.Page{{.table.ClassName}}Req)
+	err := c.ShouldBind(req)
+    lv_logic.HasErrAndPanic(err)
+	var svc service.{{.table.ClassName}}Service
+	url, err := svc.ExportAll(req)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.SucessDataMsg(c, url, url)
 }

@@ -53,7 +53,7 @@ type SelectPageReq struct {
 
 // 根据ID获取记录
 func (r *GenTable) SelectRecordById(id int64) (*EntityExtend, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	var result EntityExtend
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -80,7 +80,7 @@ func (r *GenTable) SelectRecordById(id int64) (*EntityExtend, error) {
 
 // 根据条件分页查询数据
 func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -125,7 +125,7 @@ func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *lv_web.P
 
 // 查询据库列表
 func SelectDbTableList(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -173,7 +173,7 @@ func SelectDbTableList(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error)
 
 // 查询据库列表
 func SelectDbTableListByNames(tableNames []string) ([]GenTable, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -195,7 +195,7 @@ func SelectDbTableListByNames(tableNames []string) ([]GenTable, error) {
 
 // 查询据库列表
 func SelectTableByName(tableName string) (*GenTable, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -216,7 +216,7 @@ func SelectTableByName(tableName string) (*GenTable, error) {
 
 // 查询表ID业务信息
 func (r *GenTable) SelectGenTableById(tableId int64) (*GenTable, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -233,7 +233,7 @@ func (r *GenTable) SelectGenTableById(tableId int64) (*GenTable, error) {
 }
 
 func (r *GenTable) SelectableExtendById(tableId int64) (*EntityExtend, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -249,7 +249,7 @@ func (r *GenTable) SelectableExtendById(tableId int64) (*EntityExtend, error) {
 
 // 查询表名称业务信息
 func (r *GenTable) SelectGenTableByName(tableName string) (*GenTable, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")

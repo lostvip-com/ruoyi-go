@@ -42,7 +42,7 @@ type CaptchaRes struct {
 
 // 通用分页表格响应
 type TableDataInfo struct {
-	Total int         `json:"total"` //总数
+	Total any         `json:"total"` //总数
 	Rows  interface{} `json:"rows"`  //数据
 	Code  int         `json:"code"`  //响应编码 200 成功 500 错误 403 无权限
 	Msg   string      `json:"msg"`   //消息

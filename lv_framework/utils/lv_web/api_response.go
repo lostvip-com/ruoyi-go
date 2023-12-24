@@ -14,11 +14,33 @@ type ApiResp struct {
 }
 
 // 返回一个成功的消息体
-func Sucess(c *gin.Context, data interface{}) {
+func SucessData(c *gin.Context, data interface{}) {
 	msg := model_cmn.CommonRes{
 		Code: 200,
 		Data: data,
 		Msg:  "操作成功",
+	}
+	c.JSON(http.StatusOK, msg)
+	c.Abort()
+}
+
+// 返回一个成功的消息体
+func SucessDataMsg(c *gin.Context, data, msg string) {
+	c.JSON(http.StatusOK, model_cmn.CommonRes{
+		Code: 200,
+		Data: data,
+		Msg:  msg,
+	})
+	c.Abort()
+}
+
+// 返回一个成功的消息体
+func SucessPage(c *gin.Context, rows any, total int64) {
+	msg := model_cmn.TableDataInfo{
+		Code:  200,
+		Rows:  rows,
+		Total: total,
+		Msg:   "操作成功",
 	}
 	c.JSON(http.StatusOK, msg)
 	c.Abort()

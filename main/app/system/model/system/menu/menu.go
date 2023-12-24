@@ -67,7 +67,7 @@ type EditReq struct {
 
 // 根据主键查询数据
 func SelectRecordById(id int64) (*EntityExtend, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -85,7 +85,7 @@ func SelectRecordById(id int64) (*EntityExtend, error) {
 
 // 根据条件分页查询数据
 func SelectListPage(param *SelectPageReq) (*[]SysMenu, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -136,7 +136,7 @@ func SelectListPage(param *SelectPageReq) (*[]SysMenu, *lv_web.Paging, error) {
 
 // 获取所有数据
 func SelectListAll(param *SelectPageReq) ([]SysMenu, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -178,7 +178,7 @@ func SelectListAll(param *SelectPageReq) ([]SysMenu, error) {
 func SelectMenuNormalAll() ([]EntityExtend, error) {
 	var result []EntityExtend
 
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -200,7 +200,7 @@ func SelectMenuNormalAll() ([]EntityExtend, error) {
 func SelectMenusByUserId(userId string) ([]EntityExtend, error) {
 	var result []EntityExtend
 
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -223,7 +223,7 @@ func SelectMenusByUserId(userId string) ([]EntityExtend, error) {
 
 // 根据角色ID查询菜单
 func SelectMenuTree(roleId int64) ([]string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	var result []string
 

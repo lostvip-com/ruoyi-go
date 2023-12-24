@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/cache/myredis"
-	"lostvip.com/db"
+	"lostvip.com/db/lvbatis"
+	"lostvip.com/lvdao"
+	"lostvip.com/utils/lv_logic"
 	"lostvip.com/utils/lv_web"
+	model "robvi/app/system/model/system"
 	"robvi/app/system/model/system/post"
 	"time"
 )
@@ -14,47 +17,50 @@ import (
 // 相对于mapper目录的路径
 var SQL_FILE_POST = "sys_post/sys_post_mapper.tpl"
 
-/**
- * 基于ibatis 的分页查询演示
- */
-func (w DemoController) Mybatis3(c *gin.Context) {
+func (w DemoController) MybatisMap(c *gin.Context) {
 	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	resp := db.GetPageByNamedSql[post.SysPost](SQL_FILE_POST, "test", req)
-	lv_web.PageOK(c, resp)
+
+	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
+	sql, err := ibatis.GetLimitSql("listSql", &req)
+	lv_logic.HasErrAndPanic(err)
+	listMap, err := lvdao.ListMapByNamedSql(sql, &req, true)
+	lv_logic.HasErrAndPanic(err)
+	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
+	lv_logic.HasErrAndPanic(err)
+	lv_web.PageOK2(c, listMap, count)
 }
 
-func (w DemoController) Mybatis1(c *gin.Context) {
+func (w DemoController) MybatisStruct(c *gin.Context) {
 	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	ibatis := db.NewIBatis(SQL_FILE_POST)
-	sql := ibatis.GetLimitSql("test", req)
-	list := db.ListByNamedSql[post.SysPost](sql, req)
-	count := db.CountByNamedSql(ibatis.GetCountSql(), req)
+	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
+	sql, err := ibatis.GetLimitSql("listSql", &req)
+	lv_logic.HasErrAndPanic(err)
+	list, err := lvdao.ListByNamedSql[model.SysPost](sql, &req)
+	lv_logic.HasErrAndPanic(err)
+	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
+	lv_logic.HasErrAndPanic(err)
 	lv_web.PageOK2(c, list, count)
 }
 
-func (w DemoController) Mybatis2(c *gin.Context) {
-	req := post.SelectPageReq{PostName: "%test%", PageSize: 200, PageNum: 1}
+/**
+ * 基于ibatis 的分页查询演示
+ */
+func (w DemoController) MybatisStructPage(c *gin.Context) {
+	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("patient管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-
-	ibatis := db.NewIBatis(SQL_FILE_POST)
-	sql := ibatis.GetLimitSql("test", req)
-	listMap, err := db.GetInstance().ListByNamedSql(sql, req, true)
-	count, err := db.GetInstance().CountByNamedSql(ibatis.GetCountSql(), req)
-	if err != nil {
-		panic(err)
-	}
-	lv_web.PageOK2(c, listMap, count)
+	resp := lvdao.GetPageByNamedSql[model.SysPost](SQL_FILE_POST, "listSql", &req)
+	lv_web.PageOK(c, resp)
 }
 
 func (w DemoController) TestRedis(c *gin.Context) {
@@ -72,5 +78,5 @@ func (w DemoController) TestRedis(c *gin.Context) {
 	fmt.Println("------------myredis----------------------123")
 	data1 := redis.HGet(ctx, "mapKey1", "test")
 	fmt.Println(data1)
-	lv_web.Sucess(c, data1)
+	lv_web.SucessData(c, data1)
 }

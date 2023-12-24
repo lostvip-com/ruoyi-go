@@ -4,12 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"lostvip.com/db"
+	"lostvip.com/db/lvbatis"
+	"lostvip.com/logme"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_file"
 	"lostvip.com/utils/lv_web"
 	"net/http"
 	"os"
 	"os/exec"
+	"robvi/app/common/global"
 	"robvi/app/common/model_cmn"
 	menuModel "robvi/app/system/model/system/menu"
 	tool3 "robvi/app/system/model/tool"
@@ -46,7 +49,7 @@ func (w *GenController) ExecSqlFile(c *gin.Context) {
 	}
 	//err = db.ExecSqlFile(sqlFile)
 	// Loads queries from file
-	dot, err := db.LoadFromFile(sqlFile)
+	dot, err := lvbatis.LoadFromFile(sqlFile)
 	// Run queries
 	_, err = dot.Exec(db.GetInstance().Engine().DB(), "menu")
 	menuName := po.FunctionName
@@ -62,7 +65,7 @@ func (w *GenController) ExecSqlFile(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	lv_web.Sucess(c, nil)
+	lv_web.SucessData(c, nil)
 }
 
 // swagger文档
@@ -234,12 +237,16 @@ func (w *GenController) Preview(c *gin.Context) {
 		listTmp = "vm/html/list-tree.txt"
 	}
 
+	mapperKey := "vm/mapper/" + entity.TbName + "_mapper.tpl.vm"
+	mapperValue := ""
 	sqlKey := "vm/sql/" + entity.TbName + "_menu.sql.vm"
 	sqlValue := ""
 	entityKey := "vm/go/" + entity.ClassName + ".go.vm"
 	entityValue := ""
-	extendKey := "vm/go/" + entity.ClassName + "DTO.go.vm"
+	extendKey := "vm/go/" + entity.ClassName + "VO.go.vm"
 	extendValue := ""
+	daoKey := "vm/go/" + entity.ClassName + "Dao.go.vm"
+	daoValue := ""
 	serviceKey := "vm/go/" + entity.ClassName + "Service.go.vm"
 	serviceValue := ""
 	routerKey := "vm/go/" + entity.BusinessName + "_router.go.vm"
@@ -261,14 +268,15 @@ func (w *GenController) Preview(c *gin.Context) {
 	}
 
 	//entity模板
-	entityValue, _ = tableService.LoadTemplate("vm/go/entity.txt", gin.H{"table": entity})
+	entityValue, _ = tableService.LoadTemplate("vm/go/model.txt", gin.H{"table": entity})
 
 	//extend模板
-	extendValue, _ = tableService.LoadTemplate("vm/go/extend.txt", gin.H{"table": entity})
+	extendValue, _ = tableService.LoadTemplate("vm/go/vo.txt", gin.H{"table": entity})
 
 	//service模板
 	serviceValue, _ = tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity})
-
+	//dao模板
+	daoValue, _ = tableService.LoadTemplate("vm/go/dao.txt", gin.H{"table": entity})
 	//router模板
 	routerValue, _ = tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity})
 
@@ -277,6 +285,8 @@ func (w *GenController) Preview(c *gin.Context) {
 
 	//sql模板
 	sqlValue, _ = tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity})
+	//mapper模板
+	mapperValue, _ = tableService.LoadTemplate("vm/mapper/mapper.tpl", gin.H{"table": entity})
 
 	if entity.TplCategory == "tree" {
 		c.JSON(http.StatusOK, model_cmn.CommonRes{
@@ -291,8 +301,10 @@ func (w *GenController) Preview(c *gin.Context) {
 				entityKey:     entityValue,
 				extendKey:     extendValue,
 				serviceKey:    serviceValue,
+				daoKey:        daoValue,
 				routerKey:     routerValue,
 				controllerKey: controllerValue,
+				mapperKey:     mapperValue,
 			},
 		})
 	} else {
@@ -307,8 +319,10 @@ func (w *GenController) Preview(c *gin.Context) {
 				entityKey:     entityValue,
 				extendKey:     extendValue,
 				serviceKey:    serviceValue,
+				daoKey:        daoValue,
 				routerKey:     routerValue,
 				controllerKey: controllerValue,
+				mapperKey:     mapperValue,
 			},
 		})
 	}
@@ -317,6 +331,7 @@ func (w *GenController) Preview(c *gin.Context) {
 
 // 生成代码
 func (w *GenController) GenCode(c *gin.Context) {
+	overwrite := global.GetConfigInstance().GetBool("gen.overwrite")
 	tableId := lv_conv.Int64(c.Query("tableId"))
 	if tableId <= 0 {
 		c.JSON(http.StatusOK, model_cmn.CommonRes{
@@ -354,145 +369,159 @@ func (w *GenController) GenCode(c *gin.Context) {
 	if tmp, err := tableService.LoadTemplate("vm/html/add.txt", gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/add.html"
 
-		//if !file.Exists(fileName) { //改为直接覆盖
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 
 	//edit模板
 	if tmp, err := tableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/edit.html"
-		//if !file.Exists(fileName) { //改为直接覆盖
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 
 	//list模板
 	if tmp, err := tableService.LoadTemplate(listTmp, gin.H{"table": entity}); err == nil {
 		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/list.html"
-
-		//if !file.Exists(fileName) {//改为直接覆盖
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 
 	if entity.TplCategory == "tree" {
 		//tree模板
 		if tmp, err := tableService.LoadTemplate("vm/html/tree.txt", gin.H{"table": entity}); err == nil {
 			fileName := htmlMoudlePath + "/" + entity.BusinessName + "/tree.html"
-
-			//if !file.Exists(fileName) {
-			f, err := lv_file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
+			if canGenIt(overwrite, fileName) {
+				f, err := lv_file.Create(fileName)
+				if err == nil {
+					f.WriteString(tmp)
+				}
+				f.Close()
 			}
-			f.Close()
-			//}
 		}
 	}
 	var goModulePath = curDir + "/app/" + entity.ModuleName
 	//entity模板
 	if tmp, err := tableService.LoadTemplate("vm/go/model.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/model/" + entity.ClassName + ".go"
-		if lv_file.Exists(fileName) {
-			os.RemoveAll(fileName)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
-		}
-		f.Close()
 	}
 
 	//dao模板
 	if tmp, err := tableService.LoadTemplate("vm/go/dao.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/dao/" + entity.ClassName + "Dao.go"
-		//if !file.Exists(fileName) {//改为直接覆盖
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
-	//dto模板
-	if tmp, err := tableService.LoadTemplate("vm/go/dto.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/dto/" + entity.ClassName + "Dto.go"
-		//if !file.Exists(fileName) {//改为直接覆盖
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+	//vo模板
+	if tmp, err := tableService.LoadTemplate("vm/go/vo.txt", gin.H{"table": entity}); err == nil {
+		fileName := goModulePath + "/vo/" + entity.ClassName + "VO.go"
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 	//service模板
 	if tmp, err := tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/service/" + entity.ClassName + "Service.go"
-
-		//if !file.Exists(fileName) {
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 	//controller模板
 	if tmp, err := tableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/controller/" + entity.ClassName + "Controller.go"
-
-		//if !file.Exists(fileName) {
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 	//router模板
 	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
 		fileName := goModulePath + "/" + entity.TbName + "_router.go"
-
-		//if !file.Exists(fileName) {
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
-
+	//ibatis sql文件
+	if mapper, err := tableService.LoadTemplate("vm/mapper/mapper.tpl", gin.H{"table": entity}); err == nil {
+		mapperPath := curDir + "/mapper"
+		fileName := strings.Join([]string{mapperPath, "/", entity.ModuleName, "/", entity.TbName, "_mapper.tpl"}, "")
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(mapper)
+			}
+			f.Close()
+		}
+	}
 	//sql模板
 	if tmp, err := tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity}); err == nil {
 		tmpPath := curDir + "/tmp/sql"
-		if !lv_file.Exists(tmpPath) {
-			lv_file.Mkdir(tmpPath)
-		}
 		fileName := strings.Join([]string{tmpPath, "/", entity.ModuleName, "/", entity.TbName, "_menu.sql"}, "")
-
-		//if !file.Exists(fileName) {
-		f, err := lv_file.Create(fileName)
-		if err == nil {
-			f.WriteString(tmp)
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
 		}
-		f.Close()
-		//}
 	}
 	lv_web.SucessResp(c).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
+}
+
+func canGenIt(overwrite bool, file string) bool {
+	if overwrite { //允许覆盖
+		logme.Warn("--------->您配置了 overwrite 开关的值为true，旧文件会被覆盖！！！！ ")
+		return true
+	} else { // 不允许覆盖
+		if lv_file.Exists(file) { //文件已经存在，不允许重新生成
+			logme.Warn("=======> 文件已经存在，本次将不会生成新文件！！！！！！！！！！！！ ")
+			return false
+		} else { //文件不存在，允许重新生成
+			return true
+		}
+	}
 }
 
 // 查询数据库列表

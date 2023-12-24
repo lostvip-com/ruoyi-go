@@ -13,9 +13,9 @@ func init() {
 	demo := controller2.DemoController{}
 	g0 := router.New("/demo/db")
 	//mybatis
-	g0.GET("/mybatis1", "", demo.Mybatis1)
-	g0.GET("/mybatis2", "", demo.Mybatis2)
-	g0.GET("/mybatis3", "", demo.Mybatis3)
+	g0.GET("/mybatis1", "", demo.MybatisMap)
+	g0.GET("/mybatis2", "", demo.MybatisStruct)
+	g0.GET("/mybatis3", "", demo.MybatisStructPage)
 	g0.GET("/redis", "", demo.TestRedis)
 	//lv_web
 	g1 := router.New("/demo/form")

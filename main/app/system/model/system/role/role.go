@@ -94,7 +94,7 @@ type EditReq struct {
 
 // 根据条件分页查询角色数据
 func SelectListPage(param *SelectPageReq) ([]Entity, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -150,7 +150,7 @@ func SelectListPage(param *SelectPageReq) ([]Entity, *lv_web.Paging, error) {
 
 // 导出excel
 func SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	if db == nil {
 		return "", errors.New("获取数据库连接失败")
 	}
@@ -193,7 +193,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 
 // 获取所有角色数据
 func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -234,7 +234,7 @@ func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
 
 // 根据用户ID查询角色
 func SelectRoleContactVo(userId int64) ([]Entity, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")

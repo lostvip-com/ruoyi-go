@@ -4,9 +4,9 @@ go:
   log:
     output: stdout #生产环境要注释，不会记录到文件
   redis:
-    host: ${REDIS_HOST:127.0.0.1}
+    host: ${REDIS_HOST:"127.0.0.1"}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:qwer1234}
+    password: ${REDIS_PWD:"123456"}
   datasource:
     #    driver: sqlite3
     #    master: data.db
@@ -19,4 +19,4 @@ gen:
   author: "lv"
   moduleName: "mywork"
   packageName: "robvi"
-  autoRemovePre: true
+  overwrite: false

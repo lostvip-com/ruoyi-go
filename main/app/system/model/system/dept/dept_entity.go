@@ -31,20 +31,20 @@ func TableName() string {
 
 // 插入数据
 func (r *SysDept) Insert() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).Insert(r)
+	return db.GetInstance().Engine().Table(TableName()).Insert(r)
 }
 
 // 更新数据
 func (r *SysDept) Update() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).ID(r.DeptId).Update(r)
+	return db.GetInstance().Engine().Table(TableName()).ID(r.DeptId).Update(r)
 }
 
 // 删除
 func (r *SysDept) Delete() (int64, error) {
-	return db.Instance().Engine().Table(TableName()).ID(r.DeptId).Delete(r)
+	return db.GetInstance().Engine().Table(TableName()).ID(r.DeptId).Delete(r)
 }
 
 // 根据结构体中已有的非空数据来获得单条数据
 func (r *SysDept) FindOne() (bool, error) {
-	return db.Instance().Engine().Table(TableName()).Get(r)
+	return db.GetInstance().Engine().Table(TableName()).Get(r)
 }

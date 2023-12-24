@@ -33,8 +33,8 @@ type GeneralGetDto struct {
 }
 
 //
-//func MakeCondition(q interface{}) func(db *gorm.DB) *gorm.DB {
-//	return func(db *gorm.DB) *gorm.DB {
+//func MakeCondition(q interface{}) func(db *lvbatis.DB) *lvbatis.DB {
+//	return func(db *lvbatis.DB) *lvbatis.DB {
 //		condition := &GormCondition{
 //			GormPublic: GormPublic{},
 //			Join:       make([]*GormJoin, 0),
@@ -68,8 +68,8 @@ type GeneralGetDto struct {
 //	}
 //}
 //
-//func Paginate(pageSize, pageIndex int) func(db *gorm.DB) *gorm.DB {
-//	return func(db *gorm.DB) *gorm.DB {
+//func Paginate(pageSize, pageIndex int) func(db *lvbatis.DB) *lvbatis.DB {
+//	return func(db *lvbatis.DB) *lvbatis.DB {
 //		offset := (pageIndex - 1) * pageSize
 //		if offset < 0 {
 //			offset = 0

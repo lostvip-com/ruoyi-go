@@ -59,7 +59,7 @@ func AddSave(req *role.AddReq, c *gin.Context) (int64, error) {
 		role.CreateBy = user.LoginName
 	}
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 
 	err := session.Begin()
 
@@ -119,7 +119,7 @@ func EditSave(req *role.EditReq, c *gin.Context) (int64, error) {
 		r.CreateBy = user.LoginName
 	}
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 
 	pErr := session.Begin()
 
@@ -182,7 +182,7 @@ func AuthDataScope(req *role.DataScopeReq, c *gin.Context) (int64, error) {
 	}
 	entity.UpdateTime = time.Now()
 
-	session := db.Instance().Engine().NewSession()
+	session := db.GetInstance().Engine().NewSession()
 	tanErr := session.Begin()
 
 	_, tanErr = session.Table(role.TableName()).ID(entity.RoleId).Update(entity)
@@ -269,7 +269,7 @@ func InsertAuthUsers(roleId int64, userIds string) int64 {
 		roleUserList = append(roleUserList, tmp)
 	}
 
-	rs, err := db.Instance().Engine().Table(user_role.TableName()).Insert(roleUserList)
+	rs, err := db.GetInstance().Engine().Table(user_role.TableName()).Insert(roleUserList)
 	if err != nil {
 		return 0
 	}
@@ -298,7 +298,7 @@ func DeleteUserRoleInfos(roleId int64, ids string) int64 {
 		}
 	}
 
-	rs, err := db.Instance().Engine().Exec("delete from sys_user_role where role_id=? and user_id in (?)", roleId, idStr)
+	rs, err := db.GetInstance().Engine().Exec("delete from sys_user_role where role_id=? and user_id in (?)", roleId, idStr)
 	if err != nil {
 		return 0
 	}

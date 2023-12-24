@@ -1,24 +1,27 @@
 package db
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 	"lostvip.com/conf"
-	"lostvip.com/db/sqlx"
+	"lostvip.com/db/xorm"
 	"lostvip.com/logme"
-	"lostvip.com/utils/lv_sql"
+	"robvi/app/common/global"
 	"strings"
 	"sync"
 	"xorm.io/core"
 )
 
 type dbEngine struct {
-	master *xorm.Engine //主数据库
-	slave  *xorm.Engine //从数据库
+	masterXorm *xorm.Engine //主数据库
 	//sqlX
-	sqlxMaster *sqlx.DB
-	sqlxSlave  *sqlx.DB
+	gormMaster *gorm.DB
+	gormSlave  *gorm.DB
 }
 
 var (
@@ -27,87 +30,113 @@ var (
 )
 
 func init() {
-	//这里设置sqlx中，在使用interface{}类型传sql参数时，
-	//占位符的格式默认是全部小写：这里改为首字母大写，
-	//如： and post_name like :PostName
-	sqlx.NameMapper = lv_sql.ToTitle
+	fmt.Println("-----正在初始化数据库连接-------")
 }
 
-func createSqlx(dsn string) *sqlx.DB {
-	// 连接到数据库并使用ping进行验证。
-	// 也可以使用 MustConnect MustConnect连接到数据库，并在出现错误时恐慌 panic。
-	db, err := sqlx.Connect("mysql", dsn)
-	if err != nil {
-		panic("connect DB failed, err:%v\n" + err.Error())
+// 获取操作实例 如果传入slave 并且成功配置了slave 返回slave orm引擎 否则返回master orm引擎
+func (db *dbEngine) GetOrm(dbType string) *gorm.DB {
+	if strings.EqualFold(dbType, "slave") {
+		return GetSlaveGorm() //随机选取一个
+	} else {
+		return GetMasterGorm()
 	}
-	err = db.Ping()
-	if err != nil {
-		panic("connect DB failed, err:%v\n" + err.Error())
-	}
-	db.SetMaxOpenConns(100) // 设置数据库的最大打开连接数。
-	db.SetMaxIdleConns(1)   // 设置空闲连接池中的最大连接数。
-	logme.Info("########### sqlx 初始化成功！ #################")
-	return db
+	return db.gormMaster
 }
-
-/**
- * 获取主库的实例
- */
-func GetInstanceMaster() *xorm.Engine {
-	return GetInstance().Engine()
-}
-
-func GetMasterSqlX() *sqlx.DB {
-	return GetInstance().sqlxMaster
-}
-
-func GetSlaveSqlX() *sqlx.DB {
-	return GetInstance().sqlxSlave
-}
-
-/**
- * 获取从库的实例
- */
-func GetInstanceSlave() *xorm.Engine {
-	return GetInstance().Engine("slave")
-}
-
-/**
- * 单例方法
- */
-func GetInstance() *dbEngine {
-	if instance == nil {
-		instance = Instance()
-	}
-	return instance
-}
-
-// 初始化数据操作 driver为数据库类型
-func Instance() *dbEngine {
-	once.Do(func() {
-		//driverName := core.SQLITE
-		var db dbEngine
+func GetMasterGorm() *gorm.DB {
+	master := GetInstance().gormMaster
+	if master == nil {
 		var config = conf.Config()
 		driverName := config.GetDriver()
-		//没有配置从数据库
-		if config.GetMaster() != "" {
-			//xorm
-			db.master = createXormEngine(driverName, config.GetMaster(), config.IsDebug())
-			//sqlx
-			db.sqlxMaster = createSqlx(config.GetMaster())
-		}
-		if config.GetSlave() != "" {
-			//xorm
-			db.slave = createXormEngine(driverName, config.GetSlave(), config.IsDebug())
-			//sqlx
-			db.sqlxSlave = createSqlx(config.GetSlave())
-		}
-		instance = &db
-	})
-	return instance
+		master = createGorm(driverName, config.GetMaster())
+		GetInstance().gormMaster = master
+	}
+	if global.GetConfigInstance().IsDebug() {
+		master = master.Debug()
+	}
+	return master
 }
 
+/**
+ * 目前只实现一个数据源
+ */
+func GetSlaveGorm() *gorm.DB {
+	slave := GetInstance().gormSlave
+	if slave == nil {
+		var config = conf.Config()
+		driverName := config.GetDriver()
+		slave = createGorm(driverName, config.GetSlave())
+		GetInstance().gormMaster = slave
+	}
+	return slave
+}
+
+func createGorm(driverName, url string) *gorm.DB {
+	if !strings.Contains(url, "?") {
+		url = url + "?"
+	}
+	params := "parseTime=true"
+	if !strings.Contains(url, params) { //自动解析时间类型到time.Time!!
+		if strings.HasSuffix(url, "?") {
+			url = url + params
+		} else {
+			url = url + "&" + params
+		}
+	}
+	params = "charset=utf8mb4"
+	if !strings.Contains(url, params) {
+		if !strings.Contains(url, params) {
+			if strings.HasSuffix(url, "?") {
+				url = url + params
+			} else {
+				url = url + "&" + params
+			}
+		}
+	}
+	var dialector gorm.Dialector
+	if "mysql" == driverName {
+		dialector = mysql.Open(url)
+	} else {
+		dialector = sqlite.Open(url)
+	}
+	gormDB, err := gorm.Open(dialector, &gorm.Config{NamingStrategy: schema.NamingStrategy{SingularTable: true}})
+	if err != nil {
+		panic("连接数据库失败" + err.Error())
+	}
+	sqlDB, err := gormDB.DB() //dr
+	if err != nil {
+		panic("连接数据库失败")
+	}
+	sqlDB.SetMaxIdleConns(5)
+	sqlDB.SetMaxOpenConns(50)
+	logme.Info("########### sqlx 初始化成功！ #################")
+	return gormDB
+}
+
+// /////////////////////////////////////////////////////////////////////////////////////////
+// xorm
+// ////////////////////////////////////////////////////////////////////////////////////////
 func createXormEngine(driverName string, url string, debug bool) *xorm.Engine {
+	if !strings.Contains(url, "?") {
+		url = url + "?"
+	}
+	params := "parseTime=true"
+	if !strings.Contains(url, params) {
+		if strings.HasSuffix(url, "?") {
+			url = url + params
+		} else {
+			url = url + "&" + params
+		}
+	}
+	params = "charset=utf8mb4"
+	if !strings.Contains(url, params) {
+		if !strings.Contains(url, params) {
+			if strings.HasSuffix(url, "?") {
+				url = url + params
+			} else {
+				url = url + "&" + params
+			}
+		}
+	}
 	engine, err := xorm.NewEngine(driverName, url)
 	if err != nil {
 		panic("数据库连接错误:%v" + err.Error())
@@ -126,17 +155,33 @@ func createXormEngine(driverName string, url string, debug bool) *xorm.Engine {
 	return engine
 }
 
+// 初始化数据操作 driver为数据库类型
+func GetInstance() *dbEngine {
+	once.Do(func() {
+		//driverName := core.SQLITE
+		var db dbEngine
+		var config = conf.Config()
+		driverName := config.GetDriver()
+		//没有配置从数据库
+		if config.GetMaster() != "" {
+			//xorm (即将移除xorm,目前作为过渡)
+			db.masterXorm = createXormEngine(driverName, config.GetMaster(), config.IsDebug())
+		}
+		instance = &db
+	})
+	return instance
+}
+
 // 获取操作实例 如果传入slave 并且成功配置了slave 返回slave orm引擎 否则返回master orm引擎
 func (db *dbEngine) Engine(dbType ...string) *xorm.Engine {
 	if dbType != nil && len(dbType) > 0 {
 		if strings.EqualFold(dbType[0], "slave") {
-			if db.slave != nil {
-				return db.slave //随机选取一个
-			}
+			panic("暂不支持！")
+			return nil //随机选取一个
 		}
 	}
 	if db == nil {
-		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>master:\n " + conf.Config().GetMaster() + "\n ------------>slave:\n " + conf.Config().GetSlave())
+		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>masterXorm:\n " + conf.Config().GetMaster() + "\n ------------>slave:\n " + conf.Config().GetSlave())
 	}
-	return db.master
+	return db.masterXorm
 }

@@ -22,6 +22,8 @@ func RecoverError(c *gin.Context) {
 					c.String(http.StatusOK, errTypeObj)
 					c.Abort()
 				} else {
+					fmt.Println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:")
+					fmt.Println(err)
 					lv_web.Err(c, errTypeObj)
 				}
 			case dto.Resp: //封装过的

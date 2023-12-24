@@ -197,7 +197,7 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 
-	saveDir := curDir + "/public/upload/"
+	saveDir := curDir + "/static/upload/"
 
 	fileHead, err := c.FormFile("avatarfile")
 

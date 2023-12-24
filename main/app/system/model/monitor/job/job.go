@@ -61,7 +61,7 @@ type SelectPageReq struct {
 
 // 根据条件分页查询数据
 func SelectListByPage(param *SelectPageReq) (*[]Entity, *lv_web.Paging, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
@@ -135,7 +135,7 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *lv_web.Paging, error) {
 
 // 导出excel
 func SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return "", errors.New("获取数据库连接失败")
@@ -192,7 +192,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 
 // 获取所有数据
 func SelectListAll(param *SelectPageReq) ([]Entity, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -249,7 +249,7 @@ func SelectListAll(param *SelectPageReq) ([]Entity, error) {
 
 // 批量修改状态
 func UpdateState(ids, status string) (int64, error) {
-	db := db.Instance().Engine()
+	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return 0, errors.New("获取数据库连接失败")
