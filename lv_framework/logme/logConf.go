@@ -22,7 +22,10 @@ func InitLog(fileName string) {
 		panic(err)
 	}
 	pwd = pwd + "/logs"
-	lv_file.PathCreateIfNotExist(pwd)
+	err = lv_file.PathCreateIfNotExist(pwd)
+	if err != nil {
+		panic(err)
+	}
 	if log == nil {
 		log = logrus.New()
 	}
@@ -86,12 +89,7 @@ func FatalWithTrace(c *gin.Context, args ...interface{}) {
 	}).Fatal(args)
 }
 func Warn(args ...interface{}) {
-	ip := ""
-	traceId := ""
-	log.WithFields(logrus.Fields{
-		"ip":      ip,
-		"traceId": traceId,
-	}).Warn(args)
+	log.Warn(args)
 }
 
 func Info(args ...interface{}) {

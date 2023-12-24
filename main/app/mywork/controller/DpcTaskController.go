@@ -1,8 +1,8 @@
-//	==========================================================================
+//	=========================================================================
 //
-// LV自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：{{.table.CreateTime}}
-// 生成人：{{.table.FunctionAuthor}}
+// LV自动生成控制器相关代码，只生成一次，按需修改,默认再次生成不会覆盖.
+// date：2023-12-24 14:57:01 +0800 CST
+// author：lv
 // ==========================================================================
 package controller
 
@@ -47,13 +47,14 @@ func (w DpcTaskController) Edit(c *gin.Context) {
 //
 // api
 // =========================================================================
+
 // ListAjax 新增页面保存
 func (w DpcTaskController) ListAjax(c *gin.Context) {
 	req := new(vo.PageDpcTaskReq)
 	err := c.ShouldBind(req)
 	lv_logic.HasErrAndPanic(err)
-	taskService := service.DpcTaskService{}
-	result, total, _ := taskService.ListByPage(req)
+	var svc service.DpcTaskService
+	result, total, _ := svc.ListByPage(req)
 	lv_web.SucessPage(c, result, total)
 }
 
@@ -62,9 +63,10 @@ func (w DpcTaskController) AddSave(c *gin.Context) {
 	req := new(vo.AddDpcTaskReq)
 	err := c.ShouldBind(req)
 	lv_logic.HasErrAndPanic(err)
+	var svc service.DpcTaskService
+
 	var userService sysService.UserService
 	user := userService.GetProfile(c)
-	var svc service.DpcTaskService
 	id, err := svc.AddSave(req, user)
 	lv_logic.HasErrAndPanic(err)
 	lv_web.SucessData(c, id)
@@ -75,10 +77,11 @@ func (w DpcTaskController) EditSave(c *gin.Context) {
 	req := new(vo.EditDpcTaskReq)
 	err := c.ShouldBind(req)
 	lv_logic.HasErrAndPanic(err)
+	var svc service.DpcTaskService
+
 	var userService sysService.UserService
 	user := userService.GetProfile(c)
-	taskService := service.DpcTaskService{}
-	err = taskService.EditSave(req, user)
+	err = svc.EditSave(req, user)
 	lv_logic.HasErrAndPanic(err)
 	lv_web.Success(c, nil, "success")
 }
@@ -86,22 +89,20 @@ func (w DpcTaskController) EditSave(c *gin.Context) {
 // Remove 删除数据
 func (w DpcTaskController) Remove(c *gin.Context) {
 	req := new(model_cmn.RemoveReq)
-	if err := c.ShouldBind(req); err != nil {
-		panic(err)
-		return
-	}
-	taskService := service.DpcTaskService{}
-	rs := taskService.DeleteByIds(req.Ids)
+	err := c.ShouldBind(req)
+	lv_logic.HasErrAndPanic(err)
+	var svc service.DpcTaskService
+	rs := svc.DeleteByIds(req.Ids)
 	lv_web.SuccessData(c, rs)
 }
 
-// Export 导出
+// 导出
 func (w DpcTaskController) Export(c *gin.Context) {
 	req := new(vo.PageDpcTaskReq)
 	err := c.ShouldBind(req)
 	lv_logic.HasErrAndPanic(err)
-	taskService := service.DpcTaskService{}
-	url, err := taskService.ExportAll(req)
+	var svc service.DpcTaskService
+	url, err := svc.ExportAll(req)
 	lv_logic.HasErrAndPanic(err)
 	lv_web.SucessDataMsg(c, url, url)
 }

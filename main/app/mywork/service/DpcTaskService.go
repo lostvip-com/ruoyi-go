@@ -1,6 +1,6 @@
 // ==========================================================================
 // LV自动生成业务逻辑层相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：2023-12-17 19:23:47 +0800 CST
+// 生成日期：2023-12-24 14:57:01 +0800 CST
 // 生成人：lv
 // ==========================================================================
 package service
@@ -12,7 +12,7 @@ import (
 	"robvi/app/mywork/dao"
 	"robvi/app/mywork/model"
 	"robvi/app/mywork/vo"
-	"robvi/app/system/model/system/user"
+	sysmodel "robvi/app/system/model/system"
 	"time"
 )
 
@@ -40,8 +40,9 @@ func (svc DpcTaskService) DeleteByIds(ids string) int64 {
 }
 
 // AddSave 添加数据
-func (svc DpcTaskService) AddSave(req *vo.AddDpcTaskReq, user *user.SysUser) (int64, error) {
+func (svc DpcTaskService) AddSave(req *vo.AddDpcTaskReq, user *sysmodel.SysUser) (int64, error) {
 	var entity = new(model.DpcTask)
+
 	entity.Username = req.Username
 	entity.Password = req.Password
 	entity.PrjCode = req.PrjCode
@@ -52,22 +53,22 @@ func (svc DpcTaskService) AddSave(req *vo.AddDpcTaskReq, user *user.SysUser) (in
 	entity.AutoSubmit = req.AutoSubmit
 	entity.Status = req.Status
 	entity.Sort = req.Sort
-	entity.DelFlag = req.DelFlag
-	entity.DelFlag = "0"
+
 	entity.CreateTime = time.Now()
 	entity.UpdateTime = entity.CreateTime
-
 	entity.CreateBy = user.LoginName
+
 	err := entity.Save()
 	lv_logic.HasErrAndPanic(err)
 	return entity.Id, err
 }
 
 // EditSave 修改数据
-func (svc DpcTaskService) EditSave(req *vo.EditDpcTaskReq, user *user.SysUser) error {
+func (svc DpcTaskService) EditSave(req *vo.EditDpcTaskReq, user *sysmodel.SysUser) error {
 	entity := &model.DpcTask{Id: req.Id}
 	err := entity.FindById()
 	lv_logic.HasErrAndPanic(err)
+
 	entity.Username = req.Username
 	entity.Password = req.Password
 	entity.PrjCode = req.PrjCode
@@ -79,11 +80,7 @@ func (svc DpcTaskService) EditSave(req *vo.EditDpcTaskReq, user *user.SysUser) e
 	entity.Status = req.Status
 	entity.Sort = req.Sort
 	entity.UpdateTime = time.Now()
-	entity.UpdateBy = ""
-	if user == nil {
-		entity.UpdateBy = user.LoginName
-	}
-
+	entity.UpdateBy = user.LoginName
 	return entity.Updates()
 }
 
@@ -98,8 +95,8 @@ func (svc DpcTaskService) ExportAll(param *vo.PageDpcTaskReq) (string, error) {
 	var d dao.DpcTaskDao
 	listMap, err := d.ListAll(param)
 	lv_logic.HasErrAndPanic(err)
-	heads := []string{"ID", "工号", "密码", "项  目  号", "任务内容", "开始日期", "结束日期", "本月工时", "自动提交", "任务状态", "排序，大的优先", "删除标识1删除0未删除", "创建人", "创建时间", "更新者", "更新时间"}
-	cols := []string{"id", "username", "password", "prj_code", "task_content", "start_date", "end_date", "work_days", "auto_submit", "status", "sort", "del_flag", "create_by", "create_time", "update_by", "update_time"}
+	heads := []string{"", "工号", "密码", "项  目  号", "任务内容", "开始日期", "结束日期", "本月工时", "自动提交", "任务状态", "排序，大的优先", "删除标识1删除0未删除", "创建人", "更新者", "创建时间", "更新时间"}
+	cols := []string{"id", "username", "password", "prj_code", "task_content", "start_date", "end_date", "work_days", "auto_submit", "status", "sort", "del_flag", "create_by", "update_by", "create_time", "update_time"}
 	url, err := lv_office.DownlaodExcelByListMap(&heads, &cols, listMap)
 	return url, err
 }

@@ -7,18 +7,14 @@
 package model
 
 import (
-    "robvi/app/common/model_cmn"
     "lostvip.com/db"
 	"time"
 )
 
-// 数据表映射结构体
+// {{.table.ClassName}} {{.table.TableComment}}
 type {{.table.ClassName}} struct {
 {{- range $index, $column := .table.Columns -}}
 {{ if or (eq $column.GoField "CreateTime") (eq $column.GoField "CreateBy") -}}
-    {{- continue -}}
-{{- end -}}
-{{- if or (eq $column.GoField "UpdateTime") (eq $column.GoField "UpdateBy") -}}
     {{- continue -}}
 {{- end -}}
 {{- if or (eq $column.GoField "DelFlag") -}}
@@ -31,10 +27,11 @@ type {{.table.ClassName}} struct {
     {{$column.GoField}}  {{$column.GoType}}  `gorm:"{{$column.ColumnType}};comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}"`
 {{- end -}}
 {{- end }}
-    model_cmn.Model
+    CreateTime time.Time  `gorm:"column:create_time;type:datetime;comment:创建时间;" time_format:"2006-01-02 15:04:05" json:"createTime"  `
+    CreateBy   string     `gorm:"varchar(32);comment:创建人;" json:"createBy" form:"createBy"`
+    DelFlag    int        `gorm:"del_flag;default:0;comment:删除标记;" json:"delFlag"`
 }
 
-//映射数据表
 func (e *{{.table.ClassName}}) TableName() string {
 	return "{{.table.TbName}}"
 }

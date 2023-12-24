@@ -9,7 +9,7 @@ import (
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_secret"
 	"robvi/app/system/model/monitor/online"
-	"robvi/app/system/model/system/user"
+	"robvi/app/system/model/system"
 	logininforService "robvi/app/system/service/monitor/logininfor"
 	"strings"
 	"time"
@@ -24,9 +24,9 @@ func (svc *SessionService) IsSignedIn(tokenStr string) bool {
 }
 
 // 用户登录，成功返回用户信息，否则返回nil; passport应当会md5值字符串
-func (svc *SessionService) SignIn(loginnName, password string) (*user.SysUser, error) {
+func (svc *SessionService) SignIn(loginnName, password string) (*model.SysUser, error) {
 	//查询用户信息
-	user := user.SysUser{LoginName: loginnName}
+	user := model.SysUser{LoginName: loginnName}
 	ok, err := user.FindOne()
 
 	if err != nil {
@@ -64,7 +64,7 @@ func (svc *SessionService) ForceLogout(token string) error {
 	return nil
 }
 
-func (svc *SessionService) SaveUserToSession(token string, user *user.SysUser, c *gin.Context) {
+func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, c *gin.Context) {
 	// 保存用户信息到session
 	loginIp := c.ClientIP()
 	loginLocation := lv_net.GetCityByIp(loginIp)

@@ -1,0 +1,9 @@
+basePath: /api
+host: localhost
+info:
+  contact: {}
+  description: 生成文档请在调试模式下进行<a href="/tool/swagger?a=r">重新生成文档</a>
+  title: LV 自动生成API文档
+  version: "1.0"
+paths: {}
+swagger: "2.0"

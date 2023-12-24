@@ -94,7 +94,7 @@ func (w *GenController) Swagger(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/static/swagger/index.html")
 }
 
-// 自动生成文档 swag init -o /Volumes/File/WorkSpaces/app-yjzx/public/swagger
+// 自动生成文档 swag init -o static/swagger
 func (w *GenController) generateSwaggerFiles(output string) error {
 
 	cmd := exec.Command("swag", "init -o "+output)

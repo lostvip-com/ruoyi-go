@@ -5,7 +5,7 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/utils/lv_office"
 	"lostvip.com/utils/lv_web"
-	userModel "robvi/app/system/model/system/user"
+	userModel "robvi/app/system/model/system"
 	"time"
 	"xorm.io/builder"
 )

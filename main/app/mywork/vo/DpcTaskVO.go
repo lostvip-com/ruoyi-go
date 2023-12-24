@@ -1,6 +1,6 @@
 // ==========================================================================
 // LV自动生成model扩展代码列表 按需修改
-// 生成日期：2023-12-17 19:23:47 +0800 CST
+// 生成日期：2023-12-24 14:57:01 +0800 CST
 // 生成人：lv
 // ==========================================================================
 package vo
@@ -15,12 +15,12 @@ type AddDpcTaskReq struct {
 	Password    string    `form:"password"  `
 	PrjCode     string    `form:"prjCode"  `
 	TaskContent string    `form:"taskContent"  `
-	StartDate   time.Time `form:"startDate"   time_format:"2006-01-02" `
-	EndDate     time.Time `form:"endDate"   time_format:"2006-01-02" `
+	StartDate   time.Time `form:"startDate"  `
+	EndDate     time.Time `form:"endDate"  `
 	WorkDays    int64     `form:"workDays"  `
 	AutoSubmit  string    `form:"autoSubmit"  `
 	Status      string    `form:"status" binding:"required" `
-	Sort        int       `form:"sort"  `
+	Sort        int64     `form:"sort"  `
 	DelFlag     string    `form:"delFlag"  `
 }
 
@@ -31,12 +31,12 @@ type EditDpcTaskReq struct {
 	Password    string    `form:"password"  `
 	PrjCode     string    `form:"prjCode"  `
 	TaskContent string    `form:"taskContent"  `
-	StartDate   time.Time `form:"startDate"   time_format:"2006-01-02" `
-	EndDate     time.Time `form:"endDate"   time_format:"2006-01-02" `
+	StartDate   time.Time `form:"startDate"  `
+	EndDate     time.Time `form:"endDate"  `
 	WorkDays    int64     `form:"workDays"  `
 	AutoSubmit  string    `form:"autoSubmit"  `
 	Status      string    `form:"status" binding:"required" `
-	Sort        int       `form:"sort"  `
+	Sort        int64     `form:"sort"  `
 }
 
 // 分页请求参数

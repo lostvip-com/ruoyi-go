@@ -3,8 +3,6 @@ package server
 import (
 	"fmt"
 	"github.com/spf13/cast"
-	swaggerFiles "github.com/swaggo/files"
-	gs "github.com/swaggo/gin-swagger"
 	"html/template"
 	"lostvip.com/conf"
 	"lostvip.com/logme"
@@ -96,7 +94,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	// web 页面
 	/////////////////////////////////////////////////////////////////////////////////
 	routerBase := engine.Group(contextPath)
-	routerBase.GET("/swagger/*any", gs.DisablingWrapHandler(swaggerFiles.Handler, conf.KEY_SWAGGER_OFF))
+	//routerBase.GET("/swagger/*any", gs.DisablingWrapHandler(swaggerFiles.Handler, conf.KEY_SWAGGER_OFF))
 	tmp, _ := os.Getwd()
 	staticPath := tmp + "/static"
 	fmt.Println("设置静态目录：" + staticPath)
