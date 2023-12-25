@@ -22,6 +22,7 @@ type GenTable struct {
 	UpdateBy       string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`
 	UpdateTime     time.Time `json:"update_time" xorm:"comment('更新时间') DATETIME"`
 	Remark         string    `json:"remark" xorm:"comment('备注') VARCHAR(500)"`
+	HasEditTime    string    `xorm:"-"` //1需要导入time.Time 0 不需要
 }
 
 // 映射数据表

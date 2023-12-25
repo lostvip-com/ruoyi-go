@@ -26,7 +26,7 @@ type HisDataController struct {
 func (w HisDataController) SugSite(c *gin.Context) {
 	fmt.Println("=============SugSite start==================")
 	query := "q=" + url.QueryEscape(c.Query("q"))
-	url := "http://gateway1:8888/iotsettings/navtree/site"
+	url := "http://iot-gateway:8888/iotsettings/navtree/site"
 	lv_net.ProxyWithUrlDifferent(c, url, query)
 	fmt.Println("=============SugSite over==================")
 }
@@ -36,7 +36,7 @@ func (w HisDataController) SugSite(c *gin.Context) {
  * "http://gateway1:8888/datasyn/hisDataController/copy_his_2_aggDevPowerDay"
  */
 func (w HisDataController) CopyCsv2His(c *gin.Context) {
-	host := "gateway1:8888"
+	host := "iot-gateway:8888"
 	fmt.Println("=============copy_his_2_aggDevPowerDay start================" + host)
 	lv_net.ProxyWithUrlSame(c, host)
 	fmt.Println("=========copy_his_2_aggDevPowerDay over==================")

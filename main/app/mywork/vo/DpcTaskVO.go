@@ -6,47 +6,49 @@
 package vo
 
 import (
-	"time"
+"time"
 )
 
-// 新增页面请求参数
+//新增页面请求参数
 type AddDpcTaskReq struct {
-	Username    string    `form:"username" binding:"required" `
-	Password    string    `form:"password"  `
-	PrjCode     string    `form:"prjCode"  `
-	TaskContent string    `form:"taskContent"  `
-	StartDate   time.Time `form:"startDate"  `
-	EndDate     time.Time `form:"endDate"  `
-	WorkDays    int64     `form:"workDays"  `
-	AutoSubmit  string    `form:"autoSubmit"  `
-	Status      string    `form:"status" binding:"required" `
-	Sort        int64     `form:"sort"  `
-	DelFlag     string    `form:"delFlag"  `
+	Username string `form:"username" binding:"required" `
+	Password string `form:"password"  `
+	PrjCode string `form:"prjCode"  `
+	TaskContent string `form:"taskContent"  `
+	StartDate time.Time `form:"startDate"  `
+	EndDate time.Time `form:"endDate"  `
+	WorkDays int64 `form:"workDays"  `
+	AutoSubmit string `form:"autoSubmit"  `
+	Status string `form:"status" binding:"required" `
+	Sort int64 `form:"sort"  `
+	DelFlag string `form:"delFlag"  `
+    CreateBy string
 }
 
-// 修改页面请求参数
+//修改页面请求参数
 type EditDpcTaskReq struct {
-	Id          int64     `form:"id" binding:"required"`
-	Username    string    `form:"username" binding:"required" `
-	Password    string    `form:"password"  `
-	PrjCode     string    `form:"prjCode"  `
-	TaskContent string    `form:"taskContent"  `
-	StartDate   time.Time `form:"startDate"  `
-	EndDate     time.Time `form:"endDate"  `
-	WorkDays    int64     `form:"workDays"  `
-	AutoSubmit  string    `form:"autoSubmit"  `
-	Status      string    `form:"status" binding:"required" `
-	Sort        int64     `form:"sort"  `
+      Id    int64  `form:"id" binding:"required"`    
+      Username  string `form:"username" binding:"required" `   
+      Password  string `form:"password"  `   
+      PrjCode  string `form:"prjCode"  `   
+      TaskContent  string `form:"taskContent"  `   
+      StartDate  time.Time `form:"startDate"  `   
+      EndDate  time.Time `form:"endDate"  `   
+      WorkDays  int64 `form:"workDays"  `   
+      AutoSubmit  string `form:"autoSubmit"  `   
+      Status  string `form:"status" binding:"required" `   
+      Sort  int64 `form:"sort"  `            
+      UpdateBy string
 }
 
-// 分页请求参数
+//分页请求参数 
 type PageDpcTaskReq struct {
-	Username    string `form:"username"`    //工号
-	Password    string `form:"password"`    //密码
-	PrjCode     string `form:"prjCode"`     //项  目  号
+	Username string `form:"username"` //工号
+	Password string `form:"password"` //密码
+	PrjCode string `form:"prjCode"` //项  目  号
 	TaskContent string `form:"taskContent"` //任务内容
-	BeginTime   string `form:"beginTime"`   //开始时间
-	EndTime     string `form:"endTime"`     //结束时间
-	PageNum     int    `form:"pageNum"`     //当前页码
-	PageSize    int    `form:"pageSize"`    //每页数
+	BeginTime  string `form:"beginTime"`  //开始时间
+	EndTime    string `form:"endTime"`    //结束时间
+	PageNum    int    `form:"pageNum"`    //当前页码
+	PageSize   int    `form:"pageSize"`   //每页数
 }

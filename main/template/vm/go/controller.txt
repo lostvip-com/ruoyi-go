@@ -64,7 +64,8 @@ func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
 
     var userService sysService.UserService
     user := userService.GetProfile(c)
-	id, err := svc.AddSave(req, user)
+    req.CreateBy = user.LoginName
+	id, err := svc.AddSave(req)
     lv_logic.HasErrAndPanic(err)
 	lv_web.SucessData(c, id)
 }
@@ -75,10 +76,10 @@ func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
 	err := c.ShouldBind(req)
     lv_logic.HasErrAndPanic(err)
     var svc service.{{.table.ClassName}}Service
-
     var userService sysService.UserService
     user := userService.GetProfile(c)
-	err = svc.EditSave(req, user)
+    req.UpdateBy = user.LoginName
+	err = svc.EditSave(req)
 	lv_logic.HasErrAndPanic(err)
 	lv_web.Success(c, nil, "success")
 }

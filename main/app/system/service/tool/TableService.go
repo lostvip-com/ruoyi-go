@@ -193,11 +193,15 @@ func (svc TableService) SetTableFromOptions(entity *tool.EntityExtend) {
 // 设置主键列信息
 func (svc TableService) SetPkColumn(table *tool.EntityExtend, columns []tool.Entity) {
 	for _, column := range columns {
+		//是否存在 需要编辑的时间字段 time.Time类型
+		if column.GoType == "time.Time" && column.IsEdit == "1" {
+			table.HasEditTime = "1"
+		}
+
 		if column.IsPk == "1" {
 			table.PkColumn = column
-			break
 		}
-	}
+	} //end for
 	if &(table.PkColumn) == nil {
 		table.PkColumn = columns[0]
 	}

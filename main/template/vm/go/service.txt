@@ -13,7 +13,6 @@ import (
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/model"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/dao"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
-    sysmodel "{{.table.PackageName}}/app/system/model/system"
 )
 type {{.table.ClassName}}Service struct{}
 // FindById 根据主键查询数据
@@ -38,7 +37,7 @@ func (svc {{.table.ClassName}}Service) DeleteByIds(ids string) int64 {
 }
 
 // AddSave 添加数据
-func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Req,user *sysmodel.SysUser) ({{.table.PkColumn.GoType}}, error) {
+func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Req) ({{.table.PkColumn.GoType}}, error) {
 	var entity = new(model.{{.table.ClassName}})
 	{{range $index, $column := .table.Columns}}
 	{{- if or (eq $column.GoField "DelFlag") -}}
@@ -48,23 +47,21 @@ func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Re
 	{{end}}
 	entity.CreateTime = time.Now()
 	entity.UpdateTime = entity.CreateTime
-	entity.CreateBy = user.LoginName
-
+	entity.CreateBy = req.CreateBy
 	err := entity.Save()
 	lv_logic.HasErrAndPanic(err)
 	return entity.{{.table.PkColumn.GoField}}, err
 }
 
 // EditSave 修改数据
-func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}Req, user *sysmodel.SysUser) error {
+func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}Req) error {
 	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
 	err := entity.FindById()
     lv_logic.HasErrAndPanic(err)
-
 	{{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}}
 	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
 	entity.UpdateTime = time.Now()
-	entity.UpdateBy = user.LoginName
+	entity.UpdateBy = req.UpdateBy
 	return entity.Updates()
 }
 
