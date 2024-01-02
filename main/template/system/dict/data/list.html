@@ -73,19 +73,19 @@
                 checkbox: true
             },
                 {
-                    field: 'dict_code',
+                    field: 'dictCode',
                     title: '字典编码'
                 },
                 {
-                    field: 'dict_label',
+                    field: 'dictLabel',
                     title: '字典标签'
                 },
                 {
-                    field: 'dict_value',
+                    field: 'dictValue',
                     title: '字典键值'
                 },
                 {
-                    field: 'dict_sort',
+                    field: 'dictSort',
                     title: '字典排序'
                 },
                 {
@@ -101,7 +101,7 @@
                     title: '备注'
                 },
                 {
-                    field: 'create_time',
+                    field: 'createTime',
                     title: '创建时间',
                     sortable: true,
                     formatter:function (value,row,index) {
@@ -113,8 +113,8 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dict_code + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dict_code + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dictCode + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dictCode + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]

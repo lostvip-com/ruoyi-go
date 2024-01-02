@@ -6,14 +6,14 @@ import (
 )
 
 type Entity struct {
-	DictId     int64     `json:"dict_id" xorm:"not null pk autoincr comment('字典主键') BIGINT(20)"`
-	DictName   string    `json:"dict_name" xorm:"default '' comment('字典名称') VARCHAR(100)"`
-	DictType   string    `json:"dict_type" xorm:"default '' comment('字典类型') unique VARCHAR(100)"`
+	DictId     int64     `json:"dictId" xorm:"not null pk autoincr comment('字典主键') BIGINT(20)"`
+	DictName   string    `json:"dictName" xorm:"default '' comment('字典名称') VARCHAR(100)"`
+	DictType   string    `json:"dictType" xorm:"default '' comment('字典类型') unique VARCHAR(100)"`
 	Status     string    `json:"status" xorm:"default '0' comment('状态（0正常 1停用）') CHAR(1)"`
-	CreateBy   string    `json:"create_by" xorm:"default '' comment('创建者') VARCHAR(64)"`
-	CreateTime time.Time `json:"create_time" xorm:"comment('创建时间') DATETIME"`
-	UpdateBy   string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`
-	UpdateTime time.Time `json:"update_time" xorm:"comment('更新时间') DATETIME"`
+	CreateBy   string    `json:"createBy" xorm:"default '' comment('创建者') VARCHAR(64)"`
+	CreateTime time.Time `json:"createTime" xorm:"comment('创建时间') DATETIME"`
+	UpdateBy   string    `json:"updateBy" xorm:"default '' comment('更新者') VARCHAR(64)"`
+	UpdateTime time.Time `json:"updateTime" xorm:"comment('更新时间') DATETIME"`
 	Remark     string    `json:"remark" xorm:"comment('备注') VARCHAR(500)"`
 }
 

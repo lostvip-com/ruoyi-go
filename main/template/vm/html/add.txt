@@ -15,7 +15,7 @@ LV自动生成新增页面代码,只生成一次,按需修改.
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-{{$businessName}}-add">  {{range $index, $column := .table.Columns}} {{if and (eq $column.IsInsert "1") (ne $column.IsPk "1")}}
-            {{if and (ne $treeParentCode "") (eq $column.ColumnName $treeParentCode)}}
+            {{if and (ne $treeParentCode "") (eq $column.HtmlField $treeParentCode)}}
                 <div class="form-group">
                     <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>
                     <div class="col-sm-8">

@@ -2,8 +2,8 @@
 <!--
 ==========================================================================
 LV自动生成修改页面代码,只生成一次,按需修改.
-生成日期：2024-01-02 15:43:10 +0800 CST
-生成路径: template/mywork/task/edit.html
+生成日期：2024-01-02 15:41:17 +0800 CST
+生成路径: template/mywork/table/edit.html
 生成人：lv
 ==========================================================================
 -->
@@ -14,103 +14,107 @@ LV自动生成修改页面代码,只生成一次,按需修改.
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-    <form class="form-horizontal m" id="form-task-edit">
-        <input name="id" value="{{.task.Id}}" type="hidden">
+    <form class="form-horizontal m" id="form-table-edit">
+        <input name="id" value="{{.table.Id}}" type="hidden">
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">工号：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <textarea name="username" class="form-control"
-                              required>{{.task.Username}}</textarea>
+                    <input name="username" value="{{.table.Username}}" class="form-control"  type="text" required>
                 </div>
-            </div>     
+            </div>
+            
             <div class="form-group">
-                <label class="col-sm-3 control-label">密码：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <textarea name="password" class="form-control"
-                              >{{.task.Password}}</textarea>
+                    <input name="password" value="{{.table.Password}}" class="form-control"  type="text" >
                 </div>
-            </div>     
+            </div>
+            
             <div class="form-group">
-                <label class="col-sm-3 control-label">项  目  号：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <textarea name="prjCode" class="form-control"
-                              >{{.task.PrjCode}}</textarea>
+                    <input name="taskContent" value="{{.table.TaskContent}}" class="form-control"  type="text" >
                 </div>
-            </div>     
+            </div>
+            
             <div class="form-group">
-                <label class="col-sm-3 control-label">任务内容：</label>
-                <div class="col-sm-8">
-                    <textarea name="taskContent" class="form-control"
-                              >{{.task.TaskContent}}</textarea>
-                </div>
-            </div>     
-            <div class="form-group">
-                <label class="col-sm-3 control-label">开始日期：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="startDate" value="{{.task.StartDate}}" class="form-control"
+                        <input name="startDate" value="{{.table.StartDate}}" class="form-control"
                                placeholder="yyyy-MM-dd" type="text" >
                     </div>
                 </div>
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">结束日期：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="endDate" value="{{.task.EndDate}}" class="form-control"
+                        <input name="endDate" value="{{.table.EndDate}}" class="form-control"
                                placeholder="yyyy-MM-dd" type="text" >
                     </div>
                 </div>
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">本月工时：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <input name="workDays" value="{{.task.WorkDays}}" class="form-control"  type="text" >
+                    <input name="workDays" value="{{.table.WorkDays}}" class="form-control"  type="text" >
                 </div>
             </div>
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">自动提交：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <textarea name="autoSubmit" class="form-control"
-                              >{{.task.AutoSubmit}}</textarea>
+                    <input name="autoSubmit" value="{{.table.AutoSubmit}}" class="form-control"  type="text" >
                 </div>
-            </div>       
+            </div>
+              
             <div class="form-group">
-                <label class="col-sm-3 control-label">任务状态：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
                     {{getDictTypeRadio "sys_normal_disable" "status" "Status"}}
                 </div>
             </div>  
             
             <div class="form-group">
-                <label class="col-sm-3 control-label">排序，大的优先：</label>
+                <label class="col-sm-3 control-label">：</label>
                 <div class="col-sm-8">
-                    <input name="sort" value="{{.task.Sort}}" class="form-control"  type="text" >
+                    <input name="sort" value="{{.table.Sort}}" class="form-control"  type="text" >
                 </div>
             </div>
-                    
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="updateTime" value="{{.table.UpdateTime}}" class="form-control"
+                               placeholder="yyyy-MM-dd" type="text" >
+                    </div>
+                </div>
+            </div>
+          
     </form>
 </div>
 {{template "footer" (OssUrl)}}
 <script src="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
-    var prefix = ctx + "/mywork/task";
-    $("#form-task-edit").validate({
+    var prefix = ctx + "/mywork/table";
+    $("#form-table-edit").validate({
         focusCleanup: true
     });
 
     function submitHandler() {
         if ($.validate.form()) {
-            $.operate.save(prefix + "/edit", $('#form-task-edit').serialize());
+            $.operate.save(prefix + "/edit", $('#form-table-edit').serialize());
         }
     }
-                          
+                      
     $("input[name='startDate']").datetimepicker({
         format: "yyyy-mm-dd",
         minView: "month",
@@ -122,19 +126,13 @@ LV自动生成修改页面代码,只生成一次,按需修改.
         minView: "month",
         autoclose: true
     });
-                            
+                        
     $("input[name='updateTime']").datetimepicker({
         format: "yyyy-mm-dd",
         minView: "month",
         autoclose: true
     });
-        
-    $("input[name='createTime']").datetimepicker({
-        format: "yyyy-mm-dd",
-        minView: "month",
-        autoclose: true
-    });
-              
+      
     
 </script>
 </body>

@@ -109,6 +109,6 @@ func SelectListByPage(params *dict_data.SelectPageReq) (*[]dict_data.Entity, *lv
 // 导出excel
 func Export(param *dict_data.SelectPageReq) (string, error) {
 	head := []string{"字典编码", "字典排序", "字典标签", "字典键值", "字典类型", "样式属性", "表格回显样式", "是否默认", "状态", "创建者", "创建时间", "更新者", "更新时间", "备注"}
-	col := []string{"dict_code", "dict_sort", "dict_label", "dict_value", "dict_type", "css_class", "list_class", "is_default", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
+	col := []string{"dictCode", "dictSort", "dict_label", "dict_value", "dict_type", "css_class", "list_class", "is_default", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
 	return dict_data.SelectListExport(param, head, col)
 }

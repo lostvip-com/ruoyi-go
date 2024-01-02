@@ -2,8 +2,8 @@
 <!--
 ==========================================================================
 LV自动生成列表页面代码,只生成一次,按需修改.
-生成日期：2024-01-02 15:43:10 +0800 CST
-生成路径: template/mywork/task/list.html
+生成日期：2024-01-02 15:41:17 +0800 CST
+生成路径: template/mywork/table/list.html
 生成人：lv
 ==========================================================================
 -->
@@ -17,7 +17,28 @@ LV自动生成列表页面代码,只生成一次,按需修改.
         <div class="col-sm-12 search-collapse">
             <form id="formId">
                 <div class="select-list">
-                    <ul>                                        
+                    <ul>    
+                        <li>
+                            <p>：</p>
+                            <input type="text" name="username"/>
+                        </li>
+                            
+                        <li>
+                            <p>：</p>
+                            <input type="text" name="password"/>
+                        </li>
+                            
+                        <li>
+                            <p>：</p>
+                            <input type="text" name="taskContent"/>
+                        </li>
+                            
+                        <li class="select-time">
+                            <p>：</p>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+                        </li>                
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                             <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -28,10 +49,10 @@ LV自动生成列表页面代码,只生成一次,按需修改.
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            {{getPermiButton .uid "mywork:task:add" "$.operate.addFull()" "新增" "btn btn-success" "fa fa-plus"}}
-            {{getPermiButton .uid "mywork:task:edit" "$.operate.editFull()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
-            {{getPermiButton .uid "mywork:task:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
-            {{getPermiButton .uid "mywork:task:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
+            {{getPermiButton .uid "mywork:table:add" "$.operate.addFull()" "新增" "btn btn-success" "fa fa-plus"}}
+            {{getPermiButton .uid "mywork:table:edit" "$.operate.editFull()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
+            {{getPermiButton .uid "mywork:table:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
+            {{getPermiButton .uid "mywork:table:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -40,11 +61,11 @@ LV自动生成列表页面代码,只生成一次,按需修改.
 </div>
 {{template "footer" (OssUrl)}}
 <script type="text/javascript">
-    var editFlag = '{{hasPermi .uid "mywork:task:edit"}}';
-    var removeFlag = '{{hasPermi .uid "mywork:task:remove"}}';
+    var editFlag = '{{hasPermi .uid "mywork:table:edit"}}';
+    var removeFlag = '{{hasPermi .uid "mywork:table:remove"}}';
 
-                         var statusDatas = {{getDictTypeData "sys_normal_disable"}};              
-    var prefix = ctx + "/mywork/task";
+                       var statusDatas = {{getDictTypeData "sys_normal_disable"}};      
+    var prefix = ctx + "/mywork/table";
 
     $(function () {
         var options = {
@@ -53,7 +74,7 @@ LV自动生成列表页面代码,只生成一次,按需修改.
             updateUrl: prefix + "/edit?id={id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            modalName: "task",
+            modalName: "table",
             columns: [
                 {
                     checkbox: true
@@ -65,47 +86,47 @@ LV自动生成列表页面代码,只生成一次,按需修改.
                 },     
                 {
                     field: 'username',
-                    title: '工号'
+                    title: ''
                 },      
                 {
                     field: 'password',
-                    title: '密码'
-                },      
-                {
-                    field: 'prjCode',
-                    title: '项  目  号'
+                    title: ''
                 },      
                 {
                     field: 'taskContent',
-                    title: '任务内容'
+                    title: ''
                 },      
                 {
                     field: 'startDate',
-                    title: '开始日期'
+                    title: ''
                 },      
                 {
                     field: 'endDate',
-                    title: '结束日期'
+                    title: ''
                 },      
                 {
                     field: 'workDays',
-                    title: '本月工时'
+                    title: ''
                 },      
                 {
                     field: 'autoSubmit',
-                    title: '自动提交'
+                    title: ''
                 },      
                 {
                     field: 'status',
-                    title: '任务状态',
+                    title: '',
                     formatter: function (value, row, index) {
                         return $.table.selectDictLabel(statusDatas, value);
                     }
                 },       
                 {
                     field: 'sort',
-                    title: '排序，大的优先'
-                },              
+                    title: ''
+                },      
+                {
+                    field: 'updateTime',
+                    title: ''
+                },    
                 {
                     title: '操作',
                     align: 'center',

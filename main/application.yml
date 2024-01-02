@@ -11,8 +11,8 @@ go:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
-    #master: "root:qwer1234@tcp(127.0.0.1:3307)/ruoyi-go?charset=utf8"
-    master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:3306)/ruoyi-go?charset=utf8"}
+    master: "root:Ssz123456!@tcp(127.0.0.1:3307)/ruoyi-go?charset=utf8"
+    #master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:3306)/ruoyi-go?charset=utf8"}
     slave: ""
 
 gen:

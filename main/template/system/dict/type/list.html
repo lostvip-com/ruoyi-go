@@ -66,27 +66,27 @@
             updateUrl: prefix + "/edit?id={id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            sortName: "create_time",
+            sortName: "dict_id",
             sortOrder: "desc",
             modalName: "类型",
             columns: [{
                 checkbox: true
             },
                 {
-                    field: 'dict_id',
+                    field: 'dictId',
                     title: '字典主键'
                 },
                 {
-                    field: 'dict_name',
+                    field: 'dictName',
                     title: '字典名称',
                     sortable: true
                 },
                 {
-                    field: 'dict_type',
+                    field: 'dictType',
                     title: '字典类型',
                     sortable: true,
                     formatter: function (value, row, index) {
-                        return '<a href="javascript:void(0)" onclick="detail(\'' + row.dict_id + '\')">' + value + '</a>';
+                        return '<a href="javascript:void(0)" onclick="detail(\'' + row.dictId + '\')">' + value + '</a>';
                     }
                 },
                 {
@@ -102,7 +102,7 @@
                     title: '备注'
                 },
                 {
-                    field: 'create_time',
+                    field: 'createTime',
                     title: '创建时间',
                     sortable: true,
                     formatter:function (value,row,index) {
@@ -114,9 +114,9 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dict_id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-info btn-xs ' + listFlag + '" href="javascript:void(0)" onclick="detail(\'' + row.dict_id + '\')"><i class="fa fa-list-ul"></i>列表</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dict_id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dictId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-info btn-xs ' + listFlag + '" href="javascript:void(0)" onclick="detail(\'' + row.dictId + '\')"><i class="fa fa-list-ul"></i>列表</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dictId + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]
