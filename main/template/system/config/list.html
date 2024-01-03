@@ -71,29 +71,29 @@
                 checkbox: true
             },
                 {
-                    field: 'config_id',
+                    field: 'configId',
                     title: '参数主键'
                 },
                 {
-                    field: 'config_name',
+                    field: 'configName',
                     title: '参数名称',
                     formatter: function (value, row, index) {
                         return $.table.tooltip(value);
                     }
                 },
                 {
-                    field: 'config_key',
+                    field: 'configKey',
                     title: '参数键名',
                     formatter: function (value, row, index) {
                         return $.table.tooltip(value);
                     }
                 },
                 {
-                    field: 'config_value',
+                    field: 'configValue',
                     title: '参数键值'
                 },
                 {
-                    field: 'config_type',
+                    field: 'configType',
                     title: '系统内置',
                     align: 'center',
                     formatter: function (value, row, index) {
@@ -109,7 +109,7 @@
                     }
                 },
                 {
-                    field: 'create_time',
+                    field: 'createTime',
                     title: '创建时间',
                     formatter:function (value,row,index) {
                         return value;
@@ -120,8 +120,8 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.config_id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.config_id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.configId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.configId + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]

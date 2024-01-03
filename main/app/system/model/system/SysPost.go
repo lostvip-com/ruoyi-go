@@ -10,7 +10,7 @@ type SysPost struct {
 	Status   string `json:"status" gorm:"not null comment:状态（0正常 1停用）;CHAR(1)"`
 	CreateBy string `json:"createBy" gorm:"default '' comment:创建者;VARCHAR(64)"`
 	Remark   string `json:"remark" gorm:"comment:备注;VARCHAR(500)"`
-	TenantId int64  `json:"tenant_id" gorm:"default 0 comment:租户id;BIGINT(20)"`
+	TenantId int64  `json:"tenantId" gorm:"default 0 comment:租户id;BIGINT(20)"`
 	model_cmn.Model
 }
 

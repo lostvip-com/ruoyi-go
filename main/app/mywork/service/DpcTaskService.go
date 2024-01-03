@@ -1,6 +1,6 @@
 // ==========================================================================
 // LV自动生成业务逻辑层相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：2023-12-24 14:57:01 +0800 CST
+// 生成日期：2024-01-03 21:50:54 +0800 CST
 // 生成人：lv
 // ==========================================================================
 package service
@@ -95,8 +95,8 @@ func (svc DpcTaskService) ExportAll(param *vo.PageDpcTaskReq) (string, error) {
     var d dao.DpcTaskDao
     listMap, err := d.ListAll(param)
     lv_logic.HasErrAndPanic(err)
-	heads := []string{  "" ,"工号" ,"密码" ,"项  目  号" ,"任务内容" ,"开始日期" ,"结束日期" ,"本月工时" ,"自动提交" ,"任务状态" ,"排序，大的优先" ,"删除标识1删除0未删除" ,"创建人" ,"更新者" ,"创建时间" ,"更新时间"}
-	cols := []string{  "id" ,"username" ,"password" ,"prj_code" ,"task_content" ,"start_date" ,"end_date" ,"work_days" ,"auto_submit" ,"status" ,"sort" ,"del_flag" ,"create_by" ,"update_by" ,"create_time" ,"update_time"}
+	heads := []string{  "" ,"工号" ,"密码" ,"项  目  号" ,"任务内容" ,"开始日期" ,"结束日期" ,"本月工时" ,"自动提交" ,"任务状态" ,"排序，大的优先" ,"更新者" ,"更新时间" ,"创建时间" ,"创建人" ,"删除标记"}
+	cols := []string{  "id" ,"username" ,"password" ,"prj_code" ,"task_content" ,"start_date" ,"end_date" ,"work_days" ,"auto_submit" ,"status" ,"sort" ,"update_by" ,"update_time" ,"create_time" ,"create_by" ,"del_flag"}
 	url, err := lv_office.DownlaodExcelByListMap(&heads, &cols, listMap)
 	return url, err
 }

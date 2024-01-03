@@ -2,34 +2,34 @@
 
 -- name: ListByPage
 select
-  t.id id
-  , t.username username
-  , t.password password
-  , t.prj_code prjCode
-  , t.task_content taskContent
-  , t.start_date startDate
-  , t.end_date endDate
-  , t.work_days workDays
-  , t.auto_submit autoSubmit
-  , t.status status
-  , t.sort sort
-  , t.del_flag delFlag
-  , t.create_by createBy
-  , t.update_by updateBy
-  , t.create_time createTime
-  , t.update_time updateTime
+  t.id
+  , t.username
+  , t.password
+  , t.prj_code
+  , t.task_content
+  , t.start_date
+  , t.end_date
+  , t.work_days
+  , t.auto_submit
+  , t.status
+  , t.sort
+  , t.update_by
+  , t.update_time
+  , t.create_time
+  , t.create_by
+  , t.del_flag
 
 from dpc_task t where 1=1 and del_flag=0
 
     {{if and (ne .Username "")  (ne .Username nil) }}
-        and  t.username = @username
+        and  t.username like concat('%', @username,'%')
     {{end}}
     {{if and (ne .Password "")  (ne .Password nil) }}
-        and  t.password = @password
+        and  t.password like concat('%', @password,'%')
     {{end}}
     {{if and (ne .PrjCode "")  (ne .PrjCode nil) }}
-        and  t.prj_code = @prjCode
+        and  t.prj_code like concat('%', @prjCode,'%')
     {{end}}
     {{if and (ne .TaskContent "")  (ne .TaskContent nil) }}
-        and  t.task_content = @taskContent
+        and  t.task_content like concat('%', @taskContent,'%')
     {{end}}

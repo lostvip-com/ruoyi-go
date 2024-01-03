@@ -13,15 +13,15 @@ import (
 // Fill with you ideas below.
 // SysPost is the golang structure for table sys_post.
 type EntityFlag struct {
-	PostId     int64     `json:"post_id" xorm:"not null pk autoincr comment('岗位ID') BIGINT(20)"`
-	PostCode   string    `json:"post_code" xorm:"not null comment('岗位编码') VARCHAR(64)"`
-	PostName   string    `json:"post_name" xorm:"not null comment('岗位名称') VARCHAR(50)"`
-	PostSort   int       `json:"post_sort" xorm:"not null comment('显示顺序') INT(4)"`
+	PostId     int64     `json:"postId" xorm:"not null pk autoincr comment('岗位ID') BIGINT(20)"`
+	PostCode   string    `json:"postCode" xorm:"not null comment('岗位编码') VARCHAR(64)"`
+	PostName   string    `json:"postName" xorm:"not null comment('岗位名称') VARCHAR(50)"`
+	PostSort   int       `json:"postSort" xorm:"not null comment('显示顺序') INT(4)"`
 	Status     string    `json:"status" xorm:"not null comment('状态（0正常 1停用）') CHAR(1)"`
-	CreateBy   string    `json:"create_by" xorm:"default '' comment('创建者') VARCHAR(64)"`
-	CreateTime time.Time `json:"create_time" xorm:"comment('创建时间') DATETIME"`
-	UpdateBy   string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`
-	UpdateTime time.Time `json:"update_time" xorm:"comment('更新时间') DATETIME"`
+	CreateBy   string    `json:"createBy" xorm:"default '' comment('创建者') VARCHAR(64)"`
+	CreateTime time.Time `json:"createTime" xorm:"comment('创建时间') DATETIME"`
+	UpdateBy   string    `json:"updateBy" xorm:"default '' comment('更新者') VARCHAR(64)"`
+	UpdateTime time.Time `json:"updateTime" xorm:"comment('更新时间') DATETIME"`
 	Remark     string    `json:"remark" xorm:"comment('备注') VARCHAR(500)"`
 	Flag       bool      `json:"flag"` // 标记
 }

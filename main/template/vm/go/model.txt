@@ -21,19 +21,21 @@ type {{.table.ClassName}} struct {
     {{- continue -}}
 {{- end -}}
 {{- if eq $column.IsPk "1" }}
-    {{$column.GoField}}  {{$column.GoType}}  `gorm:"primary_key;auto_increment;{{$column.ColumnComment}};"     json:"{{$column.HtmlField}}"  form:"{{$column.HtmlField}}"`
+    {{$column.GoField}}  {{$column.GoType}}  `gorm:"type:{{$column.ColumnType}};primary_key;auto_increment;{{$column.ColumnComment}};"     json:"{{$column.HtmlField}}"  form:"{{$column.HtmlField}}"`
 {{- end -}}
 {{- if ne $column.IsPk "1" }}
-    {{- if eq $column.GoType "time.Time" }}
-    {{$column.GoField}} time.Time `gorm:"datetime;comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}" time_format:"2006-01-02 15:04:05"`
+    {{- if eq $column.ColumnType "datetime" }}
+    {{$column.GoField}} time.Time `gorm:"type:datetime;comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}" time_format:"2006-01-02 15:04:05"`
+    {{- else if eq $column.ColumnType "date" }}
+    {{$column.GoField}} time.Time `gorm:"type:date;comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}" time_format:"2006-01-02"`
     {{- else }}
-    {{$column.GoField}}  {{$column.GoType}}  `gorm:"{{$column.ColumnType}};comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}"`
+    {{$column.GoField}}  {{$column.GoType}}  `gorm:"type:{{$column.ColumnType}};comment:{{$column.ColumnComment}};" json:"{{$column.HtmlField}}" form:"{{$column.HtmlField}}"`
     {{- end -}}
 {{- end -}}
 {{- end }}
-    CreateTime time.Time  `gorm:"column:create_time;type:datetime;comment:创建时间;" time_format:"2006-01-02 15:04:05" json:"createTime"  `
-    CreateBy   string     `gorm:"varchar(32);comment:创建人;" json:"createBy" form:"createBy"`
-    DelFlag    int        `gorm:"del_flag;default:0;comment:删除标记;" json:"delFlag"`
+    CreateTime time.Time  `gorm:"type:datetime;comment:创建时间;"  column:create_time; time_format:"2006-01-02 15:04:05" json:"createTime"  `
+    CreateBy   string     `gorm:"type:varchar(32);comment:创建人;" column:create_by; json:"createBy" form:"createBy"`
+    DelFlag    int        `gorm:"type:tinyint(1);default:0;comment:删除标记;" column:del_flag; json:"delFlag"`
 }
 
 func (e *{{.table.ClassName}}) TableName() string {

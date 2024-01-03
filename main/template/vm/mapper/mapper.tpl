@@ -3,7 +3,7 @@
 -- name: ListByPage
 select
  {{- range $index, $column := .table.Columns}}
- {{if ne $index 0}} ,{{end}} t.{{$column.ColumnName}} {{$column.HtmlField}}
+ {{if ne $index 0}} ,{{end}} t.{{$column.ColumnName}}
  {{- end }}
 
 from {{.table.TbName}} t where 1=1 and del_flag=0

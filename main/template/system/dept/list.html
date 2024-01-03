@@ -50,9 +50,9 @@
 
     $(function () {
         var options = {
-            code: "dept_id",
-            parentCode: "parent_id",
-            uniqueId: "dept_id",
+            code: "deptId",
+            parentCode: "parentId",
+            uniqueId: "deptId",
             url: prefix + "/list",
             createUrl: prefix + "/add?pid={id}",
             updateUrl: prefix + "/edit?id={id}",
@@ -63,12 +63,12 @@
                 radio: true
             },
                 {
-                    field: 'dept_name',
+                    field: 'deptName',
                     title: '部门名称',
                     align: "left"
                 },
                 {
-                    field: 'order_num',
+                    field: 'orderNum',
                     title: '排序',
                     align: "left"
                 },
@@ -81,7 +81,7 @@
                     }
                 },
                 {
-                    field: 'create_time',
+                    field: 'createTime',
                     title: '创建时间',
                     align: "left",
                     formatter:function (value,row,index) {
@@ -94,9 +94,9 @@
                     formatter: function (value, row, index) {
                         if (row.parentId != 0) {
                             var actions = [];
-                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dept_id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                            actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.dept_id + '\')"><i class="fa fa-plus"></i>新增</a> ');
-                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dept_id + '\')"><i class="fa fa-trash"></i>删除</a>');
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.deptId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.deptId + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.deptId + '\')"><i class="fa fa-trash"></i>删除</a>');
                             return actions.join('');
                         } else {
                             return "";

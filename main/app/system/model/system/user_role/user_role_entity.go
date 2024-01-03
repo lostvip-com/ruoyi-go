@@ -6,8 +6,8 @@ import (
 )
 
 type Entity struct {
-	UserId int64 `json:"user_id" xorm:"not null pk comment('用户ID') BIGINT(20)"`
-	RoleId int64 `json:"role_id" xorm:"not null pk comment('角色ID') BIGINT(20)"`
+	UserId int64 `json:"userId" xorm:"not null pk comment('用户ID') BIGINT(20)"`
+	RoleId int64 `json:"roleId" xorm:"not null pk comment('角色ID') BIGINT(20)"`
 }
 
 // 映射数据表

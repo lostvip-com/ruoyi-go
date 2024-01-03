@@ -4,19 +4,20 @@ go:
   log:
     output: stdout #生产环境要注释，不会记录到文件
   redis:
-    host: ${REDIS_HOST:127.0.0.1}
+    host: ${REDIS_HOST:"127.0.0.1"}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:123456!}
+    password: ${REDIS_PWD:"123456"}
   datasource:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
-    master: "root:123456!@tcp(127.0.0.1:3307)/ruoyi-go?charset=utf8"
-    #master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:3306)/ruoyi-go?charset=utf8"}
+    master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:13306)/ruoyi-go?charset=utf8"}
     slave: ""
 
+#代码生成器配置
 gen:
   author: "lv"
   moduleName: "mywork"
   packageName: "robvi"
+ #覆盖旧的代码
   overwrite: false

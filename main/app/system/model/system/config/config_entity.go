@@ -6,15 +6,15 @@ import (
 )
 
 type Entity struct {
-	ConfigId    int64     `json:"config_id" xorm:"not null pk autoincr comment('参数主键') INT(5)"`
-	ConfigName  string    `json:"config_name" xorm:"default '' comment('参数名称') VARCHAR(100)"`
-	ConfigKey   string    `json:"config_key" xorm:"default '' comment('参数键名') VARCHAR(100)"`
-	ConfigValue string    `json:"config_value" xorm:"default '' comment('参数键值') VARCHAR(500)"`
-	ConfigType  string    `json:"config_type" xorm:"default 'N' comment('系统内置（Y是 N否）') CHAR(1)"`
-	CreateBy    string    `json:"create_by" xorm:"default '' comment('创建者') VARCHAR(64)"`
-	CreateTime  time.Time `json:"create_time" xorm:"comment('创建时间') DATETIME"`
-	UpdateBy    string    `json:"update_by" xorm:"default '' comment('更新者') VARCHAR(64)"`
-	UpdateTime  time.Time `json:"update_time" xorm:"comment('更新时间') DATETIME"`
+	ConfigId    int64     `json:"configId" xorm:"not null pk autoincr comment('参数主键') INT(5)"`
+	ConfigName  string    `json:"configName" xorm:"default '' comment('参数名称') VARCHAR(100)"`
+	ConfigKey   string    `json:"configKey" xorm:"default '' comment('参数键名') VARCHAR(100)"`
+	ConfigValue string    `json:"configValue" xorm:"default '' comment('参数键值') VARCHAR(500)"`
+	ConfigType  string    `json:"configType" xorm:"default 'N' comment('系统内置（Y是 N否）') CHAR(1)"`
+	CreateBy    string    `json:"createBy" xorm:"default '' comment('创建者') VARCHAR(64)"`
+	CreateTime  time.Time `json:"createTime" xorm:"comment('创建时间') DATETIME"`
+	UpdateBy    string    `json:"updateBy" xorm:"default '' comment('更新者') VARCHAR(64)"`
+	UpdateTime  time.Time `json:"updateTime" xorm:"comment('更新时间') DATETIME"`
 	Remark      string    `json:"remark" xorm:"comment('备注') VARCHAR(500)"`
 }
 
