@@ -48,9 +48,16 @@ func (e *{{.table.ClassName}}) Save() error {
 }
 // 查
 func (e *{{.table.ClassName}}) FindById() error {
-	err := db.GetMasterGorm().Find(e, e.Id).Error
+	err := db.GetMasterGorm().Take(e).Error
 	return err
 }
+
+// 查第一条
+func (e *{{.table.ClassName}}) FindOne() error {
+	err := db.GetMasterGorm().First(e).Error
+	return err
+}
+
 // 改
 func (e *{{.table.ClassName}}) Updates() error {
 	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error

@@ -51,10 +51,9 @@ func (e {{.table.ClassName}}Dao) Find(where, order string) (*[]model.{{.table.Cl
 }
 
 func (e {{.table.ClassName}}Dao) DeleteByIds(ida []int64) int64 {
-	var entity model.{{.table.ClassName}}
-	db := db.GetMasterGorm().Find(&entity, ida).Update("del_flag", 1)
-	if db.Error != nil {
-		panic(db.Error)
-	}
-	return db.RowsAffected
+	db := db.GetMasterGorm().Table("{{.table.TbName}}").Where("{{.table.PkColumn.ColumnName}} in ? ", ida).Update("del_flag", 1)
+    if db.Error != nil {
+        panic(db.Error)
+    }
+    return db.RowsAffected
 }
