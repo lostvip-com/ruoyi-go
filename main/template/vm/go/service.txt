@@ -40,11 +40,16 @@ func (svc {{.table.ClassName}}Service) DeleteByIds(ids string) int64 {
 func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Req) ({{.table.PkColumn.GoType}}, error) {
 	var entity = new(model.{{.table.ClassName}})
 	{{range $index, $column := .table.Columns}}
-	{{- if or (eq $column.GoField "DelFlag") -}}
+        {{- if or (eq $column.GoField "DelFlag") -}}
         {{- continue -}}
-    {{- end -}}
-	    {{if eq $column.IsInsert "1"}} {{if eq $column.IsPk "0"}} entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
-	{{end}}
+        {{- end }}
+	    {{- if eq $column.IsInsert "0"}}
+        {{- continue -}}
+	    {{- end }}
+	    {{- if eq $column.IsPk "0" -}}
+            entity.{{$column.GoField}} = req.{{$column.GoField}}
+        {{- end }}
+	{{ end}}
 	entity.CreateTime = time.Now()
 	entity.UpdateTime = entity.CreateTime
 	entity.CreateBy = req.CreateBy
@@ -74,10 +79,10 @@ func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassN
 // ExportAll 导出excel
 func (svc {{.table.ClassName}}Service) ExportAll(param *vo.Page{{.table.ClassName}}Req) (string, error) {
     var d dao.{{.table.ClassName}}Dao
-    listMap, err := d.ListAll(param)
+    listMap, err := d.ListAll(param,true)
     lv_logic.HasErrAndPanic(err)
 	heads := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
-	cols := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnName}}"{{else}},"{{$column.ColumnName}}"{{end}}{{end}}}
-	url, err := lv_office.DownlaodExcelByListMap(&heads, &cols, listMap)
+	keys  := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.HtmlField}}"{{else}},"{{$column.HtmlField}}"{{end}}{{end}}}
+	url, err := lv_office.DownlaodExcelByListMap(&heads, &keys, listMap)
 	return url, err
 }

@@ -19,6 +19,19 @@ import (
 type {{.table.ClassName}}Dao struct { }
 
 // 根据条件分页查询数据
+func (e {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, int64, error) {
+	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
+	// 约定用方法名ListByPage对应sql文件中的同名tagName
+	tagName := lv_reflect.GetMethodName()
+	limitSQL, err := ibatis.GetLimitSql(tagName, req)
+	//查询数据
+	rows, err := lvdao.ListMapByNamedSql(limitSQL, req,true)
+	lv_logic.HasErrAndPanic(err)
+	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
+	lv_logic.HasErrAndPanic(err)
+	return rows, count, nil
+}
+// 根据条件分页查询数据
 func (e {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
 	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
@@ -33,13 +46,13 @@ func (e {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 }
 
 // ListAll 导出excel使用
-func (e {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, error) {
+func (e {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
 	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
 	lv_logic.HasErrAndPanic(err)
 
-	arr, err := lvdao.ListMapByNamedSql(sql, req, false)
+	arr, err := lvdao.ListMapByNamedSql(sql, req, isCamel)
 	return arr, err
 }
 
