@@ -6,6 +6,7 @@
 package vo
 
 import (
+"lostvip.com/utils/lv_web"
 {{ if eq .table.HasEditTime "1" -}}  "time" {{- end }}
 )
 
@@ -48,6 +49,5 @@ type Page{{.table.ClassName}}Req struct {
 {{- end}}
 	BeginTime  string `form:"beginTime"`  //开始时间
 	EndTime    string `form:"endTime"`    //结束时间
-	PageNum    int    `form:"pageNum"`    //当前页码
-	PageSize   int    `form:"pageSize"`   //每页数
+	lv_web.Paging
 }
