@@ -8,7 +8,7 @@ package service
 import (
 	"time"
     "lostvip.com/utils/lv_conv"
-    "lostvip.com/utils/lv_logic"
+    "lostvip.com/utils/lv_err"
     "lostvip.com/utils/lv_office"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/model"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/dao"
@@ -54,7 +54,7 @@ func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Re
 	entity.UpdateTime = entity.CreateTime
 	entity.CreateBy = req.CreateBy
 	err := entity.Save()
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	return entity.{{.table.PkColumn.GoField}}, err
 }
 
@@ -62,7 +62,7 @@ func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Re
 func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}Req) error {
 	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
 	err := entity.FindById()
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	{{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}}
 	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
 	entity.UpdateTime = time.Now()
@@ -80,7 +80,7 @@ func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassN
 func (svc {{.table.ClassName}}Service) ExportAll(param *vo.Page{{.table.ClassName}}Req) (string, error) {
     var d dao.{{.table.ClassName}}Dao
     listMap, err := d.ListAll(param,true)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	heads := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
 	keys  := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.HtmlField}}"{{else}},"{{$column.HtmlField}}"{{end}}{{end}}}
 	url, err := lv_office.DownlaodExcelByListMap(&heads, &keys, listMap)

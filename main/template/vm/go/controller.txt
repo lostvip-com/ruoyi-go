@@ -10,7 +10,7 @@ import (
     "github.com/gin-gonic/gin"
     "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_web"
-    "lostvip.com/utils/lv_logic"
+    "lostvip.com/utils/lv_err"
     "{{.table.PackageName}}/app/common/model_cmn"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/service"
@@ -49,7 +49,7 @@ func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
 func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 	req := new(vo.Page{{.table.ClassName}}Req)
 	err := c.ShouldBind(req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service
 	result, total, _ := svc.ListByPage(req)
 	lv_web.SucessPage(c, result, total)
@@ -59,14 +59,14 @@ func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
 	req := new(vo.Add{{.table.ClassName}}Req)
     err := c.ShouldBind(req)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service
 
     var userService sysService.UserService
     user := userService.GetProfile(c)
     req.CreateBy = user.LoginName
 	id, err := svc.AddSave(req)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	lv_web.SucessData(c, id)
 }
 
@@ -74,13 +74,13 @@ func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
 func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
 	req := new(vo.Edit{{.table.ClassName}}Req)
 	err := c.ShouldBind(req)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
     var svc service.{{.table.ClassName}}Service
     var userService sysService.UserService
     user := userService.GetProfile(c)
     req.UpdateBy = user.LoginName
 	err = svc.EditSave(req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	lv_web.Success(c, nil, "success")
 }
 
@@ -88,7 +88,7 @@ func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
 func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
 	req := new(model_cmn.RemoveReq)
 	err := c.ShouldBind(req)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service
 	rs := svc.DeleteByIds(req.Ids)
 	lv_web.SuccessData(c, rs)
@@ -98,9 +98,9 @@ func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
 func (w {{.table.ClassName}}Controller) Export(c *gin.Context) {
 	req := new(vo.Page{{.table.ClassName}}Req)
 	err := c.ShouldBind(req)
-    lv_logic.HasErrAndPanic(err)
+    lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service
 	url, err := svc.ExportAll(req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	lv_web.SucessDataMsg(c, url, url)
 }

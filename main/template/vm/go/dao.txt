@@ -9,7 +9,7 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/db/lvbatis"
 	"lostvip.com/lvdao"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_reflect"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/model"
@@ -26,9 +26,9 @@ func (e {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
 	//查询数据
 	rows, err := lvdao.ListMapByNamedSql(limitSQL, req,true)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	return rows, count, nil
 }
 // 根据条件分页查询数据
@@ -39,9 +39,9 @@ func (e {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
 	//查询数据
 	rows, err := lvdao.ListByNamedSql[model.{{.table.ClassName}}](limitSQL, req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	return rows, count, nil
 }
 
@@ -50,7 +50,7 @@ func (e {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, is
 	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 
 	arr, err := lvdao.ListMapByNamedSql(sql, req, isCamel)
 	return arr, err
