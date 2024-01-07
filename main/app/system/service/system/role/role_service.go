@@ -15,8 +15,8 @@ import (
 )
 
 // 根据主键查询数据
-func SelectRecordById(id int64) (*role.Entity, error) {
-	entity := &role.Entity{RoleId: id}
+func SelectRecordById(id int64) (*role.SysRole, error) {
+	entity := &role.SysRole{RoleId: id}
 	_, err := entity.FindOne()
 	return entity, err
 }
@@ -27,13 +27,13 @@ func SelectRecordAll(params *role.SelectPageReq) ([]role.EntityFlag, error) {
 }
 
 // 根据条件分页查询数据
-func SelectRecordPage(params *role.SelectPageReq) ([]role.Entity, *lv_web.Paging, error) {
+func SelectRecordPage(params *role.SelectPageReq) ([]role.SysRole, *lv_web.Paging, error) {
 	return role.SelectListPage(params)
 }
 
 // 根据主键删除数据
 func DeleteRecordById(id int64) bool {
-	rs, _ := (&role.Entity{RoleId: id}).Delete()
+	rs, _ := (&role.SysRole{RoleId: id}).Delete()
 	if rs > 0 {
 		return true
 	}
@@ -43,7 +43,7 @@ func DeleteRecordById(id int64) bool {
 // 添加数据
 func AddSave(req *role.AddReq, c *gin.Context) (int64, error) {
 
-	role := new(role.Entity)
+	role := new(role.SysRole)
 	role.RoleName = req.RoleName
 	role.RoleKey = req.RoleKey
 	role.Status = req.Status
@@ -97,7 +97,7 @@ func AddSave(req *role.AddReq, c *gin.Context) (int64, error) {
 
 // 修改数据
 func EditSave(req *role.EditReq, c *gin.Context) (int64, error) {
-	r := &role.Entity{RoleId: req.RoleId}
+	r := &role.SysRole{RoleId: req.RoleId}
 	ok, err := r.FindOne()
 	if err != nil {
 		return 0, err
@@ -123,7 +123,7 @@ func EditSave(req *role.EditReq, c *gin.Context) (int64, error) {
 
 	pErr := session.Begin()
 
-	_, pErr = session.Table(role.TableName()).ID(r.RoleId).Update(r)
+	_, pErr = session.Table("sys_role").ID(r.RoleId).Update(r)
 
 	if pErr != nil {
 		session.Rollback()
@@ -161,7 +161,7 @@ func EditSave(req *role.EditReq, c *gin.Context) (int64, error) {
 
 // 保存数据权限
 func AuthDataScope(req *role.DataScopeReq, c *gin.Context) (int64, error) {
-	entity := &role.Entity{RoleId: req.RoleId}
+	entity := &role.SysRole{RoleId: req.RoleId}
 	ok, err := entity.FindOne()
 	if err != nil {
 		return 0, err
@@ -185,7 +185,7 @@ func AuthDataScope(req *role.DataScopeReq, c *gin.Context) (int64, error) {
 	session := db.GetInstance().Engine().NewSession()
 	tanErr := session.Begin()
 
-	_, tanErr = session.Table(role.TableName()).ID(entity.RoleId).Update(entity)
+	_, tanErr = session.Table("sys_role").ID(entity.RoleId).Update(entity)
 
 	if tanErr != nil {
 		session.Rollback()
@@ -219,10 +219,10 @@ func AuthDataScope(req *role.DataScopeReq, c *gin.Context) (int64, error) {
 }
 
 // 批量删除数据记录
-func DeleteRecordByIds(ids string) int64 {
+func DeleteRecordByIds(ids string) (int64, error) {
 	idArr := lv_conv.ToInt64Array(ids, ",")
-	result, _ := role.DeleteBatch(idArr...)
-	return result
+	result, _ := db.GetInstance().Engine().Exec("delete from sys_role where role_id in ? ", idArr)
+	return result.RowsAffected()
 }
 
 // 导出excel
@@ -236,20 +236,16 @@ func Export(param *role.SelectPageReq) (string, error) {
 func SelectRoleContactVo(userId int64) ([]role.EntityFlag, error) {
 	var paramsPost *role.SelectPageReq
 	roleAll, err := role.SelectListAll(paramsPost)
-
 	if err != nil || roleAll == nil {
-		return nil, errors.New("未查询到岗位数据")
+		return nil, errors.New("未查询到角色数据")
 	}
 
 	userRole, err := role.SelectRoleContactVo(userId)
-
-	if err != nil || userRole == nil {
-		return nil, errors.New("未查询到用户岗位数据")
-	} else {
-		for i := range roleAll {
-			for j := range userRole {
-				if userRole[j].RoleId == roleAll[i].RoleId {
-					roleAll[i].Flag = true
+	if userRole != nil {
+		for i := range userRole {
+			for j := range roleAll {
+				if userRole[i].RoleId == roleAll[j].RoleId {
+					roleAll[j].Flag = true
 					break
 				}
 			}
@@ -261,15 +257,15 @@ func SelectRoleContactVo(userId int64) ([]role.EntityFlag, error) {
 // 批量选择用户授权
 func InsertAuthUsers(roleId int64, userIds string) int64 {
 	idarr := lv_conv.ToInt64Array(userIds, ",")
-	var roleUserList []user_role.Entity
+	var roleUserList []user_role.SysUserRole
 	for _, str := range idarr {
-		var tmp user_role.Entity
+		var tmp user_role.SysUserRole
 		tmp.UserId = str
 		tmp.RoleId = roleId
 		roleUserList = append(roleUserList, tmp)
 	}
 
-	rs, err := db.GetInstance().Engine().Table(user_role.TableName()).Insert(roleUserList)
+	rs, err := db.GetInstance().Engine().Table("sys_user_role").Insert(roleUserList)
 	if err != nil {
 		return 0
 	}
@@ -278,7 +274,7 @@ func InsertAuthUsers(roleId int64, userIds string) int64 {
 
 // 取消授权用户角色
 func DeleteUserRoleInfo(userId, roleId int64) int64 {
-	entity := &user_role.Entity{UserId: userId, RoleId: roleId}
+	entity := &user_role.SysUserRole{UserId: userId, RoleId: roleId}
 	rs, _ := entity.Delete()
 	return rs
 }

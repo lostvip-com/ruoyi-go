@@ -5,7 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/system/dept"
+	"robvi/app/system/dao"
+	"robvi/app/system/model"
+	"robvi/app/system/vo"
 	"strings"
 	"time"
 )
@@ -13,11 +15,11 @@ import (
 type DeptService struct{}
 
 // 新增保存信息
-func (svc *DeptService) AddSave(req *dept.AddReq, c *gin.Context) (int64, error) {
-	dept0 := new(dept.SysDept)
-	parent := &dept.SysDept{DeptId: req.ParentId}
-	ok, err := parent.FindOne()
-	if err == nil && ok {
+func (svc *DeptService) AddSave(req *vo.AddDeptReq, c *gin.Context) (int64, error) {
+	dept0 := new(model.SysDept)
+	parent := &model.SysDept{DeptId: req.ParentId}
+	err := parent.FindOne()
+	if err == nil {
 		if parent.Status != "0" {
 			return 0, errors.New("部门停用，不允许新增")
 		}
@@ -28,7 +30,6 @@ func (svc *DeptService) AddSave(req *dept.AddReq, c *gin.Context) (int64, error)
 	dept0.DeptName = req.DeptName
 	dept0.Status = req.Status
 	dept0.ParentId = req.ParentId
-	dept0.DelFlag = "0"
 	dept0.Email = req.Email
 	dept0.Leader = req.Leader
 	dept0.Phone = req.Phone
@@ -41,62 +42,51 @@ func (svc *DeptService) AddSave(req *dept.AddReq, c *gin.Context) (int64, error)
 	}
 
 	dept0.CreateTime = time.Now()
-
-	_, err = dept0.Insert()
 	//这里跟原版不一样了，多加了一级自己的ID，以方便数据权限控制
 	dept0.Ancestors = parent.Ancestors + "," + lv_conv.String(dept0.DeptId)
+	err = dept0.Save()
 	return dept0.DeptId, err
 }
 
 // 修改保存信息
-func (svc *DeptService) EditSave(req *dept.EditReq, c *gin.Context) (int64, error) {
-	dept0 := &dept.SysDept{DeptId: req.DeptId}
-	ok, err := dept0.FindOne()
-	if err != nil || !ok {
+func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, error) {
+	dept0 := &model.SysDept{DeptId: req.DeptId}
+	err := dept0.FindOne()
+	if err != nil {
 		return 0, errors.New("数据不存在")
 	}
-	pdept := &dept.SysDept{DeptId: req.ParentId}
-
-	ok, err = pdept.FindOne()
-	if pdept != nil {
-		if pdept.Status != "0" {
-			return 0, errors.New("部门停用，不允许新增")
-		} else {
-			if !strings.HasSuffix(pdept.Ancestors, lv_conv.String(pdept.DeptId)) { //修复数据用，
-				pdept.Ancestors = pdept.Ancestors + "," + lv_conv.String(pdept.DeptId)
-			}
-			newAncestors := pdept.Ancestors + "," + lv_conv.String(dept0.DeptId) //上级的+自己的
-			dept.UpdateDeptChildren(dept0.DeptId, newAncestors, dept0.Ancestors)
-
-			dept0.DeptName = req.DeptName
-			dept0.Status = req.Status
-			dept0.ParentId = req.ParentId
-			dept0.DelFlag = "0"
-			dept0.Email = req.Email
-			dept0.Leader = req.Leader
-			dept0.Phone = req.Phone
-			dept0.OrderNum = req.OrderNum
-
-			var userService UserService
-			user := userService.GetProfile(c)
-
-			if user != nil && user.UserId > 0 {
-				dept0.UpdateBy = user.LoginName
-			}
-
-			dept0.UpdateTime = time.Now()
-
-			dept0.Update()
-			return 1, nil
-		}
-
-	} else {
+	pdept := &model.SysDept{DeptId: req.ParentId}
+	var dao dao.SysDeptDao
+	err = pdept.FindOne()
+	if pdept == nil {
 		return 0, errors.New("父部门不能为空")
+	}
+	if pdept.Status != "0" {
+		return 0, errors.New("部门停用，不允许新增")
+	} else {
+		dept0.DeptName = req.DeptName
+		dept0.Status = req.Status
+		dept0.ParentId = req.ParentId
+		dept0.Email = req.Email
+		dept0.Leader = req.Leader
+		dept0.Phone = req.Phone
+		dept0.OrderNum = req.OrderNum
+		var userService UserService
+		user := userService.GetProfile(c)
+		if user != nil && user.UserId > 0 {
+			dept0.UpdateBy = user.LoginName
+		}
+		dept0.UpdateTime = time.Now()
+		dept0.Update()
+		//递归修改所有子项目
+		newAncestors := pdept.Ancestors + "," + lv_conv.String(dept0.DeptId) //上级的+自己的
+		dao.UpdateDeptChildrenAncestors(dept0, newAncestors)
+		return 1, nil
 	}
 }
 
 // 根据分页查询部门管理数据
-func (svc *DeptService) SelectListAll(param *dept.SelectPageReq) ([]dept.SysDept, error) {
+func (svc *DeptService) SelectListAll(param *vo.DeptPageReq) (*[]model.SysDept, error) {
 	if param == nil {
 		return svc.SelectDeptList(0, "", "", param.TenantId)
 	} else {
@@ -105,13 +95,15 @@ func (svc *DeptService) SelectListAll(param *dept.SelectPageReq) ([]dept.SysDept
 }
 
 // 删除部门管理信息
-func (svc *DeptService) DeleteDeptById(deptId int64) int64 {
-	return dept.DeleteDeptById(deptId)
+func (svc *DeptService) DeleteDeptById(deptId int64) error {
+	var dao dao.SysDeptDao
+	return dao.DeleteDeptById(deptId)
 }
 
 // 根据部门ID查询信息
-func (svc *DeptService) SelectDeptById(deptId int64) *dept.SysDeptExtend {
-	deptEntity, err := dept.SelectDeptById(deptId)
+func (svc *DeptService) SelectDeptById(deptId int64) *vo.SysDeptExtend {
+	var dao dao.SysDeptDao
+	deptEntity, err := dao.SelectDeptById(deptId)
 	if err != nil {
 		return nil
 	}
@@ -120,49 +112,53 @@ func (svc *DeptService) SelectDeptById(deptId int64) *dept.SysDeptExtend {
 }
 
 // 根据ID查询所有子部门
-func (svc *DeptService) SelectChildrenDeptById(deptId int64) []*dept.SysDept {
-	return dept.SelectChildrenDeptById(deptId)
+func (svc *DeptService) SelectChildrenDeptById(deptId int64) []*model.SysDept {
+	var dao dao.SysDeptDao
+	return dao.SelectChildrenDeptById(deptId)
 }
 
 // 加载部门列表树
 func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]model_cmn.Ztree, error) {
-	list, err := dept.SelectDeptList(parentId, deptName, status, tenantId)
+	var dao dao.SysDeptDao
+	list, err := dao.SelectDeptList(parentId, deptName, status, tenantId)
 	if err != nil {
 		return nil, err
 	}
 
-	return svc.InitZtree(&list, nil), nil
+	return svc.InitZtree(list, nil), nil
 
 }
 
 // 查询部门管理数据
-func (svc *DeptService) SelectDeptList(parentId int64, deptName, status string, tenantId int64) ([]dept.SysDept, error) {
-	return dept.SelectDeptList(parentId, deptName, status, tenantId)
+func (svc *DeptService) SelectDeptList(parentId int64, deptName, status string, tenantId int64) (*[]model.SysDept, error) {
+	var dao dao.SysDeptDao
+	return dao.SelectDeptList(parentId, deptName, status, tenantId)
 }
 
 // 根据角色ID查询部门（数据权限）
 func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model_cmn.Ztree, error) {
 	var result *[]model_cmn.Ztree
-	deptList, err := dept.SelectDeptList(0, "", "", tenantId)
+	var dao dao.SysDeptDao
+	deptList, err := dao.SelectDeptList(0, "", "", tenantId)
 	if err != nil {
 		return nil, err
 	}
 
 	if roleId > 0 {
-		roleDeptList, err := dept.SelectRoleDeptTree(roleId)
+		roleDeptList, err := dao.SelectRoleDeptTree(roleId)
 		if err != nil || roleDeptList == nil {
-			result = svc.InitZtree(&deptList, nil)
+			result = svc.InitZtree(deptList, nil)
 		} else {
-			result = svc.InitZtree(&deptList, &roleDeptList)
+			result = svc.InitZtree(deptList, &roleDeptList)
 		}
 	} else {
-		result = svc.InitZtree(&deptList, nil)
+		result = svc.InitZtree(deptList, nil)
 	}
 	return result, nil
 }
 
 // 对象转部门树
-func (svc *DeptService) InitZtree(deptList *[]dept.SysDept, roleDeptList *[]string) *[]model_cmn.Ztree {
+func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]string) *[]model_cmn.Ztree {
 	var result []model_cmn.Ztree
 	isCheck := false
 	if roleDeptList != nil && len(*roleDeptList) > 0 {
@@ -195,17 +191,20 @@ func (svc *DeptService) InitZtree(deptList *[]dept.SysDept, roleDeptList *[]stri
 
 // 查询部门是否存在用户
 func (svc *DeptService) CheckDeptExistUser(deptId int64) bool {
-	return dept.CheckDeptExistUser(deptId)
+	var dao dao.SysDeptDao
+	return dao.CheckDeptExistUser(deptId)
 }
 
 // 查询部门人数
 func (svc *DeptService) SelectDeptCount(deptId, parentId int64) int64 {
-	return dept.SelectDeptCount(deptId, parentId)
+	var dao dao.SysDeptDao
+	return dao.SelectDeptCount(deptId, parentId)
 }
 
 // 校验部门名称是否唯一
 func (svc *DeptService) CheckDeptNameUniqueAll(deptName string, parentId int64) string {
-	dept, err := dept.CheckDeptNameUniqueAll(deptName, parentId)
+	var dao dao.SysDeptDao
+	dept, err := dao.CheckDeptNameUniqueAll(deptName, parentId)
 	if err != nil {
 		return "1"
 	}
@@ -218,7 +217,8 @@ func (svc *DeptService) CheckDeptNameUniqueAll(deptName string, parentId int64) 
 
 // 校验部门名称是否唯一
 func (svc *DeptService) CheckDeptNameUnique(deptName string, deptId, parentId int64) string {
-	dept, err := dept.CheckDeptNameUniqueAll(deptName, parentId)
+	var dao dao.SysDeptDao
+	dept, err := dao.CheckDeptNameUniqueAll(deptName, parentId)
 
 	if err != nil {
 		return "1"

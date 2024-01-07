@@ -6,7 +6,6 @@ import (
 	"lostvip.com/utils/lv_web"
 	"net/http"
 	"robvi/app/common/model_cmn"
-	userModel "robvi/app/system/model/system"
 	"robvi/app/system/model/system/role"
 	"robvi/app/system/service"
 	roleService "robvi/app/system/service/system/role"
@@ -28,7 +27,7 @@ func (w *RoleController) ListAjax(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]role.Entity, 0)
+	rows := make([]role.SysRole, 0)
 	result, page, err := roleService.SelectRecordPage(req)
 
 	if err == nil && len(result) > 0 {
@@ -150,12 +149,12 @@ func (w *RoleController) UnallocatedList(c *gin.Context) {
 	roleId := lv_conv.Int64(c.PostForm("roleId"))
 	loginName := c.PostForm("loginName")
 	phonenumber := c.PostForm("phonenumber")
-	var rows []userModel.SysUser
+	var rows []map[string]string
 	var userService service.UserService
 	userList, err := userService.SelectUnallocatedList(roleId, loginName, phonenumber)
 
 	if err == nil && userList != nil {
-		rows = userList
+		rows = *userList
 	}
 
 	c.JSON(http.StatusOK, model_cmn.TableDataInfo{
@@ -175,7 +174,7 @@ func (w *RoleController) Remove(c *gin.Context) {
 		return
 	}
 
-	rs := roleService.DeleteRecordByIds(req.Ids)
+	rs, _ := roleService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
 		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("角色管理", req).WriteJsonExit()
@@ -257,13 +256,13 @@ func (w *RoleController) AllocatedList(c *gin.Context) {
 	roleId := lv_conv.Int64(c.PostForm("roleId"))
 	loginName := c.PostForm("loginName")
 	phonenumber := c.PostForm("phonenumber")
-	var rows []userModel.SysUser
+	var rows []map[string]string
 
 	var userService service.UserService
 	userList, err := userService.SelectAllocatedList(roleId, loginName, phonenumber)
 
 	if err == nil && userList != nil {
-		rows = userList
+		rows = *userList
 	}
 
 	c.JSON(http.StatusOK, model_cmn.TableDataInfo{

@@ -5,8 +5,8 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/system/post"
-	postService "robvi/app/system/service/system/post"
+	postService "robvi/app/system/service"
+	"robvi/app/system/vo"
 )
 
 type PostController struct {
@@ -19,22 +19,18 @@ func (w *PostController) List(c *gin.Context) {
 
 // 列表分页数据
 func (w *PostController) ListAjax(c *gin.Context) {
-	var req *post.SelectPageReq
+	var req *vo.SelectPostPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]post.SysPost, 0)
-	result, page, err := postService.SelectListByPage(req)
+	var postService postService.SysPostService
+	result, total, err := postService.SelectListByPage(req)
 	if err != nil {
 		panic(err)
 	}
-	if len(result) > 0 {
-		rows = result
-	}
-
-	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, total, result).WriteJsonExit()
 }
 
 // 新增页面
@@ -44,13 +40,13 @@ func (w *PostController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *PostController) AddSave(c *gin.Context) {
-	var req *post.AddReq
+	var req *vo.AddPostReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-
+	var postService postService.SysPostService
 	if postService.CheckPostNameUniqueAll(req.PostName) == "1" {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
 		return
@@ -79,7 +75,7 @@ func (w *PostController) Edit(c *gin.Context) {
 		})
 		return
 	}
-
+	var postService postService.SysPostService
 	post, err := postService.SelectRecordById(id)
 
 	if err != nil || post == nil {
@@ -96,30 +92,18 @@ func (w *PostController) Edit(c *gin.Context) {
 
 // 修改页面保存
 func (w *PostController) EditSave(c *gin.Context) {
-	var req *post.EditReq
-	//获取参数
+	var req *vo.EditSysPostReq
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-
-	if postService.CheckPostNameUnique(req.PostName, req.PostId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
-		return
-	}
-
-	if postService.CheckPostCodeUnique(req.PostCode, req.PostId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
-		return
-	}
-
-	rs, err := postService.EditSave(req, c)
-
-	if err != nil || rs <= 0 {
+	var postService postService.SysPostService
+	err := postService.EditSave(req, c)
+	if err != nil {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(rs).SetBtype(model_cmn.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 }
 
 // 删除数据
@@ -130,7 +114,7 @@ func (w *PostController) Remove(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).SetBtype(model_cmn.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-
+	var postService postService.SysPostService
 	rs := postService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
@@ -142,12 +126,13 @@ func (w *PostController) Remove(c *gin.Context) {
 
 // 导出
 func (w *PostController) Export(c *gin.Context) {
-	var req *post.SelectPageReq
+	var req *vo.SelectPostPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
+	var postService postService.SysPostService
 	url, err := postService.Export(req)
 
 	if err != nil {
@@ -159,12 +144,12 @@ func (w *PostController) Export(c *gin.Context) {
 
 // 检查岗位名称是否已经存在不包括本岗位
 func (w *PostController) CheckPostNameUnique(c *gin.Context) {
-	var req *post.CheckPostNameReq
+	var req *vo.CheckPostNameReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var postService postService.SysPostService
 	result := postService.CheckPostNameUnique(req.PostName, req.PostId)
 
 	c.Writer.WriteString(result)
@@ -172,12 +157,12 @@ func (w *PostController) CheckPostNameUnique(c *gin.Context) {
 
 // 检查岗位名称是否已经存在
 func (w *PostController) CheckPostNameUniqueAll(c *gin.Context) {
-	var req *post.CheckPostNameALLReq
+	var req *vo.CheckPostNameALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var postService postService.SysPostService
 	result := postService.CheckPostNameUniqueAll(req.PostName)
 
 	c.Writer.WriteString(result)
@@ -185,12 +170,12 @@ func (w *PostController) CheckPostNameUniqueAll(c *gin.Context) {
 
 // 检查岗位编码是否已经存在不包括本岗位
 func (w *PostController) CheckPostCodeUnique(c *gin.Context) {
-	var req *post.CheckPostCodeReq
+	var req *vo.CheckPostCodeReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var postService postService.SysPostService
 	result := postService.CheckPostCodeUnique(req.PostCode, req.PostId)
 
 	c.Writer.WriteString(result)
@@ -198,12 +183,12 @@ func (w *PostController) CheckPostCodeUnique(c *gin.Context) {
 
 // 检查岗位编码是否已经存在
 func (w *PostController) CheckPostCodeUniqueAll(c *gin.Context) {
-	var req *post.CheckPostCodeALLReq
+	var req *vo.CheckPostCodeALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var postService postService.SysPostService
 	result := postService.CheckPostCodeUniqueAll(req.PostCode)
 
 	c.Writer.WriteString(result)

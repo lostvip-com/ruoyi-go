@@ -7,10 +7,10 @@ import (
 	"lostvip.com/cache/myredis"
 	"lostvip.com/db/lvbatis"
 	"lostvip.com/lvdao"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_web"
-	model "robvi/app/system/model/system"
-	"robvi/app/system/model/system/post"
+	"robvi/app/system/model"
+	"robvi/app/system/vo"
 	"time"
 )
 
@@ -18,7 +18,7 @@ import (
 var SQL_FILE_POST = "sys_post/sys_post_mapper.tpl"
 
 func (w DemoController) MybatisMap(c *gin.Context) {
-	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
+	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
@@ -26,27 +26,27 @@ func (w DemoController) MybatisMap(c *gin.Context) {
 
 	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
 	sql, err := ibatis.GetLimitSql("listSql", &req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	listMap, err := lvdao.ListMapByNamedSql(sql, &req, true)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	lv_web.PageOK2(c, listMap, count)
 }
 
 func (w DemoController) MybatisStruct(c *gin.Context) {
-	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
+	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
 	sql, err := ibatis.GetLimitSql("listSql", &req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	list, err := lvdao.ListByNamedSql[model.SysPost](sql, &req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	lv_web.PageOK2(c, list, count)
 }
 
@@ -54,7 +54,7 @@ func (w DemoController) MybatisStruct(c *gin.Context) {
  * 基于ibatis 的分页查询演示
  */
 func (w DemoController) MybatisStructPage(c *gin.Context) {
-	req := post.SelectPageReq{PageSize: 200, PageNum: 1}
+	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return

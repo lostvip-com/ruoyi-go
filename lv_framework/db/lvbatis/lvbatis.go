@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cast"
 	"io"
 	"lostvip.com/logme"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_tpl"
 	"os"
 	"reflect"
@@ -64,7 +64,7 @@ func (e *LvBatis) GetSql(tagName string, params interface{}) (string, error) {
 	}
 	//动态解析
 	sql, err := lv_tpl.ParseTemplateStr(query, params)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	if sql == "" {
 		panic("sql文件存在语法错误，请使用golang的telmplate标准语法" + e.getTplFile())
 	}

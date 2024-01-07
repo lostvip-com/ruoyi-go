@@ -10,7 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"hash/crc32"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"reflect"
 	"strings"
 	"time"
@@ -886,6 +886,6 @@ func (s *Session) GetCount(count *int64) *Session {
 	}
 
 	e := session.queryRow(sqlStr, args...).Scan(count)
-	lv_logic.HasErrAndPanic(e)
+	lv_err.HasErrAndPanic(e)
 	return s
 }

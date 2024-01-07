@@ -9,7 +9,7 @@ import (
 	"xorm.io/builder"
 )
 
-// Entity is the golang structure for table sys_role.
+// SysRole is the golang structure for table sys_role.
 type EntityFlag struct {
 	RoleId     int64     `json:"roleId" xorm:"not null pk autoincr comment('角色ID') BIGINT(20)"`
 	RoleName   string    `json:"roleName" xorm:"not null comment('角色名称') VARCHAR(30)"`
@@ -93,14 +93,14 @@ type EditReq struct {
 }
 
 // 根据条件分页查询角色数据
-func SelectListPage(param *SelectPageReq) ([]Entity, *lv_web.Paging, error) {
+func SelectListPage(param *SelectPageReq) ([]SysRole, *lv_web.Paging, error) {
 	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
 		return nil, p, errors.New("获取数据库连接失败")
 	}
 
-	model := db.Table(TableName()).Alias("r").Where("r.del_flag = '0'")
+	model := db.Table("sys_role").Alias("r").Where("r.del_flag = '0'")
 
 	if param.RoleName != "" {
 		model.Where("r.role_name like ?", "%"+param.RoleName+"%")
@@ -142,7 +142,7 @@ func SelectListPage(param *SelectPageReq) ([]Entity, *lv_web.Paging, error) {
 
 	model.Limit(p.Pagesize, p.StartNum)
 
-	var result []Entity
+	var result []SysRole
 
 	err = model.Find(&result)
 	return result, p, err
@@ -155,7 +155,7 @@ func SelectListExport(param *SelectPageReq, head, col []string) (string, error) 
 		return "", errors.New("获取数据库连接失败")
 	}
 
-	build := builder.Select(col...).From(TableName(), "t")
+	build := builder.Select(col...).From("sys_role", "t")
 
 	if param != nil {
 		if param.RoleName != "" {
@@ -199,7 +199,7 @@ func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
 		return nil, errors.New("获取数据库连接失败")
 	}
 
-	model := db.Table(TableName()).Alias("r").Select("r.*,false as flag").Where("r.del_flag = '0'")
+	model := db.Table("sys_role").Alias("r").Select("r.*,false as flag").Where("r.del_flag = '0'")
 	if param != nil {
 		if param.RoleName != "" {
 			model.Where("r.role_name like ?", "%"+param.RoleName+"%")
@@ -233,14 +233,14 @@ func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
 }
 
 // 根据用户ID查询角色
-func SelectRoleContactVo(userId int64) ([]Entity, error) {
+func SelectRoleContactVo(userId int64) ([]SysRole, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
 
-	model := db.Table(TableName()).Alias("r")
+	model := db.Table("sys_role").Alias("r")
 	model.Join("Left", []string{"sys_user_role", "ur"}, "ur.role_id = r.role_id")
 	model.Join("Left", []string{"sys_user", "u"}, "u.user_id = ur.user_id")
 	model.Join("Left", []string{"sys_dept", "d"}, "u.dept_id = d.dept_id")
@@ -248,15 +248,15 @@ func SelectRoleContactVo(userId int64) ([]Entity, error) {
 	model.Where("ur.user_id = ?", userId)
 	model.Select("distinct r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope,r.status, r.del_flag, r.create_time, r.remark")
 
-	var result []Entity
+	var result []SysRole
 
 	err := model.Find(&result)
 	return result, err
 }
 
 // 检查角色键是否唯一
-func CheckRoleNameUniqueAll(roleName string) (*Entity, error) {
-	var entity Entity
+func CheckRoleNameUniqueAll(roleName string) (*SysRole, error) {
+	var entity SysRole
 	entity.RoleName = roleName
 	_, err := entity.FindOne()
 	ok, err := entity.FindOne()
@@ -268,8 +268,8 @@ func CheckRoleNameUniqueAll(roleName string) (*Entity, error) {
 }
 
 // 检查角色键是否唯一
-func CheckRoleKeyUniqueAll(roleKey string) (*Entity, error) {
-	var entity Entity
+func CheckRoleKeyUniqueAll(roleKey string) (*SysRole, error) {
+	var entity SysRole
 	entity.RoleKey = roleKey
 	ok, err := entity.FindOne()
 	if ok {

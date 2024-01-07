@@ -6,16 +6,19 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
+	"gorm.io/gorm"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/db"
 	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_gen"
 	"lostvip.com/utils/lv_net"
+	"lostvip.com/utils/lv_office"
 	"lostvip.com/utils/lv_secret"
-	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model/system"
-	user_post2 "robvi/app/system/model/system/user_post"
+	"robvi/app/system/dao"
+	"robvi/app/system/model"
 	user_role2 "robvi/app/system/model/system/user_role"
+	"robvi/app/system/vo"
 	"strings"
 	"time"
 )
@@ -25,29 +28,33 @@ type UserService struct{}
 // 根据主键查询用户信息
 func (svc *UserService) SelectRecordById(id int64) (*model.SysUser, error) {
 	entity := &model.SysUser{UserId: id}
-	_, err := entity.FindOne()
+	err := entity.FindOne()
 	return entity, err
 }
 
 // 根据条件分页查询用户列表
-func (svc UserService) SelectRecordList(param *model.SelectPageReq) ([]model.UserListEntity, *lv_web.Paging, error) {
+func (svc UserService) SelectRecordList(param *vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
 	var deptService DeptService
-	var d = deptService.SelectDeptById(param.DeptId)
-	if d != nil { //数据权限
-		param.Ancestors = d.Ancestors
+	var dept = deptService.SelectDeptById(param.DeptId)
+	if dept != nil { //数据权限
+		param.Ancestors = dept.Ancestors
 	}
-	return model.SelectPageList(param)
+	var d dao.SysUserDao
+	return d.SelectPageList(param)
 }
 
 // 导出excel
-func (svc UserService) Export(param *model.SelectPageReq) (string, error) {
+func (svc UserService) Export(param *vo.SelectUserPageReq) (string, error) {
 	head := []string{"用户名", "呢称", "Email", "电话号码", "性别", "部门", "领导", "状态", "删除标记", "创建人", "创建时间", "备注"}
-	col := []string{"u.login_name", "u.user_name", "u.email", "u.phonenumber", "u.sex", "d.dept_name", "d.leader", "u.status", "u.del_flag", "u.create_by", "u.create_time", "u.remark"}
-	return model.SelectExportList(param, head, col)
+	col := []string{"loginName", "userName", "u.email", "phonenumber", "sex", "deptName", "leader", "status", "delFlag", "createBy", "createTime", "Remark"}
+	var d dao.SysUserDao
+	listMap, err := d.SelectExportList(param)
+	lv_err.HasErrAndPanic(err)
+	return lv_office.DownlaodExcelByListMap(&head, &col, listMap)
 }
 
 // 新增用户
-func (svc UserService) AddSave(req *model.AddReq, c *gin.Context) (int64, error) {
+func (svc UserService) AddSave(req *vo.AddReq, c *gin.Context) (int64, error) {
 	var u model.SysUser
 	u.LoginName = req.LoginName
 	u.UserName = req.UserName
@@ -62,178 +69,160 @@ func (svc UserService) AddSave(req *model.AddReq, c *gin.Context) (int64, error)
 	newSalt := lv_gen.GenerateSubId(6)
 	newToken := req.LoginName + req.Password + newSalt
 	newToken = lv_secret.MustEncryptString(newToken)
-
 	u.Salt = newSalt
 	u.Password = newToken
-
 	u.CreateTime = time.Now()
-
 	createUser := svc.GetProfile(c)
 
 	if createUser != nil {
 		u.CreateBy = createUser.LoginName
 	}
+	u.DelFlag = 0
 
-	u.DelFlag = "0"
-
-	session := db.GetInstance().Engine().NewSession()
-	err := session.Begin()
-
-	_, err = session.Table(model.TableName()).Insert(&u)
-
-	if err != nil || u.UserId <= 0 {
-		session.Rollback()
-		return 0, err
-	}
-
-	//增加岗位数据
-	if req.PostIds != "" {
-		postIds := lv_conv.ToInt64Array(req.PostIds, ",")
-		userPosts := make([]user_post2.Entity, 0)
-		for i := range postIds {
-			if postIds[i] > 0 {
-				var userPost user_post2.Entity
-				userPost.UserId = u.UserId
-				userPost.PostId = postIds[i]
-				userPosts = append(userPosts, userPost)
+	err := db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&u).Error; err != nil {
+			return err
+		}
+		//增加岗位数据
+		if req.PostIds != "" {
+			postIds := lv_conv.ToInt64Array(req.PostIds, ",")
+			userPosts := make([]model.SysUserPost, 0)
+			for i := range postIds {
+				if postIds[i] > 0 {
+					var userPost model.SysUserPost
+					userPost.UserId = u.UserId
+					userPost.PostId = postIds[i]
+					userPosts = append(userPosts, userPost)
+				}
+			} //end for
+			if len(userPosts) > 0 {
+				if err := tx.CreateInBatches(userPosts, 1).Error; err != nil {
+					return err
+				}
 			}
 		}
-		if len(userPosts) > 0 {
-			_, err := session.Table(user_post2.TableName()).Insert(userPosts)
-			if err != nil {
-				session.Rollback()
-				return 0, err
+		//增加角色数据
+		if req.RoleIds != "" {
+			roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
+			userRoles := make([]user_role2.SysUserRole, 0)
+			for i := range roleIds {
+				if roleIds[i] > 0 {
+					var userRole user_role2.SysUserRole
+					userRole.UserId = u.UserId
+					userRole.RoleId = roleIds[i]
+					userRoles = append(userRoles, userRole)
+				}
+			}
+			if len(userRoles) > 0 {
+				if err := tx.CreateInBatches(userRoles, 1).Error; err != nil {
+					return err
+				}
 			}
 		}
+		return nil
+	})
 
-	}
-
-	//增加角色数据
-	if req.RoleIds != "" {
-		roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
-		userRoles := make([]user_role2.Entity, 0)
-		for i := range roleIds {
-			if roleIds[i] > 0 {
-				var userRole user_role2.Entity
-				userRole.UserId = u.UserId
-				userRole.RoleId = roleIds[i]
-				userRoles = append(userRoles, userRole)
-			}
-		}
-		if len(userRoles) > 0 {
-			_, err := session.Table(user_role2.TableName()).Insert(userRoles)
-			if err != nil {
-				session.Rollback()
-				return 0, err
-			}
-		}
-	}
-
-	return u.UserId, session.Commit()
+	return u.UserId, err
 }
 
 // 新增用户
-func (svc UserService) EditSave(req *model.EditReq, c *gin.Context) (int64, error) {
-	u := &model.SysUser{UserId: req.UserId}
-	ok, err := u.FindOne()
+func (svc UserService) EditSave(req *vo.EditReq, c *gin.Context) error {
+	userPtr := &model.SysUser{UserId: req.UserId}
+	err := userPtr.FindOne()
 	if err != nil {
-		return 0, err
+		return err
 	}
-	if !ok {
-		return 0, errors.New("数据不存在")
-	}
-
-	u.UserName = req.UserName
-	u.Email = req.Email
-	u.Phonenumber = req.Phonenumber
-	u.Status = req.Status
-	u.Sex = req.Sex
-	u.DeptId = req.DeptId
-	u.Remark = req.Remark
-
-	u.UpdateTime = time.Now()
-
+	userPtr.UserName = req.UserName
+	userPtr.Email = req.Email
+	userPtr.Phonenumber = req.Phonenumber
+	userPtr.Status = req.Status
+	userPtr.Sex = req.Sex
+	userPtr.DeptId = req.DeptId
+	userPtr.Remark = req.Remark
+	userPtr.UpdateTime = time.Now()
 	updateUser := svc.GetProfile(c)
 
 	if updateUser != nil {
-		u.UpdateBy = updateUser.LoginName
+		userPtr.UpdateBy = updateUser.LoginName
 	}
-
-	session := db.GetInstance().Engine().NewSession()
-	tanErr := session.Begin()
-
-	_, tanErr = session.Table(model.TableName()).ID(u.UserId).Update(u)
-
-	if tanErr != nil {
-		session.Rollback()
-		return 0, tanErr
-	}
-
-	//增加岗位数据
-	if req.PostIds != "" {
-		postIds := lv_conv.ToInt64Array(req.PostIds, ",")
-		userPosts := make([]user_post2.Entity, 0)
-		for i := range postIds {
-			if postIds[i] > 0 {
-				var userPost user_post2.Entity
-				userPost.UserId = u.UserId
-				userPost.PostId = postIds[i]
-				userPosts = append(userPosts, userPost)
+	err = db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+		if err := tx.Updates(userPtr).Error; err != nil {
+			return err
+		}
+		//增加岗位数据
+		if req.PostIds != "" {
+			postIds := lv_conv.ToInt64Array(req.PostIds, ",")
+			userPosts := make([]model.SysUserPost, 0)
+			for i := range postIds {
+				if postIds[i] > 0 {
+					var userPost model.SysUserPost
+					userPost.UserId = userPtr.UserId
+					userPost.PostId = postIds[i]
+					userPosts = append(userPosts, userPost)
+				}
+			} //end for
+			if len(userPosts) > 0 {
+				tx.Exec("delete from sys_user_post where user_id=?", userPtr.UserId)
+				if err := tx.Save(userPosts).Error; err != nil {
+					return err
+				}
 			}
 		}
-		if len(userPosts) > 0 {
-			session.Exec("delete from sys_user_post where user_id=?", u.UserId)
-			_, tanErr = session.Table(user_post2.TableName()).Insert(userPosts)
-			if tanErr != nil {
-				session.Rollback()
-				return 0, err
+		//增加角色数据
+		if req.RoleIds != "" {
+			roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
+			userRoles := make([]user_role2.SysUserRole, 0)
+			for i := range roleIds {
+				if roleIds[i] > 0 {
+					var userRole user_role2.SysUserRole
+					userRole.UserId = userPtr.UserId
+					userRole.RoleId = roleIds[i]
+					userRoles = append(userRoles, userRole)
+				}
+			} //end for
+			if len(userRoles) > 0 {
+				tx.Exec("delete from sys_user_role where user_id=?", userPtr.UserId)
+				if err := tx.Save(userRoles).Error; err != nil {
+					return err
+				}
 			}
 		}
+		return nil
+	})
 
-	}
-
-	//增加角色数据
-	if req.RoleIds != "" {
-		roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
-		userRoles := make([]user_role2.Entity, 0)
-		for i := range roleIds {
-			if roleIds[i] > 0 {
-				var userRole user_role2.Entity
-				userRole.UserId = u.UserId
-				userRole.RoleId = roleIds[i]
-				userRoles = append(userRoles, userRole)
-			}
-		}
-		if len(userRoles) > 0 {
-			session.Exec("delete from sys_user_role where user_id=?", u.UserId)
-			_, err := session.Table(user_role2.TableName()).Insert(userRoles)
-			if tanErr != nil {
-				session.Rollback()
-				return 0, err
-			}
-		}
-	}
-
-	return 1, session.Commit()
+	return err
 }
 
 // 根据主键删除用户信息
-func (svc UserService) DeleteRecordById(id int64) bool {
+func (svc UserService) DeleteRecordById(id int64) error {
 	entity := &model.SysUser{UserId: id}
-	result, _ := entity.Delete()
-	if result > 0 {
-		return true
-	}
-	return false
+	err := entity.Delete()
+	return err
 }
 
 // 批量删除用户记录
-func (svc UserService) DeleteRecordByIds(ids string) int64 {
+func (svc UserService) DeleteRecordByIds(ids string) error {
 	idarr := lv_conv.ToInt64Array(ids, ",")
-	result, _ := model.DeleteBatch(idarr...)
-	user_role2.DeleteBatch(idarr...)
-	user_post2.DeleteBatch(idarr...)
-	return result
+	idarr = lv_conv.RemoveOne(idarr, 1) //去掉admin的id
+	if len(idarr) == 0 {
+		return errors.New("ids can not be empty ")
+	}
+	err := db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+		err := tx.Table("sys_user").Where("user_id in ? and user_id!=1 ", idarr).Update("del_flag", 1).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Table("sys_user_post").Where("user_id in ? and user_id!=1 ", idarr).Update("del_flag", 1).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Table("sys_user_role").Where("user_id in ? and user_id!=1 ", idarr).Update("del_flag", 1).Error
+		if err != nil {
+			return err
+		}
+		return err
+	})
+	return err
 }
 
 // 判断是否是系统管理员
@@ -256,16 +245,11 @@ func (svc UserService) IsSignedIn(tokenStr string) bool {
 func (svc UserService) SignIn(loginnName, password string) (*model.SysUser, error) {
 	//查询用户信息
 	user := model.SysUser{LoginName: loginnName}
-	ok, err := user.FindOne()
+	err := user.FindOne()
 
 	if err != nil {
 		return nil, err
 	}
-
-	if !ok {
-		return nil, errors.New("用户名或者密码错误")
-	}
-
 	//校验密码
 	pwdNew := user.LoginName + password + user.Salt
 
@@ -297,7 +281,7 @@ func (svc UserService) ForceLogout(c *gin.Context) error {
 // 检查账号是否符合规范,存在返回false,否则true
 func (svc UserService) CheckPassport(loginName string) bool {
 	entity := model.SysUser{LoginName: loginName}
-	if ok, err := entity.FindOne(); err != nil || !ok {
+	if err := entity.FindOne(); err != nil {
 		return false
 	} else {
 		return true
@@ -307,7 +291,7 @@ func (svc UserService) CheckPassport(loginName string) bool {
 // 检查登录名是否存在,存在返回true,否则false
 func (svc UserService) CheckNickName(userName string) bool {
 	entity := model.SysUser{UserName: userName}
-	if ok, err := entity.FindOne(); err != nil || !ok {
+	if err := entity.FindOne(); err != nil {
 		return false
 	} else {
 		return true
@@ -317,7 +301,7 @@ func (svc UserService) CheckNickName(userName string) bool {
 // 检查登录名是否存在,存在返回true,否则false
 func (svc UserService) CheckLoginName(loginName string) bool {
 	entity := model.SysUser{LoginName: loginName}
-	if ok, err := entity.FindOne(); err != nil || !ok {
+	if err := entity.FindOne(); err != nil {
 		return false
 	} else {
 		return true
@@ -331,7 +315,7 @@ func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 	userId := myredis.GetInstance().HGet(context.Background(), key, "userId")
 	u := new(model.SysUser)
 	u.UserId = cast.ToInt64(userId)
-	_, err := u.FindOne()
+	err := u.FindOne()
 	if err != nil {
 		panic(err)
 	}
@@ -339,7 +323,7 @@ func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 }
 
 // 更新用户信息详情
-func (svc UserService) UpdateProfile(profile *model.ProfileReq, c *gin.Context) error {
+func (svc UserService) UpdateProfile(profile *vo.ProfileReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.UserName != "" {
@@ -358,7 +342,7 @@ func (svc UserService) UpdateProfile(profile *model.ProfileReq, c *gin.Context) 
 		user.Sex = profile.Sex
 	}
 
-	_, err := user.Update()
+	err := user.Updates()
 	if err != nil {
 		return errors.New("保存数据失败")
 	}
@@ -375,7 +359,7 @@ func (svc UserService) UpdateAvatar(avatar string, c *gin.Context) error {
 		user.Avatar = avatar
 	}
 
-	_, err := user.Update()
+	err := user.Updates()
 	if err != nil {
 		return errors.New("保存数据失败")
 	}
@@ -385,7 +369,7 @@ func (svc UserService) UpdateAvatar(avatar string, c *gin.Context) error {
 }
 
 // 修改用户密码
-func (svc UserService) UpdatePassword(profile *model.PasswordReq, c *gin.Context) error {
+func (svc UserService) UpdatePassword(profile *vo.PasswordReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.OldPassword == "" {
@@ -424,7 +408,7 @@ func (svc UserService) UpdatePassword(profile *model.PasswordReq, c *gin.Context
 	user.Salt = newSalt
 	user.Password = newToken
 
-	_, err := user.Update()
+	err := user.Updates()
 	if err != nil {
 		return errors.New("保存数据失败")
 	}
@@ -434,9 +418,9 @@ func (svc UserService) UpdatePassword(profile *model.PasswordReq, c *gin.Context
 }
 
 // 重置用户密码
-func (svc UserService) ResetPassword(params *model.ResetPwdReq) (bool, error) {
+func (svc UserService) ResetPassword(params *vo.ResetPwdReq) (bool, error) {
 	user := model.SysUser{UserId: params.UserId}
-	if ok, err := user.FindOne(); err != nil || !ok {
+	if err := user.FindOne(); err != nil {
 		return false, errors.New("用户不存在")
 	}
 	//新校验密码
@@ -446,7 +430,7 @@ func (svc UserService) ResetPassword(params *model.ResetPwdReq) (bool, error) {
 
 	user.Salt = newSalt
 	user.Password = newToken
-	if _, err := user.Update(); err != nil {
+	if err := user.Updates(); err != nil {
 		return false, errors.New("保存数据失败")
 	}
 	return true, nil
@@ -471,40 +455,48 @@ func (svc UserService) CheckPassword(user *model.SysUser, password string) bool 
 
 // 检查邮箱是否已使用
 func (svc UserService) CheckEmailUnique(userId int64, email string) bool {
-	return model.CheckEmailUnique(userId, email)
+	var vo dao.SysUserDao
+	return vo.CheckEmailUnique(userId, email)
 }
 
 // 检查邮箱是否存在,存在返回true,否则false
 func (svc UserService) CheckEmailUniqueAll(email string) bool {
-	return model.CheckEmailUniqueAll(email)
+	var vo dao.SysUserDao
+	return vo.CheckEmailUniqueAll(email)
 }
 
 // 检查手机号是否已使用,存在返回true,否则false
 func (svc UserService) CheckPhoneUnique(userId int64, phone string) bool {
-	return model.CheckPhoneUnique(userId, phone)
+	var vo dao.SysUserDao
+	return vo.CheckPhoneUnique(userId, phone)
 }
 
 // 检查手机号是否已使用 ,存在返回true,否则false
 func (svc UserService) CheckPhoneUniqueAll(phone string) bool {
-	return model.CheckPhoneUniqueAll(phone)
+	var vo dao.SysUserDao
+	return vo.CheckPhoneUniqueAll(phone)
 }
 
 // 根据登录名查询用户信息
 func (svc UserService) SelectUserByLoginName(loginName string) (*model.SysUser, error) {
-	return model.SelectUserByLoginName(loginName)
+	var vo dao.SysUserDao
+	return vo.SelectUserByLoginName(loginName)
 }
 
 // 根据手机号查询用户信息
 func (svc UserService) SelectUserByPhoneNumber(phonenumber string) (*model.SysUser, error) {
-	return model.SelectUserByPhoneNumber(phonenumber)
+	var vo dao.SysUserDao
+	return vo.SelectUserByPhoneNumber(phonenumber)
 }
 
 // 查询已分配用户角色列表
-func (svc UserService) SelectAllocatedList(roleId int64, loginName, phonenumber string) ([]model.SysUser, error) {
-	return model.SelectAllocatedList(roleId, loginName, phonenumber)
+func (svc UserService) SelectAllocatedList(roleId int64, loginName, phonenumber string) (*[]map[string]string, error) {
+	var vo dao.SysUserDao
+	return vo.SelectAllocatedList(roleId, loginName, phonenumber)
 }
 
 // 查询未分配用户角色列表
-func (svc UserService) SelectUnallocatedList(roleId int64, loginName, phonenumber string) ([]model.SysUser, error) {
-	return model.SelectUnallocatedList(roleId, loginName, phonenumber)
+func (svc UserService) SelectUnallocatedList(roleId int64, loginName, phonenumber string) (*[]map[string]string, error) {
+	var vo dao.SysUserDao
+	return vo.SelectUnallocatedList(roleId, loginName, phonenumber)
 }

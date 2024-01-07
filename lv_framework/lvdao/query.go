@@ -4,10 +4,8 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/db/lvbatis"
 	"lostvip.com/namedsql"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/web/dto"
-	"robvi/app/common/global"
-	"strings"
 )
 
 func ListMapByNamedSql(sql string, req any, isCamel bool) (*[]map[string]string, error) {
@@ -19,28 +17,11 @@ func ListMapByNamedSql(sql string, req any, isCamel bool) (*[]map[string]string,
  * 通用泛型查询
  */
 func ListByNamedSql[T any](sql string, req any) (*[]T, error) {
-	var list = make([]T, 0)
-	db := db.GetMasterGorm()
-	if global.GetConfigInstance().IsDebug() {
-		db = db.Debug()
-	}
-	var err error
-	if strings.Contains(sql, "@") {
-		err = db.Raw(sql, req).Scan(&list).Error
-	} else {
-		err = db.Raw(sql).Scan(&list).Error
-	}
-
-	return &list, err
+	return namedsql.ListData[T](db.GetMasterGorm(), sql, req)
 }
 
-func CountByNamedSql(sqlStr string, params any) (int64, error) {
-	db := db.GetMasterGorm()
-	if global.GetConfigInstance().IsDebug() {
-		db = db.Debug()
-	}
-	count, err := namedsql.Count(db, sqlStr, params)
-	return count, err
+func CountByNamedSql(sql string, params any) (int64, error) {
+	return namedsql.Count(db.GetMasterGorm(), sql, params)
 }
 
 /**
@@ -50,12 +31,12 @@ func GetPageByNamedSql[T any](sqlfile string, sqlTag string, req any) dto.RespPa
 	//解析sql
 	ibatis := lvbatis.NewInstance(sqlfile)
 	sql, err := ibatis.GetLimitSql(sqlTag, req)
-	lv_logic.HasErrAndPanic(err)
+	lv_err.HasErrAndPanic(err)
 	//查询数据
-	rows, err := ListByNamedSql[T](sql, req)
-	lv_logic.HasErrAndPanic(err)
-	count, err := CountByNamedSql(sql, req)
-	lv_logic.HasErrAndPanic(err)
+	rows, err := namedsql.ListData[T](db.GetMasterGorm(), sql, req)
+	lv_err.HasErrAndPanic(err)
+	count, err := namedsql.Count(db.GetMasterGorm(), sql, req)
+	lv_err.HasErrAndPanic(err)
 	return dto.SuccessPage[T](rows, count)
 }
 

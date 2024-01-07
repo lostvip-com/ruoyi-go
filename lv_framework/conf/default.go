@@ -80,6 +80,8 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.SetConfigType("yaml")
 		e.vipperCfg.AddConfigPath("./")
 		e.vipperCfg.ReadInConfig()
+	} else {
+		fmt.Println("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
 	}
 	//加载第二个配置文件
 	if lv_file.IsFileExist("application.yml") || lv_file.IsFileExist("application.yaml") {
@@ -87,6 +89,9 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.SetConfigType("yaml")
 		e.vipperCfg.AddConfigPath("./")
 		e.vipperCfg.MergeInConfig()
+	} else {
+		fmt.Println("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
+
 	}
 	return e.vipperCfg
 }

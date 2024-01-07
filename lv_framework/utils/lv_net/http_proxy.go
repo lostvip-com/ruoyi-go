@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"lostvip.com/utils/lv_logic"
+	"lostvip.com/utils/lv_err"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -63,8 +63,8 @@ func ProxyWithUrlSame(c *gin.Context, host string) {
  */
 func ProxyWithUrlDifferent(c *gin.Context, targetUrl string, rawQuery string) {
 	url, err := url.Parse(targetUrl)
-	lv_logic.HasError1(err)
-	lv_logic.Assert1(!strings.HasPrefix(targetUrl, "http"), "targetUrl 格式必须以http开头！")
+	lv_err.HasError1(err)
+	lv_err.Assert1(!strings.HasPrefix(targetUrl, "http"), "targetUrl 格式必须以http开头！")
 	fmt.Println("==================rawQuery:" + rawQuery)
 	proxy := &httputil.ReverseProxy{
 		Director: func(req *http.Request) {

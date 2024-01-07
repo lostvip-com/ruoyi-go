@@ -16,34 +16,45 @@ import (
 /**
  * 通用泛型查询
  */
-func ListData[T any](db *gorm.DB, limitSql string, req any) *[]T {
+func ListData[T any](db *gorm.DB, limitSql string, req any) (*[]T, error) {
 	var list = make([]T, 0)
+	var err error
 	if global.GetConfigInstance().IsDebug() {
 		db = db.Debug()
 	}
 	if strings.Contains(limitSql, "@") {
-		db.Raw(limitSql, req).Scan(&list)
+		kvMap, isMap := checkAndExtractMap(req)
+		if isMap {
+			req = kvMap
+		}
+		err = db.Raw(limitSql, req).Scan(&list).Error
 	} else {
-		db.Raw(limitSql).Scan(&list)
+		err = db.Raw(limitSql).Scan(&list).Error
 	}
 
-	return &list
+	return &list, err
 }
 
-func Count(db *gorm.DB, countSql string, sqlParams any) (int64, error) {
+func Count(db *gorm.DB, countSql string, params any) (int64, error) {
+	if global.GetConfigInstance().IsDebug() {
+		db = db.Debug()
+	}
+
 	if !strings.Contains(countSql, "count") {
-		countSql = " select count(1) from (" + countSql + ") t where 1=1  "
+		countSql = " select count(*) from (" + countSql + ") t where 1=1  "
 	}
 	if !strings.Contains(countSql, "limit") {
 		countSql = countSql + "   limit 1  "
 	}
-	if global.GetConfigInstance().IsDebug() {
-		db = db.Debug()
-	}
+
 	var rows *sql.Rows
 	var err error
 	if strings.Contains(countSql, "@") {
-		rows, err = db.Raw(countSql, sqlParams).Rows()
+		kvMap, isMap := checkAndExtractMap(params)
+		if isMap {
+			params = kvMap
+		}
+		rows, err = db.Raw(countSql, params).Rows()
 	} else {
 		rows, err = db.Raw(countSql).Rows()
 	}
@@ -61,13 +72,37 @@ func Count(db *gorm.DB, countSql string, sqlParams any) (int64, error) {
 	return count, err
 }
 
-// Raw sql查询返回[]map[string]string类型
-func ListMap(db *gorm.DB, sqlQuery string, sqlParams any, isCamel bool) (*[]map[string]string, error) {
+/**
+ * gorm中参数为map指针时，无法正常传参数！！
+ * 处理方式：把map的指针转为值类型。
+ */
+func checkAndExtractMap(value interface{}) (map[string]any, bool) {
+	// 判断是否是指针类型
+	if ptr, ok := value.(*map[string]any); ok {
+		// 指针指向Map类型
+		return *ptr, true
+	}
+	return nil, false
+}
 
+/**
+ *  注意：
+ *  如果是map类型，只能是值类型，不能传地址 ！！！！！！！！！
+ *  paramsValues 参数如果是struct类型，可以是指针也可以是值
+ *
+ */
+func ListMap(db *gorm.DB, sqlQuery string, params any, isCamel bool) (*[]map[string]string, error) {
 	var rows *sql.Rows
 	var err error
+	if global.GetConfigInstance().IsDebug() {
+		db = db.Debug()
+	}
 	if strings.Contains(sqlQuery, "@") {
-		rows, err = db.Raw(sqlQuery, sqlParams).Rows()
+		kvMap, isMap := checkAndExtractMap(params)
+		if isMap {
+			params = kvMap
+		}
+		rows, err = db.Raw(sqlQuery, params).Rows()
 	} else {
 		rows, err = db.Raw(sqlQuery).Rows()
 	}
@@ -111,15 +146,18 @@ func ListMap(db *gorm.DB, sqlQuery string, sqlParams any, isCamel bool) (*[]map[
 	return &result, err
 }
 
-func ListArrStr(db *gorm.DB, sqlQuery string, sqlValues ...interface{}) (*[][]string, error) {
-
+func ListArrStr(db *gorm.DB, sqlQuery string, params any) (*[][]string, error) {
 	if global.GetConfigInstance().IsDebug() {
 		db = db.Debug()
 	}
 	var rows *sql.Rows
 	var err error
 	if strings.Contains(sqlQuery, "@") {
-		rows, err = db.Raw(sqlQuery, sqlValues).Rows()
+		kvMap, isMap := checkAndExtractMap(params)
+		if isMap {
+			params = kvMap
+		}
+		rows, err = db.Raw(sqlQuery, params).Rows()
 	} else {
 		rows, err = db.Raw(sqlQuery).Rows()
 	}
@@ -155,22 +193,4 @@ func ListArrStr(db *gorm.DB, sqlQuery string, sqlValues ...interface{}) (*[][]st
 		listRows = append(listRows, row)
 	}
 	return &listRows, err
-}
-
-func CountWhereVal(db *gorm.DB, sql string, whereVal []interface{}) (int, error) {
-
-	if global.GetConfigInstance().IsDebug() {
-		db = db.Debug()
-	}
-
-	rows, err := db.Raw(sql, whereVal...).Limit(1).Rows()
-	if err != nil {
-		return 0, err
-	}
-	//查总数
-	var count int
-	for rows.Next() {
-		rows.Scan(&count)
-	}
-	return count, err
 }

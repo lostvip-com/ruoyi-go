@@ -19,8 +19,8 @@ import (
 type {{.table.ClassName}}Dao struct { }
 
 // 根据条件分页查询数据
-func (e {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, int64, error) {
-	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
+func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, int64, error) {
+	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	tagName := lv_reflect.GetMethodName()
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
@@ -32,8 +32,8 @@ func (e {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 	return rows, count, nil
 }
 // 根据条件分页查询数据
-func (e {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
-	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
+func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
+	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	tagName := lv_reflect.GetMethodName()
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
@@ -46,7 +46,7 @@ func (e {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 }
 
 // ListAll 导出excel使用
-func (e {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
+func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
 	ibatis := lvbatis.NewInstance("{{.table.ModuleName}}/{{.table.TbName}}_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
@@ -57,13 +57,13 @@ func (e {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, is
 }
 
 // FindByWhere 根据条件查询
-func (e {{.table.ClassName}}Dao) Find(where, order string) (*[]model.{{.table.ClassName}}, error) {
+func (d {{.table.ClassName}}Dao) Find(where, order string) (*[]model.{{.table.ClassName}}, error) {
 	var list []model.{{.table.ClassName}}
 	err := db.GetMasterGorm().Table("{{.table.TbName}}").Where(where).Order(order).Find(&list).Error
 	return &list, err
 }
 
-func (e {{.table.ClassName}}Dao) DeleteByIds(ida []int64) int64 {
+func (d {{.table.ClassName}}Dao) DeleteByIds(ida []int64) int64 {
 	db := db.GetMasterGorm().Table("{{.table.TbName}}").Where("{{.table.PkColumn.ColumnName}} in ? ", ida).Update("del_flag", 1)
     if db.Error != nil {
         panic(db.Error)

@@ -82,7 +82,7 @@
                     <div class="col-sm-8">
                         <select id="post" class="form-control select2-multiple" multiple>
                             {{range $index, $post := .posts}}
-                                <option value="{{$post.PostId}}" {{if $post.Flag }} selected {{end}} {{if eq $post.Status "1" }} disabled {{end}}  {{if eq $post.Status "1" }} disabled {{end}}>{{$post.PostName}}</option>
+                                <option value="{{$post.PostId}}" {{if $post.Selected }} selected {{end}} {{if eq $post.Status "1" }} disabled {{end}}  {{if eq $post.Status "1" }} disabled {{end}}>{{$post.PostName}}</option>
                             {{end}}
                         </select>
                     </div>

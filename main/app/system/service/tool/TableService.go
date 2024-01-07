@@ -12,7 +12,7 @@ import (
 	"os"
 	"robvi/app/system/model/tool"
 	"robvi/app/system/service"
-	"robvi/app/system/service/system/calcu"
+	"robvi/app/system/utils/calcu"
 	"strings"
 	"text/template"
 	"time"
@@ -341,11 +341,13 @@ func (svc TableService) InitColumnField(column *tool.Entity, table *tool.GenTabl
 		column.HtmlType = "input"
 		// 如果是浮点型
 		tmp := column.ColumnType
-		if tmp == "float" || tmp == "double" {
+		if strings.HasPrefix(tmp, "float") {
+			column.GoType = "float"
+		} else if strings.Contains(tmp, "double") || strings.HasPrefix(tmp, "decimal") {
 			column.GoType = "float64"
-		} else if tmp == "bigint" {
+		} else if strings.Contains(tmp, "bigint") {
 			column.GoType = "int64"
-		} else if tmp == "int" || tmp == "tinyint" {
+		} else if strings.Contains(tmp, "int") {
 			column.GoType = "int"
 		} else {
 			start := strings.Index(tmp, "(")

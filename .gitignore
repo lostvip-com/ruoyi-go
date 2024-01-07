@@ -1,4 +1,5 @@
 uploads/*
+static/upload/*
 logs/*
 *.exe
 .idea

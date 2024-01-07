@@ -8,8 +8,8 @@ import (
 	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_secret"
+	"robvi/app/system/model"
 	"robvi/app/system/model/monitor/online"
-	"robvi/app/system/model/system"
 	logininforService "robvi/app/system/service/monitor/logininfor"
 	"strings"
 	"time"
@@ -27,14 +27,12 @@ func (svc *SessionService) IsSignedIn(tokenStr string) bool {
 func (svc *SessionService) SignIn(loginnName, password string) (*model.SysUser, error) {
 	//查询用户信息
 	user := model.SysUser{LoginName: loginnName}
-	ok, err := user.FindOne()
+	err := user.FindOne()
 
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, errors.New("用户名或者密码错误")
-	}
+
 	//校验密码
 	pwdNew := user.LoginName + password + user.Salt
 

@@ -165,7 +165,7 @@ func GetInstance() *dbEngine {
 		//没有配置从数据库
 		if config.GetMaster() != "" {
 			//xorm (即将移除xorm,目前作为过渡)
-			db.masterXorm = createXormEngine(driverName, config.GetMaster(), config.IsDebug())
+			db.masterXorm = createXormEngine(driverName, config.GetMaster(), false)
 		}
 		instance = &db
 	})
@@ -180,6 +180,7 @@ func (db *dbEngine) Engine(dbType ...string) *xorm.Engine {
 			return nil //随机选取一个
 		}
 	}
+
 	if db == nil {
 		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>masterXorm:\n " + conf.Config().GetMaster() + "\n ------------>slave:\n " + conf.Config().GetSlave())
 	}

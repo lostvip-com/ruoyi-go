@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/logme"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_web"
 	"lostvip.com/web/dto"
 	"net/http"
@@ -17,19 +17,19 @@ func RecoverError(c *gin.Context) {
 			switch errTypeObj := err.(type) {
 			case string:
 				if strings.HasPrefix(errTypeObj, "{") {
-					fmt.Println("============>" + errTypeObj)
 					c.Header("Content-Type", "application/json; charset=utf-8")
 					c.String(http.StatusOK, errTypeObj)
 					c.Abort()
 				} else {
-					fmt.Println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:")
-					fmt.Println(err)
 					lv_web.Err(c, errTypeObj)
 				}
 			case dto.Resp: //封装过的
 				c.AbortWithStatusJSON(http.StatusOK, errTypeObj)
 				lv_web.ErrResp(c, errTypeObj)
 			case error: // 原始的错误
+				if gin.IsDebugging() {
+					lv_err.PrintStackTrace(errTypeObj)
+				}
 				logme.Error(c, "CustomError XXXXXXXXXX: ", errTypeObj)
 				lv_web.Error(c, errTypeObj)
 			default:

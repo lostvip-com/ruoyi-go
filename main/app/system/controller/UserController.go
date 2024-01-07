@@ -5,12 +5,9 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
 	"robvi/app/common/model_cmn"
-	userModel "robvi/app/system/model/system"
-	postModel "robvi/app/system/model/system/post"
-	roleModel "robvi/app/system/model/system/role"
 	service2 "robvi/app/system/service"
-	postService "robvi/app/system/service/system/post"
 	roleService "robvi/app/system/service/system/role"
+	userModel "robvi/app/system/vo"
 )
 
 type UserController struct {
@@ -23,44 +20,30 @@ func (w *UserController) List(c *gin.Context) {
 
 // 用户列表分页数据
 func (w *UserController) ListAjax(c *gin.Context) {
-	var req *userModel.SelectPageReq
+	var req *userModel.SelectUserPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]userModel.UserListEntity, 0)
+	var rows []map[string]string
 	var userService service2.UserService
-	result, page, err := userService.SelectRecordList(req)
+	result, total, err := userService.SelectRecordList(req)
 
-	if err == nil && len(result) > 0 {
-		rows = result
+	if err == nil && len(*result) > 0 {
+		rows = *result
 	}
-	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
+	lv_web.BuildTable(c, total, rows).WriteJsonExit()
 }
 
 // 用户新增页面
 func (w *UserController) Add(c *gin.Context) {
-	var paramsRole *roleModel.SelectPageReq
-	var paramsPost *postModel.SelectPageReq
-
-	roles := make([]roleModel.EntityFlag, 0)
-	posts := make([]postModel.EntityFlag, 0)
-
-	rolesP, _ := roleService.SelectRecordAll(paramsRole)
-
-	if rolesP != nil {
-		roles = rolesP
-	}
-
-	postP, _ := postService.SelectListAll(paramsPost)
-
-	if postP != nil {
-		posts = postP
-	}
+	rolesP, _ := roleService.SelectRecordAll(nil)
+	var postService service2.SysPostService
+	postP, _ := postService.SelectListAll(nil)
 	lv_web.BuildTpl(c, "system/user/add").WriteTpl(gin.H{
-		"roles": roles,
-		"posts": posts,
+		"roles": rolesP,
+		"posts": postP,
 	})
 }
 
@@ -79,14 +62,12 @@ func (w *UserController) AddSave(c *gin.Context) {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("登录名已经存在").Log("新增用户", req).WriteJsonExit()
 		return
 	}
-
 	//判断手机号码是否已注册
 	isHadPhone := userService.CheckPhoneUniqueAll(req.Phonenumber)
 	if isHadPhone {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("手机号码已经存在").Log("新增用户", req).WriteJsonExit()
 		return
 	}
-
 	//判断邮箱是否已注册
 	isHadEmail := userService.CheckEmailUniqueAll(req.Email)
 	if isHadEmail {
@@ -106,23 +87,14 @@ func (w *UserController) AddSave(c *gin.Context) {
 // 用户修改页面
 func (w *UserController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
-
-	if id <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
-			"desc": "参数错误",
-		})
-		return
-	}
 	var userService service2.UserService
 	user, err := userService.SelectRecordById(id)
-
 	if err != nil || user == nil {
 		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "用户不存在",
 		})
 		return
 	}
-
 	//获取部门信息
 	deptName := ""
 	if user.DeptId > 0 {
@@ -132,27 +104,14 @@ func (w *UserController) Edit(c *gin.Context) {
 			deptName = dept.DeptName
 		}
 	}
-
-	roles := make([]roleModel.EntityFlag, 0)
-	posts := make([]postModel.EntityFlag, 0)
-
 	rolesP, _ := roleService.SelectRoleContactVo(id)
-
-	if rolesP != nil {
-		roles = rolesP
-	}
-
+	var postService service2.SysPostService
 	postP, _ := postService.SelectPostsByUserId(id)
-
-	if postP != nil {
-		posts = postP
-	}
-
 	lv_web.BuildTpl(c, "system/user/edit").WriteTpl(gin.H{
 		"user":     user,
 		"deptName": deptName,
-		"roles":    roles,
-		"posts":    posts,
+		"roles":    rolesP,
+		"posts":    postP,
 	})
 }
 
@@ -198,34 +157,17 @@ func (w *UserController) ResetPwdSave(c *gin.Context) {
 // 保存修改用户数据
 func (w *UserController) EditSave(c *gin.Context) {
 	var req *userModel.EditReq
-	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("修改用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	var userService service2.UserService
-	//判断手机号码是否已注册
-	isHadPhone := userService.CheckPhoneUnique(req.UserId, req.Phonenumber)
-	if isHadPhone {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("手机号码已经存在").Log("修改用户", req).WriteJsonExit()
+	err := userService.EditSave(req, c)
+	if err != nil {
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).WriteJsonExit()
 		return
 	}
-
-	//判断邮箱是否已注册
-	isHadEmail := userService.CheckEmailUnique(req.UserId, req.Email)
-	if isHadEmail {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("邮箱已经存在").Log("修改用户", req).WriteJsonExit()
-		return
-	}
-
-	uid, err := userService.EditSave(req, c)
-
-	if err != nil || uid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
-		return
-	}
-
-	lv_web.SucessResp(c).SetData(uid).SetBtype(model_cmn.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(req.UserId).SetBtype(model_cmn.Buniss_Edit).WriteJsonExit()
 }
 
 // 删除数据
@@ -233,21 +175,20 @@ func (w *UserController) Remove(c *gin.Context) {
 	var req *model_cmn.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("删除用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).WriteJsonExit()
 	}
 	var userService service2.UserService
-	rs := userService.DeleteRecordByIds(req.Ids)
-
-	if rs > 0 {
-		lv_web.SucessResp(c).SetData(rs).SetBtype(model_cmn.Buniss_Del).Log("删除用户", req).WriteJsonExit()
+	err := userService.DeleteRecordByIds(req.Ids)
+	if err == nil {
+		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("删除用户", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).WriteJsonExit()
 	}
 }
 
 // 导出
 func (w *UserController) Export(c *gin.Context) {
-	var req *userModel.SelectPageReq
+	var req *userModel.SelectUserPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("导出Excel", req).WriteJsonExit()

@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"robvi/app/common/model_cmn"
 	"robvi/app/common/session"
-	"robvi/app/system/model/system/dept"
 	"robvi/app/system/service"
+	"robvi/app/system/vo"
 )
 
 type DeptController struct {
@@ -22,20 +22,18 @@ func (w *DeptController) List(c *gin.Context) {
 // 列表分页数据
 func (w *DeptController) ListAjax(c *gin.Context) {
 	var service service.DeptService
-	var req = dept.SelectPageReq{}
+	var req = vo.DeptPageReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]dept.SysDept, 0)
 	result, err := service.SelectListAll(&req)
-
-	if err == nil && len(result) > 0 {
-		rows = result
+	if err != nil {
+		panic(err)
 	}
 
-	c.JSON(http.StatusOK, rows)
+	c.JSON(http.StatusOK, result)
 }
 
 // 新增页面
@@ -53,7 +51,7 @@ func (w *DeptController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *DeptController) AddSave(c *gin.Context) {
-	var req *dept.AddReq
+	var req *vo.AddDeptReq
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
@@ -102,7 +100,7 @@ func (w *DeptController) Edit(c *gin.Context) {
 func (w *DeptController) EditSave(c *gin.Context) {
 	var service service.DeptService
 
-	var req *dept.EditReq
+	var req *vo.EditDeptReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
@@ -127,9 +125,8 @@ func (w *DeptController) EditSave(c *gin.Context) {
 func (w *DeptController) Remove(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	service := service.DeptService{}
-	rs := service.DeleteDeptById(id)
-
-	if rs > 0 {
+	err := service.DeleteDeptById(id)
+	if err != nil {
 		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	} else {
 		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
@@ -177,7 +174,7 @@ func (w *DeptController) RoleDeptTreeData(c *gin.Context) {
 // 检查部门名称是否已经存在
 func (w *DeptController) CheckDeptNameUnique(c *gin.Context) {
 	var service service.DeptService
-	var req *dept.CheckDeptNameReq
+	var req *vo.CheckDeptNameReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
@@ -190,7 +187,7 @@ func (w *DeptController) CheckDeptNameUnique(c *gin.Context) {
 
 // 检查部门名称是否已经存在
 func (w *DeptController) CheckDeptNameUniqueAll(c *gin.Context) {
-	var req *dept.CheckDeptNameALLReq
+	var req *vo.CheckDeptNameALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
