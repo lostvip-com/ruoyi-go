@@ -79,8 +79,7 @@ func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, er
 		dept0.UpdateTime = time.Now()
 		dept0.Update()
 		//递归修改所有子项目
-		newAncestors := pdept.Ancestors + "," + lv_conv.String(dept0.DeptId) //上级的+自己的
-		dao.UpdateDeptChildrenAncestors(dept0, newAncestors)
+		dao.UpdateDeptChildrenAncestors(dept0, pdept.Ancestors)
 		return 1, nil
 	}
 }

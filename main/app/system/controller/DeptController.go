@@ -107,11 +107,6 @@ func (w *DeptController) EditSave(c *gin.Context) {
 		return
 	}
 
-	if service.CheckDeptNameUnique(req.DeptName, req.DeptId, req.ParentId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
-		return
-	}
-
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {

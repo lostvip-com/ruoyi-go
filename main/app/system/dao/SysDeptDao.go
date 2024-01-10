@@ -30,7 +30,8 @@ func (dao SysDeptDao) SelectDeptById(deptId int64) (*vo.SysDeptExtend, error) {
 func (dao SysDeptDao) SelectChildrenDeptById(deptId int64) []*model.SysDept {
 	db := db.GetMasterGorm()
 	var rs []*model.SysDept
-	db.Table("sys_dept").Where("find_in_set(?, ancestors)", deptId).Find(&rs)
+	//db.Table("sys_dept").Where("find_in_set(?, ancestors)", deptId).Find(&rs)
+	db.Table("sys_dept").Where("parent_id=?", deptId).Find(&rs)
 	return rs
 }
 
@@ -43,20 +44,16 @@ func (dao SysDeptDao) DeleteDeptById(deptId int64) error {
 }
 
 // 修改子元素关系（替换前半部分）
-func (dao SysDeptDao) UpdateDeptChildrenAncestors(dept *model.SysDept, newAncestors string) {
-	if dept.Ancestors == newAncestors {
-		return //不需要更新
-	}
-	dept.Ancestors = newAncestors
-	db.GetMasterGorm().Table("sys_dept").Where("dept_id=?", dept.DeptId).Update("ancestors", newAncestors)
+func (dao SysDeptDao) UpdateDeptChildrenAncestors(dept *model.SysDept, parentCodes string) {
+	dept.Ancestors = parentCodes + "," + cast.ToString(dept.DeptId)
+	db.GetMasterGorm().Table("sys_dept").Where("parent_id=", dept.DeptId).Update("ancestors", dept.Ancestors)
 	// ancestors 上级ancestors发生变化，修改下级
 	deptList := dao.SelectChildrenDeptById(dept.DeptId)
 	if deptList == nil || len(deptList) <= 0 {
 		return
 	}
-	for _, tmp := range deptList {
-		childAncestors := newAncestors + "," + cast.ToString(tmp.DeptId)
-		dao.UpdateDeptChildrenAncestors(tmp, childAncestors)
+	for _, child := range deptList {
+		dao.UpdateDeptChildrenAncestors(child, dept.Ancestors)
 	}
 }
 
