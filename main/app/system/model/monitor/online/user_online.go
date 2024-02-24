@@ -126,7 +126,7 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
 	if param.OrderByColumn != "" {
 		model.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")

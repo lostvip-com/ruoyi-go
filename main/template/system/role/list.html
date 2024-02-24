@@ -1,6 +1,6 @@
 {{define "system/role/list"}}
 {{/*    下面这个标签非常重要，没有它页面高度会出现滚动条*/}}
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 <head>
     {{template "header" (OssUrl)}}
@@ -42,7 +42,6 @@
             {{getPermiButton .uid "system:role:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}
             {{getPermiButton .uid "system:role:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
             {{getPermiButton .uid "system:role:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
-            {{getPermiButton .uid "system:role:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
         </div>
 
         <div class="col-sm-12 select-table table-striped">
@@ -63,7 +62,6 @@
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit?id={id}",
             removeUrl: prefix + "/remove",
-            exportUrl: prefix + "/export",
             sortName: "create_time",
             modalName: "角色",
             columns: [{

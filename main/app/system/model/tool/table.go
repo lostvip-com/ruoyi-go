@@ -114,7 +114,7 @@ func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *lv_web.P
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
 	model.Limit(p.Pagesize, p.StartNum)
 	var result []GenTable
@@ -161,7 +161,7 @@ func SelectDbTableList(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error)
 		return nil, p, errors.New("读取行数失败")
 	}
 
-	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int(total))
+	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
 	model.Select("table_name, table_comment, create_time, update_time")
 	model.Limit(p.Pagesize, p.StartNum)

@@ -12,7 +12,9 @@ import (
 )
 
 type ConfigDefault struct {
-	vipperCfg *viper.Viper
+	vipperCfg   *viper.Viper
+	proxyMap    map[string]string
+	proxyEnable bool
 }
 
 func (e *ConfigDefault) GetVipperCfg() *viper.Viper {
@@ -81,7 +83,7 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.AddConfigPath("./")
 		e.vipperCfg.ReadInConfig()
 	} else {
-		fmt.Println("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
+		panic("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
 	}
 	//加载第二个配置文件
 	if lv_file.IsFileExist("application.yml") || lv_file.IsFileExist("application.yaml") {
@@ -91,8 +93,15 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.MergeInConfig()
 	} else {
 		fmt.Println("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
-
 	}
+	if e.vipperCfg.GetBool("go.proxy.enable") == true {
+		e.proxyEnable = true
+		e.GetProxyMap()
+	} else {
+		fmt.Println("!!！！！！！！！！！！！！!!! porxy feature is disabled ！！！！！！！！！！！！！！！！！！！！！！！")
+		e.proxyEnable = false
+	}
+
 	return e.vipperCfg
 }
 
@@ -188,4 +197,34 @@ func (e *ConfigDefault) GetDataId() string {
 	key := e.GetAppName() + "-" + e.GetAppActive() + ".yml"
 	fmt.Println(" dataId: " + key)
 	return key
+}
+
+func (e *ConfigDefault) IsProxyEnable() bool {
+	return e.proxyEnable
+}
+
+func (e *ConfigDefault) GetProxyMap() *map[string]string {
+	if e.proxyEnable && e.proxyMap == nil {
+		e.LoadProxyInfo()
+	}
+	return &e.proxyMap
+}
+
+func (e *ConfigDefault) LoadProxyInfo() *map[string]string {
+	fmt.Println("######### 加载代理配置信息 start #############")
+	if !e.IsProxyEnable() {
+		return nil
+	}
+	list := e.GetVipperCfg().GetStringSlice("go.proxy.prefix")
+	e.proxyMap = make(map[string]string)
+	for _, v := range list {
+		index := strings.Index(v, "=")
+		key := lv_conv.SubStr(v, 0, index)
+		hostPort := lv_conv.SubStr(v, index+1, len(v))
+		e.proxyMap[key] = hostPort
+	}
+	e.proxyEnable = e.GetBool("go.proxy.enable")
+	fmt.Println("go.proxy:", e.proxyMap)
+	fmt.Println("######### 加载代理配置信息 end #############")
+	return &e.proxyMap
 }

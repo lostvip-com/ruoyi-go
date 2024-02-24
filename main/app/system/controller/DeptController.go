@@ -4,11 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	"main/app/common/session"
+	"main/app/system/service"
+	"main/app/system/vo"
 	"net/http"
-	"robvi/app/common/model_cmn"
-	"robvi/app/common/session"
-	"robvi/app/system/service"
-	"robvi/app/system/vo"
 )
 
 type DeptController struct {
@@ -55,28 +55,28 @@ func (w *DeptController) AddSave(c *gin.Context) {
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	if service.CheckDeptNameUniqueAll(req.DeptName, req.ParentId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 		return
 	}
 	rid, err := service.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(dto.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func (w *DeptController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -85,7 +85,7 @@ func (w *DeptController) Edit(c *gin.Context) {
 	dept := service.SelectDeptById(id)
 
 	if dept == nil || dept.DeptId <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "部门不存在",
 		})
 		return
@@ -103,17 +103,17 @@ func (w *DeptController) EditSave(c *gin.Context) {
 	var req *vo.EditDeptReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(rs).SetBtype(model_cmn.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetData(rs).SetBtype(dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 }
 
 // 删除数据
@@ -122,9 +122,9 @@ func (w *DeptController) Remove(c *gin.Context) {
 	service := service.DeptService{}
 	err := service.DeleteDeptById(id)
 	if err != nil {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
 	}
 }
 

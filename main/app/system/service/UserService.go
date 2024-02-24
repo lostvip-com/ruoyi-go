@@ -15,10 +15,9 @@ import (
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_office"
 	"lostvip.com/utils/lv_secret"
-	"robvi/app/system/dao"
-	"robvi/app/system/model"
-	user_role2 "robvi/app/system/model/system/user_role"
-	"robvi/app/system/vo"
+	"main/app/system/dao"
+	"main/app/system/model"
+	"main/app/system/vo"
 	"strings"
 	"time"
 )
@@ -54,7 +53,7 @@ func (svc UserService) Export(param *vo.SelectUserPageReq) (string, error) {
 }
 
 // 新增用户
-func (svc UserService) AddSave(req *vo.AddReq, c *gin.Context) (int64, error) {
+func (svc UserService) AddSave(req *vo.AddUserReq, c *gin.Context) (int64, error) {
 	var u model.SysUser
 	u.LoginName = req.LoginName
 	u.UserName = req.UserName
@@ -104,10 +103,10 @@ func (svc UserService) AddSave(req *vo.AddReq, c *gin.Context) (int64, error) {
 		//增加角色数据
 		if req.RoleIds != "" {
 			roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
-			userRoles := make([]user_role2.SysUserRole, 0)
+			userRoles := make([]model.SysUserRole, 0)
 			for i := range roleIds {
 				if roleIds[i] > 0 {
-					var userRole user_role2.SysUserRole
+					var userRole model.SysUserRole
 					userRole.UserId = u.UserId
 					userRole.RoleId = roleIds[i]
 					userRoles = append(userRoles, userRole)
@@ -126,7 +125,7 @@ func (svc UserService) AddSave(req *vo.AddReq, c *gin.Context) (int64, error) {
 }
 
 // 新增用户
-func (svc UserService) EditSave(req *vo.EditReq, c *gin.Context) error {
+func (svc UserService) EditSave(req *vo.EditUserReq, c *gin.Context) error {
 	userPtr := &model.SysUser{UserId: req.UserId}
 	err := userPtr.FindOne()
 	if err != nil {
@@ -171,10 +170,10 @@ func (svc UserService) EditSave(req *vo.EditReq, c *gin.Context) error {
 		//增加角色数据
 		if req.RoleIds != "" {
 			roleIds := lv_conv.ToInt64Array(req.RoleIds, ",")
-			userRoles := make([]user_role2.SysUserRole, 0)
+			userRoles := make([]model.SysUserRole, 0)
 			for i := range roleIds {
 				if roleIds[i] > 0 {
-					var userRole user_role2.SysUserRole
+					var userRole model.SysUserRole
 					userRole.UserId = userPtr.UserId
 					userRole.RoleId = roleIds[i]
 					userRoles = append(userRoles, userRole)
@@ -312,12 +311,15 @@ func (svc UserService) CheckLoginName(loginName string) bool {
 func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 	token := lv_net.GetParam(c, "token")
 	key := "login:" + token
-	userId := myredis.GetInstance().HGet(context.Background(), key, "userId")
+	userId := myredis.GetInstance().HGet(context.Background(), key, "userId").Val()
+	roleKeys := myredis.GetInstance().HGet(context.Background(), key, "roleKeys").Val()
 	u := new(model.SysUser)
 	u.UserId = cast.ToInt64(userId)
 	err := u.FindOne()
 	if err != nil {
 		panic(err)
+	} else {
+		u.RoleKeys = roleKeys
 	}
 	return u
 }
@@ -499,4 +501,12 @@ func (svc UserService) SelectAllocatedList(roleId int64, loginName, phonenumber 
 func (svc UserService) SelectUnallocatedList(roleId int64, loginName, phonenumber string) (*[]map[string]string, error) {
 	var vo dao.SysUserDao
 	return vo.SelectUnallocatedList(roleId, loginName, phonenumber)
+}
+
+// 查询未分配用户角色列表
+func (svc UserService) GetRoleKeys(userId int64) (string, error) {
+	var sql = " SELECT GROUP_CONCAT(r.role_key) roles from sys_user_role ur,sys_role r where ur.user_id=? and ur.role_id = r.role_id "
+	var roles string
+	err := db.GetMasterGorm().Raw(sql, userId).Scan(&roles).Error
+	return roles, err
 }

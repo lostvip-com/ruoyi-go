@@ -5,10 +5,10 @@ import (
 	"html/template"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	"main/app/system/model/monitor/oper_log"
+	operlogService "main/app/system/service/monitor/operlog"
 	"net/http"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/monitor/oper_log"
-	operlogService "robvi/app/system/service/monitor/operlog"
 )
 
 type OperlogController struct {
@@ -24,7 +24,7 @@ func (w *OperlogController) ListAjax(c *gin.Context) {
 	var req *oper_log.SelectPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, model_cmn.CommonRes{
+		c.JSON(http.StatusOK, dto.CommonRes{
 			Code: 500,
 			Msg:  err.Error(),
 		})
@@ -47,27 +47,27 @@ func (w *OperlogController) Clean(c *gin.Context) {
 	rs, _ := operlogService.DeleteRecordAll()
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("操作日志管理", "all").WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).SetData(rs).Log("操作日志管理", "all").WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("操作日志管理", "all").WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("操作日志管理", "all").WriteJsonExit()
 	}
 }
 
 // 删除数据
 func (w *OperlogController) Remove(c *gin.Context) {
-	var req *model_cmn.RemoveReq
+	var req *dto.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := operlogService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).SetData(rs).Log("操作日志管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("操作日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("操作日志管理", req).WriteJsonExit()
 	}
 }
 
@@ -75,7 +75,7 @@ func (w *OperlogController) Remove(c *gin.Context) {
 func (w *OperlogController) Detail(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -84,7 +84,7 @@ func (w *OperlogController) Detail(c *gin.Context) {
 	operLog, err := operlogService.SelectRecordById(id)
 
 	if err != nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "数据不存在",
 		})
 		return

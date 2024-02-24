@@ -35,13 +35,23 @@ func (e *SysDept) Save() error {
 
 // 查
 func (e *SysDept) FindById() error {
-	err := db.GetMasterGorm().Take(e).Error
+	err := db.GetMasterGorm().Take(e, e.DeptId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysDept) FindOne() error {
-	err := db.GetMasterGorm().First(e).Error
+	tb := db.GetMasterGorm()
+	if e.Ancestors != "" {
+		tb = tb.Where("ancestors=?", e.Ancestors)
+	}
+	if e.DeptName != "" {
+		tb = tb.Where("dept_name=?", e.DeptName)
+	}
+	if e.DeptId != 0 {
+		tb = tb.Where("dept_id=?", e.DeptId)
+	}
+	err := tb.First(e).Error
 	return err
 }
 

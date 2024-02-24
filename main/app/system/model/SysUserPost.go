@@ -28,22 +28,22 @@ func (e *SysUserPost) Save() error {
 
 // 查
 func (e *SysUserPost) FindById() error {
-	err := db.GetMasterGorm().Take(e).Error
+	err := db.GetMasterGorm().Take(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
 	return err
 }
 
-// 查第一条
+// // 查第一条
 func (e *SysUserPost) FindOne() error {
-	err := db.GetMasterGorm().First(e).Error
+	err := db.GetMasterGorm().First(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
 	return err
 }
 
 // 改
 func (e *SysUserPost) Updates() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return db.GetMasterGorm().Updates(e).Error
 }
 
 // 删
 func (e *SysUserPost) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return db.GetMasterGorm().Delete(e).Error
 }

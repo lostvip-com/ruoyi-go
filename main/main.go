@@ -7,10 +7,10 @@ import (
 	"lostvip.com/logme"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/web/server"
-	_ "robvi/app"
-	"robvi/app/common/global"
-	my "robvi/app/mywork/model"
-	sys "robvi/app/system/model"
+	_ "main/app"
+	"main/app/common/global"
+	my "main/app/mywork/model"
+	sys "main/app/system/model"
 )
 
 // @title LV 自动生成API文档

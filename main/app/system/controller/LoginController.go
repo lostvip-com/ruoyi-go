@@ -5,15 +5,16 @@ import (
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
 	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_secret"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	global2 "main/app/common/global"
+	logininforModel "main/app/system/model/monitor/logininfor"
+	"main/app/system/service"
+	logininforService "main/app/system/service/monitor/logininfor"
 	"net/http"
-	global2 "robvi/app/common/global"
-	"robvi/app/common/model_cmn"
-	logininforModel "robvi/app/system/model/monitor/logininfor"
-	"robvi/app/system/service"
-	logininforService "robvi/app/system/service/monitor/logininfor"
 	"strings"
 	"time"
 )
@@ -104,8 +105,12 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 		}
 		c.SetCookie(cookie.Name, token, maxage, path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		// 生成token
+		ua := c.Request.Header.Get("User-Agent")
+		roles, err := userService.GetRoleKeys(user.UserId)
+		lv_err.HasErrAndPanic(err)
 		var svc service.SessionService
-		svc.SaveUserToSession(token, user, c)
+		ip := lv_net.GetClientRealIP(c)
+		svc.SaveUserToSession(token, user, roles, ua, ip)
 		w.SaveLogs(c, &req, "登录成功") //记录日志
 		lv_web.SucessResp(c).SetData(token).SetMsg("登录成功").WriteJsonExit()
 	}
@@ -174,10 +179,12 @@ func (w *LoginController) CaptchaImage(c *gin.Context) {
 	//idKeyD, capD := base64Captcha.GenerateCaptcha("", configD)
 	//以base64编码
 	//base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
-	c.JSON(http.StatusOK, model_cmn.CaptchaRes{
-		Code:  200,
-		IdKey: idKeyC,
-		Data:  base64stringC,
-		Msg:   "操作成功",
+
+	c.JSON(http.StatusOK, dto.CaptchaRes{
+		Code:           200,
+		CaptchaEnabled: true,
+		Uuid:           idKeyC,
+		Img:            base64stringC,
+		Msg:            "操作成功",
 	})
 }

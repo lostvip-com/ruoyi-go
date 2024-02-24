@@ -1,4 +1,4 @@
-module robvi
+module main
 
 require (
 	github.com/mojocn/base64Captcha v1.2.2

@@ -11,7 +11,7 @@ import (
 	"lostvip.com/conf"
 	"lostvip.com/db/xorm"
 	"lostvip.com/logme"
-	"robvi/app/common/global"
+	"main/app/common/global"
 	"strings"
 	"sync"
 	"xorm.io/core"
@@ -108,7 +108,7 @@ func createGorm(driverName, url string) *gorm.DB {
 	}
 	sqlDB.SetMaxIdleConns(5)
 	sqlDB.SetMaxOpenConns(50)
-	logme.Info("########### sqlx 初始化成功！ #################")
+	logme.Info("########### db conn 初始化成功！ #################")
 	return gormDB
 }
 

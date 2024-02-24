@@ -1,9 +1,9 @@
-package robvi
+package myowrk
 
 import (
 	"fmt"
 	"lostvip.com/web/router"
-	"robvi/app/mywork/controller"
+	"main/app/mywork/controller"
 )
 
 func init() {

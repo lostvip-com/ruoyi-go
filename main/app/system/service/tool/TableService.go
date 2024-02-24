@@ -9,10 +9,10 @@ import (
 	"lostvip.com/db"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/functions"
+	"main/app/system/model/tool"
+	"main/app/system/service"
 	"os"
-	"robvi/app/system/model/tool"
-	"robvi/app/system/service"
-	"robvi/app/system/utils/calcu"
 	"strings"
 	"text/template"
 	"time"
@@ -641,7 +641,7 @@ func (svc TableService) LoadTemplate(templateName string, data interface{}) (str
 
 	// 创建函数映射
 	funcs := template.FuncMap{
-		"contains": calcu.Contains,
+		"contains": functions.Contains,
 	}
 
 	tmpl, err := template.New(templateName).Funcs(funcs).Parse(templateStr) //建立一个模板，内容是"hello, {{OssUrl}}"

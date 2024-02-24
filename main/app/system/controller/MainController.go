@@ -3,17 +3,15 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	"lostvip.com/web/functions"
+	"main/app/common/global"
+	"main/app/system/model"
+	"main/app/system/service"
 	"net/http"
 	"os"
-	"robvi/app/common/global"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/system/menu"
-	"robvi/app/system/service"
-	configService "robvi/app/system/service/system/config"
-	menuService "robvi/app/system/service/system/menu"
 )
 
 type MainController struct{}
@@ -33,22 +31,24 @@ func (w *MainController) goMain(c *gin.Context, indexPageDefault string) {
 	if avatar == "" {
 		avatar = "/resource/img/profile.jpg"
 	}
-	var menus *[]menu.EntityExtend
+	var menus *[]model.SysMenu
 	//获取菜单数据
+	menuService := service.MenuService{}
 	if userService.IsAdmin(user.UserId) {
 		tmp, err := menuService.SelectMenuNormalAll()
 		if err == nil {
 			menus = tmp
 		}
 	} else {
-		tmp, err := menuService.SelectMenusByUserId(lv_conv.String(user.UserId))
+		tmp, err := menuService.SelectMenusByUserId(user.UserId)
 		if err == nil {
 			menus = tmp
 		}
 	}
 
 	//获取配置数据
-	sideTheme := configService.GetValueByKey("sys.index.sideTheme")
+	var configService service.ConfigService
+	sideTheme := functions.GetValueByKey("sys.index.sideTheme")
 	skinName := configService.GetValueByKey("sys.index.skinName")
 	//设置首页风格
 	menuStyle := c.Query("menuStyle")
@@ -92,7 +92,7 @@ func (w *MainController) Download(c *gin.Context) {
 	fileName := c.Query("fileName")
 	//delete := c.Query("delete")
 	if fileName == "" {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -102,7 +102,7 @@ func (w *MainController) Download(c *gin.Context) {
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return

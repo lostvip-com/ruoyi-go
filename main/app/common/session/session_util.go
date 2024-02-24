@@ -2,7 +2,7 @@ package session
 
 import (
 	"github.com/gin-gonic/gin"
-	userModel "robvi/app/system/model"
+	userModel "main/app/system/model"
 )
 
 func IsAdminUser(user *userModel.SysUser) bool {

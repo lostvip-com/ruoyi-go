@@ -1,7 +1,7 @@
 package vo
 
 import (
-	"robvi/app/system/model"
+	"main/app/system/model"
 )
 
 // Fill with you ideas below.

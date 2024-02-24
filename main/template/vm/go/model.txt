@@ -3,7 +3,6 @@
 // 生成日期：{{.table.CreateTime}}
 // 生成人：{{.table.FunctionAuthor}}
 // ==========================================================================
-
 package model
 
 import (
@@ -48,14 +47,30 @@ func (e *{{.table.ClassName}}) Save() error {
 }
 // 查
 func (e *{{.table.ClassName}}) FindById() error {
-	err := db.GetMasterGorm().Take(e).Error
+	err := db.GetMasterGorm().Take(e,e.{{.table.PkColumn.GoField}}).Error
 	return err
 }
 
 // 查第一条
 func (e *{{.table.ClassName}}) FindOne() error {
-	err := db.GetMasterGorm().First(e).Error
-	return err
+    tb := db.GetMasterGorm().Table(e.TableName())
+{{range $index, $column := .table.Columns -}}
+{{if eq $column.IsQuery "0"}}
+    {{- continue -}}
+{{- end -}}
+{{ if contains $column.GoType "int"}}
+    if e.{{$column.GoField}} != 0 {
+        tb = tb.Where("{{$column.ColumnName}}=?", e.{{$column.GoField}})
+    }
+{{- end -}}
+{{ if eq $column.GoType "string" }}
+    if e.{{$column.GoField}} != "" {
+         tb = tb.Where("{{$column.ColumnName}}=?", e.{{$column.GoField}})
+    }
+{{- end -}}
+{{- end }}
+    err := tb.First(e).Error
+    return err
 }
 
 // 改

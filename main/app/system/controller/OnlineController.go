@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/system/model/monitor/online"
-	"robvi/app/system/service"
-	onlineService "robvi/app/system/service/monitor/online"
+	"main/app/system/model/monitor/online"
+	"main/app/system/service"
+	onlineService "main/app/system/service/monitor/online"
 	"strings"
 )
 

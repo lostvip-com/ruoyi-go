@@ -14,9 +14,11 @@ import (
 	"fmt"
 	"github.com/morrisxyang/xreflect"
 	"github.com/spf13/cast"
+	"gorm.io/gorm"
 	"io"
 	"lostvip.com/logme"
 	"lostvip.com/utils/lv_err"
+	"lostvip.com/utils/lv_file"
 	"lostvip.com/utils/lv_tpl"
 	"os"
 	"reflect"
@@ -25,7 +27,7 @@ import (
 
 // Execer is an interface used by Exec.
 type Execer interface {
-	Exec(query string, args ...interface{}) (sql.Result, error)
+	Exec(query string, args ...interface{}) *gorm.DB
 }
 
 // ExecerContext is an interface used by ExecContext.
@@ -124,13 +126,12 @@ func (d LvBatis) LookupQuery(name string) (query string, err error) {
 }
 
 // Exec is a wrapper for database/sql's Exec(), using dotsql named query.
-func (d LvBatis) Exec(db Execer, name string, args ...interface{}) (sql.Result, error) {
+func (d LvBatis) Exec(db Execer, name string, args ...interface{}) (*gorm.DB, error) {
 	query, err := d.LookupQuery(name)
 	if err != nil {
 		return nil, err
 	}
-
-	return db.Exec(query, args...)
+	return db.Exec(query, args...), err
 }
 
 // ExecContext is a wrapper for database/sql's ExecContext(), using dotsql named query.
@@ -171,6 +172,9 @@ func Load(r io.Reader) (*LvBatis, error) {
 
 // LoadFromFile imports SQL Queries from the file.
 func LoadFromFile(sqlFile string) (*LvBatis, error) {
+	if !lv_file.IsFileExist(sqlFile) {
+		panic("生成代码后再执行此操作!未发现文件 " + sqlFile)
+	}
 	f, err := os.Open(sqlFile)
 	if err != nil {
 		return nil, err

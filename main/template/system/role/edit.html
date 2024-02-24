@@ -69,47 +69,11 @@
     $("#form-role-edit").validate({
         onkeyup: false,
         rules: {
-            roleName: {
-                remote: {
-                    url: ctx + "/system/role/checkRoleNameUnique",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "roleId": function () {
-                            return $("#roleId").val();
-                        },
-                        "roleName": function () {
-                            return $.common.trim($("#roleName").val());
-                        }
-                    }
-                }
-            },
-            roleKey: {
-                remote: {
-                    url: ctx + "/system/role/checkRoleKeyUnique",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "roleId": function () {
-                            return $("#roleId").val();
-                        },
-                        "roleKey": function () {
-                            return $.common.trim($("#roleKey").val());
-                        }
-                    }
-                }
-            },
             roleSort: {
                 digits: true
             },
         },
         messages: {
-            "roleName": {
-                remote: "角色名称已经存在"
-            },
-            "roleKey": {
-                remote: "角色权限已经存在"
-            }
         },
         focusCleanup: true
     });

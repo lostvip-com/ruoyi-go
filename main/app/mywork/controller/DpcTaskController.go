@@ -11,10 +11,10 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model_cmn"
-	"robvi/app/mywork/service"
-	"robvi/app/mywork/vo"
-	sysService "robvi/app/system/service"
+	"lostvip.com/web/dto"
+	"main/app/mywork/service"
+	"main/app/mywork/vo"
+	sysService "main/app/system/service"
 )
 
 type DpcTaskController struct{}
@@ -89,7 +89,7 @@ func (w DpcTaskController) EditSave(c *gin.Context) {
 
 // Remove 删除数据
 func (w DpcTaskController) Remove(c *gin.Context) {
-	req := new(model_cmn.RemoveReq)
+	req := new(dto.RemoveReq)
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
 	var svc service.DpcTaskService

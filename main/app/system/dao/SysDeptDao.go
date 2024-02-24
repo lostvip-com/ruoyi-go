@@ -3,9 +3,9 @@ package dao
 import (
 	"github.com/spf13/cast"
 	"lostvip.com/db"
-	"lostvip.com/lvdao"
-	"robvi/app/system/model"
-	"robvi/app/system/vo"
+	"lostvip.com/db/lvdao"
+	"main/app/system/model"
+	"main/app/system/vo"
 )
 
 // Fill with you ideas below.
@@ -46,7 +46,7 @@ func (dao SysDeptDao) DeleteDeptById(deptId int64) error {
 // 修改子元素关系（替换前半部分）
 func (dao SysDeptDao) UpdateDeptChildrenAncestors(dept *model.SysDept, parentCodes string) {
 	dept.Ancestors = parentCodes + "," + cast.ToString(dept.DeptId)
-	db.GetMasterGorm().Table("sys_dept").Where("parent_id=", dept.DeptId).Update("ancestors", dept.Ancestors)
+	db.GetMasterGorm().Table("sys_dept").Where("dept_id=", dept.DeptId).Update("ancestors", dept.Ancestors)
 	// ancestors 上级ancestors发生变化，修改下级
 	deptList := dao.SelectChildrenDeptById(dept.DeptId)
 	if deptList == nil || len(deptList) <= 0 {
@@ -150,29 +150,28 @@ func (dao SysDeptDao) CheckDeptNameUniqueAll(deptName string, parentId int64) (*
 	return &entity, err
 }
 
-//
-//// 根据条件查询
-//func Find(where, order string) ([]model.SysDept, error) {
-//	var list []model.SysDept
-//	err := db.GetInstance().Engine().Table("sys_dept").Where(where).OrderBy(order).Find(&list)
-//	return list, err
-//}
-//
-//// 指定字段集合查询
-//func FindIn(column string, args ...interface{}) ([]model.SysDept, error) {
-//	var list []model.SysDept
-//	err := db.GetInstance().Engine().Table("sys_dept").In(column, args).Find(&list)
-//	return list, err
-//}
-//
-//// 排除指定字段集合查询
-//func FindNotIn(column string, args ...interface{}) ([]model.SysDept, error) {
-//	var list []model.SysDept
-//	err := db.GetInstance().Engine().Table("sys_dept").NotIn(column, args).Find(&list)
-//	return list, err
-//}
-//
-//// 批量删除
-//func DeleteBatch(ids ...int64) (int64, error) {
-//	return db.GetInstance().Engine().Table("sys_dept").In("dept_id", ids).Delete(new(model.SysDept))
-//}
+// 根据条件查询
+func (dao SysDeptDao) Find(where, order string) ([]model.SysDept, error) {
+	var list []model.SysDept
+	err := db.GetInstance().Engine().Table("sys_dept").Where(where).OrderBy(order).Find(&list)
+	return list, err
+}
+
+// // 指定字段集合查询
+func (dao SysDeptDao) FindIn(column string, args ...interface{}) ([]model.SysDept, error) {
+	var list []model.SysDept
+	err := db.GetInstance().Engine().Table("sys_dept").In(column, args).Find(&list)
+	return list, err
+}
+
+// 排除指定字段集合查询
+func (dao SysDeptDao) FindNotIn(column string, args ...interface{}) ([]model.SysDept, error) {
+	var list []model.SysDept
+	err := db.GetInstance().Engine().Table("sys_dept").NotIn(column, args).Find(&list)
+	return list, err
+}
+
+// 批量删除
+func (dao SysDeptDao) DeleteBatch(ids ...int64) (int64, error) {
+	return db.GetInstance().Engine().Table("sys_dept").In("dept_id", ids).Delete(new(model.SysDept))
+}

@@ -28,7 +28,7 @@ func ProxyWithUrlSame(c *gin.Context, host string) {
 		rw.Write([]byte(ret)) //写到body里
 	}
 	proxy.ModifyResponse = func(response *http.Response) error {
-		response.Header.Set("proxy", "proxy by ssz")
+		response.Header.Set("proxy", "proxy by lv-framework")
 		return nil
 	}
 	proxy.ServeHTTP(c.Writer, c.Request)
@@ -73,4 +73,19 @@ func ProxyWithUrlDifferent(c *gin.Context, targetUrl string, rawQuery string) {
 		},
 	}
 	proxy.ServeHTTP(c.Writer, c.Request)
+}
+
+/**
+ * 反向代理，转发到特定的URL上
+ */
+func ProxyWithUrlDiff(c *gin.Context, host, newUri string) {
+	fmt.Println("============= HttpProxyWithSameUrl start ==================")
+	c.Request.URL.Path = newUri
+	// 使用代理转发请求
+	proxy := httputil.NewSingleHostReverseProxy(&url.URL{
+		Scheme: "http",
+		Host:   host,
+	})
+	proxy.ServeHTTP(c.Writer, c.Request)
+	fmt.Println("============= HttpProxyWithSameUrl over ==================")
 }

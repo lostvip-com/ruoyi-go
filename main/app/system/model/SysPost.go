@@ -39,13 +39,20 @@ func (e *SysPost) Save() error {
 
 // 查
 func (e *SysPost) FindById() error {
-	err := db.GetMasterGorm().Take(e).Error
+	err := db.GetMasterGorm().Take(e, e.PostId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysPost) FindOne() error {
-	err := db.GetMasterGorm().First(e).Error
+	tb := db.GetMasterGorm()
+	if e.PostId != 0 {
+		tb = tb.Where("post_id=?", e.PostId)
+	}
+	if e.PostCode != "" {
+		tb = tb.Where("post_code=?", e.PostCode)
+	}
+	err := tb.First(e).Error
 	return err
 }
 

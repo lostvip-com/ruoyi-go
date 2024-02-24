@@ -6,18 +6,23 @@ go:
   redis:
     host: ${REDIS_HOST:"127.0.0.1"}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:"123456"}
+    password: ${REDIS_PWD:"123!"}
   datasource:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
     master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:13306)/ruoyi-go?charset=utf8"}
     slave: ""
-
+ #代理转发
+#  proxy:
+#    enable: true
+#    prefix:
+#      - /video=192.168.100.110
+#      - /lostvip=lostvip.com
 #代码生成器配置
 gen:
   author: "lv"
   moduleName: "mywork"
-  packageName: "robvi"
+  packageName: "main"
   #覆盖旧的代码
   overwrite: false

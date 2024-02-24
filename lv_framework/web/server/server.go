@@ -6,15 +6,11 @@ import (
 	"html/template"
 	"lostvip.com/conf"
 	"lostvip.com/logme"
+	functions2 "lostvip.com/web/functions"
 	"lostvip.com/web/gintemplate"
 	"lostvip.com/web/middleware"
 	"lostvip.com/web/router"
-	"robvi/app/common/global"
-	"robvi/app/system/service/system/config"
-	"robvi/app/system/service/system/dict"
-	"robvi/app/system/service/system/permission"
-	"robvi/app/system/utils/calcu"
-
+	"main/app/common/global"
 	//gintemplate "github.com/foolin/gin-template"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -90,6 +86,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	//engine.Use(middleware.RateLimit())  // 限流
 	//router.Use(gzip.Gzip(gzip.DefaultCompression)),开启后客户端无法收到，尚未解决此问题不要打开
 	//router.Use(Secure)
+	engine.Use(middleware.IfProxyForward())
 	//////////////////////////////////////////////////////////////////////////////////
 	// web 页面
 	/////////////////////////////////////////////////////////////////////////////////
@@ -108,18 +105,18 @@ func InitGinRouter(contextPath string) *gin.Engine {
 		Master:    "",
 		Partials:  []string{"header", "footer", "system/menu/icon"},
 		Funcs: template.FuncMap{
-			"hasPermi":          permission.HasPermi,
-			"getPermiButton":    permission.GetPermiButton,
-			"getDictLabel":      dict.GetDictLabel,
-			"getDictTypeSelect": dict.GetDictTypeSelect,
-			"getDictTypeRadio":  dict.GetDictTypeRadio,
-			"getDictTypeData":   dict.GetDictTypeData,
-			"Copyright":         config.GetCopyright,
-			"OssUrl":            config.GetOssUrl,
-			"Ctx":               config.GetCtx,
-			"getCtxPath":        config.GetCtxPath,
-			"addInt":            calcu.AddInt,
-			"contains":          calcu.Contains,
+			"hasPermi":          functions2.HasPermi,
+			"getPermiButton":    functions2.GetPermiButton,
+			"getDictLabel":      functions2.GetDictLabel,
+			"getDictTypeSelect": functions2.GetDictTypeSelect,
+			"getDictTypeRadio":  functions2.GetDictTypeRadio,
+			"getDictTypeData":   functions2.GetDictTypeData,
+			"Copyright":         functions2.GetCopyright,
+			"OssUrl":            functions2.GetOssUrl,
+			"Ctx":               functions2.GetCtx,
+			"getCtxPath":        functions2.GetCtxPath,
+			"addInt":            functions2.AddInt,
+			"contains":          functions2.Contains,
 		},
 		DisableCache: true,
 	})

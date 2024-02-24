@@ -3,14 +3,13 @@ package service
 import (
 	"context"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"github.com/mssola/user_agent"
 	"lostvip.com/cache/myredis"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_secret"
-	"robvi/app/system/model"
-	"robvi/app/system/model/monitor/online"
-	logininforService "robvi/app/system/service/monitor/logininfor"
+	"main/app/system/model"
+	"main/app/system/model/monitor/online"
+	logininforService "main/app/system/service/monitor/logininfor"
 	"strings"
 	"time"
 )
@@ -62,10 +61,9 @@ func (svc *SessionService) ForceLogout(token string) error {
 	return nil
 }
 
-func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, c *gin.Context) {
+func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, roleKeys string, userAgent string, ip string) {
 	// 保存用户信息到session
-	loginIp := c.ClientIP()
-	loginLocation := lv_net.GetCityByIp(loginIp)
+	loginLocation := lv_net.GetCityByIp(ip)
 	//记录到redis
 	redis := myredis.GetInstance()
 	ctx := context.Background()
@@ -74,11 +72,11 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	fieldMap["userId"] = user.UserId
 	fieldMap["loginName"] = user.LoginName
 	fieldMap["avatar"] = user.Avatar
-	fieldMap["ip"] = loginIp
+	fieldMap["ip"] = ip
 	fieldMap["location"] = loginLocation
+	fieldMap["roleKeys"] = roleKeys
 	//其它
 	//save to db
-	userAgent := c.Request.Header.Get("User-Agent")
 	ua := user_agent.New(userAgent)
 	os := ua.OS()
 	browser, _ := ua.Browser()
@@ -90,7 +88,7 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	userOnline.Browser = browser
 	userOnline.Os = os
 	userOnline.DeptName = ""
-	userOnline.Ipaddr = loginIp
+	userOnline.Ipaddr = ip
 	userOnline.ExpireTime = 1440
 	userOnline.StartTimestamp = time.Now()
 	userOnline.LastAccessTime = time.Now()

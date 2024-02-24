@@ -5,11 +5,11 @@ import (
 )
 
 type Paging struct {
-	PageNum   int //当前页
-	Pagesize  int //每页条数
-	Total     int //总条数
-	PageCount int //总页数
-	StartNum  int //起始行
+	PageNum   int   //当前页
+	Pagesize  int   //每页条数
+	Total     int64 //总条数
+	PageCount int   //总页数
+	StartNum  int   //起始行
 }
 
 // 创建分页
@@ -33,7 +33,7 @@ func (p *Paging) GetPageSize() int {
 }
 
 // 创建分页
-func CreatePaging(pageNum, pagesize, total int) *Paging {
+func CreatePaging(pageNum, pagesize int, total int64) *Paging {
 	if pageNum < 1 {
 		pageNum = 1
 	}

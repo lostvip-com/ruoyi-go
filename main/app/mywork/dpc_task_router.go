@@ -3,18 +3,18 @@
 // 生成日期：2024-01-03 21:50:54 +0800 CST
 // 生成人：lv
 // ==========================================================================
-package robvi
+package myowrk
 
 import (
-        "lostvip.com/web/router"
-        "robvi/app/common/middleware/auth"
-        "robvi/app/mywork/controller"
+	"lostvip.com/web/router"
+	"main/app/common/middleware/auth"
+	"main/app/mywork/controller"
 )
 
-//加载路由
+// 加载路由
 func init() {
 	// 参数路由
-	g1 := router.New( "/mywork/task", auth.Auth)
+	g1 := router.New("/mywork/task", auth.PermitCheck)
 
 	web := controller.DpcTaskController{}
 	g1.GET("/", "mywork:task:view", web.List)
@@ -23,6 +23,6 @@ func init() {
 	g1.POST("/add", "mywork:task:add", web.AddSave)
 	g1.POST("/remove", "mywork:task:remove", web.Remove)
 	g1.GET("/edit", "mywork:task:edit", web.Edit)
-	g1.POST("/edit", "mywork:task:edit",web.EditSave)
+	g1.POST("/edit", "mywork:task:edit", web.EditSave)
 	g1.POST("/export", "mywork:task:export", web.Export)
 }

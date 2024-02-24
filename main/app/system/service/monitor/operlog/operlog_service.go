@@ -7,14 +7,14 @@ import (
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_net"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model_cmn"
-	oper_log2 "robvi/app/system/model/monitor/oper_log"
-	service2 "robvi/app/system/service"
+	"lostvip.com/web/dto"
+	oper_log2 "main/app/system/model/monitor/oper_log"
+	service2 "main/app/system/service"
 	"time"
 )
 
 // 新增记录
-func Add(c *gin.Context, title, inContent string, outContent *model_cmn.CommonRes) error {
+func Add(c *gin.Context, title, inContent string, outContent *dto.CommonRes) error {
 	var userService service2.UserService
 	user := userService.GetProfile(c)
 	if user == nil {

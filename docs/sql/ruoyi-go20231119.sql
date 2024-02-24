@@ -44,7 +44,7 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES (13, 'his_patient', '患者基本信息', 'HisPatient', 'crud', 'robvi', 'mywork', 'patient', '患者基本信息', 'lv', '', 'admin', '2023-10-29 22:05:20', 'admin', '2023-10-30 19:15:28', '');
+INSERT INTO `gen_table` VALUES (13, 'his_patient', '患者基本信息', 'HisPatient', 'crud', 'main', 'mywork', 'patient', '患者基本信息', 'lv', '', 'admin', '2023-10-29 22:05:20', 'admin', '2023-10-30 19:15:28', '');
 
 -- ----------------------------
 -- Table structure for gen_table_column

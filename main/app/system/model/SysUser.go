@@ -29,11 +29,13 @@ type SysUser struct {
 	LoginDate   time.Time `gorm:"type:datetime;comment:最后登陆时间;" json:"loginDate" form:"loginDate" time_format:"2006-01-02 15:04:05"`
 	UpdateBy    string    `gorm:"type:varchar(64);comment:更新者;" json:"updateBy" form:"updateBy"`
 	UpdateTime  time.Time `gorm:"type:datetime;comment:更新时间;" json:"updateTime" form:"updateTime" time_format:"2006-01-02 15:04:05"`
-	Remark      string    `gorm:"type:varchar(500);comment:备注;" json:"remark" form:"remark"`
+	Remark      string    `gorm:"type:varchar(500);comment:备注;" json:"remark"   form:"remark"`
 	TenantId    int64     `gorm:"type:bigint(20);comment:租户id;" json:"tenantId" form:"tenantId"`
-	CreateTime  time.Time `gorm:"type:datetime;comment:创建时间;"  column:create_time; time_format:"2006-01-02 15:04:05" json:"createTime"  `
-	CreateBy    string    `gorm:"type:varchar(32);comment:创建人;" column:create_by; json:"createBy" form:"createBy"`
-	DelFlag     int       `gorm:"type:tinyint(1);default:0;comment:删除标记;" column:del_flag; json:"delFlag"`
+	CreateTime  time.Time `gorm:"type:datetime;comment:创建时间;column:create_time;" json:"createTime"  time_format:"2006-01-02 15:04:05"`
+	CreateBy    string    `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
+	DelFlag     int       `gorm:"type:tinyint(1);default:0;comment:删除标记;column:del_flag;" json:"delFlag"`
+	//临时属性
+	RoleKeys string `gorm:"-"  json:"roleKeys"`
 }
 
 // 映射数据表
@@ -53,17 +55,32 @@ func (e *SysUser) GetById() error {
 }
 
 // 查
+func (e *SysUser) FindById() error {
+	tb := db.GetMasterGorm()
+	err := tb.Take(e, e.UserId).Error
+	return err
+}
+
+// 查
 func (e *SysUser) FindOne() error {
-	err := db.GetMasterGorm().First(e).Error
+	tb := db.GetMasterGorm()
+	if e.UserId != 0 {
+		tb = tb.Where("user_id=?", e.UserId)
+	}
+
+	if e.LoginName != "" && e.LoginName != "" {
+		tb = tb.Where("login_name=?", e.LoginName)
+	}
+	err := tb.First(e).Error
 	return err
 }
 
 // 改
 func (e *SysUser) Updates() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return db.GetMasterGorm().Updates(e).Error
 }
 
 // 删
 func (e *SysUser) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return db.GetMasterGorm().Delete(e).Error
 }

@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model_cmn"
-	postService "robvi/app/system/service"
-	"robvi/app/system/vo"
+	"lostvip.com/web/dto"
+	postService "main/app/system/service"
+	"main/app/system/vo"
 )
 
 type PostController struct {
@@ -43,34 +43,34 @@ func (w *PostController) AddSave(c *gin.Context) {
 	var req *vo.AddPostReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
 	var postService postService.SysPostService
 	if postService.CheckPostNameUniqueAll(req.PostName) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
 		return
 	}
 
 	if postService.CheckPostCodeUniqueAll(req.PostCode) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
 		return
 	}
 
 	pid, err := postService.AddSave(req, c)
 
 	if err != nil || pid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.ErrorResp(c).SetData(pid).SetBtype(model_cmn.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
+	lv_web.ErrorResp(c).SetData(pid).SetBtype(dto.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func (w *PostController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -79,7 +79,7 @@ func (w *PostController) Edit(c *gin.Context) {
 	post, err := postService.SelectRecordById(id)
 
 	if err != nil || post == nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "岗位不存在",
 		})
 		return
@@ -94,33 +94,33 @@ func (w *PostController) Edit(c *gin.Context) {
 func (w *PostController) EditSave(c *gin.Context) {
 	var req *vo.EditSysPostReq
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
 	var postService postService.SysPostService
 	err := postService.EditSave(req, c)
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 }
 
 // 删除数据
 func (w *PostController) Remove(c *gin.Context) {
-	var req *model_cmn.RemoveReq
+	var req *dto.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).SetBtype(model_cmn.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetMsg(err.Error()).SetBtype(dto.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
 	var postService postService.SysPostService
 	rs := postService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 	}
 }
 
@@ -139,7 +139,7 @@ func (w *PostController) Export(c *gin.Context) {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetMsg(url).SetBtype(model_cmn.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetMsg(url).SetBtype(dto.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 }
 
 // 检查岗位名称是否已经存在不包括本岗位

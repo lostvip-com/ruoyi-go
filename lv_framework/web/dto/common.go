@@ -12,7 +12,7 @@ const (
 
 // 响应结果
 const (
-	SUCCESS      = 0   // 成功
+	SUCCESS      = 200 // 成功
 	ERROR        = 500 //错误
 	UNAUTHORIZED = 403 //无权限
 	FAIL         = -1  //失败
@@ -34,17 +34,18 @@ type CommonRes struct {
 
 // 验证码响应
 type CaptchaRes struct {
-	Code  int         `json:"code"`  //响应编码 0 成功 500 错误 403 无权限
-	Msg   string      `json:"msg"`   //消息
-	Data  interface{} `json:"data"`  //数据内容
-	IdKey string      `json:"idkey"` //验证码ID
+	Code           int         `json:"code"` //响应编码 0 成功 500 错误 403 无权限
+	Msg            string      `json:"msg"`  //消息
+	Img            interface{} `json:"img"`  //数据内容
+	Uuid           string      `json:"uuid"` //验证码ID
+	CaptchaEnabled bool        `json:"captchaEnabled"`
 }
 
 // 通用分页表格响应
 type TableDataInfo struct {
-	Total int         `json:"total"` //总数
+	Total any         `json:"total"` //总数
 	Rows  interface{} `json:"rows"`  //数据
-	Code  int         `json:"code"`  //响应编码 0 成功 500 错误 403 无权限
+	Code  int         `json:"code"`  //响应编码 200 成功 500 错误 403 无权限
 	Msg   string      `json:"msg"`   //消息
 }
 

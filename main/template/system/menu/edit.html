@@ -104,32 +104,9 @@
             menuType: {
                 required: true,
             },
-            menuName: {
-                remote: {
-                    url: prefix + "/checkMenuNameUnique",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "menuId": function () {
-                            return $("#menuId").val();
-                        },
-                        "parentId": function () {
-                            return $("input[name='parentId']").val();
-                        },
-                        "menuName": function () {
-                            return $.common.trim($("#menuName").val());
-                        }
-                    }
-                }
-            },
             orderNum: {
                 digits: true
             },
-        },
-        messages: {
-            "menuName": {
-                remote: "菜单已经存在"
-            }
         },
         focusCleanup: true
     });

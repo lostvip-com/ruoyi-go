@@ -4,10 +4,10 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/dao"
-	"robvi/app/system/model"
-	"robvi/app/system/vo"
+	"lostvip.com/web/dto"
+	"main/app/system/dao"
+	"main/app/system/model"
+	"main/app/system/vo"
 	"strings"
 	"time"
 )
@@ -117,7 +117,7 @@ func (svc *DeptService) SelectChildrenDeptById(deptId int64) []*model.SysDept {
 }
 
 // 加载部门列表树
-func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]model_cmn.Ztree, error) {
+func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]dto.Ztree, error) {
 	var dao dao.SysDeptDao
 	list, err := dao.SelectDeptList(parentId, deptName, status, tenantId)
 	if err != nil {
@@ -135,8 +135,8 @@ func (svc *DeptService) SelectDeptList(parentId int64, deptName, status string, 
 }
 
 // 根据角色ID查询部门（数据权限）
-func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model_cmn.Ztree, error) {
-	var result *[]model_cmn.Ztree
+func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]dto.Ztree, error) {
+	var result *[]dto.Ztree
 	var dao dao.SysDeptDao
 	deptList, err := dao.SelectDeptList(0, "", "", tenantId)
 	if err != nil {
@@ -157,8 +157,8 @@ func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]model
 }
 
 // 对象转部门树
-func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]string) *[]model_cmn.Ztree {
-	var result []model_cmn.Ztree
+func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]string) *[]dto.Ztree {
+	var result []dto.Ztree
 	isCheck := false
 	if roleDeptList != nil && len(*roleDeptList) > 0 {
 		isCheck = true
@@ -166,7 +166,7 @@ func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]str
 
 	for i := range *deptList {
 		if (*deptList)[i].Status == "0" {
-			var ztree model_cmn.Ztree
+			var ztree dto.Ztree
 			ztree.Id = (*deptList)[i].DeptId
 			ztree.Pid = (*deptList)[i].ParentId
 			ztree.Name = (*deptList)[i].DeptName

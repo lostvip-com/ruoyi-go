@@ -2,16 +2,15 @@ package system
 
 import (
 	"lostvip.com/web/router"
-	"robvi/app/common/middleware/auth"
-	"robvi/app/common/middleware/token"
-	"robvi/app/system/controller"
+	"main/app/common/middleware/auth"
+	"main/app/system/controller"
 )
 
 // 加载路由
 func init() {
 	// 服务监控
 	tool := new(controller.GenController)
-	g1 := router.New("/tool", token.TokenMiddleware(), auth.Auth)
+	g1 := router.New("/tool", auth.TokenCheck(), auth.PermitCheck)
 	g1.GET("/build", "tool:build:view", tool.Build)
 	g1.GET("/swagger", "tool:swagger:view", tool.Swagger)
 	g1.GET("/gen", "tool:gen:view", tool.Gen)

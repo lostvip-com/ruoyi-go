@@ -19,12 +19,15 @@ type MyConfig struct {
 	conf.ConfigDefault
 }
 
+func (e *MyConfig) IsProxyEnabled() bool {
+	return e.IsProxyEnable()
+}
+
 func GetConfigInstance() conf.IConfig {
 	if cfg == nil {
 		cfg = &MyConfig{}
 		cfg.LoadConf()
 		conf.RegisterCfg(cfg)
-		//日志
 	}
 	return cfg
 }
@@ -40,19 +43,29 @@ func (e *MyConfig) LoadConf() {
 }
 
 func resetCfg() {
-	if conf.Config().IsDebug() {
-		logme.Warn(conf.Config().GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
+	conig := conf.Config()
+	if conig.IsDebug() {
+		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
 		os.Setenv(conf.KEY_SWAGGER_OFF, "")
 	} else {
-		logme.Warn(conf.Config().GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
+		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
+		gin.SetMode(gin.ReleaseMode)
+		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
+	}
+	if conig.IsDebug() {
+		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
+		gin.SetMode(gin.DebugMode)
+		os.Setenv(conf.KEY_SWAGGER_OFF, "")
+	} else {
+		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
 	}
 	myredis.GetInstance()
-	fmt.Println(conf.Config().GetAppName() + " ############# 数据库初始化完毕 ####################")
+	fmt.Println(conig.GetAppName() + " ############# 数据库初始化完毕 ####################")
 	InitTables()
-	fmt.Println(conf.Config().GetAppName() + " ############# 修改表结构完毕 ####################")
+	fmt.Println(conig.GetAppName() + " ############# 修改表结构完毕 ####################")
 
 }
 

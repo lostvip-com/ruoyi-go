@@ -4,9 +4,9 @@ import (
 	"errors"
 	"github.com/spf13/cast"
 	"lostvip.com/db"
-	"lostvip.com/namedsql"
-	"robvi/app/system/model"
-	"robvi/app/system/vo"
+	"lostvip.com/db/namedsql"
+	"main/app/system/model"
+	"main/app/system/vo"
 )
 
 type SysPostDao struct {

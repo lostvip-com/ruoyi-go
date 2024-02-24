@@ -163,12 +163,12 @@ body.bg_terminal {
 .form-control{
 	border-radius: 1px!important;
 	padding: 6px 12px!important;
-	height: 42px!important;
+	height: 40px!important;
 }
 
 .form-control:focus{
     border-color: #1ab394 !important;
 }
 .login-left{
-	font-size: 22px;
+	font-size: 20px;
 }

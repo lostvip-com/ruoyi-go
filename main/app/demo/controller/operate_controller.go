@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
 	"net/http"
-	"robvi/app/common/model_cmn"
 )
 
 type OperateController struct{}
@@ -90,7 +90,7 @@ func (w OperateController) List(c *gin.Context) {
 		tmp.UserEmail = "111@qq.com"
 		rows = append(rows, tmp)
 	}
-	c.JSON(http.StatusOK, model_cmn.TableDataInfo{
+	c.JSON(http.StatusOK, dto.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),

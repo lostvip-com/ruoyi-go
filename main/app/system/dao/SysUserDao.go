@@ -3,9 +3,10 @@ package dao
 import (
 	"github.com/spf13/cast"
 	"lostvip.com/db"
-	"lostvip.com/namedsql"
-	"robvi/app/system/model"
-	"robvi/app/system/vo"
+	"lostvip.com/db/namedsql"
+	"lostvip.com/logme"
+	"main/app/system/model"
+	"main/app/system/vo"
 )
 
 // Fill with you ideas below.
@@ -26,6 +27,7 @@ func (e SysUserDao) DeleteByIds(ida []int64) int64 {
 func (d SysUserDao) SelectPageList(param *vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
 	db := db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
+	logme.Info("============sqlParams:", sqlParams)
 	limitSql := sql + " order by u.user_id desc "
 	limitSql += "  limit " + cast.ToString(param.GetStartNum()) + "," + cast.ToString(param.GetPageSize())
 	result, err := namedsql.ListMap(db, limitSql, sqlParams, true)
@@ -73,8 +75,11 @@ func (d SysUserDao) GetSql(param *vo.SelectUserPageReq) (map[string]interface{},
 		if param.Ancestors != "" {
 			sql += " and u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE t.ancestors like @Ancestors )"
 			sqlParams["Ancestors"] = param.Ancestors + "%"
+			logme.Info("============sqlParams:", sqlParams)
 		}
+		logme.Info("============sqlParams:", sqlParams)
 	}
+	logme.Info("============sqlParams:", sqlParams)
 	return sqlParams, sql
 }
 

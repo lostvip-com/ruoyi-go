@@ -3,11 +3,11 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	"main/app/system/service"
+	userModel "main/app/system/vo"
 	"net/http"
 	"os"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/service"
-	userModel "robvi/app/system/vo"
 	"strconv"
 	"time"
 )
@@ -29,16 +29,16 @@ func (w *ProfileController) Update(c *gin.Context) {
 	var req *userModel.ProfileReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 		return
 	}
 	var userService service.UserService
 	err := userService.UpdateProfile(req, c)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("用户管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("用户管理", req).WriteJsonExit()
 	}
 }
 
@@ -46,15 +46,15 @@ func (w *ProfileController) Update(c *gin.Context) {
 func (w *ProfileController) UpdatePassword(c *gin.Context) {
 	var req *userModel.PasswordReq
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	}
 	var userService service.UserService
 	err := userService.UpdatePassword(req, c)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("修改用户密码", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("修改用户密码", req).WriteJsonExit()
 	}
 }
 
@@ -149,7 +149,7 @@ func (w *ProfileController) CheckPhoneUnique(c *gin.Context) {
 func (w *ProfileController) CheckPhoneUniqueAll(c *gin.Context) {
 	var req *userModel.CheckPhoneAllReq
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, model_cmn.CommonRes{
+		c.JSON(http.StatusOK, dto.CommonRes{
 			Code: 500,
 			Msg:  err.Error(),
 		})
@@ -169,7 +169,7 @@ func (w *ProfileController) CheckPhoneUniqueAll(c *gin.Context) {
 func (w *ProfileController) CheckPassword(c *gin.Context) {
 	var req *userModel.CheckPasswordReq
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, model_cmn.CommonRes{
+		c.JSON(http.StatusOK, dto.CommonRes{
 			Code: 500,
 			Msg:  err.Error(),
 		})
@@ -194,7 +194,7 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	curDir, err := os.Getwd()
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	saveDir := curDir + "/static/upload/"
@@ -202,7 +202,7 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	fileHead, err := c.FormFile("avatarfile")
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("没有获取到上传文件").Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg("没有获取到上传文件").Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	curdate := time.Now().UnixNano()
@@ -210,7 +210,7 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	dts := saveDir + filename
 
 	if err := c.SaveUploadedFile(fileHead, dts); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	avatar := "/upload/" + filename
@@ -218,8 +218,8 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	err = userService.UpdateAvatar(avatar, c)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Edit).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 }

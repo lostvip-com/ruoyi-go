@@ -2,11 +2,11 @@ package app
 
 import (
 	"lostvip.com/web/router"
-	"robvi/app/common/middleware/token"
-	_ "robvi/app/demo"
-	_ "robvi/app/mywork"
-	_ "robvi/app/system"
-	controller2 "robvi/app/system/controller"
+	"main/app/common/middleware/auth"
+	_ "main/app/demo"
+	_ "main/app/mywork"
+	_ "main/app/system"
+	controller2 "main/app/system/controller"
 )
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 	g0.GET("/404", "", errorc.NotFound)
 	g0.GET("/403", "", errorc.Unauth)
 	//下在要检测是否登录
-	g1 := router.New("/", token.TokenMiddleware())
+	g1 := router.New("/", auth.TokenCheck())
 	main := controller2.MainController{}
 	g1.GET("/", "", main.Index)
 	g1.GET("/index", "", main.Index)

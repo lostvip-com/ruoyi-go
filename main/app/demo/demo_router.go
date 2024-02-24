@@ -3,13 +3,13 @@ package demo
 import (
 	"fmt"
 	"lostvip.com/web/router"
-	"robvi/app/common/middleware/token"
-	controller2 "robvi/app/demo/controller"
+	"main/app/common/middleware/auth"
+	controller2 "main/app/demo/controller"
 )
 
 func init() {
 	fmt.Println("############## demo init ################")
-	//g1 := router.New( "/demo/form",token.TokenMiddleware())
+	//g1 := router.New( "/demo/form",token.TokenCheck())
 	demo := controller2.DemoController{}
 	g0 := router.New("/demo/db")
 	//mybatis
@@ -38,11 +38,11 @@ func init() {
 	g1.GET("/validate", "", demo.Validate)
 	g1.GET("/wizard", "", demo.Wizard)
 
-	g2 := router.New("/demo/icon", token.TokenMiddleware())
+	g2 := router.New("/demo/icon", auth.TokenCheck())
 	g2.GET("/fontawesome", "", demo.Fontawesome)
 	g2.GET("/glyphicons", "", demo.Glyphicons)
 
-	g3 := router.New("/demo/modal", token.TokenMiddleware())
+	g3 := router.New("/demo/modal", auth.TokenCheck())
 	g3.GET("/dialog", "", demo.Dialog)
 	g3.GET("/form", "", demo.Form)
 	g3.GET("/layer", "", demo.Layer)
@@ -51,7 +51,7 @@ func init() {
 	g3.GET("/parent", "", demo.Parent)
 	g3.GET("/radio", "", demo.Radio)
 
-	g4 := router.New("/demo/operate", token.TokenMiddleware())
+	g4 := router.New("/demo/operate", auth.TokenCheck())
 	oper := controller2.OperateController{}
 	g4.GET("/list", "", oper.List)
 	g4.GET("/add", "", oper.Add)
@@ -61,20 +61,20 @@ func init() {
 	g4.GET("/other", "", oper.Other)
 	g4.GET("/table", "", oper.Table)
 
-	g5 := router.New("/demo/report", token.TokenMiddleware())
+	g5 := router.New("/demo/report", auth.TokenCheck())
 	g5.GET("/echarts", "", demo.Echarts)
 	g5.GET("/metrics", "", demo.Metrics)
 	g5.GET("/peity", "", demo.Peity)
 	g5.GET("/sparkline", "", demo.Sparkline)
 
-	g6 := router.New("/demo/table", token.TokenMiddleware())
+	g6 := router.New("/demo/table", auth.TokenCheck())
 	g6.GET("/button", "", demo.Button)
 	g6.GET("/child", "", demo.Child)
 	g6.GET("/curd", "", demo.Curd)
 	g6.GET("/detail", "", demo.Detail)
 	g6.POST("list", "", demo.List)
 
-	g6.GET("/editable", "", demo.Editable, token.TokenMiddleware())
+	g6.GET("/editable", "", demo.Editable, auth.TokenCheck())
 	g6.GET("/event", "", demo.Event)
 	g6.POST("/export", "", demo.Export)
 	g6.GET("/fixedColumns", "", demo.FixedColumns)

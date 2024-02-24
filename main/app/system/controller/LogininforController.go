@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_web"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/monitor/logininfor"
-	logininforService "robvi/app/system/service/monitor/logininfor"
+	"lostvip.com/web/dto"
+	"main/app/system/model/monitor/logininfor"
+	logininforService "main/app/system/service/monitor/logininfor"
 )
 
 type LoginInforController struct {
@@ -37,19 +37,19 @@ func (w *LoginInforController) ListAjax(c *gin.Context) {
 
 // 删除数据
 func (w *LoginInforController) Remove(c *gin.Context) {
-	var req *model_cmn.RemoveReq
+	var req *dto.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("登录日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("登录日志管理", req).WriteJsonExit()
 		return
 	}
 
 	rs := logininforService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("登录日志管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).SetData(rs).Log("登录日志管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("登录日志管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("登录日志管理", req).WriteJsonExit()
 	}
 }
 
@@ -59,9 +59,9 @@ func (w *LoginInforController) Clean(c *gin.Context) {
 	rs, _ := logininforService.DeleteRecordAll()
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).SetData(rs).Log("登录日志管理", "all").WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).SetData(rs).Log("登录日志管理", "all").WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("登录日志管理", "all").WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("登录日志管理", "all").WriteJsonExit()
 	}
 }
 

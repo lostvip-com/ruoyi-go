@@ -8,7 +8,7 @@ package dao
 import (
 	"lostvip.com/db"
 	"lostvip.com/db/lvbatis"
-	"lostvip.com/lvdao"
+	"lostvip.com/db/lvdao"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_reflect"
     "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"

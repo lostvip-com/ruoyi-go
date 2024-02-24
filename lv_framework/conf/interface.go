@@ -34,10 +34,12 @@ type IConfig interface {
 	GetGroupDefault() string
 
 	GetDataId() string
-	LoadConf()
 	IsDebug() bool
 	GetVipperCfg() *viper.Viper
 	GetConf(key string) string
 	GetValueStr(key string) string
 	GetBool(key string) bool
+	GetProxyMap() *map[string]string
+	IsProxyEnabled() bool
+	LoadConf()
 }

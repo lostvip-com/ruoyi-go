@@ -23,31 +23,30 @@
 <body class="signin">
     <div class="signinpanel">
         <div class="row">
-            <div class="col-sm-7">
+            <div class="col-md-6  col-lg-6">
                 <div class="signin-info">
                     <div class="logopanel m-b">
 {{/*                        <h1><img alt="[ 欢迎使用 ]" style="width: 64px;height: 64px" src="{{OssUrl}}/resource/logo.png"></h1>*/}}
                     </div>
                     <div class="m-b"></div>
-                    <h2> <strong>Lostvip管理系统</strong></h2>
+                    <h2> <strong>lostvip管理系统</strong></h2>
                     <ul class="m-b login-left">
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> GO</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> GIN</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> XORM</li>
-                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Boorstrap</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> go</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> gin</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> gorm</li>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> boorstrap</li>
                     </ul>
 {{/*                    <strong th:if="${@config.getKey('sys.account.registerUser')}">还没有账号？ <a th:href="@{/register}">立即注册&raquo;</a></strong>*/}}
                 </div>
             </div>
-            <div class="col-sm-5">
+            <div class="col-md-6 col-lg-6">
                 <form id="signupForm" autocomplete="off">
                     <h3 class="no-margins">用户登录：</h3>
-                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value=""    />
+                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value=""  />
                     <input type="password" name="password" class="form-control pword"     placeholder="密码"   value="" />
 
 					<div id="vcode" class="row m-t" style="display: {{if eq .CodeShow 0}} none {{end}}" >
 						<div class="col-xs-6">
-
                             <input type="text" name="validateCode" class="form-control code" placeholder="验证码" maxlength="6">
                             <input type="hidden" id="idkey"/>
                         </div>
@@ -57,8 +56,6 @@
                             </a>
 						</div>
 					</div>
-
-
 
                     <div class="checkbox-custom" style="margin-top: 10px">
 				        <input type="checkbox" id="rememberme" name="rememberme"> <label for="rememberme">记住我</label>

@@ -4,10 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_web"
+	"lostvip.com/web/dto"
+	"main/app/system/model"
+	"main/app/system/service"
+	"main/app/system/vo"
 	"net/http"
-	"robvi/app/common/model_cmn"
-	"robvi/app/system/model/system/dict_type"
-	dictTypeService "robvi/app/system/service/system/dict_type"
 )
 
 type DictTypeController struct {
@@ -20,13 +21,14 @@ func (w *DictTypeController) List(c *gin.Context) {
 
 // 列表分页数据
 func (w *DictTypeController) ListAjax(c *gin.Context) {
-	var req *dict_type.SelectPageReq
+	var req *vo.SelectDictTypePageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
-	rows := make([]dict_type.Entity, 0)
+	rows := make([]model.DictType, 0)
+	var dictTypeService service.DictTypeService
 	result, page, err := dictTypeService.SelectListByPage(req)
 
 	if err == nil && len(result) > 0 {
@@ -43,22 +45,22 @@ func (w *DictTypeController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *DictTypeController) AddSave(c *gin.Context) {
-	var req *dict_type.AddReq
+	var req *model.DictType
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	if dictTypeService.CheckDictTypeUniqueAll(req.DictType) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).SetMsg("字典类型已存在").Log("字典管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("字典类型已存在").Log("字典管理", req).WriteJsonExit()
 		return
 	}
 
 	rid, err := dictTypeService.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Add).Log("字典管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).Log("字典管理", req).WriteJsonExit()
 		return
 	}
 	lv_web.SucessResp(c).SetData(rid).Log("字典管理", req).WriteJsonExit()
@@ -68,16 +70,16 @@ func (w *DictTypeController) AddSave(c *gin.Context) {
 func (w *DictTypeController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "字典类型错误",
 		})
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	entity, err := dictTypeService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "字典类型不存在",
 		})
 		return
@@ -90,22 +92,22 @@ func (w *DictTypeController) Edit(c *gin.Context) {
 
 // 修改页面保存
 func (w *DictTypeController) EditSave(c *gin.Context) {
-	var req *dict_type.EditReq
+	var req *vo.EditDictTypeReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	if dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).SetMsg("字典类型已存在").Log("字典类型管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg("字典类型已存在").Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := dictTypeService.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Edit).Log("字典类型管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
 	lv_web.SucessResp(c).Log("字典类型管理", req).WriteJsonExit()
@@ -113,19 +115,19 @@ func (w *DictTypeController) EditSave(c *gin.Context) {
 
 // 删除数据
 func (w *DictTypeController) Remove(c *gin.Context) {
-	var req *model_cmn.RemoveReq
+	var req *dto.RemoveReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	rs := dictTypeService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		lv_web.SucessResp(c).SetBtype(model_cmn.Buniss_Del).Log("字典管理", req).WriteJsonExit()
+		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("字典管理", req).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(model_cmn.Buniss_Del).Log("字典管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("字典管理", req).WriteJsonExit()
 	}
 }
 
@@ -133,15 +135,16 @@ func (w *DictTypeController) Remove(c *gin.Context) {
 func (w *DictTypeController) Detail(c *gin.Context) {
 	dictId := lv_conv.Int64(c.Query("dictId"))
 	if dictId <= 0 {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
 	}
+	var dictTypeService service.DictTypeService
 	dict, _ := dictTypeService.SelectRecordById(dictId)
 
 	if dict == nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "字典类别不存在",
 		})
 		return
@@ -149,7 +152,7 @@ func (w *DictTypeController) Detail(c *gin.Context) {
 
 	dictList, _ := dictTypeService.SelectListAll(nil)
 	if dictList == nil {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误2",
 		})
 		return
@@ -166,7 +169,7 @@ func (w *DictTypeController) SelectDictTree(c *gin.Context) {
 	columnId := lv_conv.Int64(c.Query("columnId"))
 	dictType := c.Query("dictType")
 	if columnId <= 0 || dictType == "" {
-		lv_web.BuildTpl(c, model_cmn.ERROR_PAGE).WriteTpl(gin.H{
+		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 
@@ -176,8 +179,8 @@ func (w *DictTypeController) SelectDictTree(c *gin.Context) {
 	if dictType == "-" {
 		dictType = "-"
 	}
-
-	var dict dict_type.Entity
+	var dictTypeService service.DictTypeService
+	var dict model.DictType
 	rs := dictTypeService.SelectDictTypeByType(dictType)
 	if rs != nil {
 		dict = *rs
@@ -191,14 +194,14 @@ func (w *DictTypeController) SelectDictTree(c *gin.Context) {
 
 // 导出
 func (w *DictTypeController) Export(c *gin.Context) {
-	var req *dict_type.SelectPageReq
+	var req *vo.SelectDictTypePageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 		return
 	}
+	var dictTypeService service.DictTypeService
 	url, err := dictTypeService.Export(req)
-
 	if err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 		return
@@ -209,24 +212,24 @@ func (w *DictTypeController) Export(c *gin.Context) {
 
 // 检查字典类型是否唯一不包括本参数
 func (w *DictTypeController) CheckDictTypeUnique(c *gin.Context) {
-	var req *dict_type.CheckDictTypeReq
+	var req *vo.CheckDictTypeReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	result := dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId)
 	c.Writer.WriteString(result)
 }
 
 // 检查字典类型是否唯一
 func (w *DictTypeController) CheckDictTypeUniqueAll(c *gin.Context) {
-	var req *dict_type.CheckDictTypeALLReq
+	var req *vo.CheckDictTypeALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-
+	var dictTypeService service.DictTypeService
 	result := dictTypeService.CheckDictTypeUniqueAll(req.DictType)
 
 	c.Writer.WriteString(result)
@@ -234,6 +237,7 @@ func (w *DictTypeController) CheckDictTypeUniqueAll(c *gin.Context) {
 
 // 加载部门列表树结构的数据
 func (w *DictTypeController) TreeData(c *gin.Context) {
+	var dictTypeService service.DictTypeService
 	result := dictTypeService.SelectDictTree(nil)
 	c.JSON(http.StatusOK, result)
 }

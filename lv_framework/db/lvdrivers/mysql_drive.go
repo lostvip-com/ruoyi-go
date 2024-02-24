@@ -40,7 +40,7 @@ func (e *DbConn) GetGormDB() *gorm.DB {
 
 // Setup 配置步骤
 //
-//root:root!@tcp(60.205.205.242:13307)/robvi.com?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+//root:root!@tcp(60.205.205.242:13307)/main.com?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
 func (e *DbConn) Setup() (*gorm.DB, error) {
 	var err error
 	url := "%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=5000ms"
