@@ -4,7 +4,7 @@ import (
 	"lostvip.com/db"
 )
 
-// SysUserRole 用户和角色关联
+// 用户和角色关联
 type SysUserRole struct {
 	UserId int64 `gorm:"type:bigint(20);primary_key;auto_increment;用户ID;" json:"userId"`
 	RoleId int64 `gorm:"type:bigint(20);primary_key;auto_increment;角色ID;" json:"roleId"`

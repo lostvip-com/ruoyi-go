@@ -32,7 +32,7 @@ func (e *SysUserPost) FindById() error {
 	return err
 }
 
-// // 查第一条
+// 查第一条
 func (e *SysUserPost) FindOne() error {
 	err := db.GetMasterGorm().First(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
 	return err
