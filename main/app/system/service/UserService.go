@@ -505,6 +505,9 @@ func (svc UserService) SelectUnallocatedList(roleId int64, loginName, phonenumbe
 
 // 查询未分配用户角色列表
 func (svc UserService) GetRoleKeys(userId int64) (string, error) {
+	if userId == 1 {
+		return "admin", nil
+	}
 	var sql = " SELECT GROUP_CONCAT(r.role_key) roles from sys_user_role ur,sys_role r where ur.user_id=? and ur.role_id = r.role_id "
 	var roles string
 	err := db.GetMasterGorm().Raw(sql, userId).Scan(&roles).Error

@@ -38,12 +38,11 @@ func (e *SysUserPost) FindOne() error {
 	return err
 }
 
-// 改
-func (e *SysUserPost) Updates() error {
-	return db.GetMasterGorm().Updates(e).Error
-}
-
 // 删
 func (e *SysUserPost) Delete() error {
-	return db.GetMasterGorm().Delete(e).Error
+	err := e.FindById()
+	if err == nil {
+		return db.GetMasterGorm().Delete(e).Error
+	}
+	return err
 }
