@@ -104,7 +104,7 @@ fresh
 ## 演示图
 
 <img alt="" height="400" src="docs/1.jpg" width="600" />
-<img alt="" height="400" src="docs/2.png" width="600" />
+<img alt="" height="400" src="docs/2.jpg" width="600" />
 <img alt="" height="400" src="docs/3.png" width="600" />
 <img alt="" height="400" src="docs/4.png" width="600" />
 
