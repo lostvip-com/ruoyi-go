@@ -136,3 +136,7 @@ fresh
 如有兴趣一起完善，进QQ群 43862272
 
 <img alt="" height="389" src="https://github.com/lostvip-com/ruoyi-go/blob/main/docs/qq.png" width="300" />
+
+ <p>Gitee <a href="https://gitee.com/lostvip_com/ruoyi-go">https://gitee.com/lostvip_com/ruoyi-go</a></p>
+ <p>Github <a href="https://github.com/lostvip-com/ruoyi-go">https://github.com/lostvip-com/ruoyi-go</a></p>
+ <p>Gitcode <a href="https://gitcode.com/lostvip-com1/ruoyi-go/tree/main">https://gitcode.com/lostvip-com1/ruoyi-go/tree/main</a></p>
