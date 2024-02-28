@@ -48,8 +48,8 @@ func (w *MainController) goMain(c *gin.Context, indexPageDefault string) {
 
 	//获取配置数据
 	var configService service.ConfigService
-	sideTheme := functions.GetValueByKey("sys.index.sideTheme")
-	skinName := configService.GetValueByKey("sys.index.skinName")
+	sideTheme := functions.GetValueByKey("system.index.sideTheme")
+	skinName := configService.GetValueByKey("system.index.skinName")
 	//设置首页风格
 	menuStyle := c.Query("menuStyle")
 	cookie, _ := c.Request.Cookie("menuStyle")

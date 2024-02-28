@@ -34,7 +34,7 @@ func GetCtxPath(url string) string {
 	return url
 }
 func GetOssUrl() string {
-	ossUrl := GetValueByKey("sys.resource.url")
+	ossUrl := GetValueByKey("system.resource.url")
 	if ossUrl == "" {
 		ossUrl = "/static"
 	} else if !strings.HasPrefix(ossUrl, "http") {
