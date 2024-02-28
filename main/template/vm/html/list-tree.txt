@@ -3,7 +3,7 @@
 ==========================================================================
 LV自动生成左树右表列表页面代码,只生成一次,按需修改.
 生成日期：{{.table.CreateTime}}
-生成路径: template/{{.table.ModuleName}}/{{.table.BusinessName}}/list.html
+生成路径: template/{{.table.PackageName}}/{{.table.BusinessName}}/list.html
 生成人：{{.table.FunctionAuthor}}
 ==========================================================================
 -->
@@ -48,8 +48,8 @@ LV自动生成左树右表列表页面代码,只生成一次,按需修改.
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            {{printf `{{getPermiButton .uid "%v:%v:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .uid "%v:%v:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}` .table.PackageName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.PackageName .table.BusinessName}}
             <a class="btn btn-info" id="expandAllBtn">
                 <i class="fa fa-exchange"></i> 展开/折叠
             </a>
@@ -61,11 +61,11 @@ LV自动生成左树右表列表页面代码,只生成一次,按需修改.
 </div>
 {{printf `{{template "footer" (OssUrl)}}`}}
 <script type="text/javascript">
-    var addFlag = '{{printf `{{hasPermi .uid "%v:%v:add"}}` .table.ModuleName .table.BusinessName}}';
-    var editFlag =' {{printf `{{hasPermi .uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';
-    var removeFlag = '{{printf `{{hasPermi .uid "%v:%v:remove"}}` .table.ModuleName .table.BusinessName}}';
+    var addFlag = '{{printf `{{hasPermi .uid "%v:%v:add"}}` .table.PackageName .table.BusinessName}}';
+    var editFlag =' {{printf `{{hasPermi .uid "%v:%v:edit"}}` .table.PackageName .table.BusinessName}}';
+    var removeFlag = '{{printf `{{hasPermi .uid "%v:%v:remove"}}` .table.PackageName .table.BusinessName}}';
     {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}var {{$column.HtmlField}}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
-    var prefix = ctx + "/{{.table.ModuleName}}/{{.table.BusinessName}}";
+    var prefix = ctx + "/{{.table.PackageName}}/{{.table.BusinessName}}";
 
     $(function () {
         var options = {

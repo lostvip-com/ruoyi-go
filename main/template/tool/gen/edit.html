@@ -154,31 +154,34 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
+
                                             <div class="form-group">
-                                                <label class="col-sm-4 control-label"
-                                                       title="生成根包名"><span
-                                                            style="color: red; ">*</span>生成根包名：<i
-                                                            class="fa fa-question-circle-o"></i></label>
-                                                <div class="col-sm-8">
-                                                    <input name="packageName" class="form-control" type="text"
-                                                           placeholder="请输入生成根包名" maxlength="100"
-                                                           value="{{.table.PackageName}}" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-sm-4 control-label" title="可理解为子系统名，例如 system"><span
-                                                            style="color: red; ">*</span>生成模块名：<i
-                                                            class="fa fa-question-circle-o"></i></label>
+                                                <label class="col-sm-4 control-label" title="可理解为子系统名，例如lv_framework、main"><span
+                                                        style="color: red; ">*</span>Module：<i
+                                                        class="fa fa-question-circle-o"></i></label>
                                                 <div class="col-sm-8">
                                                     <input name="moduleName" class="form-control" type="text"
                                                            placeholder="请输入生成模块名" maxlength="30"
                                                            value="{{.table.ModuleName}}" required>
                                                 </div>
                                             </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label"
+                                                       title="生成根包名,如mywork、demo"><span
+                                                        style="color: red; ">*</span>Package：<i
+                                                        class="fa fa-question-circle-o"></i></label>
+                                                <div class="col-sm-8">
+                                                    <input name="packageName" class="form-control" type="text"
+                                                           placeholder="请输入PackageName" maxlength="100"
+                                                           value="{{.table.PackageName}}" required>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">

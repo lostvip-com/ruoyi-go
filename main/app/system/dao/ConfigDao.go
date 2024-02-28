@@ -107,7 +107,7 @@ func (d ConfigDao) GetSql(param *vo.SelectConfigPageReq) (map[string]interface{}
 //
 //	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 //
-//	tb.Limit(p.Pagesize, p.StartNum)
+//	tb.Limit(p.PageSize, p.StartNum)
 //
 //	var result []model.SysConfig
 //	err = tb.Find(&result)

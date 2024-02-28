@@ -8,9 +8,11 @@ import (
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
+	"lostvip.com/logme"
 	ip2 "lostvip.com/utils/lv_net"
 	time2 "lostvip.com/utils/lv_time"
 	"lostvip.com/utils/lv_web"
+	"net/http"
 	"os"
 	"runtime"
 	"strconv"
@@ -136,4 +138,16 @@ func (w *ServiceController) Server(c *gin.Context) {
 		"goUserDir":       goUserDir,
 		"disklist":        disklist,
 	})
+}
+
+/**
+ * 健康监测端点
+ */
+func (w *ServiceController) Health(c *gin.Context) {
+	logme.Info("----> invoke: /monitor/health")
+	ret := map[string]string{
+		"status": "UP",
+	}
+	c.JSON(http.StatusOK, ret)
+	c.Abort()
 }

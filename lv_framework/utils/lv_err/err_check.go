@@ -1,8 +1,8 @@
 package lv_err
 
 import (
-	"encoding/json"
 	"log"
+	"lostvip.com/utils/lv_conv"
 	"lostvip.com/web/dto"
 	"runtime"
 )
@@ -26,15 +26,8 @@ func Assert1(conditionYes bool, msg string) {
 		var res dto.Resp
 		res.Msg = msg
 		res.Code = 1
-		json, _ := ToJsonStr(res)
+		json, _ := lv_conv.ToJsonStr(res)
 		panic(json)
-	}
-}
-func ToJsonStr(e interface{}) (string, error) {
-	if b, err := json.Marshal(e); err == nil {
-		return string(b), err
-	} else {
-		return "", err
 	}
 }
 

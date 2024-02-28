@@ -8,11 +8,12 @@ import (
 
 // 加载路由
 func init() {
+	serverController := controller.ServiceController{}
+	g0 := router.New("/monitor/health")
+	g0.GET("/", "", serverController.Health)
 	// 服务监控
 	g1 := router.New("/monitor/server", auth.TokenCheck(), auth.PermitCheck)
-	serverController := controller.ServiceController{}
 	g1.GET("/", "monitor:server:view", serverController.Server)
-
 	//登录日志
 	g2 := router.New("/monitor/logininfor", auth.TokenCheck(), auth.PermitCheck)
 	loginInforController := controller.LoginInforController{}

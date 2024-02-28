@@ -8,13 +8,12 @@ package controller
 
 import (
     "github.com/gin-gonic/gin"
-    "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_web"
     "lostvip.com/utils/lv_err"
-    "{{.table.PackageName}}/app/common/model_cmn"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/service"
-    sysService "{{.table.PackageName}}/app/system/service"
+    "lostvip.com/web/dto"
+    "{{.table.ModuleName}}/app/{{.table.PackageName}}/vo"
+    "{{.table.ModuleName}}/app/{{.table.PackageName}}/service"
+    sysService "main/app/system/service"
 )
 type {{.table.ClassName}}Controller struct{}
 //	========================================================================
@@ -63,7 +62,7 @@ func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
 
 // Remove 删除数据
 func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
-	req := new(model_cmn.RemoveReq)
+	req := new(dto.RemoveReq)
 	err := c.ShouldBind(req)
     lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service

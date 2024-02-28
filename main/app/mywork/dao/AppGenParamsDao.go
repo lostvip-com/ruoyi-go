@@ -1,7 +1,7 @@
 // ==========================================================================
 // LV自动生成model扩展代码列表、增、删，改、查、导出，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：{{.table.CreateTime}}
-// 生成人：{{.table.FunctionAuthor}}
+// 生成日期：2024-02-28 14:21:50 +0800 CST
+// 生成人：lv
 // ==========================================================================
 package dao
 
@@ -11,16 +11,16 @@ import (
 	"lostvip.com/db/lvdao"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_reflect"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/vo"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/model"
+    "main/app/mywork/vo"
+    "main/app/mywork/model"
 )
 
 //新增页面请求参数
-type {{.table.ClassName}}Dao struct { }
+type AppGenParamsDao struct { }
 
 // 根据条件分页查询数据
-func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, int64, error) {
-	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
+func (d AppGenParamsDao) ListMapByPage(req *vo.PageAppGenParamsReq) (*[]map[string]string, int64, error) {
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	tagName := lv_reflect.GetMethodName()
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
@@ -32,13 +32,13 @@ func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 	return rows, count, nil
 }
 // 根据条件分页查询数据
-func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
-	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
+func (d AppGenParamsDao) ListByPage(req *vo.PageAppGenParamsReq) (*[]model.AppGenParams, int64, error) {
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	tagName := lv_reflect.GetMethodName()
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
 	//查询数据
-	rows, err := lvdao.ListByNamedSql[model.{{.table.ClassName}}](limitSQL, req)
+	rows, err := lvdao.ListByNamedSql[model.AppGenParams](limitSQL, req)
 	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
 	lv_err.HasErrAndPanic(err)
@@ -46,8 +46,8 @@ func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 }
 
 // ListAll 导出excel使用
-func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
-	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl")
+func (d AppGenParamsDao) ListAll(req *vo.PageAppGenParamsReq, isCamel bool) (*[]map[string]string, error) {
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
 	lv_err.HasErrAndPanic(err)
@@ -57,14 +57,14 @@ func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, is
 }
 
 // FindByWhere 根据条件查询
-func (d {{.table.ClassName}}Dao) Find(where, order string) (*[]model.{{.table.ClassName}}, error) {
-	var list []model.{{.table.ClassName}}
-	err := db.GetMasterGorm().Table("{{.table.TbName}}").Where(where).Order(order).Find(&list).Error
+func (d AppGenParamsDao) Find(where, order string) (*[]model.AppGenParams, error) {
+	var list []model.AppGenParams
+	err := db.GetMasterGorm().Table("app_gen_params").Where(where).Order(order).Find(&list).Error
 	return &list, err
 }
 
-func (d {{.table.ClassName}}Dao) DeleteByIds(ida []int64) int64 {
-	db := db.GetMasterGorm().Table("{{.table.TbName}}").Where("{{.table.PkColumn.ColumnName}} in ? ", ida).Update("del_flag", 1)
+func (d AppGenParamsDao) DeleteByIds(ida []int64) int64 {
+	db := db.GetMasterGorm().Table("app_gen_params").Where("id in ? ", ida).Update("del_flag", 1)
     if db.Error != nil {
         panic(db.Error)
     }

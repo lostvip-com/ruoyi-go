@@ -1,4 +1,4 @@
-package myowrk
+package mywork
 
 import (
 	"fmt"

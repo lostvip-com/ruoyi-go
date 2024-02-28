@@ -7,22 +7,22 @@ package {{.table.PackageName}}
 
 import (
         "lostvip.com/web/router"
-        "{{.table.PackageName}}/app/common/middleware/auth"
-        "{{.table.PackageName}}/app/{{.table.ModuleName}}/controller"
+        "{{.table.ModuleName}}/app/common/middleware/auth"
+        "{{.table.ModuleName}}/app/{{.table.PackageName}}/controller"
 )
 
 //加载路由
 func init() {
 	// 参数路由
-	g1 := router.New( "/{{.table.ModuleName}}/{{.table.BusinessName}}", auth.Auth)
+	g1 := router.New( "/{{.table.PackageName}}/{{.table.BusinessName}}", auth.TokenCheck())
 
 	web := controller.{{.table.ClassName}}Controller{}
-	g1.GET("/", "{{.table.ModuleName}}:{{.table.BusinessName}}:view", web.List)
-	g1.POST("/list", "{{.table.ModuleName}}:{{.table.BusinessName}}:list", web.ListAjax)
-	g1.GET("/add", "{{.table.ModuleName}}:{{.table.BusinessName}}:add", web.Add)
-	g1.POST("/add", "{{.table.ModuleName}}:{{.table.BusinessName}}:add", web.AddSave)
-	g1.POST("/remove", "{{.table.ModuleName}}:{{.table.BusinessName}}:remove", web.Remove)
-	g1.GET("/edit", "{{.table.ModuleName}}:{{.table.BusinessName}}:edit", web.Edit)
-	g1.POST("/edit", "{{.table.ModuleName}}:{{.table.BusinessName}}:edit",web.EditSave)
-	g1.POST("/export", "{{.table.ModuleName}}:{{.table.BusinessName}}:export", web.Export)
+	g1.GET("/", "{{.table.PackageName}}:{{.table.BusinessName}}:view", web.List)
+	g1.POST("/list", "{{.table.PackageName}}:{{.table.BusinessName}}:list", web.ListAjax)
+	g1.GET("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.Add)
+	g1.POST("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.AddSave)
+	g1.POST("/remove", "{{.table.PackageName}}:{{.table.BusinessName}}:remove", web.Remove)
+	g1.GET("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit", web.Edit)
+	g1.POST("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit",web.EditSave)
+	g1.POST("/export", "{{.table.PackageName}}:{{.table.BusinessName}}:export", web.Export)
 }

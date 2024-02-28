@@ -3,7 +3,7 @@
 ==========================================================================
 LV自动生成数据选择树页面代码,只生成一次,按需修改.
 生成日期：{{.table.CreateTime}}
-生成路径: template/{{.table.ModuleName}}/{{.table.BusinessName}}/tree.html
+生成路径: template/{{.table.PackageName}}/{{.table.BusinessName}}/tree.html
 生成人：{{.table.FunctionAuthor}}
 ==========================================================================
 -->
@@ -37,7 +37,7 @@ LV自动生成数据选择树页面代码,只生成一次,按需修改.
 <script src="{{printf `{{OssUrl}}`}}/resource/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js"></script>
 <script type="text/javascript">
     $(function() {
-        var url = ctx + "/{{.table.ModuleName}}/{{.table.BusinessName}}/treeData";
+        var url = ctx + "/{{.table.PackageName}}/{{.table.BusinessName}}/treeData";
         var options = {
             url: url,
             expandLevel: 2,

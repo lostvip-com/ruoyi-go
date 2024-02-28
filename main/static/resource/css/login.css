@@ -161,7 +161,7 @@ body.bg_terminal {
 }
 
 .form-control{
-	border-radius: 1px!important;
+	border-radius: 3px!important;
 	padding: 6px 12px!important;
 	height: 40px!important;
 }

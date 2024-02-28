@@ -59,7 +59,7 @@ func (dao *DictTypeDao) SelectListByPage(param *vo.SelectDictTypePageReq) ([]mod
 		tb.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")
 	}
 
-	tb.Limit(p.Pagesize, p.StartNum)
+	tb.Limit(p.PageSize, p.StartNum)
 
 	var result []model.DictType
 	err = tb.Find(&result)

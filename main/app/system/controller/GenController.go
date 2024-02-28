@@ -7,6 +7,7 @@ import (
 	"lostvip.com/db/lvbatis"
 	"lostvip.com/logme"
 	"lostvip.com/utils/lv_conv"
+	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_file"
 	"lostvip.com/utils/lv_web"
 	"lostvip.com/web/dto"
@@ -45,14 +46,16 @@ func (w *GenController) ExecSqlFile(c *gin.Context) {
 
 	//err = db.ExecSqlFile(sqlFile)
 	// Loads queries from file
-	lvBatis, err := lvbatis.LoadFromFile(curDir + "/tmp/sql/" + po.ModuleName + "/" + po.TbName + "_menu.sql")
+	lvBatis, err := lvbatis.LoadFromFile(curDir + "/tmp/sql/" + po.PackageName + "/" + po.TbName + "_menu.sql")
 	// Run queries
 	tb := db.GetMasterGorm()
+	//cfg := global.GetConfigInstance()
 	lvBatis.Exec(tb, "menu")
 	menuName := po.FunctionName
 	sysmenu := menuModel.SysMenu{}
 	sysmenu.MenuName = menuName
-	err = sysmenu.FindOne()
+	err = sysmenu.FindLastOne()
+	lv_err.HasErrAndPanic(err)
 	pmenuId := sysmenu.MenuId
 	_, err = lvBatis.Exec(tb, "menu_button_create", pmenuId)
 	_, err = lvBatis.Exec(tb, "menu_button_retrieve", pmenuId)
@@ -366,10 +369,10 @@ func (w *GenController) GenCode(c *gin.Context) {
 	if err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 	}
-	var htmlMoudlePath = curDir + "/template/" + entity.ModuleName
+	var htmlPath = curDir + "/template/" + entity.PackageName
 	//add模板
 	if tmp, err := tableService.LoadTemplate("vm/html/add.txt", gin.H{"table": entity}); err == nil {
-		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/add.html"
+		fileName := htmlPath + "/" + entity.BusinessName + "/add.html"
 
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
@@ -382,7 +385,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 
 	//edit模板
 	if tmp, err := tableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity}); err == nil {
-		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/edit.html"
+		fileName := htmlPath + "/" + entity.BusinessName + "/edit.html"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -394,7 +397,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 
 	//list模板
 	if tmp, err := tableService.LoadTemplate(listTmp, gin.H{"table": entity}); err == nil {
-		fileName := htmlMoudlePath + "/" + entity.BusinessName + "/list.html"
+		fileName := htmlPath + "/" + entity.BusinessName + "/list.html"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -407,7 +410,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	if entity.TplCategory == "tree" {
 		//tree模板
 		if tmp, err := tableService.LoadTemplate("vm/html/tree.txt", gin.H{"table": entity}); err == nil {
-			fileName := htmlMoudlePath + "/" + entity.BusinessName + "/tree.html"
+			fileName := htmlPath + "/" + entity.BusinessName + "/tree.html"
 			if canGenIt(overwrite, fileName) {
 				f, err := lv_file.Create(fileName)
 				if err == nil {
@@ -417,10 +420,10 @@ func (w *GenController) GenCode(c *gin.Context) {
 			}
 		}
 	}
-	var goModulePath = curDir + "/app/" + entity.ModuleName
+	var packagePath = curDir + "/app/" + entity.PackageName
 	//entity模板
 	if tmp, err := tableService.LoadTemplate("vm/go/model.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/model/" + entity.ClassName + ".go"
+		fileName := packagePath + "/model/" + entity.ClassName + ".go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -432,7 +435,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 
 	//dao模板
 	if tmp, err := tableService.LoadTemplate("vm/go/dao.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/dao/" + entity.ClassName + "Dao.go"
+		fileName := packagePath + "/dao/" + entity.ClassName + "Dao.go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -443,7 +446,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	}
 	//vo模板
 	if tmp, err := tableService.LoadTemplate("vm/go/vo.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/vo/" + entity.ClassName + "VO.go"
+		fileName := packagePath + "/vo/" + entity.ClassName + "VO.go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -454,7 +457,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	}
 	//service模板
 	if tmp, err := tableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/service/" + entity.ClassName + "Service.go"
+		fileName := packagePath + "/service/" + entity.ClassName + "Service.go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -465,7 +468,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	}
 	//controller模板
 	if tmp, err := tableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/controller/" + entity.ClassName + "Controller.go"
+		fileName := packagePath + "/controller/" + entity.ClassName + "Controller.go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -474,9 +477,21 @@ func (w *GenController) GenCode(c *gin.Context) {
 			f.Close()
 		}
 	}
+	//controller模板
+	if tmp, err := tableService.LoadTemplate("vm/go/api.txt", gin.H{"table": entity}); err == nil {
+		fileName := packagePath + "/controller/" + entity.ClassName + "Api.go"
+		if canGenIt(overwrite, fileName) {
+			f, err := lv_file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
+			}
+			f.Close()
+		}
+	}
+
 	//router模板
 	if tmp, err := tableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity}); err == nil {
-		fileName := goModulePath + "/" + entity.TbName + "_router.go"
+		fileName := packagePath + "/" + entity.TbName + "_router.go"
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -488,7 +503,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	//ibatis sql文件
 	if mapper, err := tableService.LoadTemplate("vm/mapper/mapper.tpl", gin.H{"table": entity}); err == nil {
 		mapperPath := curDir + "/mapper"
-		fileName := strings.Join([]string{mapperPath, "/", entity.ModuleName, "/", entity.TbName, "_mapper.tpl"}, "")
+		fileName := strings.Join([]string{mapperPath, "/", entity.PackageName, "/", entity.TbName, "_mapper.tpl"}, "")
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -500,7 +515,7 @@ func (w *GenController) GenCode(c *gin.Context) {
 	//sql模板
 	if tmp, err := tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity}); err == nil {
 		tmpPath := curDir + "/tmp/sql"
-		fileName := strings.Join([]string{tmpPath, "/", entity.ModuleName, "/", entity.TbName, "_menu.sql"}, "")
+		fileName := strings.Join([]string{tmpPath, "/", entity.PackageName, "/", entity.TbName, "_menu.sql"}, "")
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {
@@ -566,17 +581,16 @@ func (w *GenController) ImportTableSave(c *gin.Context) {
 	tableArr := strings.Split(tables, ",")
 	tableList, err := tableService.SelectDbTableListByNames(tableArr)
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 
 	if tableList == nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", gin.H{"tables": tables}).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("请选择需要导入的表").WriteJsonExit()
 		return
 	}
-
 	tableService.ImportGenTable(&tableList, operName)
-	lv_web.SucessResp(c).Log("导入表结构", gin.H{"tables": tables}).WriteJsonExit()
+	lv_web.SucessResp(c).WriteJsonExit()
 }
 
 // 根据table_id查询表列数据

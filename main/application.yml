@@ -4,14 +4,14 @@ go:
   log:
     output: stdout #生产环境要注释，不会记录到文件
   redis:
-    host: ${REDIS_HOST:"127.0.0.1"}
+    host: ${REDIS_HOST:192.168.81.228}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:"123!"}
+    password:
   datasource:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
-    master: ${MYSQL_MASTER:"root:123456@tcp(127.0.0.1:13306)/ruoyi-go?charset=utf8"}
+    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:3306)/dpc_tools?charset=utf8"}
     slave: ""
  #代理转发
 #  proxy:
@@ -21,8 +21,12 @@ go:
 #      - /lostvip=lostvip.com
 #代码生成器配置
 gen:
-  author: "lv"
-  moduleName: "mywork"
-  packageName: "main"
+  author: lv
+  #大模块，如lv_framework、main、demo
+  moduleName: main
+  #小模块，业务包
+  packageName: myowrk
   #覆盖旧的代码
   overwrite: false
+  #新生成的菜单挂到哪个菜单下(暂时未使用)
+  parent_menu_id: 4

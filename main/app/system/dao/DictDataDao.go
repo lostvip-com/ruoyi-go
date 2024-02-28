@@ -55,7 +55,7 @@ func (dao *DictDataDao) SelectListByPage(param *vo.SelectDictDataPageReq) (*[]mo
 
 	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
-	tb.Limit(p.Pagesize, p.StartNum)
+	tb.Limit(p.PageSize, p.StartNum)
 
 	var result []model.SysDictData
 	tb.Find(&result)

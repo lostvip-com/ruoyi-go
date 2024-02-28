@@ -50,10 +50,35 @@ func (e *SysMenu) FindOne() error {
 	if e.ParentId != 0 {
 		tb = tb.Where("parent_id=?", e.ParentId)
 	}
+	if e.MenuName != "" {
+		tb = tb.Where("menu_name=?", e.MenuName)
+	}
+
 	if e.Perms != "" {
 		tb = tb.Where("perms=?", e.Perms)
 	}
 
+	err := tb.First(e).Error
+	return err
+}
+
+// 查第一条
+func (e *SysMenu) FindLastOne() error {
+	tb := db.GetMasterGorm().Table("sys_menu")
+	if e.MenuId != 0 {
+		tb = tb.Where("menu_id=?", e.MenuId)
+	}
+	if e.ParentId != 0 {
+		tb = tb.Where("parent_id=?", e.ParentId)
+	}
+	if e.MenuName != "" {
+		tb = tb.Where("menu_name=?", e.MenuName)
+	}
+	if e.Perms != "" {
+		tb = tb.Where("perms=?", e.Perms)
+	}
+	tb.Order("menu_id desc")
+	tb.Limit(1)
 	err := tb.First(e).Error
 	return err
 }

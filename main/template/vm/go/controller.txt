@@ -10,20 +10,16 @@ import (
     "github.com/gin-gonic/gin"
     "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_web"
-    "lostvip.com/utils/lv_err"
-    "{{.table.PackageName}}/app/common/model_cmn"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/vo"
-    "{{.table.PackageName}}/app/{{.table.ModuleName}}/service"
-    sysService "{{.table.PackageName}}/app/system/service"
+    "{{.table.ModuleName}}/app/{{.table.PackageName}}/service"
 )
 
 // List 查询页
 func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
-	lv_web.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/list.html").WriteTpl()
 }
 // Add 新增页
 func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
-	lv_web.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
+	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/add.html").WriteTpl()
 }
 // Edit 修改页
 func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
@@ -34,7 +30,7 @@ func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
 		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
 		return
 	}
-	lv_web.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
+	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
 		"{{.table.BusinessName}}": entity,
 	})
 }

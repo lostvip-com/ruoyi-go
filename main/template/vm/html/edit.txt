@@ -3,7 +3,7 @@
 ==========================================================================
 LV自动生成修改页面代码,只生成一次,按需修改.
 生成日期：{{.table.CreateTime}}
-生成路径: template/{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html
+生成路径: template/{{.table.PackageName}}/{{.table.BusinessName}}/edit.html
 生成人：{{.table.FunctionAuthor}}
 ==========================================================================
 -->
@@ -91,7 +91,7 @@ LV自动生成修改页面代码,只生成一次,按需修改.
 {{printf `{{template "footer" (OssUrl)}}`}}
 <script src="{{printf `{{OssUrl}}`}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
-    var prefix = ctx + "/{{.table.ModuleName}}/{{.table.BusinessName}}";
+    var prefix = ctx + "/{{.table.PackageName}}/{{.table.BusinessName}}";
     $("#form-{{.table.BusinessName}}-edit").validate({
         focusCleanup: true
     });

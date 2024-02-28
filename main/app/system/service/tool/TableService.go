@@ -369,8 +369,12 @@ func (svc TableService) InitColumnField(column *tool.Entity, table *tool.GenTabl
 		column.IsRequired = "0"
 		column.IsInsert = "0"
 	} else { //需要生成到界面
+		if column.IsPk == "1" {
+			column.IsInsert = "0"
+		} else {
+			column.IsInsert = "1"
+		}
 		column.IsRequired = "0"
-		column.IsInsert = "1"
 		if strings.Index(columnName, "name") >= 0 || strings.Index(columnName, "status") >= 0 {
 			column.IsRequired = "1"
 		}

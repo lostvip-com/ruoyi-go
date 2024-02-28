@@ -3,7 +3,7 @@
 ==========================================================================
 LV自动生成列表页面代码,只生成一次,按需修改.
 生成日期：{{.table.CreateTime}}
-生成路径: template/{{.table.ModuleName}}/{{.table.BusinessName}}/list.html
+生成路径: template/{{.table.PackageName}}/{{.table.BusinessName}}/list.html
 生成人：{{.table.FunctionAuthor}}
 ==========================================================================
 -->
@@ -48,10 +48,10 @@ LV自动生成列表页面代码,只生成一次,按需修改.
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            {{printf `{{getPermiButton .uid "%v:%v:add" "$.operate.addFull()" "新增" "btn btn-success" "fa fa-plus"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .uid "%v:%v:edit" "$.operate.editFull()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .uid "%v:%v:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .uid "%v:%v:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:add" "$.operate.addFull()" "新增" "btn btn-success" "fa fa-plus"}}` .table.PackageName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:edit" "$.operate.editFull()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.PackageName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}` .table.PackageName .table.BusinessName}}
+            {{printf `{{getPermiButton .uid "%v:%v:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}` .table.PackageName .table.BusinessName}}
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -60,11 +60,11 @@ LV自动生成列表页面代码,只生成一次,按需修改.
 </div>
 {{printf `{{template "footer" (OssUrl)}}`}}
 <script type="text/javascript">
-    var editFlag = '{{printf `{{hasPermi .uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';
-    var removeFlag = '{{printf `{{hasPermi .uid "%v:%v:remove"}}` .table.ModuleName .table.BusinessName}}';
+    var editFlag = '{{printf `{{hasPermi .uid "%v:%v:edit"}}` .table.PackageName .table.BusinessName}}';
+    var removeFlag = '{{printf `{{hasPermi .uid "%v:%v:remove"}}` .table.PackageName .table.BusinessName}}';
 
     {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}  var {{$column.HtmlField}}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
-    var prefix = ctx + "/{{.table.ModuleName}}/{{.table.BusinessName}}";
+    var prefix = ctx + "/{{.table.PackageName}}/{{.table.BusinessName}}";
 
     $(function () {
         var options = {

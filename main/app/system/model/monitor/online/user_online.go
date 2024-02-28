@@ -132,7 +132,7 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 		model.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")
 	}
 
-	model.Limit(p.Pagesize, p.StartNum)
+	model.Limit(p.PageSize, p.StartNum)
 
 	var result []UserOnline
 	err = model.Find(&result)

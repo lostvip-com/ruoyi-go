@@ -5,9 +5,9 @@ import (
 )
 
 type Paging struct {
-	PageNum   int   //当前页
-	Pagesize  int   //每页条数
-	Total     int64 //总条数
+	PageNum   int   `form:"pageNum"  json:"pageNum"`  //当前页
+	PageSize  int   `form:"pageSize" json:"pageSize"` //每页条数
+	Total     int64 `form:"total"    json:"total"`    //每页条数//总条数
 	PageCount int   //总页数
 	StartNum  int   //起始行
 }
@@ -17,19 +17,19 @@ func (p *Paging) GetStartNum() int {
 	if p.PageNum < 1 {
 		p.PageNum = 1
 	}
-	if p.Pagesize < 1 {
-		p.Pagesize = 10
+	if p.PageSize < 1 {
+		p.PageSize = 10
 	}
-	p.StartNum = p.Pagesize * (p.PageNum - 1)
+	p.StartNum = p.PageSize * (p.PageNum - 1)
 	return p.StartNum
 }
 
 // 创建分页
 func (p *Paging) GetPageSize() int {
-	if p.Pagesize < 1 {
-		p.Pagesize = 10
+	if p.PageSize < 1 {
+		p.PageSize = 10
 	}
-	return p.Pagesize
+	return p.PageSize
 }
 
 // 创建分页
@@ -42,7 +42,7 @@ func CreatePaging(pageNum, pagesize int, total int64) *Paging {
 	}
 	paging := new(Paging)
 	paging.PageNum = pageNum
-	paging.Pagesize = pagesize
+	paging.PageSize = pagesize
 	paging.Total = total
 	paging.PageCount = int(math.Ceil(float64(total) / float64(pagesize)))
 	paging.StartNum = pagesize * (pageNum - 1)

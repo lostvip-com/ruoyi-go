@@ -116,7 +116,7 @@ func (r *GenTable) SelectListByPage(param *SelectPageReq) ([]GenTable, *lv_web.P
 
 	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
-	model.Limit(p.Pagesize, p.StartNum)
+	model.Limit(p.PageSize, p.StartNum)
 	var result []GenTable
 	err = model.Find(&result)
 
@@ -164,7 +164,7 @@ func SelectDbTableList(param *SelectPageReq) ([]GenTable, *lv_web.Paging, error)
 	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
 	model.Select("table_name, table_comment, create_time, update_time")
-	model.Limit(p.Pagesize, p.StartNum)
+	model.Limit(p.PageSize, p.StartNum)
 
 	var result []GenTable
 	err = model.Find(&result)
