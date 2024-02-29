@@ -80,7 +80,13 @@ func (svc AppGenParamsService) ListByPage(params *vo.PageAppGenParamsReq) (*[]mo
 // ExportAll 导出excel
 func (svc AppGenParamsService) ExportAll(param *vo.PageAppGenParamsReq) (string, error) {
 	var d dao.AppGenParamsDao
-	listMap, err := d.ListAll(param, true)
+	var err error
+	var listMap *[]map[string]string
+	if param.PageNum > 0 { //分页导出
+		listMap, _, err = d.ListMapByPage(param)
+	} else { //全部导出
+		listMap, err = d.ListAll(param, true)
+	}
 	lv_err.HasErrAndPanic(err)
 	heads := []string{"ID", "是否使用", "参量号", "参量名称", "参量类型", "单位", "备注信息", "监控类型", ""}
 	keys := []string{"id", "useFlag", "paramNo", "paramName", "paramType", "unit", "remark", "monitorTypeId", "createTime"}

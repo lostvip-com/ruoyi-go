@@ -79,7 +79,13 @@ func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassN
 // ExportAll 导出excel
 func (svc {{.table.ClassName}}Service) ExportAll(param *vo.Page{{.table.ClassName}}Req) (string, error) {
     var d dao.{{.table.ClassName}}Dao
-    listMap, err := d.ListAll(param,true)
+    var err error
+    var listMap *[]map[string]string
+    if param.PageNum > 0 { //分页导出
+        listMap, _, err = d.ListMapByPage(param)
+    } else { //全部导出
+        listMap, err = d.ListAll(param, true)
+    }
     lv_err.HasErrAndPanic(err)
 	heads := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
 	keys  := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.HtmlField}}"{{else}},"{{$column.HtmlField}}"{{end}}{{end}}}

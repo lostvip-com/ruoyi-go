@@ -10,33 +10,31 @@ import (
 	"lostvip.com/db/lvbatis"
 	"lostvip.com/db/lvdao"
 	"lostvip.com/utils/lv_err"
-	"lostvip.com/utils/lv_reflect"
-    "main/app/mywork/vo"
-    "main/app/mywork/model"
+	"main/app/mywork/model"
+	"main/app/mywork/vo"
 )
 
-//新增页面请求参数
-type AppGenParamsDao struct { }
+// 新增页面请求参数
+type AppGenParamsDao struct{}
 
 // 根据条件分页查询数据
 func (d AppGenParamsDao) ListMapByPage(req *vo.PageAppGenParamsReq) (*[]map[string]string, int64, error) {
 	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	tagName := lv_reflect.GetMethodName()
-	limitSQL, err := ibatis.GetLimitSql(tagName, req)
+	limitSQL, err := ibatis.GetLimitSql("ListAppGenParams", req)
 	//查询数据
-	rows, err := lvdao.ListMapByNamedSql(limitSQL, req,true)
+	rows, err := lvdao.ListMapByNamedSql(limitSQL, req, true)
 	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
 	lv_err.HasErrAndPanic(err)
 	return rows, count, nil
 }
+
 // 根据条件分页查询数据
 func (d AppGenParamsDao) ListByPage(req *vo.PageAppGenParamsReq) (*[]model.AppGenParams, int64, error) {
 	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
-	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	tagName := lv_reflect.GetMethodName()
-	limitSQL, err := ibatis.GetLimitSql(tagName, req)
+	// 对应sql文件中的同名tagName
+	limitSQL, err := ibatis.GetLimitSql("ListAppGenParams", req)
 	//查询数据
 	rows, err := lvdao.ListByNamedSql[model.AppGenParams](limitSQL, req)
 	lv_err.HasErrAndPanic(err)
@@ -49,7 +47,7 @@ func (d AppGenParamsDao) ListByPage(req *vo.PageAppGenParamsReq) (*[]model.AppGe
 func (d AppGenParamsDao) ListAll(req *vo.PageAppGenParamsReq, isCamel bool) (*[]map[string]string, error) {
 	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
+	sql, err := ibatis.GetSql("ListAppGenParams", req)
 	lv_err.HasErrAndPanic(err)
 
 	arr, err := lvdao.ListMapByNamedSql(sql, req, isCamel)
@@ -65,8 +63,8 @@ func (d AppGenParamsDao) Find(where, order string) (*[]model.AppGenParams, error
 
 func (d AppGenParamsDao) DeleteByIds(ida []int64) int64 {
 	db := db.GetMasterGorm().Table("app_gen_params").Where("id in ? ", ida).Update("del_flag", 1)
-    if db.Error != nil {
-        panic(db.Error)
-    }
-    return db.RowsAffected
+	if db.Error != nil {
+		panic(db.Error)
+	}
+	return db.RowsAffected
 }

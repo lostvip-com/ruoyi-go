@@ -97,8 +97,8 @@ func (e *LvBatis) GetLimitSql(tagName string, params interface{}) (string, error
 		pageNum, err1 := xreflect.FieldValue(params, "PageNum")
 		pageSize, err2 := xreflect.FieldValue(params, "PageSize")
 		if pageSize == 0 || pageNum == 0 || err1 != nil || err2 != nil {
-			logme.Info("XXXX=====>pageSize: %d pageNum: %d", pageSize, pageNum)
-			panic("分页信息错误!!")
+			logme.Info("XXXX=====>pageSize:", pageSize, " pageNum:", pageNum)
+			panic("分页参数错误，请检查分页参数pageSize和pageNum的值")
 		} else {
 			start := cast.ToInt64(pageSize) * (cast.ToInt64(pageNum) - 1)
 			sql = sql + " limit  " + cast.ToString(start) + "," + cast.ToString(pageSize)

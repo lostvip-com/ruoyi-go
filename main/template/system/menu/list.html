@@ -18,10 +18,8 @@
                             菜单状态：{{getDictTypeSelect "sys_show_hide" "visible" "visible" "" "" "所有" ""}}
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i
-                                        class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
-                                        class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>
@@ -31,9 +29,7 @@
         <div class="btn-group-sm" id="toolbar" role="group">
             {{getPermiButton .uid "system:menu:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}
             {{getPermiButton .uid "system:menu:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
-            <a class="btn btn-info" id="expandAllBtn">
-                <i class="fa fa-exchange"></i> 展开/折叠
-            </a>
+            <a class="btn btn-info" id="expandAllBtn">  <i class="fa fa-exchange"></i> 展开/折叠 </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-tree-table"></table>
@@ -71,7 +67,11 @@
                     width: '20%',
                     formatter: function (value, row, index) {
                         if ($.common.isEmpty(row.icon)) {
-                            return row.menu_name;
+                            if(row.menuType=='F'){
+                                return '<i class="fa fa-circle-thin"></i> <span class="nav-label">' + row.menuName + '</span>';
+                            }else{
+                                return '<i class="fa fa-sticky-note-o"></i> <span class="nav-label">' + row.menuName + '</span>';
+                            }
                         } else {
                             return '<i class="' + row.icon + '"></i> <span class="nav-label">' + row.menuName + '</span>';
                         }

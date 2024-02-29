@@ -30,9 +30,9 @@ func (dao *MenuDao) SelectRecordById(id int64) (*model.SysMenu, error) {
 		return nil, errors.New("获取数据库连接失败")
 	}
 	var result model.SysMenu
-	tb = tb.Table("sys_menu")
+	tb = tb.Table("sys_menu t")
 	tb.Select("t.menu_id, t.parent_id, t.menu_name, t.order_num, t.url, t.target, t.menu_type, t.visible, t.perms, t.icon, t.remark,(SELECT menu_name FROM sys_menu WHERE menu_id = t.parent_id) parent_name")
-	tb.Where("menu_id=?", id)
+	tb.Where("t.menu_id=?", id)
 	err := tb.First(&result).Error
 	if err != nil {
 		return nil, errors.New("获取数据失败")

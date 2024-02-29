@@ -1,6 +1,6 @@
 {{$tagS := "{{"}}
 {{$tagE := "}}"}}
--- name: ListByPage
+-- name: List{{.table.ClassName}}
 select
  {{- range $index, $column := .table.Columns}}
  {{if ne $index 0}} ,{{end}} t.{{$column.ColumnName}}

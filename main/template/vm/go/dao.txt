@@ -22,8 +22,7 @@ type {{.table.ClassName}}Dao struct { }
 func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]string, int64, error) {
 	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	tagName := lv_reflect.GetMethodName()
-	limitSQL, err := ibatis.GetLimitSql(tagName, req)
+	limitSQL, err := ibatis.GetLimitSql("List{{.table.ClassName}}", req)
 	//查询数据
 	rows, err := lvdao.ListMapByNamedSql(limitSQL, req,true)
 	lv_err.HasErrAndPanic(err)
@@ -34,9 +33,8 @@ func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 // 根据条件分页查询数据
 func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
 	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl") //under the mapper directory
-	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	tagName := lv_reflect.GetMethodName()
-	limitSQL, err := ibatis.GetLimitSql(tagName, req)
+	// 对应sql文件中的同名tagName
+	limitSQL, err := ibatis.GetLimitSql("List{{.table.ClassName}}", req)
 	//查询数据
 	rows, err := lvdao.ListByNamedSql[model.{{.table.ClassName}}](limitSQL, req)
 	lv_err.HasErrAndPanic(err)
@@ -49,7 +47,7 @@ func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
 	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.tpl")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
-	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
+	sql, err := ibatis.GetSql("List{{.table.ClassName}}", req)
 	lv_err.HasErrAndPanic(err)
 
 	arr, err := lvdao.ListMapByNamedSql(sql, req, isCamel)

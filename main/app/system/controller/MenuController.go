@@ -82,14 +82,16 @@ func (w *MenuController) Edit(c *gin.Context) {
 	}
 	var dao dao.MenuDao
 	menu, err := dao.SelectRecordById(id)
-
 	if err != nil || menu == nil {
 		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "菜单不存在",
 		})
 		return
 	}
-
+	parent, err := dao.SelectRecordById(menu.ParentId)
+	if err == nil {
+		menu.ParentName = parent.MenuName
+	}
 	lv_web.BuildTpl(c, "system/menu/edit").WriteTpl(gin.H{
 		"menu": menu,
 	})

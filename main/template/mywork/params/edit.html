@@ -16,8 +16,8 @@ LV自动生成修改页面代码,只生成一次,按需修改.
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-params-edit">
         <input name="id" value="{{.params.Id}}" type="hidden">
-          
-            <div class="form-group">
+
+        <div class="form-group">
                 <label class="col-sm-3 control-label">ID：</label>
                 <div class="col-sm-8">
                     <input name="id" value="{{.params.Id}}" class="form-control"  type="text" >
@@ -43,6 +43,10 @@ LV自动生成修改页面代码,只生成一次,按需修改.
                 <div class="col-sm-8">
                     <select name="paramType" class="form-control m-b" >
                         <option value="">所有</option>
+                        <option value="ai" {{if eq .params.ParamType "ai"}}selected{{end}}>遥测（AI）</option>
+                        <option value="di" {{if eq .params.ParamType "di"}}selected{{end}}>遥信（DI）</option>
+                        <option value="ao" {{if eq .params.ParamType "ao"}}selected{{end}}>遥调（AO）</option>
+                        <option value="do" {{if eq .params.ParamType "do"}}selected{{end}}>遥控（DO）</option>
                     </select>
                     <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
                 </div>
