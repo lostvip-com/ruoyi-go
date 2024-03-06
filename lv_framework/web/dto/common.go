@@ -61,7 +61,7 @@ type Ztree struct {
 }
 
 // 通用的删除请求
-type RemoveReq struct {
+type IdsReq struct {
 	Ids string `form:"ids"  binding:"required"`
 }
 

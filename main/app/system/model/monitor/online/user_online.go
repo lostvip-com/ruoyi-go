@@ -61,8 +61,8 @@ type SelectPageReq struct {
 	EndTime        string    `form:"endTime"`        //结束时间
 	PageNum        int       `form:"pageNum"`        //当前页码
 	PageSize       int       `form:"pageSize"`       //每页数
-	OrderByColumn  string    `form:"orderByColumn"`  //排序字段
-	IsAsc          string    `form:"isAsc"`          //排序方式
+	SortName       string    `form:"sortName"`       //排序字段
+	SortOrder      string    `form:"sortOrder"`      //排序方式
 }
 
 // 根据条件分页查询数据
@@ -128,8 +128,8 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 
 	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
-	if param.OrderByColumn != "" {
-		model.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")
+	if param.SortName != "" {
+		model.OrderBy(param.SortName + " " + param.SortOrder + " ")
 	}
 
 	model.Limit(p.PageSize, p.StartNum)

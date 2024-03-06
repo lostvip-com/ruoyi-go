@@ -89,7 +89,7 @@ func (w DpcTaskController) EditSave(c *gin.Context) {
 
 // Remove 删除数据
 func (w DpcTaskController) Remove(c *gin.Context) {
-	req := new(dto.RemoveReq)
+	req := new(dto.IdsReq)
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
 	var svc service.DpcTaskService

@@ -55,8 +55,8 @@ func (dao *DictTypeDao) SelectListByPage(param *vo.SelectDictTypePageReq) ([]mod
 
 	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
 
-	if param.OrderByColumn != "" {
-		tb.OrderBy(param.OrderByColumn + " " + param.IsAsc + " ")
+	if param.SortName != "" {
+		tb.OrderBy(param.SortName + " " + param.SortOrder + " ")
 	}
 
 	tb.Limit(p.PageSize, p.StartNum)

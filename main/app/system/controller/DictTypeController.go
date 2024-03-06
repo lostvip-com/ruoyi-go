@@ -115,7 +115,7 @@ func (w *DictTypeController) EditSave(c *gin.Context) {
 
 // 删除数据
 func (w *DictTypeController) Remove(c *gin.Context) {
-	var req *dto.RemoveReq
+	var req *dto.IdsReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()

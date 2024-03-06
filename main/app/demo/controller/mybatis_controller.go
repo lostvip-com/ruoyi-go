@@ -15,7 +15,7 @@ import (
 )
 
 // 相对于mapper目录的路径
-var SQL_FILE_POST = "sys_post/sys_post_mapper.tpl"
+var SQL_FILE_POST = "sys_post/sys_post_mapper.sql"
 
 func (w DemoController) MybatisMap(c *gin.Context) {
 	req := vo.SelectPostPageReq{}

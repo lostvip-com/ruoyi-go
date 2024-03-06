@@ -19,7 +19,7 @@ type AppGenParamsDao struct{}
 
 // 根据条件分页查询数据
 func (d AppGenParamsDao) ListMapByPage(req *vo.PageAppGenParamsReq) (*[]map[string]string, int64, error) {
-	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.sql") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	limitSQL, err := ibatis.GetLimitSql("ListAppGenParams", req)
 	//查询数据
@@ -32,7 +32,7 @@ func (d AppGenParamsDao) ListMapByPage(req *vo.PageAppGenParamsReq) (*[]map[stri
 
 // 根据条件分页查询数据
 func (d AppGenParamsDao) ListByPage(req *vo.PageAppGenParamsReq) (*[]model.AppGenParams, int64, error) {
-	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl") //under the mapper directory
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.sql") //under the mapper directory
 	// 对应sql文件中的同名tagName
 	limitSQL, err := ibatis.GetLimitSql("ListAppGenParams", req)
 	//查询数据
@@ -45,7 +45,7 @@ func (d AppGenParamsDao) ListByPage(req *vo.PageAppGenParamsReq) (*[]model.AppGe
 
 // ListAll 导出excel使用
 func (d AppGenParamsDao) ListAll(req *vo.PageAppGenParamsReq, isCamel bool) (*[]map[string]string, error) {
-	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.tpl")
+	ibatis := lvbatis.NewInstance("mywork/app_gen_params_mapper.sql")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetSql("ListAppGenParams", req)
 	lv_err.HasErrAndPanic(err)

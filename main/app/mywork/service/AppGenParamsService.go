@@ -47,7 +47,7 @@ func (svc AppGenParamsService) AddSave(req *vo.AddAppGenParamsReq) (int64, error
 	entity.Unit = req.Unit
 	entity.Remark = req.Remark
 	entity.MonitorTypeId = req.MonitorTypeId
-
+	entity.UseFlag = "1"
 	entity.CreateTime = time.Now()
 	entity.CreateBy = req.CreateBy
 	err := entity.Save()
@@ -60,7 +60,9 @@ func (svc AppGenParamsService) EditSave(req *vo.EditAppGenParamsReq) error {
 	entity := &model.AppGenParams{Id: req.Id}
 	err := entity.FindById()
 	lv_err.HasErrAndPanic(err)
-
+	if entity.ParamName != "" && entity.UseFlag == "1" && entity.MonitorTypeId > 0 {
+		panic("已经启用并绑定业务的参量号不允许修改状态")
+	}
 	entity.Id = req.Id
 	entity.ParamNo = req.ParamNo
 	entity.ParamName = req.ParamName
@@ -68,6 +70,8 @@ func (svc AppGenParamsService) EditSave(req *vo.EditAppGenParamsReq) error {
 	entity.Unit = req.Unit
 	entity.Remark = req.Remark
 	entity.MonitorTypeId = req.MonitorTypeId
+	entity.UpdateBy = req.UpdateBy
+	entity.UpdateTime = time.Now()
 	return entity.Updates()
 }
 

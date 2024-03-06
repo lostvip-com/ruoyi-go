@@ -6,15 +6,15 @@
 package mywork
 
 import (
-        "lostvip.com/web/router"
-        "main/app/common/middleware/auth"
-        "main/app/mywork/controller"
+	"lostvip.com/web/router"
+	"main/app/common/middleware/auth"
+	"main/app/mywork/controller"
 )
 
-//加载路由
+// 加载路由
 func init() {
 	// 参数路由
-	g1 := router.New( "/mywork/params", auth.TokenCheck())
+	g1 := router.New("/mywork/params", auth.TokenCheck())
 
 	web := controller.AppGenParamsController{}
 	g1.GET("/", "mywork:params:view", web.List)
@@ -23,6 +23,10 @@ func init() {
 	g1.POST("/add", "mywork:params:add", web.AddSave)
 	g1.POST("/remove", "mywork:params:remove", web.Remove)
 	g1.GET("/edit", "mywork:params:edit", web.Edit)
-	g1.POST("/edit", "mywork:params:edit",web.EditSave)
+	g1.POST("/edit", "mywork:params:edit", web.EditSave)
 	g1.POST("/export", "mywork:params:export", web.Export)
+	//有编辑权限即可调用
+	g1.POST("/changeStatus", "mywork:params:edit", web.ChangeStatus)
+	g1.POST("/changeProp", "mywork:params:edit", web.ChangeProp)
+
 }

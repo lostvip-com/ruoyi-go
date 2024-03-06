@@ -102,7 +102,7 @@ func (w *ConfigController) EditSave(c *gin.Context) {
 
 // 删除数据
 func (w *ConfigController) Remove(c *gin.Context) {
-	req := new(dto.RemoveReq)
+	req := new(dto.IdsReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()

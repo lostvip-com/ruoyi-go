@@ -169,8 +169,8 @@ var table = {
                     pageSize:       params.limit,
                     pageNum:        params.offset / params.limit + 1,
                     searchValue:    params.search,
-                    orderByColumn:  params.sort,
-                    isAsc:          params.order
+                    sortName:       params.sort,
+                    sortOrder:      params.order
                 };
                 var currentId = $.common.isEmpty(table.options.formId) ? $('form').attr('id') : table.options.formId;
                 return $.extend(curParams, $.common.formToJSON(currentId)); 
@@ -376,8 +376,8 @@ var table = {
                     var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                     var params = $("#" + table.options.id).bootstrapTable('getOptions');
                     var dataParam = $("#" + currentId).serializeArray();
-                    dataParam.push({ "name": "orderByColumn", "value": params.sortName });
-                    dataParam.push({ "name": "isAsc", "value": params.sortOrder });
+                    dataParam.push({ "name": "sortName", "value": params.sortName });
+                    dataParam.push({ "name": "sortOrder", "value": params.sortOrder });
                     $.modal.loading("正在导出数据，请稍候...");
                     $.post(table.options.exportUrl, dataParam, function(result) {
                         if (result.code == web_status.SUCCESS) {

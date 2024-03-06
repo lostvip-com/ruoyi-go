@@ -55,16 +55,16 @@ type CheckRoleKeyALLReq struct {
 
 // 分页请求参数
 type RolePageReq struct {
-	RoleName      string `form:"roleName"`      //角色名称
-	Status        string `form:"status"`        //状态
-	RoleKey       string `form:"roleKey"`       //角色键
-	DataScope     string `form:"dataScope"`     //数据范围
-	BeginTime     string `form:"beginTime"`     //开始时间
-	EndTime       string `form:"endTime"`       //结束时间
-	PageNum       int    `form:"pageNum"`       //当前页码
-	PageSize      int    `form:"pageSize"`      //每页数
-	OrderByColumn string `form:"orderByColumn"` //排序字段
-	IsAsc         string `form:"isAsc"`         //排序方式
+	RoleName  string `form:"roleName"`  //角色名称
+	Status    string `form:"status"`    //状态
+	RoleKey   string `form:"roleKey"`   //角色键
+	DataScope string `form:"dataScope"` //数据范围
+	BeginTime string `form:"beginTime"` //开始时间
+	EndTime   string `form:"endTime"`   //结束时间
+	PageNum   int    `form:"pageNum"`   //当前页码
+	PageSize  int    `form:"pageSize"`  //每页数
+	SortName  string `form:"sortName"`  //排序字段
+	SortOrder string `form:"sortOrder"` //排序方式
 	//
 	TenantId int64 `form:"tenantId"`
 	lv_web.Paging

@@ -10,7 +10,6 @@ import (
 	_ "main/app"
 	"main/app/common/global"
 	my "main/app/mywork/model"
-	sys "main/app/system/model"
 )
 
 // @title LV 自动生成API文档
@@ -24,7 +23,8 @@ func main() {
 	if cfg.IsDebug() {
 		gin.SetMode("debug")
 	}
-	err := db.GetMasterGorm().AutoMigrate(my.DpcTask{}, sys.SysPost{}, sys.SysUserPost{})
+	//自动建表
+	err := db.GetMasterGorm().AutoMigrate(my.DpcTask{}, my.AppGenParams{})
 	lv_err.HasErrAndPanic(err)
 	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	httpSvr.Start()

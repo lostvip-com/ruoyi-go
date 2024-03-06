@@ -2,7 +2,7 @@
 摒弃过度封装，代码风格极尽简洁，适合中小项目使用！<br>
 架构思路沿袭着若依的以辅助生成重复代码为主，不过度封装，生成的代码可以快速修改适应不同的需求。
 * 项目结构模仿springboot，简单改造后可注册到nacos中做为springcloud微服务的一员，对java开发人员友好。
-* 支持类mybatis查询，sql与go代码分离（基于gorm + golang的template语法实现）。
+* 支持类mybatis查询，sql与go代码分离（基于gorm + golang的template语法实现,为了idea能识别sql关键字，后缀使用_mapper.sql）。
 * 提供相关服务配置脚本，可发布到 k8s、docker swarm中做为微服务使用。
 * 支持在yaml文件中使用表达式从环境变量中取值，便于切换生产、开发、测试环境参数（模仿springboot）,如：
 ~~~
@@ -64,12 +64,13 @@ main[]()
 │   └── deploy-swarm-ry.yml      // docker swarm 服务编排脚本
 │   └── Dockerfile               // Docker镜像文件
 ├── lv_framework       // 框架通用模块
+│       └── cache               // 通用缓存处理
 │       └── conf                // 通用配置处理
-│       └── nacos               // 数据库配置处理
+│       └── db                  // 数据库配置处理
 │       └── utils               // 通用工具类
 │       └── logme               // 通用日志处理，统一风格，方便切换第三方日志库
-│       └── middleware          // 通用处理中间件
-│       └── redis               // 缓存相关
+│       └── web                 // 通用web组件
+│       
 ├── go.work            // 项目模块配置
 ├── build-linux.bat    // 编译脚本
 ~~~

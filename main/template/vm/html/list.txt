@@ -74,6 +74,8 @@ LV自动生成列表页面代码,只生成一次,按需修改.
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "{{.table.FunctionName}}",
+            sortName:"{{.table.PkColumn.HtmlField}}",
+            sortOrder:"desc",
             columns: [
                 {
                     checkbox: true
@@ -109,5 +111,14 @@ LV自动生成列表页面代码,只生成一次,按需修改.
         $.table.init(options);
     });
 </script>
+
+<script>
+    $(document).keydown(function (event) {
+        if(event.keyCode == 13){
+            $.table.search()
+        }
+    })
+</script>
+
 </body>
 </html>

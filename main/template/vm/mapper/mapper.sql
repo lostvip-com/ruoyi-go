@@ -12,12 +12,12 @@ from {{.table.TbName}} t where 1=1 and del_flag=0
     {{- continue -}}
 {{- end -}}
 {{- if contains $column.GoType "int"}}
-   {{$tagS}}if and (ne .{{$column.GoField}} 0)  (ne .{{$column.GoField}} nil) {{$tagE}}
+   {{$tagS}}if (ne .{{$column.GoField}} 0) {{$tagE}}
         and  t.{{$column.ColumnName}} = @{{$column.GoField}}
     {{$tagS}}end{{$tagE}}
 {{- end -}}
 {{if eq $column.GoType "string"}}
-    {{$tagS}}if and (ne .{{$column.GoField}} "")  (ne .{{$column.GoField}} nil) {{$tagE}}
+    {{$tagS}}if (ne .{{$column.GoField}} "") {{$tagE}}
         {{- if eq $column.QueryType "LIKE" }}
         and  t.{{$column.ColumnName}} like concat('%', @{{$column.GoField}},'%')
         {{- else}}
@@ -25,6 +25,20 @@ from {{.table.TbName}} t where 1=1 and del_flag=0
         {{- end }}
     {{$tagS}}end{{$tagE}}
     {{- end -}}
-{{- end -}}
+{{- end }}
+
+    order by
+        {{$tagS}}if (eq .SortName "{{.table.PkColumn.HtmlField}}") {{$tagE}}
+           {{.table.PkColumn.ColumnName}}
+        {{$tagS}}else{{$tagE}}
+           {{.table.PkColumn.ColumnName}}
+        {{$tagS}}end{{$tagE}}
+
+        {{$tagS}}if (eq .SortOrder "asc") {{$tagE}}
+             asc
+        {{$tagS}}else{{$tagE}}
+             desc
+        {{$tagS}}end{{$tagE}}
+
 
 

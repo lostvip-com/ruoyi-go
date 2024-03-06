@@ -19,14 +19,14 @@ type CheckMenuNameALLReq struct {
 
 // 分页请求参数
 type SelectMenuPageReq struct {
-	MenuName  string `form:"menuName"`      //菜单名称
-	Visible   string `form:"visible"`       //状态
-	BeginTime string `form:"beginTime"`     //开始时间
-	EndTime   string `form:"endTime"`       //结束时间
-	PageNum   int    `form:"pageNum"`       //当前页码
-	PageSize  int    `form:"pageSize"`      //每页数
-	SortName  string `form:"orderByColumn"` //排序字段
-	SortOrder string `form:"isAsc"`         //排序方式
+	MenuName  string `form:"menuName"`  //菜单名称
+	Visible   string `form:"visible"`   //状态
+	BeginTime string `form:"beginTime"` //开始时间
+	EndTime   string `form:"endTime"`   //结束时间
+	PageNum   int    `form:"pageNum"`   //当前页码
+	PageSize  int    `form:"pageSize"`  //每页数
+	SortName  string `form:"sortName"`  //排序字段
+	SortOrder string `form:"sortOrder"` //排序方式
 	lv_web.Paging
 }
 

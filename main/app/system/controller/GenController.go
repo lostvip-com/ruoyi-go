@@ -136,7 +136,7 @@ func (w *GenController) ImportTable(c *gin.Context) {
 
 // 删除数据
 func (w *GenController) Remove(c *gin.Context) {
-	var req *dto.RemoveReq
+	var req *dto.IdsReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("生成代码", req).WriteJsonExit()
@@ -289,7 +289,7 @@ func (w *GenController) Preview(c *gin.Context) {
 	//sql模板
 	sqlValue, _ = tableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity})
 	//mapper模板
-	mapperValue, _ = tableService.LoadTemplate("vm/mapper/mapper.tpl", gin.H{"table": entity})
+	mapperValue, _ = tableService.LoadTemplate("vm/mapper/mapper.sql", gin.H{"table": entity})
 
 	if entity.TplCategory == "tree" {
 		c.JSON(http.StatusOK, dto.CommonRes{
@@ -501,9 +501,9 @@ func (w *GenController) GenCode(c *gin.Context) {
 		}
 	}
 	//ibatis sql文件
-	if mapper, err := tableService.LoadTemplate("vm/mapper/mapper.tpl", gin.H{"table": entity}); err == nil {
+	if mapper, err := tableService.LoadTemplate("vm/mapper/mapper.sql", gin.H{"table": entity}); err == nil {
 		mapperPath := curDir + "/mapper"
-		fileName := strings.Join([]string{mapperPath, "/", entity.PackageName, "/", entity.TbName, "_mapper.tpl"}, "")
+		fileName := strings.Join([]string{mapperPath, "/", entity.PackageName, "/", entity.TbName, "_mapper.sql"}, "")
 		if canGenIt(overwrite, fileName) {
 			f, err := lv_file.Create(fileName)
 			if err == nil {

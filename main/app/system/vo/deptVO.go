@@ -14,16 +14,16 @@ type SysDeptExtend struct {
 
 // 分页请求参数
 type DeptPageReq struct {
-	ParentId  int64  `form:"parentId"`      //父部门ID
-	DeptName  string `form:"deptName"`      //部门名称
-	Status    string `form:"status"`        //状态
-	PageNum   int    `form:"pageNum"`       //当前页码
-	PageSize  int    `form:"pageSize"`      //每页数
-	SortName  string `form:"orderByColumn"` //排序字段
-	SortOrder string `form:"isAsc"`         //排序方式
-	BeginTime string `form:"beginTime"`     //开始时间
-	EndTime   string `form:"endTime"`       //结束时间
-	TenantId  int64  `form:"tenantId"`      //结束时间
+	ParentId  int64  `form:"parentId"`  //父部门ID
+	DeptName  string `form:"deptName"`  //部门名称
+	Status    string `form:"status"`    //状态
+	PageNum   int    `form:"pageNum"`   //当前页码
+	PageSize  int    `form:"pageSize"`  //每页数
+	SortName  string `form:"sortName"`  //排序字段
+	SortOrder string `form:"sortOrder"` //排序方式
+	BeginTime string `form:"beginTime"` //开始时间
+	EndTime   string `form:"endTime"`   //结束时间
+	TenantId  int64  `form:"tenantId"`  //结束时间
 }
 
 // 新增页面请求参数

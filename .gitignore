@@ -19,3 +19,4 @@ tmp
 .vscode-test/*
 .DS_Store
 .DS_Store/*
+node_modules

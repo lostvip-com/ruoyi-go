@@ -23,14 +23,14 @@ type EditSysPostReq struct {
 
 // 分页请求参数
 type SelectPostPageReq struct {
-	PostCode      string `form:"postCode"`      //岗位编码
-	Status        string `form:"status"`        //状态
-	PostName      string `form:"postName"`      //岗位名称
-	BeginTime     string `form:"beginTime"`     //开始时间
-	EndTime       string `form:"endTime"`       //结束时间
-	OrderByColumn string `form:"orderByColumn"` //排序字段
-	IsAsc         string `form:"isAsc"`         //排序方式
-	Remark        string `form:"remark"`        //每页数
+	PostCode  string `form:"postCode"`  //岗位编码
+	Status    string `form:"status"`    //状态
+	PostName  string `form:"postName"`  //岗位名称
+	BeginTime string `form:"beginTime"` //开始时间
+	EndTime   string `form:"endTime"`   //结束时间
+	SortName  string `form:"sortName"`  //排序字段
+	SortOrder string `form:"sortOrder"` //排序方式
+	Remark    string `form:"remark"`    //每页数
 	lv_web.Paging
 }
 

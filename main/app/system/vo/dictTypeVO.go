@@ -20,15 +20,15 @@ type EditDictTypeReq struct {
 
 // 分页请求参数
 type SelectDictTypePageReq struct {
-	DictName      string `form:"dictName"`      //字典名称
-	DictType      string `form:"dictType"`      //字典类型
-	Status        string `form:"status"`        //字典状态
-	BeginTime     string `form:"beginTime"`     //开始时间
-	EndTime       string `form:"endTime"`       //结束时间
-	OrderByColumn string `form:"orderByColumn"` //排序字段
-	IsAsc         string `form:"isAsc"`         //排序方式
-	PageNum       int    `form:"pageNum"`       //当前页码
-	PageSize      int    `form:"pageSize"`      //每页数
+	DictName  string `form:"dictName"`  //字典名称
+	DictType  string `form:"dictType"`  //字典类型
+	Status    string `form:"status"`    //字典状态
+	BeginTime string `form:"beginTime"` //开始时间
+	EndTime   string `form:"endTime"`   //结束时间
+	SortName  string `form:"sortName"`  //排序字段
+	SortOrder string `form:"sortOrder"` //排序方式
+	PageNum   int    `form:"pageNum"`   //当前页码
+	PageSize  int    `form:"pageSize"`  //每页数
 }
 
 // 检查字典类型请求参数

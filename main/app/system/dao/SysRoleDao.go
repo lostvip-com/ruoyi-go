@@ -40,8 +40,8 @@ func (dao *SysRoleDao) SelectListPage(param *vo.RolePageReq) (result []model.Sys
 		tb.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 	}
 
-	if param.OrderByColumn != "" {
-		tb.Order(param.OrderByColumn + " " + param.IsAsc + " ")
+	if param.SortName != "" {
+		tb.Order(param.SortName + " " + param.SortOrder + " ")
 	}
 	err = tb.Count(&total).Offset(param.GetStartNum()).Limit(param.GetPageSize()).Find(&result).Error
 	return result, total, err

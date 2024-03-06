@@ -8,12 +8,16 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_web"
 	"lostvip.com/web/dto"
+	"main/app/mywork/model"
 	"main/app/mywork/service"
 	"main/app/mywork/vo"
 	sysService "main/app/system/service"
+	"strings"
+	"time"
 )
 
 type AppGenParamsController struct{}
@@ -22,6 +26,65 @@ type AppGenParamsController struct{}
 //
 // api
 // =========================================================================
+
+// 修改页面保存
+func (w *AppGenParamsController) ChangeProp(c *gin.Context) {
+	id := c.PostForm("id")
+	value := c.PostForm("value")
+	name := c.PostForm("name")
+	po := model.AppGenParams{Id: cast.ToInt64(id)}
+	err := po.FindById()
+	lv_err.HasErrAndPanic(err)
+	if po.ParamName != "" && po.UseFlag == "1" && po.MonitorTypeId > 0 {
+		if strings.Contains(name, "remark") {
+			po.Remark = value
+			lv_err.HasErrAndPanic(err)
+			lv_web.SuccessData(c, po)
+		} else {
+			panic("已经绑定业务，不允许修改")
+		}
+	} else {
+		if strings.Contains(name, "monitorTypeId") {
+			po.MonitorTypeId = cast.ToInt(value)
+		} else if strings.Contains(name, "paramName") {
+			po.ParamName = value
+		} else if strings.Contains(name, "remark") {
+			po.Remark = value
+		} else if strings.Contains(name, "unit") {
+			po.Unit = value
+		} else if strings.Contains(name, "paramType") {
+			po.ParamType = value
+		} else {
+			panic("已经绑定业务，不允许修改")
+		}
+		po.UpdateTime = time.Now()
+		po.UseFlag = "0"
+		err = po.Save()
+		lv_err.HasErrAndPanic(err)
+		lv_web.SuccessData(c, po)
+	}
+
+}
+
+// 修改页面保存
+func (w *AppGenParamsController) ChangeStatus(c *gin.Context) {
+	id := c.PostForm("id")
+	status := c.PostForm("status")
+	po := model.AppGenParams{Id: cast.ToInt64(id)}
+	err := po.FindById()
+	lv_err.HasErrAndPanic(err)
+	if po.ParamName != "" && po.UseFlag == "1" && po.MonitorTypeId > 0 {
+		panic("已经绑定业务，不允许修改状态")
+	}
+	if po.ParamName == "" && po.MonitorTypeId == 0 {
+		panic("未设置监控类型和业务名称，不允许修改状态")
+	}
+	po.UpdateTime = time.Now()
+	po.UseFlag = status
+	err = po.Save()
+	lv_err.HasErrAndPanic(err)
+	lv_web.SuccessData(c, po)
+}
 
 // ListAjax 新增页面保存
 func (w AppGenParamsController) ListAjax(c *gin.Context) {
@@ -64,7 +127,7 @@ func (w AppGenParamsController) EditSave(c *gin.Context) {
 
 // Remove 删除数据
 func (w AppGenParamsController) Remove(c *gin.Context) {
-	req := new(dto.RemoveReq)
+	req := new(dto.IdsReq)
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
 	var svc service.AppGenParamsService

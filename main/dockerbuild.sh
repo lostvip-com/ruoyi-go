@@ -3,12 +3,13 @@
 # 构建镜像并推送到docker 仓库
 # 构建镜像并推送到docker 仓库
 ######################################################
+export VER_APP=1.8.0
 export GOPROXY=https://goproxy.cn,direct
 go build -ldflags "-w -s" -o main  main.go
 echo "------ GO 编译完成 docker 构建开始 ---------------------------"
 docker images
-echo "服务升级 openapi ======>"
-read -p "输入版本号:"  ver
+echo "服务升级 ======>"
+#read -p "输入版本号:"  ver
 export VER_APP=$ver
 echo "您输入的版本号是：$ver"
 read -p "请选Y/N:"  para
@@ -28,5 +29,5 @@ docker push  $IMG_NAME
 echo "------ $IMG_NAME 构建完成 ---------------------------"
 
 docker stack deploy -c ../docs/swarm/deploy-swarm-ry.yml g
-docker baseService ls
-echo " docker service logs -f $SVC_NAME "
+docker service ls
+docker service logs -f $SVC_NAME --tail=100

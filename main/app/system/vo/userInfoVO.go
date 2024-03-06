@@ -62,15 +62,15 @@ type CheckPasswordReq struct {
 
 // 查询用户列表请求参数
 type SelectUserPageReq struct {
-	LoginName   string `form:"loginName"`     //登录名
-	Status      string `form:"status"`        //状态
-	Phonenumber string `form:"phonenumber"`   //手机号码
-	BeginTime   string `form:"beginTime"`     //数据范围
-	EndTime     string `form:"endTime"`       //开始时间
-	DeptId      int64  `form:"deptId"`        //结束时间
-	SortName    string `form:"orderByColumn"` //排序字段
-	SortOrder   string `form:"isAsc"`         //排序方式
-	Ancestors   string `form:"ancestors"`     //排序方式
+	LoginName   string `form:"loginName"`   //登录名
+	Status      string `form:"status"`      //状态
+	Phonenumber string `form:"phonenumber"` //手机号码
+	BeginTime   string `form:"beginTime"`   //数据范围
+	EndTime     string `form:"endTime"`     //开始时间
+	DeptId      int64  `form:"deptId"`      //结束时间
+	SortName    string `form:"sortName"`    //排序字段
+	SortOrder   string `form:"sortOrder"`   //排序方式
+	Ancestors   string `form:"ancestors"`   //排序方式
 	//
 	TenantId int64 `form:"tenantId"`
 	lv_web.Paging

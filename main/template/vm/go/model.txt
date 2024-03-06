@@ -75,10 +75,10 @@ func (e *{{.table.ClassName}}) FindOne() error {
 
 // 改
 func (e *{{.table.ClassName}}) Updates() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return db.GetMasterGorm().Updates(e).Error
 }
 // 删
 func (e *{{.table.ClassName}}) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return db.GetMasterGorm().Delete(e).Error
 }
 

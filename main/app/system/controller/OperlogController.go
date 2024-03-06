@@ -55,7 +55,7 @@ func (w *OperlogController) Clean(c *gin.Context) {
 
 // 删除数据
 func (w *OperlogController) Remove(c *gin.Context) {
-	var req *dto.RemoveReq
+	var req *dto.IdsReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()

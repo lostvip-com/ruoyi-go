@@ -53,6 +53,7 @@ func NewInstance(relativePath string) (string *LvBatis) {
 		absolutePath = absolutePath + "/" + relativePath
 	}
 	dot, err := LoadFromFile(absolutePath)
+	dot.TplFile = relativePath
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +69,7 @@ func (e *LvBatis) GetSql(tagName string, params interface{}) (string, error) {
 	sql, err := lv_tpl.ParseTemplateStr(query, params)
 	lv_err.HasErrAndPanic(err)
 	if sql == "" {
-		panic("sql文件存在语法错误，请使用golang的telmplate标准语法" + e.getTplFile())
+		panic(e.getTplFile() + " 可能存在错误：<p/>1.使用了参数对象中不存在的属性<p/>2.template语法错误")
 	}
 	e.CurrBaseSql = sql //缓存当前正在执行的分页sql
 	return sql, err

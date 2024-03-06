@@ -20,7 +20,7 @@ type DpcTaskDao struct{}
 
 // 根据条件分页查询数据
 func (e DpcTaskDao) ListByPage(req *vo.PageDpcTaskReq) (*[]model.DpcTask, int64, error) {
-	ibatis := lvbatis.NewInstance("mywork/dpc_task_mapper.tpl") //under the directory mapper
+	ibatis := lvbatis.NewInstance("mywork/dpc_task_mapper.sql") //under the directory mapper
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	tagName := lv_reflect.GetMethodName()
 	limitSQL, err := ibatis.GetLimitSql(tagName, req)
@@ -34,7 +34,7 @@ func (e DpcTaskDao) ListByPage(req *vo.PageDpcTaskReq) (*[]model.DpcTask, int64,
 
 // ListAll 导出excel使用
 func (e DpcTaskDao) ListAll(req *vo.PageDpcTaskReq, isCamel bool) (*[]map[string]string, error) {
-	ibatis := lvbatis.NewInstance("mywork/dpc_task_mapper.tpl") //under the directory mapper
+	ibatis := lvbatis.NewInstance("mywork/dpc_task_mapper.sql") //under the directory mapper
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
 	lv_err.HasErrAndPanic(err)

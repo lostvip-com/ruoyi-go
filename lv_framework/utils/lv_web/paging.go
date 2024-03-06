@@ -5,11 +5,13 @@ import (
 )
 
 type Paging struct {
-	PageNum   int   `form:"pageNum"  json:"pageNum"`  //当前页
-	PageSize  int   `form:"pageSize" json:"pageSize"` //每页条数
-	Total     int64 `form:"total"    json:"total"`    //每页条数//总条数
-	PageCount int   //总页数
-	StartNum  int   //起始行
+	PageNum   int    `form:"pageNum"  json:"pageNum"`       //当前页
+	PageSize  int    `form:"pageSize" json:"pageSize"`      //每页条数
+	Total     int64  `form:"total"    json:"total"`         //每页条数//总条数
+	SortOrder string `form:"sortOrder"    json:"sortOrder"` //排序
+	SortName  string `form:"sortName"    json:"sortName"`   //每页条数//总条数
+	PageCount int    //总页数
+	StartNum  int    //起始行
 }
 
 // 创建分页
