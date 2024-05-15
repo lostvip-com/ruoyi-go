@@ -34,3 +34,12 @@ func RemoveOne(nums []int64, val int64) []int64 {
 	}
 	return newNums
 }
+func Remove(slice []any, element any) []any {
+	var newSlice []any
+	for _, v := range slice {
+		if v != element {
+			newSlice = append(newSlice, v)
+		}
+	}
+	return newSlice
+}

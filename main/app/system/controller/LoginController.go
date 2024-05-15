@@ -110,9 +110,15 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 		lv_err.HasErrAndPanic(err)
 		var svc service.SessionService
 		ip := lv_net.GetClientRealIP(c)
-		svc.SaveUserToSession(token, user, roles, ua, ip)
-		w.SaveLogs(c, &req, "登录成功") //记录日志
-		lv_web.SucessResp(c).SetData(token).SetMsg("登录成功").WriteJsonExit()
+		err = svc.SaveUserToSession(token, user, roles, ua, ip)
+		if err != nil {
+			lv_err.PrintStackTrace(err)
+			w.SaveLogs(c, &req, "登录失败"+err.Error()) //记录日志
+			lv_web.Fail(c, "登录失败")
+		} else {
+			w.SaveLogs(c, &req, "登录成功") //记录日志
+			lv_web.SucessResp(c).SetData(token).SetMsg("登录成功").WriteJsonExit()
+		}
 	}
 }
 

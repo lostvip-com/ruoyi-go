@@ -48,7 +48,7 @@ func (svc *SessionService) SignIn(loginnName, password string) (*model.SysUser, 
 // 用户注销
 func (svc *SessionService) SignOut(tokenStr string) error {
 	myredis.GetInstance().Del(context.Background(), "login:"+tokenStr)
-	entity := online.UserOnline{Sessionid: "login:" + tokenStr}
+	entity := online.UserOnline{SessionId: "login:" + tokenStr}
 	entity.Delete()
 	return nil
 }
@@ -56,12 +56,12 @@ func (svc *SessionService) SignOut(tokenStr string) error {
 // 强退用户
 func (svc *SessionService) ForceLogout(token string) error {
 	svc.SignOut(token)
-	entity := online.UserOnline{Sessionid: token}
+	entity := online.UserOnline{SessionId: token}
 	entity.Delete()
 	return nil
 }
 
-func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, roleKeys string, userAgent string, ip string) {
+func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, roleKeys string, userAgent string, ip string) error {
 	// 保存用户信息到session
 	loginLocation := lv_net.GetCityByIp(ip)
 	//记录到redis
@@ -94,12 +94,26 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	userOnline.LastAccessTime = time.Now()
 	userOnline.Status = "on_line"
 	userOnline.LoginLocation = loginLocation
-	userOnline.Delete()
-	userOnline.Insert()
+	userOnline.SessionId = token
+	err := userOnline.Delete()
+	if err != nil {
+		return err
+	}
+	err = userOnline.Save()
+	if err != nil {
+		return err
+	}
 	//
 	key := "login:" + token
-	redis.HMSet(ctx, key, fieldMap)
-	redis.Expire(ctx, key, time.Hour)
+	err = redis.HMSet(ctx, key, fieldMap).Err()
+	if err != nil {
+		return err
+	}
+	err = redis.Expire(ctx, key, time.Hour).Err()
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func (svc *SessionService) Refresh(token string) {

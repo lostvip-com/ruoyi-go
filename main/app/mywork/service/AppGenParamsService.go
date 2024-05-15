@@ -6,6 +6,10 @@
 package service
 
 import (
+	"fmt"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
+	"lostvip.com/db"
 	"lostvip.com/utils/lv_conv"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_office"
@@ -96,4 +100,35 @@ func (svc AppGenParamsService) ExportAll(param *vo.PageAppGenParamsReq) (string,
 	keys := []string{"id", "useFlag", "paramNo", "paramName", "paramType", "unit", "remark", "monitorTypeId", "createTime"}
 	url, err := lv_office.DownlaodExcelByListMap(&heads, &keys, listMap)
 	return url, err
+}
+
+func (svc *AppGenParamsService) GenParamsToDB(baseNUm int, amount int, username string) {
+	for i := 0; i < amount; { //第一行是标题，忽略
+		baseNUm += 1
+		p, err := svc.getParamByNo(baseNUm)
+		if err == nil && p != nil {
+			fmt.Println("***************已存在的参量号*****************!!!!!!!!!!!!")
+			continue //参量号已经存在了
+		}
+		i++
+		app := model.AppGenParams{
+			ParamNo:    baseNUm,
+			CreateBy:   username,
+			UseFlag:    "0",
+			CreateTime: time.Now(),
+			UpdateTime: time.Now(),
+		}
+		db.GetMasterGorm().Create(&app)
+		logrus.Info("=============>baseNUm:" + cast.ToString(baseNUm))
+	}
+}
+
+func (s *AppGenParamsService) getParamByNo(paramNO int) (*model.AppGenParams, error) {
+	list := []model.AppGenParams{}
+	err := db.GetMasterGorm().Where("param_no=?", paramNO).Find(&list).Error
+	if len(list) > 0 {
+		return &list[0], err
+	} else {
+		return nil, err
+	}
 }

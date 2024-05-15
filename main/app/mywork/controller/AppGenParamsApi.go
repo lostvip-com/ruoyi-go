@@ -27,6 +27,17 @@ type AppGenParamsController struct{}
 // api
 // =========================================================================
 
+// AddSave 新增页面保存
+func (w AppGenParamsController) GenParams(c *gin.Context) {
+	baseNum := c.PostForm("baseNum")
+	amount := c.PostForm("amount")
+	var svc service.AppGenParamsService
+	var userService sysService.UserService
+	user := userService.GetProfile(c)
+	svc.GenParamsToDB(cast.ToInt(baseNum), cast.ToInt(amount), user.LoginName)
+	lv_web.SucessData(c, "success")
+}
+
 // 修改页面保存
 func (w *AppGenParamsController) ChangeProp(c *gin.Context) {
 	id := c.PostForm("id")

@@ -1,28 +1,82 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : robnote.com
+ Source Server         : 192.168.88.114-3307
  Source Server Type    : MySQL
- Source Server Version : 50738
- Source Host           : robnote.com:13306
- Source Schema         : ruoyi-go
+ Source Server Version : 80019 (8.0.19)
+ Source Host           : 192.168.88.114:3307
+ Source Schema         : dpc
 
  Target Server Type    : MySQL
- Target Server Version : 50738
+ Target Server Version : 80019 (8.0.19)
  File Encoding         : 65001
 
- Date: 19/09/2023 22:06:03
+ Date: 15/05/2024 16:45:00
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for app_gen_params
+-- ----------------------------
+DROP TABLE IF EXISTS `app_gen_params`;
+CREATE TABLE `app_gen_params`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `use_flag` int NULL DEFAULT NULL,
+  `param_no` int NULL DEFAULT NULL,
+  `param_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参量名称',
+  `param_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参量类型',
+  `unit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '单位',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注信息',
+  `monitor_type_id` int NULL DEFAULT NULL,
+  `del_flag` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unq_param_monitor`(`param_no` ASC, `monitor_type_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 28952 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '生成的参量表，相同的参量编号一定相同，监控类型可能不同 如 A相电压，不管在哪个监控类型下，都是参量X' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of app_gen_params
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for dpc_task
+-- ----------------------------
+DROP TABLE IF EXISTS `dpc_task`;
+CREATE TABLE `dpc_task`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '工号',
+  `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '密码',
+  `prj_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '项  目  号',
+  `task_content` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '任务内容',
+  `start_date` date NULL DEFAULT NULL COMMENT '开始日期',
+  `end_date` date NULL DEFAULT NULL COMMENT '结束日期',
+  `work_days` bigint NULL DEFAULT NULL COMMENT '本月工时',
+  `auto_submit` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '自动提交',
+  `status` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '任务状态',
+  `sort` bigint NULL DEFAULT NULL COMMENT '排序，大的优先',
+  `update_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `create_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `del_flag` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of dpc_task
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for gen_table
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table`;
 CREATE TABLE `gen_table`  (
-  `table_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `table_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '表名称',
   `table_comment` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '表描述',
   `class_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '实体类名称',
@@ -34,26 +88,25 @@ CREATE TABLE `gen_table`  (
   `function_author` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生成功能作者',
   `options` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '其它生成选项',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`table_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-INSERT INTO `gen_table` VALUES (5, 'sys_config', '参数配置表', 'config', 'crud', 'lostvip.com', 'module', 'config', '参数配置', 'yunjie', '', 'admin', '2020-03-26 20:35:17', 'admin', '2020-03-27 09:49:22', '455445454');
-INSERT INTO `gen_table` VALUES (6, 'sys_oper_log', '操作日志记录', 'SysOperLog', 'crud', 'main', 'mywork', '', '操作日志记录', 'lv', '', 'admin', '2023-09-17 19:15:59', '', '2023-09-17 11:10:48', '');
+INSERT INTO `gen_table` VALUES (7, 'app_gen_params', '参量字典', 'AppGenParams', 'crud', 'mywork', 'main', 'params', '基础参量管理', 'lv', '', 'admin', '2024-02-28 14:21:50', 'admin', '2024-02-28 16:10:05', '所有参量的汇总');
 
 -- ----------------------------
 -- Table structure for gen_table_column
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table_column`;
 CREATE TABLE `gen_table_column`  (
-  `column_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `table_id` bigint(20) NULL DEFAULT NULL COMMENT '归属表编号',
+  `column_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `table_id` bigint NULL DEFAULT NULL COMMENT '归属表编号',
   `column_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列名称',
   `column_comment` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列描述',
   `column_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列类型',
@@ -70,13 +123,13 @@ CREATE TABLE `gen_table_column`  (
   `query_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'EQ' COMMENT '查询方式（等于、不等于、大于、小于、范围）',
   `html_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）',
   `dict_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典类型',
-  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
+  `sort` int NULL DEFAULT NULL COMMENT '排序',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`column_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 539 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 548 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gen_table_column
@@ -219,24 +272,33 @@ INSERT INTO `gen_table_column` VALUES (535, 6, 'json_result', '返回参数', 'v
 INSERT INTO `gen_table_column` VALUES (536, 6, 'status', '操作状态（0正常 1异常）', 'int(11)', 'int64', 'Status', 'status', '0', '0', '1', '1', '1', '1', '1', 'EQ', 'radio', '', 14, 'admin', NULL, '', NULL);
 INSERT INTO `gen_table_column` VALUES (537, 6, 'error_msg', '错误消息', 'varchar(2000)', 'string', 'ErrorMsg', 'errorMsg', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', '', 15, 'admin', NULL, '', NULL);
 INSERT INTO `gen_table_column` VALUES (538, 6, 'oper_time', '操作时间', 'datetime', 'Time', 'OperTime', 'operTime', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'datetime', '', 16, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (539, 7, 'id', 'ID', 'bigint', 'int64', 'Id', 'id', '1', '1', '0', '0', '1', '0', '0', 'EQ', 'input', '', 1, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (540, 7, 'use_flag', '是否使用', 'int', 'int', 'UseFlag', 'useFlag', '0', '0', '0', '0', '0', '0', '0', 'EQ', 'input', '', 2, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (541, 7, 'param_no', '参量号', 'int', 'int', 'ParamNo', 'paramNo', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', '', 3, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (542, 7, 'param_name', '参量名称', 'varchar(255)', 'string', 'ParamName', 'paramName', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 4, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (543, 7, 'param_type', '参量类型', 'varchar(255)', 'string', 'ParamType', 'paramType', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'select', '', 5, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (544, 7, 'unit', '单位', 'varchar(255)', 'string', 'Unit', 'unit', '0', '0', '0', '1', '1', '1', '0', 'LIKE', 'input', '', 6, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (545, 7, 'remark', '备注信息', 'varchar(255)', 'string', 'Remark', 'remark', '0', '0', '0', '1', '1', '1', '0', 'LIKE', 'input', '', 7, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (546, 7, 'monitor_type_id', '监控类型', 'int', 'int', 'MonitorTypeId', 'monitorTypeId', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'input', '', 8, 'admin', NULL, '', NULL);
+INSERT INTO `gen_table_column` VALUES (547, 7, 'create_time', '', 'datetime', 'time.Time', 'CreateTime', 'createTime', '0', '0', '0', '0', '0', '0', '0', 'EQ', 'datetime', '', 9, 'admin', NULL, '', NULL);
 
 -- ----------------------------
 -- Table structure for sys_config
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_config`;
 CREATE TABLE `sys_config`  (
-  `config_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '参数主键',
+  `config_id` int NOT NULL AUTO_INCREMENT COMMENT '参数主键',
   `config_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '参数名称',
   `config_key` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '参数键名',
   `config_value` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '参数键值',
   `config_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'N' COMMENT '系统内置（Y是 N否）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '参数配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '参数配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_config
@@ -251,41 +313,41 @@ INSERT INTO `sys_config` VALUES (4, '静态资源网盘存储', 'system.resource
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
-  `dept_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '部门id',
-  `parent_id` bigint(20) NULL DEFAULT 0 COMMENT '父部门id',
+  `dept_id` bigint NOT NULL AUTO_INCREMENT COMMENT '部门id',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父部门id',
   `ancestors` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '祖级列表',
   `dept_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '部门名称',
-  `order_num` int(11) NULL DEFAULT 0 COMMENT '显示顺序',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `leader` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '负责人',
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '部门状态（0正常 1停用）',
   `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `tenant_id` bigint(20) NULL DEFAULT 0 COMMENT '租户id',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `tenant_id` bigint NULL DEFAULT 0 COMMENT '租户id',
   PRIMARY KEY (`dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (100, 0, '0', 'DPC', 0, 'admin', '15888888888', '110@qq.com', '0', '0', 'admin', '2018-03-16 11:33:00', 'admin', '2023-09-15 11:34:01', 0);
-INSERT INTO `sys_dept` VALUES (110, 100, '0,100', '江苏铁塔', 100, '', '', '', '0', '0', 'admin', '2019-12-02 17:07:02', 'admin', '2023-09-15 11:54:50', 0);
+INSERT INTO `sys_dept` VALUES (100, 0, '0', 'LOSTVIP', 0, 'admin', '15888888888', '110@qq.com', '0', '0', 'admin', '2018-03-16 11:33:00', 'admin', '2023-09-15 11:34:01', 0);
+INSERT INTO `sys_dept` VALUES (110, 100, '0,100', '铁塔公司', 100, '', '', '', '0', '0', 'admin', '2019-12-02 17:07:02', 'admin', '2023-09-15 11:54:50', 0);
 INSERT INTO `sys_dept` VALUES (111, 100, '0,100', '电影学院', 51, '曾尚兵1', '18788996255', 'ddd@163.com', '0', '2', 'admin', '2020-03-01 09:40:48', 'admin', '2020-03-01 09:40:55', 0);
-INSERT INTO `sys_dept` VALUES (112, 100, '0,100', '动力源运维', 10, '曾尚兵', '18788996255', 'ddd@163.com', '0', '0', 'admin', '2020-03-21 16:30:26', 'admin', '2023-09-15 11:55:24', 0);
-INSERT INTO `sys_dept` VALUES (113, 100, '0,100', '江苏铁塔', 2, '江苏铁塔', '', '', '0', '2', 'admin', '2023-09-15 11:38:29', 'admin', '2023-09-15 11:39:15', 0);
-INSERT INTO `sys_dept` VALUES (114, 100, '0,100', '爱客', 100, '', '', '', '0', '0', 'admin', '2023-09-15 11:39:05', 'admin', '2023-09-15 11:55:13', 0);
+INSERT INTO `sys_dept` VALUES (112, 100, '0,100', '公司运维', 10, '曾尚兵', '18788996255', 'ddd@163.com', '0', '0', 'admin', '2020-03-21 16:30:26', 'admin', '2023-09-15 11:55:24', 0);
+INSERT INTO `sys_dept` VALUES (113, 100, '0,100', '测试一', 2, '测试一', '', '', '0', '2', 'admin', '2023-09-15 11:38:29', 'admin', '2023-09-15 11:39:15', 0);
+INSERT INTO `sys_dept` VALUES (114, 100, '0,100', '测试二', 100, '', '', '', '0', '0', 'admin', '2023-09-15 11:39:05', 'admin', '2023-09-15 11:55:13', 0);
 
 -- ----------------------------
 -- Table structure for sys_dict_data
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_data`;
 CREATE TABLE `sys_dict_data`  (
-  `dict_code` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
-  `dict_sort` int(11) NULL DEFAULT 0 COMMENT '字典排序',
+  `dict_code` bigint NOT NULL AUTO_INCREMENT COMMENT '字典编码',
+  `dict_sort` int NULL DEFAULT 0 COMMENT '字典排序',
   `dict_label` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典标签',
   `dict_value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典键值',
   `dict_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典类型',
@@ -294,12 +356,12 @@ CREATE TABLE `sys_dict_data`  (
   `is_default` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'N' COMMENT '是否默认（Y是 N否）',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dict_data
@@ -342,18 +404,18 @@ INSERT INTO `sys_dict_data` VALUES (33, 2, '抖音用户', '2', 'zxuser_type', N
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_type`;
 CREATE TABLE `sys_dict_type`  (
-  `dict_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典主键',
+  `dict_id` bigint NOT NULL AUTO_INCREMENT COMMENT '字典主键',
   `dict_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典名称',
   `dict_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典类型',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_id`) USING BTREE,
-  UNIQUE INDEX `dict_type`(`dict_type`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `dict_type`(`dict_type` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dict_type
@@ -377,7 +439,7 @@ INSERT INTO `sys_dict_type` VALUES (13, '测试11', 'test3dddd', '0', 'admin', '
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_job`;
 CREATE TABLE `sys_job`  (
-  `job_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+  `job_id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务ID',
   `job_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '任务名称',
   `job_params` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '参数',
   `job_group` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'DEFAULT' COMMENT '任务组名',
@@ -387,12 +449,12 @@ CREATE TABLE `sys_job`  (
   `concurrent` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '是否并发执行（0允许 1禁止）',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1暂停）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '备注信息',
   PRIMARY KEY (`job_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job
@@ -405,23 +467,27 @@ INSERT INTO `sys_job` VALUES (12, 'test2', 'helloworld|yjgo', 'DEFAULT', 'test2'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_job_log`;
 CREATE TABLE `sys_job_log`  (
-  `job_log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务日志ID',
+  `job_log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务日志ID',
   `job_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称',
   `job_group` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务组名',
   `invoke_target` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '调用目标字符串',
   `job_message` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日志信息',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '执行状态（0正常 1失败）',
   `exception_info` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '异常信息',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`job_log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_job_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_logininfor
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_logininfor`;
 CREATE TABLE `sys_logininfor`  (
-  `info_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '访问ID',
+  `info_id` bigint NOT NULL AUTO_INCREMENT COMMENT '访问ID',
   `login_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '登录账号',
   `ipaddr` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '登录IP地址',
   `login_location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '登录地点',
@@ -429,278 +495,23 @@ CREATE TABLE `sys_logininfor`  (
   `os` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '操作系统',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '登录状态（0成功 1失败）',
   `msg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '提示消息',
-  `login_time` datetime(0) NULL DEFAULT NULL COMMENT '访问时间',
+  `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 636 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 660 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
 -- ----------------------------
-INSERT INTO `sys_logininfor` VALUES (381, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 13:29:30');
-INSERT INTO `sys_logininfor` VALUES (382, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 13:59:34');
-INSERT INTO `sys_logininfor` VALUES (383, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 14:33:41');
-INSERT INTO `sys_logininfor` VALUES (384, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:07:56');
-INSERT INTO `sys_logininfor` VALUES (385, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:20:08');
-INSERT INTO `sys_logininfor` VALUES (386, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:22:20');
-INSERT INTO `sys_logininfor` VALUES (387, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:38:52');
-INSERT INTO `sys_logininfor` VALUES (388, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:39:51');
-INSERT INTO `sys_logininfor` VALUES (389, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:49:13');
-INSERT INTO `sys_logininfor` VALUES (390, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:50:04');
-INSERT INTO `sys_logininfor` VALUES (391, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:52:06');
-INSERT INTO `sys_logininfor` VALUES (392, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:53:42');
-INSERT INTO `sys_logininfor` VALUES (393, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 15:56:50');
-INSERT INTO `sys_logininfor` VALUES (394, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:01:00');
-INSERT INTO `sys_logininfor` VALUES (395, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:02:31');
-INSERT INTO `sys_logininfor` VALUES (396, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:03:26');
-INSERT INTO `sys_logininfor` VALUES (397, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:09:14');
-INSERT INTO `sys_logininfor` VALUES (398, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:20:03');
-INSERT INTO `sys_logininfor` VALUES (399, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:27:41');
-INSERT INTO `sys_logininfor` VALUES (400, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 16:34:51');
-INSERT INTO `sys_logininfor` VALUES (401, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:04:05');
-INSERT INTO `sys_logininfor` VALUES (402, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:12:21');
-INSERT INTO `sys_logininfor` VALUES (403, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:17:53');
-INSERT INTO `sys_logininfor` VALUES (404, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:20:11');
-INSERT INTO `sys_logininfor` VALUES (405, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:44:10');
-INSERT INTO `sys_logininfor` VALUES (406, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:45:20');
-INSERT INTO `sys_logininfor` VALUES (407, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:51:47');
-INSERT INTO `sys_logininfor` VALUES (408, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:55:35');
-INSERT INTO `sys_logininfor` VALUES (409, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:57:44');
-INSERT INTO `sys_logininfor` VALUES (410, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 18:59:49');
-INSERT INTO `sys_logininfor` VALUES (411, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 19:01:42');
-INSERT INTO `sys_logininfor` VALUES (412, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 19:04:18');
-INSERT INTO `sys_logininfor` VALUES (413, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 19:28:51');
-INSERT INTO `sys_logininfor` VALUES (414, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 19:30:01');
-INSERT INTO `sys_logininfor` VALUES (415, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 20:42:57');
-INSERT INTO `sys_logininfor` VALUES (416, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 20:46:46');
-INSERT INTO `sys_logininfor` VALUES (417, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 20:48:01');
-INSERT INTO `sys_logininfor` VALUES (418, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 21:08:41');
-INSERT INTO `sys_logininfor` VALUES (419, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 21:43:49');
-INSERT INTO `sys_logininfor` VALUES (420, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 21:55:36');
-INSERT INTO `sys_logininfor` VALUES (421, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 21:56:54');
-INSERT INTO `sys_logininfor` VALUES (422, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 22:00:25');
-INSERT INTO `sys_logininfor` VALUES (423, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-24 22:07:46');
-INSERT INTO `sys_logininfor` VALUES (424, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-25 14:18:52');
-INSERT INTO `sys_logininfor` VALUES (425, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-25 14:59:39');
-INSERT INTO `sys_logininfor` VALUES (426, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 13:46:03');
-INSERT INTO `sys_logininfor` VALUES (427, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 16:19:47');
-INSERT INTO `sys_logininfor` VALUES (428, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 16:23:40');
-INSERT INTO `sys_logininfor` VALUES (429, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 16:24:22');
-INSERT INTO `sys_logininfor` VALUES (430, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 16:26:52');
-INSERT INTO `sys_logininfor` VALUES (431, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 17:38:39');
-INSERT INTO `sys_logininfor` VALUES (432, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 17:41:48');
-INSERT INTO `sys_logininfor` VALUES (433, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 17:43:37');
-INSERT INTO `sys_logininfor` VALUES (434, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 17:45:25');
-INSERT INTO `sys_logininfor` VALUES (435, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 19:38:09');
-INSERT INTO `sys_logininfor` VALUES (436, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 19:39:43');
-INSERT INTO `sys_logininfor` VALUES (437, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 19:41:09');
-INSERT INTO `sys_logininfor` VALUES (438, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 20:35:01');
-INSERT INTO `sys_logininfor` VALUES (439, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:07:38');
-INSERT INTO `sys_logininfor` VALUES (440, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:32:22');
-INSERT INTO `sys_logininfor` VALUES (441, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:35:00');
-INSERT INTO `sys_logininfor` VALUES (442, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:36:07');
-INSERT INTO `sys_logininfor` VALUES (443, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:51:02');
-INSERT INTO `sys_logininfor` VALUES (444, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:53:04');
-INSERT INTO `sys_logininfor` VALUES (445, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:54:52');
-INSERT INTO `sys_logininfor` VALUES (446, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 21:56:22');
-INSERT INTO `sys_logininfor` VALUES (447, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 22:00:20');
-INSERT INTO `sys_logininfor` VALUES (448, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 22:08:10');
-INSERT INTO `sys_logininfor` VALUES (449, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 22:10:38');
-INSERT INTO `sys_logininfor` VALUES (450, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-26 22:18:28');
-INSERT INTO `sys_logininfor` VALUES (451, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:39:14');
-INSERT INTO `sys_logininfor` VALUES (452, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:40:27');
-INSERT INTO `sys_logininfor` VALUES (453, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:46:12');
-INSERT INTO `sys_logininfor` VALUES (454, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:47:49');
-INSERT INTO `sys_logininfor` VALUES (455, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:49:05');
-INSERT INTO `sys_logininfor` VALUES (456, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 09:52:40');
-INSERT INTO `sys_logininfor` VALUES (457, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:00:55');
-INSERT INTO `sys_logininfor` VALUES (458, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:03:04');
-INSERT INTO `sys_logininfor` VALUES (459, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:03:52');
-INSERT INTO `sys_logininfor` VALUES (460, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:11:50');
-INSERT INTO `sys_logininfor` VALUES (461, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:12:47');
-INSERT INTO `sys_logininfor` VALUES (462, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:17:20');
-INSERT INTO `sys_logininfor` VALUES (463, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:18:32');
-INSERT INTO `sys_logininfor` VALUES (464, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:39:41');
-INSERT INTO `sys_logininfor` VALUES (465, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 10:44:16');
-INSERT INTO `sys_logininfor` VALUES (466, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 11:04:58');
-INSERT INTO `sys_logininfor` VALUES (467, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 11:43:43');
-INSERT INTO `sys_logininfor` VALUES (468, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 12:02:57');
-INSERT INTO `sys_logininfor` VALUES (469, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:00:55');
-INSERT INTO `sys_logininfor` VALUES (470, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:36:47');
-INSERT INTO `sys_logininfor` VALUES (471, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:39:50');
-INSERT INTO `sys_logininfor` VALUES (472, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:40:51');
-INSERT INTO `sys_logininfor` VALUES (473, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:42:14');
-INSERT INTO `sys_logininfor` VALUES (474, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:43:20');
-INSERT INTO `sys_logininfor` VALUES (475, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-27 21:45:45');
-INSERT INTO `sys_logininfor` VALUES (476, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-28 20:56:27');
-INSERT INTO `sys_logininfor` VALUES (477, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-28 21:06:20');
-INSERT INTO `sys_logininfor` VALUES (478, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-03-29 14:54:13');
-INSERT INTO `sys_logininfor` VALUES (479, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-04-16 15:50:09');
-INSERT INTO `sys_logininfor` VALUES (480, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-04-16 15:56:04');
-INSERT INTO `sys_logininfor` VALUES (481, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-04-16 16:06:16');
-INSERT INTO `sys_logininfor` VALUES (482, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-05-05 13:50:54');
-INSERT INTO `sys_logininfor` VALUES (483, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-05-05 13:53:13');
-INSERT INTO `sys_logininfor` VALUES (484, 'admin', '::1', '内网IP', 'Chrome', 'Intel Mac OS X 10_14_6', '0', '登录成功', '2020-05-05 13:59:27');
-INSERT INTO `sys_logininfor` VALUES (485, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-01 23:55:03');
-INSERT INTO `sys_logininfor` VALUES (486, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-02 00:02:10');
-INSERT INTO `sys_logininfor` VALUES (487, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-19 23:08:06');
-INSERT INTO `sys_logininfor` VALUES (488, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-19 23:09:50');
-INSERT INTO `sys_logininfor` VALUES (489, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-19 23:14:10');
-INSERT INTO `sys_logininfor` VALUES (490, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-19 23:23:11');
-INSERT INTO `sys_logininfor` VALUES (491, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-19 23:42:36');
-INSERT INTO `sys_logininfor` VALUES (492, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 00:05:22');
-INSERT INTO `sys_logininfor` VALUES (493, 'admin', '::1', '内网IP', 'Chrome', 'Android 6.0', '0', '登录成功', '2021-06-20 00:12:47');
-INSERT INTO `sys_logininfor` VALUES (494, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2021-06-20 00:25:33');
-INSERT INTO `sys_logininfor` VALUES (495, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2021-06-20 00:25:42');
-INSERT INTO `sys_logininfor` VALUES (496, 'admin', '::1', '内网IP', 'Chrome', 'Android 6.0', '0', '账号或密码不正确', '2021-06-20 00:25:55');
-INSERT INTO `sys_logininfor` VALUES (497, 'admin', '::1', '内网IP', 'Chrome', 'Android 6.0', '0', '账号或密码不正确', '2021-06-20 00:26:45');
-INSERT INTO `sys_logininfor` VALUES (498, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2021-06-20 00:27:02');
-INSERT INTO `sys_logininfor` VALUES (499, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2021-06-20 00:27:14');
-INSERT INTO `sys_logininfor` VALUES (500, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 00:28:01');
-INSERT INTO `sys_logininfor` VALUES (501, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 13:43:34');
-INSERT INTO `sys_logininfor` VALUES (502, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 13:44:46');
-INSERT INTO `sys_logininfor` VALUES (503, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 13:48:29');
-INSERT INTO `sys_logininfor` VALUES (504, 'admin', '127.0.0.1', '内网IP', 'Firefox', 'Windows 10', '0', '登录成功', '2021-06-20 13:51:09');
-INSERT INTO `sys_logininfor` VALUES (505, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2021-06-20 15:59:42');
-INSERT INTO `sys_logininfor` VALUES (506, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2022-11-18 14:52:04');
-INSERT INTO `sys_logininfor` VALUES (507, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2022-11-18 15:10:22');
-INSERT INTO `sys_logininfor` VALUES (508, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2022-11-18 15:10:33');
-INSERT INTO `sys_logininfor` VALUES (509, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-03-15 13:25:42');
-INSERT INTO `sys_logininfor` VALUES (510, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-03-15 13:26:23');
-INSERT INTO `sys_logininfor` VALUES (511, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 12:39:39');
-INSERT INTO `sys_logininfor` VALUES (512, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:01:47');
-INSERT INTO `sys_logininfor` VALUES (513, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:07:49');
-INSERT INTO `sys_logininfor` VALUES (514, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:10:43');
-INSERT INTO `sys_logininfor` VALUES (515, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:11:27');
-INSERT INTO `sys_logininfor` VALUES (516, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:18:41');
-INSERT INTO `sys_logininfor` VALUES (517, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:19:45');
-INSERT INTO `sys_logininfor` VALUES (518, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:26:06');
-INSERT INTO `sys_logininfor` VALUES (519, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:27:37');
-INSERT INTO `sys_logininfor` VALUES (520, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:27:50');
-INSERT INTO `sys_logininfor` VALUES (521, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:31:14');
-INSERT INTO `sys_logininfor` VALUES (522, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:52:09');
-INSERT INTO `sys_logininfor` VALUES (523, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 14:56:23');
-INSERT INTO `sys_logininfor` VALUES (524, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:24:11');
-INSERT INTO `sys_logininfor` VALUES (525, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:24:26');
-INSERT INTO `sys_logininfor` VALUES (526, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:24:48');
-INSERT INTO `sys_logininfor` VALUES (527, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:25:35');
-INSERT INTO `sys_logininfor` VALUES (528, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:26:26');
-INSERT INTO `sys_logininfor` VALUES (529, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:31:13');
-INSERT INTO `sys_logininfor` VALUES (530, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:36:56');
-INSERT INTO `sys_logininfor` VALUES (531, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:38:33');
-INSERT INTO `sys_logininfor` VALUES (532, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:48:19');
-INSERT INTO `sys_logininfor` VALUES (533, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 15:50:10');
-INSERT INTO `sys_logininfor` VALUES (534, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:02:17');
-INSERT INTO `sys_logininfor` VALUES (535, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:03:10');
-INSERT INTO `sys_logininfor` VALUES (536, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:07:31');
-INSERT INTO `sys_logininfor` VALUES (537, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:20:05');
-INSERT INTO `sys_logininfor` VALUES (538, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:28:53');
-INSERT INTO `sys_logininfor` VALUES (539, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:32:50');
-INSERT INTO `sys_logininfor` VALUES (540, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:35:27');
-INSERT INTO `sys_logininfor` VALUES (541, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 16:53:17');
-INSERT INTO `sys_logininfor` VALUES (542, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 21:52:15');
-INSERT INTO `sys_logininfor` VALUES (543, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 21:53:02');
-INSERT INTO `sys_logininfor` VALUES (544, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:30:00');
-INSERT INTO `sys_logininfor` VALUES (545, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:42:55');
-INSERT INTO `sys_logininfor` VALUES (546, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:52:28');
-INSERT INTO `sys_logininfor` VALUES (547, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:53:23');
-INSERT INTO `sys_logininfor` VALUES (548, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:53:35');
-INSERT INTO `sys_logininfor` VALUES (549, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 22:59:20');
-INSERT INTO `sys_logininfor` VALUES (550, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-14 23:02:14');
-INSERT INTO `sys_logininfor` VALUES (551, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 10:57:59');
-INSERT INTO `sys_logininfor` VALUES (552, 'qy1156010001', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:03:41');
-INSERT INTO `sys_logininfor` VALUES (553, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2023-09-15 11:04:13');
-INSERT INTO `sys_logininfor` VALUES (554, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2023-09-15 11:04:20');
-INSERT INTO `sys_logininfor` VALUES (555, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2023-09-15 11:04:27');
-INSERT INTO `sys_logininfor` VALUES (556, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2023-09-15 11:04:55');
-INSERT INTO `sys_logininfor` VALUES (557, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:05:08');
-INSERT INTO `sys_logininfor` VALUES (558, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:06:05');
-INSERT INTO `sys_logininfor` VALUES (559, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:06:49');
-INSERT INTO `sys_logininfor` VALUES (560, 'qy1156010001', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '账号或密码不正确', '2023-09-15 11:09:08');
-INSERT INTO `sys_logininfor` VALUES (561, 'qy1156010001', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:09:28');
-INSERT INTO `sys_logininfor` VALUES (562, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:12:52');
-INSERT INTO `sys_logininfor` VALUES (563, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:22:25');
-INSERT INTO `sys_logininfor` VALUES (564, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:31:39');
-INSERT INTO `sys_logininfor` VALUES (565, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:51:02');
-INSERT INTO `sys_logininfor` VALUES (566, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 11:59:07');
-INSERT INTO `sys_logininfor` VALUES (567, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 12:00:08');
-INSERT INTO `sys_logininfor` VALUES (568, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 13:40:50');
-INSERT INTO `sys_logininfor` VALUES (569, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 13:41:20');
-INSERT INTO `sys_logininfor` VALUES (570, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 13:42:10');
-INSERT INTO `sys_logininfor` VALUES (571, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 13:42:59');
-INSERT INTO `sys_logininfor` VALUES (572, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:38:39');
-INSERT INTO `sys_logininfor` VALUES (573, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:55:57');
-INSERT INTO `sys_logininfor` VALUES (574, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:56:53');
-INSERT INTO `sys_logininfor` VALUES (575, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:57:49');
-INSERT INTO `sys_logininfor` VALUES (576, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:58:21');
-INSERT INTO `sys_logininfor` VALUES (577, 'admin', '::1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 17:59:03');
-INSERT INTO `sys_logininfor` VALUES (578, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:06:15');
-INSERT INTO `sys_logininfor` VALUES (579, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:07:15');
-INSERT INTO `sys_logininfor` VALUES (580, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:09:38');
-INSERT INTO `sys_logininfor` VALUES (581, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:17:37');
-INSERT INTO `sys_logininfor` VALUES (582, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:31:33');
-INSERT INTO `sys_logininfor` VALUES (583, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:40:20');
-INSERT INTO `sys_logininfor` VALUES (584, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:44:15');
-INSERT INTO `sys_logininfor` VALUES (585, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 18:55:01');
-INSERT INTO `sys_logininfor` VALUES (586, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 19:23:07');
-INSERT INTO `sys_logininfor` VALUES (587, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 19:23:50');
-INSERT INTO `sys_logininfor` VALUES (588, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 19:25:46');
-INSERT INTO `sys_logininfor` VALUES (589, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 19:26:19');
-INSERT INTO `sys_logininfor` VALUES (590, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-15 22:09:38');
-INSERT INTO `sys_logininfor` VALUES (591, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-16 18:46:02');
-INSERT INTO `sys_logininfor` VALUES (592, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 18:39:38');
-INSERT INTO `sys_logininfor` VALUES (593, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:02:19');
-INSERT INTO `sys_logininfor` VALUES (594, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:03:39');
-INSERT INTO `sys_logininfor` VALUES (595, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:15:39');
-INSERT INTO `sys_logininfor` VALUES (596, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:19:12');
-INSERT INTO `sys_logininfor` VALUES (597, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:35:40');
-INSERT INTO `sys_logininfor` VALUES (598, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:38:42');
-INSERT INTO `sys_logininfor` VALUES (599, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 19:41:11');
-INSERT INTO `sys_logininfor` VALUES (600, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 20:04:07');
-INSERT INTO `sys_logininfor` VALUES (601, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 22:29:46');
-INSERT INTO `sys_logininfor` VALUES (602, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 22:42:10');
-INSERT INTO `sys_logininfor` VALUES (603, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 22:48:04');
-INSERT INTO `sys_logininfor` VALUES (604, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 23:41:45');
-INSERT INTO `sys_logininfor` VALUES (605, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-17 23:43:05');
-INSERT INTO `sys_logininfor` VALUES (606, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 09:57:25');
-INSERT INTO `sys_logininfor` VALUES (607, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 09:58:17');
-INSERT INTO `sys_logininfor` VALUES (608, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 10:02:03');
-INSERT INTO `sys_logininfor` VALUES (609, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 10:09:47');
-INSERT INTO `sys_logininfor` VALUES (610, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 10:17:10');
-INSERT INTO `sys_logininfor` VALUES (611, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 11:36:20');
-INSERT INTO `sys_logininfor` VALUES (612, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 14:52:17');
-INSERT INTO `sys_logininfor` VALUES (613, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 15:13:45');
-INSERT INTO `sys_logininfor` VALUES (614, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:36:17');
-INSERT INTO `sys_logininfor` VALUES (615, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:40:43');
-INSERT INTO `sys_logininfor` VALUES (616, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:42:55');
-INSERT INTO `sys_logininfor` VALUES (617, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:52:45');
-INSERT INTO `sys_logininfor` VALUES (618, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:53:51');
-INSERT INTO `sys_logininfor` VALUES (619, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:56:52');
-INSERT INTO `sys_logininfor` VALUES (620, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 21:58:55');
-INSERT INTO `sys_logininfor` VALUES (621, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-18 22:10:26');
-INSERT INTO `sys_logininfor` VALUES (622, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 13:57:09');
-INSERT INTO `sys_logininfor` VALUES (623, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 13:59:35');
-INSERT INTO `sys_logininfor` VALUES (624, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 14:00:12');
-INSERT INTO `sys_logininfor` VALUES (625, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 14:01:44');
-INSERT INTO `sys_logininfor` VALUES (626, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 14:02:05');
-INSERT INTO `sys_logininfor` VALUES (627, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 14:14:16');
-INSERT INTO `sys_logininfor` VALUES (628, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 20:21:15');
-INSERT INTO `sys_logininfor` VALUES (629, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 20:22:48');
-INSERT INTO `sys_logininfor` VALUES (630, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 21:22:54');
-INSERT INTO `sys_logininfor` VALUES (631, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 21:45:24');
-INSERT INTO `sys_logininfor` VALUES (632, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 21:53:03');
-INSERT INTO `sys_logininfor` VALUES (633, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 21:54:07');
-INSERT INTO `sys_logininfor` VALUES (634, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 21:56:05');
-INSERT INTO `sys_logininfor` VALUES (635, 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 10', '0', '登录成功', '2023-09-19 22:00:59');
 
 -- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-  `menu_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
+  `menu_id` bigint NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `menu_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
-  `parent_id` bigint(20) NULL DEFAULT 0 COMMENT '父菜单ID',
-  `order_num` int(11) NULL DEFAULT 0 COMMENT '显示顺序',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父菜单ID',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '#' COMMENT '请求地址',
   `target` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '打开方式（menuItem页签 menuBlank新窗口）',
   `menu_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '菜单类型（M目录 C菜单 F按钮）',
@@ -708,12 +519,12 @@ CREATE TABLE `sys_menu`  (
   `perms` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限标识',
   `icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '#' COMMENT '菜单图标',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1067 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1085 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -728,7 +539,7 @@ INSERT INTO `sys_menu` VALUES (7, '表格演示', 5, 2, '#', '', 'M', '0', '', '
 INSERT INTO `sys_menu` VALUES (8, '弹框演示', 5, 3, '#', '', 'M', '0', '', '', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '弹框演示');
 INSERT INTO `sys_menu` VALUES (9, '操作演示', 5, 4, '#', '', 'M', '0', '', '', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '操作演示');
 INSERT INTO `sys_menu` VALUES (10, '报表演示', 5, 5, '#', '', 'M', '0', '', '', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '报表演示');
-INSERT INTO `sys_menu` VALUES (11, '图标演示', 5, 6, '#', '', 'M', '0', '', '', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '图标演示');
+INSERT INTO `sys_menu` VALUES (11, '图标演示', 5, 6, '#', 'menuItem', 'M', '0', '', 'fa fa-bookmark-o', 'admin', '2018-03-16 11:33:00', 'admin', '2024-02-29 02:23:37', '图标演示');
 INSERT INTO `sys_menu` VALUES (12, '栅格演示', 6, 2, '/demo/form/grid', '', 'C', '0', 'demo:grid:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (13, '下拉框', 6, 3, '/demo/form/select', '', 'C', '0', 'demo:select:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
 INSERT INTO `sys_menu` VALUES (14, '时间轴', 6, 4, '/demo/form/timeline', '', 'C', '0', 'demo:timeline:view', 'fa fa-sticky-note-o', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '');
@@ -848,36 +659,46 @@ INSERT INTO `sys_menu` VALUES (1062, '字典详情', 105, 5, '#', '', 'F', '0', 
 INSERT INTO `sys_menu` VALUES (1064, '监控平台', 4, 1, 'http://iciom.dpc.com.cn/', 'menuItem', 'C', '0', '', 'fa fa-globe', '', '2021-06-19 23:12:45', '', '2023-09-19 21:44:36', '');
 INSERT INTO `sys_menu` VALUES (1065, '搜索自动补全', 6, 100, '/demo/form/autocomplete', 'menuItem', 'C', '', '', 'fa fa-sticky-note-o', '', '2023-09-18 10:15:49', '', '2023-09-18 10:17:03', '');
 INSERT INTO `sys_menu` VALUES (1066, '发电量重算', 4, 100, 'iot/hisData/toWizard', 'menuItem', 'C', '', '', 'fa fa-sticky-note-o', '', '2023-09-18 21:42:44', '', '2023-09-19 21:36:52', '');
+INSERT INTO `sys_menu` VALUES (1079, '基础参量管理', 4, 1, '/mywork/params', '', 'C', '0', 'mywork:params:view', 'fa fa-sticky-note-o', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '基础参量管理菜单');
+INSERT INTO `sys_menu` VALUES (1080, '基础参量管理新增', 1079, 2, '#', '', 'F', '0', 'mywork:params:add', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1081, '基础参量管理查询', 1079, 1, '#', '', 'F', '0', 'mywork:params:list', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1082, '基础参量管理修改', 1079, 3, '#', '', 'F', '0', 'mywork:params:edit', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1083, '基础参量管理删除', 1079, 4, '#', '', 'F', '0', 'mywork:params:remove', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
+INSERT INTO `sys_menu` VALUES (1084, '基础参量管理导出', 1079, 5, '#', '', 'F', '0', 'mywork:params:export', '#', 'admin', '2020-01-01 00:00:00', 'admin', '2020-01-01 00:00:00', '');
 
 -- ----------------------------
 -- Table structure for sys_notice
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice`  (
-  `notice_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `notice_id` int NOT NULL AUTO_INCREMENT COMMENT '公告ID',
   `notice_title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公告标题',
   `notice_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公告类型（1通知 2公告）',
   `notice_content` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公告内容',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '公告状态（0正常 1关闭）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`notice_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '通知公告表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_notice
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_oper_log
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_oper_log`;
 CREATE TABLE `sys_oper_log`  (
-  `oper_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '日志主键',
+  `oper_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键',
   `title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '模块标题',
-  `business_type` int(11) NULL DEFAULT 0 COMMENT '业务类型（0其它 1新增 2修改 3删除）',
+  `business_type` int NULL DEFAULT 0 COMMENT '业务类型（0其它 1新增 2修改 3删除）',
   `method` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '方法名称',
   `request_method` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '请求方式',
-  `operator_type` int(11) NULL DEFAULT 0 COMMENT '操作类别（0其它 1后台用户 2手机端用户）',
+  `operator_type` int NULL DEFAULT 0 COMMENT '操作类别（0其它 1后台用户 2手机端用户）',
   `oper_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '操作人员',
   `dept_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '部门名称',
   `oper_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '请求URL',
@@ -885,56 +706,61 @@ CREATE TABLE `sys_oper_log`  (
   `oper_location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '操作地点',
   `oper_param` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '请求参数',
   `json_result` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '返回参数',
-  `status` int(11) NULL DEFAULT 0 COMMENT '操作状态（0正常 1异常）',
+  `status` int NULL DEFAULT 0 COMMENT '操作状态（0正常 1异常）',
   `error_msg` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '错误消息',
-  `oper_time` datetime(0) NULL DEFAULT NULL COMMENT '操作时间',
+  `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 688 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 688 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_oper_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_post
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_post`;
 CREATE TABLE `sys_post`  (
-  `post_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
+  `post_id` bigint NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
   `post_code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '岗位编码',
   `post_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '岗位名称',
-  `post_sort` int(11) NOT NULL COMMENT '显示顺序',
+  `post_sort` int NOT NULL COMMENT '显示顺序',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '状态（0正常 1停用）',
-  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `create_by` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `tenant_id` bigint(20) NULL DEFAULT 0 COMMENT '租户id',
+  `tenant_id` bigint NULL DEFAULT NULL COMMENT '租户id',
+  `del_flag` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`post_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '岗位信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_post
 -- ----------------------------
-INSERT INTO `sys_post` VALUES (1, 'manager', '经理', 1, '0', 'admin', '2018-03-16 11:33:00', '', '2023-09-15 11:35:40', 'manager', 0);
-INSERT INTO `sys_post` VALUES (2, 'operator', '运维', 2, '0', 'admin', '2018-03-16 11:33:00', 'admin', '2023-09-15 11:36:02', '', 0);
+INSERT INTO `sys_post` VALUES (1, 'manager', '经理', 1, '0', 'admin', '2018-03-16 11:33:00', '', '2023-09-15 11:35:40', 'manager', 0, 0);
+INSERT INTO `sys_post` VALUES (2, 'operator', '运维', 2, '0', 'admin', '2018-03-16 11:33:00', 'admin', '2023-09-15 11:36:02', '', 0, 0);
 
 -- ----------------------------
 -- Table structure for sys_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
-  `role_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `role_id` bigint NOT NULL AUTO_INCREMENT COMMENT '角色ID',
   `role_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
   `role_key` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色权限字符串',
-  `role_sort` int(11) NOT NULL COMMENT '显示顺序',
+  `role_sort` int NOT NULL COMMENT '显示顺序',
   `data_scope` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）',
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色状态（0正常 1停用）',
   `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role
@@ -947,10 +773,10 @@ INSERT INTO `sys_role` VALUES (3, '厂家运维人员', 'oper', 0, '1', '0', '0'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_dept`;
 CREATE TABLE `sys_role_dept`  (
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  `dept_id` bigint(20) NOT NULL COMMENT '部门ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
+  `dept_id` bigint NOT NULL COMMENT '部门ID',
   PRIMARY KEY (`role_id`, `dept_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和部门关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和部门关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_dept
@@ -966,10 +792,10 @@ INSERT INTO `sys_role_dept` VALUES (3, 112);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_menu`;
 CREATE TABLE `sys_role_menu`  (
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  `menu_id` bigint(20) NOT NULL COMMENT '菜单ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
+  `menu_id` bigint NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -1181,30 +1007,34 @@ INSERT INTO `sys_role_menu` VALUES (3, 1064);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_tenant`;
 CREATE TABLE `sys_tenant`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '删除标志（0代表存在 2代表删除）',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商户名称',
   `address` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系地址',
   `manager` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '负责人',
   `phone` varchar(18) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息',
-  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '起租时间',
-  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '起租时间',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '安全邮箱',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_tenant
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
-  `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `dept_id` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
+  `user_id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `dept_id` bigint NULL DEFAULT NULL COMMENT '部门ID',
   `login_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录账号',
   `user_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户昵称',
   `user_type` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '00' COMMENT '用户类型（00系统用户）',
@@ -1217,15 +1047,15 @@ CREATE TABLE `sys_user`  (
   `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
   `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
   `login_ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '最后登录IP',
-  `login_date` datetime(0) NULL DEFAULT NULL COMMENT '最后登录时间',
+  `login_date` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `tenant_id` bigint(20) NULL DEFAULT 0 COMMENT '租户id',
+  `tenant_id` bigint NULL DEFAULT 0 COMMENT '租户id',
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
@@ -1238,7 +1068,7 @@ INSERT INTO `sys_user` VALUES (2, 110, 'qy1156010001', 'qy1156010001', '', 'uhvs
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_online`;
 CREATE TABLE `sys_user_online`  (
-  `sessionId` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户会话id',
+  `session_id` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户会话id',
   `login_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '登录账号',
   `dept_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '部门名称',
   `ipaddr` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '登录IP地址',
@@ -1246,15 +1076,16 @@ CREATE TABLE `sys_user_online`  (
   `browser` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '浏览器类型',
   `os` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '操作系统',
   `status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '在线状态on_line在线off_line离线',
-  `start_timestamp` datetime(0) NULL DEFAULT NULL COMMENT 'session创建时间',
-  `last_access_time` datetime(0) NULL DEFAULT NULL COMMENT 'session最后访问时间',
-  `expire_time` int(11) NULL DEFAULT 0 COMMENT '超时时间，单位为分钟',
-  PRIMARY KEY (`sessionId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '在线用户记录' ROW_FORMAT = Dynamic;
+  `start_timestamp` datetime NULL DEFAULT NULL COMMENT 'session创建时间',
+  `last_access_time` datetime NULL DEFAULT NULL COMMENT 'session最后访问时间',
+  `expire_time` int NULL DEFAULT 0 COMMENT '超时时间，单位为分钟',
+  PRIMARY KEY (`session_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '在线用户记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_online
 -- ----------------------------
+INSERT INTO `sys_user_online` VALUES ('6de1f46577c2c02bb92a3cbeecf8718a', '超级管理员', '', '192.168.240.162:49630', '', 'Chrome', 'Windows 10', 'on_line', '2024-05-15 08:35:24', '2024-05-15 08:35:24', 1440);
 INSERT INTO `sys_user_online` VALUES ('7IHPSW3T77IZ5EGASLEYR2TGROQCIWQQK2CPEDOLP4CQEPTL3QGQ', 'admin', '', '::1', '内网IP', 'Chrome', 'Windows 10', 'on_line', '2021-06-20 15:59:42', '2021-06-20 15:59:42', 1440);
 
 -- ----------------------------
@@ -1262,20 +1093,25 @@ INSERT INTO `sys_user_online` VALUES ('7IHPSW3T77IZ5EGASLEYR2TGROQCIWQQK2CPEDOLP
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_post`;
 CREATE TABLE `sys_user_post`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `post_id` bigint(20) NOT NULL COMMENT '岗位ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `post_id` bigint NOT NULL COMMENT '岗位ID',
+  `del_flag` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`user_id`, `post_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_user_post
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_role

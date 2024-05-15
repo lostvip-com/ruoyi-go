@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"io"
 	"lostvip.com/conf"
 	"lostvip.com/utils/lv_file"
 	"os"
@@ -39,30 +40,26 @@ func InitLog(fileName string) {
 	} else {
 		log.SetLevel(logrus.InfoLevel)
 		fmt.Println("============ release模式，输出日志json到文件============")
-		//log.SetFormatter(&logrus.JSONFormatter{})
 	}
-	if conf.Config().GetValueStr("go.log.output") == "stdout" {
-		fmt.Println("============ debug模式，输出日志到控制台 ============")
-		log.SetOutput(os.Stdout)
-		log.SetOutput(os.Stdout) //调用 logrus 的 SetOutput()函数
-	} else {
-		logger := &lumberjack.Logger{
-			Filename:   pwd + "/" + fileName,
-			MaxSize:    500,  // 日志文件最大 size, 单位是 MB
-			MaxBackups: 3,    // 最大过期日志保留的个数
-			MaxAge:     28,   //保留过期文件的最大时间间隔,单位是天
-			Compress:   true, // disabled by default,是否需要压缩滚动日志, 使用的 gzip 压缩
-		}
-		log.SetOutput(logger)
-		log.SetOutput(logger) //调用 logrus 的 SetOutput()函数
+	fileLog := &lumberjack.Logger{
+		Filename:   pwd + "/" + fileName,
+		MaxSize:    500,  // 日志文件最大 size, 单位是 MB
+		MaxBackups: 3,    // 最大过期日志保留的个数
+		MaxAge:     28,   //保留过期文件的最大时间间隔,单位是天
+		Compress:   true, // disabled by default,是否需要压缩滚动日志, 使用的 gzip 压缩
 	}
-
-	log.WithFields(logrus.Fields{
-		"omg":    true,
-		"number": 123456,
-	}).Warn("初始化测试！Log.WithFields(logrus.Field{}).Warn:  The group's number increased tremendously!")
-
-	log.Info("初始化测试Log.Info 完成 ！！")
+	var writers []io.Writer
+	output := conf.Config().GetValueStr("go.log.output")
+	if output == "stdout" { //只写控制台
+		writers = append(writers, os.Stdout)
+	} else if output == "file" { // 只写文件
+		writers = append(writers, fileLog)
+	} else { //同时写文件和屏幕
+		writers = append(writers, os.Stdout, fileLog)
+	}
+	multiWriter := io.MultiWriter(writers...)
+	log.SetOutput(multiWriter)
+	log.Info("初始化测试Log.Info 完成 ！！stdout:", output)
 }
 
 func Error(args ...interface{}) {

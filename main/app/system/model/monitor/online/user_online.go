@@ -9,10 +9,8 @@ package online
 import (
 	"errors"
 	"lostvip.com/db"
-	"lostvip.com/utils/lv_office"
 	"lostvip.com/utils/lv_web"
 	"time"
-	"xorm.io/builder"
 )
 
 // 新增页面请求参数
@@ -73,7 +71,7 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 		return nil, p, errors.New("获取数据库连接失败")
 	}
 
-	model := db.Table(TableName()).Alias("t")
+	model := db.Table("sys_user_online").Alias("t")
 
 	if param != nil {
 
@@ -140,66 +138,6 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 	return result, p, err
 }
 
-// 导出excel
-func SelectListExport(param *SelectPageReq, head, col []string) (string, error) {
-	db := db.GetInstance().Engine()
-
-	if db == nil {
-		return "", errors.New("获取数据库连接失败")
-	}
-
-	build := builder.Select(col...).From(TableName(), "t")
-	if param != nil {
-
-		if param.SessionId != "" {
-			build.Where(builder.Eq{"t.sessionId": param.SessionId})
-		}
-
-		if param.LoginName != "" {
-			build.Where(builder.Like{"t.login_name", param.LoginName})
-		}
-
-		if param.DeptName != "" {
-			build.Where(builder.Like{"t.dept_name", param.DeptName})
-		}
-
-		if param.Ipaddr != "" {
-			build.Where(builder.Eq{"t.ipaddr": param.Ipaddr})
-		}
-
-		if param.LoginLocation != "" {
-			build.Where(builder.Eq{"t.login_location": param.LoginLocation})
-		}
-
-		if param.Browser != "" {
-			build.Where(builder.Eq{"t.browser": param.Browser})
-		}
-
-		if param.Os != "" {
-			build.Where(builder.Eq{"t.os": param.Os})
-		}
-
-		if param.Status != "" {
-			build.Where(builder.Eq{"t.status": param.Status})
-		}
-
-		if param.BeginTime != "" {
-			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
-		}
-
-		if param.EndTime != "" {
-			build.Where(builder.Lte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.EndTime + "','%y%m%d')"})
-		}
-	}
-
-	sqlStr, _, _ := build.ToSQL()
-	arr, err := db.SQL(sqlStr).QuerySliceString()
-
-	path, err := lv_office.DownlaodExcel(head, arr)
-
-	return path, err
-}
-
 // 获取所有数据
 func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 	db := db.GetInstance().Engine()
@@ -208,7 +146,7 @@ func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 		return nil, errors.New("获取数据库连接失败")
 	}
 
-	model := db.Table(TableName()).Alias("t")
+	model := db.Table("sys_user_online").Alias("t")
 
 	if param != nil {
 
@@ -260,5 +198,5 @@ func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 
 // 批量删除除参数以外的数据
 func DeleteNotIn(ids ...string) (int64, error) {
-	return db.GetInstance().Engine().Table(TableName()).NotIn("sessionId", ids).Delete(new(UserOnline))
+	return db.GetInstance().Engine().Table("sys_user_online").NotIn("sessionId", ids).Delete(new(UserOnline))
 }

@@ -8,48 +8,12 @@ package online
 import (
 	"lostvip.com/utils/lv_web"
 	"main/app/system/model/monitor/online"
-	"strings"
 )
-
-// 根据主键查询数据
-func SelectRecordById(id string) (*online.UserOnline, error) {
-	entity := &online.UserOnline{Sessionid: id}
-	_, err := entity.FindOne()
-	return entity, err
-}
-
-// 根据主键删除数据
-func DeleteRecordById(id string) bool {
-	entity := &online.UserOnline{Sessionid: id}
-	result, err := entity.Delete()
-	if err == nil && result > 0 {
-		return true
-	}
-
-	return false
-}
-
-// 批量删除数据记录
-func DeleteRecordByIds(ids string) int64 {
-	idarr := strings.Split(ids, ",")
-	result, _ := online.DeleteBatch(idarr...)
-	return result
-}
 
 // 批量删除数据
 func DeleteRecordNotInIds(ids []string) int64 {
 	result, _ := online.DeleteNotIn(ids...)
 	return result
-}
-
-// 添加数据
-func AddSave(entity online.UserOnline) (int64, error) {
-	return entity.Insert()
-}
-
-// 根据条件查询数据
-func SelectListAll(params *online.SelectPageReq) ([]online.UserOnline, error) {
-	return online.SelectListAll(params)
 }
 
 // 根据条件分页查询数据

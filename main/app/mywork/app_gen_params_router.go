@@ -28,5 +28,6 @@ func init() {
 	//有编辑权限即可调用
 	g1.POST("/changeStatus", "mywork:params:edit", web.ChangeStatus)
 	g1.POST("/changeProp", "mywork:params:edit", web.ChangeProp)
+	g1.POST("/genParams", "mywork:params:edit", web.GenParams)
 
 }
