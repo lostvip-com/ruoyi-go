@@ -76,7 +76,7 @@ func SelectListByPage(param *SelectPageReq) ([]UserOnline, *lv_web.Paging, error
 	if param != nil {
 
 		if param.SessionId != "" {
-			model.Where("t.sessionId = ?", param.SessionId)
+			model.Where("t.session_id = ?", param.SessionId)
 		}
 
 		if param.LoginName != "" {
@@ -151,7 +151,7 @@ func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 	if param != nil {
 
 		if param.SessionId != "" {
-			model.Where("t.sessionId = ?", param.SessionId)
+			model.Where("t.session_id = ?", param.SessionId)
 		}
 
 		if param.LoginName != "" {
@@ -198,5 +198,5 @@ func SelectListAll(param *SelectPageReq) ([]UserOnline, error) {
 
 // 批量删除除参数以外的数据
 func DeleteNotIn(ids ...string) (int64, error) {
-	return db.GetInstance().Engine().Table("sys_user_online").NotIn("sessionId", ids).Delete(new(UserOnline))
+	return db.GetInstance().Engine().Table("sys_user_online").NotIn("session_id", ids).Delete(new(UserOnline))
 }

@@ -92,6 +92,7 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	userOnline.ExpireTime = 1440
 	userOnline.StartTimestamp = time.Now()
 	userOnline.LastAccessTime = time.Now()
+	userOnline.CreateTime = userOnline.StartTimestamp
 	userOnline.Status = "on_line"
 	userOnline.LoginLocation = loginLocation
 	userOnline.SessionId = token
