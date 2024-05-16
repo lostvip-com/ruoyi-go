@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
-	db "lostvip.com/db"
+	"lostvip.com/db"
 	"lostvip.com/logme"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/web/server"
@@ -11,7 +11,12 @@ import (
 	"main/app/common/global"
 	my "main/app/mywork/model"
 	"main/app/system/model/monitor/online"
+	"os"
+	"os/signal"
+	"syscall"
 )
+
+var httpSvr *server.MyServer
 
 // @title LV 自动生成API文档
 // @version 1.0
@@ -27,6 +32,36 @@ func main() {
 	//自动建表
 	err := db.GetMasterGorm().AutoMigrate(my.DpcTask{}, online.UserOnline{})
 	lv_err.HasErrAndPanic(err)
-	httpSvr := server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
-	httpSvr.Start()
+	httpSvr = server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
+	go httpSvr.Start()
+	//监听信号
+	catchSignal()
+}
+
+// 捕捉信号
+func catchSignal() {
+	logme.Info("⛲ ⛲ ⛲ ⛲ ⛲ ⛲  running!  ⛲ ⛲ ⛲ ⛲ ⛲ ⛲ ")
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
+	for {
+		s := <-c
+		logme.Info("⛳  收到信号:", s)
+		switch s {
+		case syscall.SIGHUP:
+			logme.Info("收到终端断开信号, 忽略")
+		case syscall.SIGINT, syscall.SIGTERM:
+			shutdown()
+		}
+	}
+}
+
+// 应用退出
+func shutdown() {
+	defer func() {
+		logme.Info("⛔️ 已经退出应用!")
+		os.Exit(0)
+	}()
+	logme.Info("⌛  即将停止服务!")
+	httpSvr.ShutDown()
+	logme.Info("❌  已经停止服务!")
 }
