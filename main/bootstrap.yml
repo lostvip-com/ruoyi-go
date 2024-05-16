@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:3001}
+  port: ${PORT:8080}
 #  context-path: /go
 copyright: © 2023 lostvip.com Copyright
 ## 注释以下配置时，不会使用 nacos #################
