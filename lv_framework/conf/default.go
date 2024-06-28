@@ -171,6 +171,10 @@ func (e *ConfigDefault) IsDebug() bool {
 	debug := e.GetBool("go.application.debug")
 	return debug
 }
+func (e *ConfigDefault) GetLogOutput() string {
+	output := e.GetValueStr("go.log.output")
+	return output
+}
 
 func (e *ConfigDefault) GetAppActive() string {
 	return e.GetValueStr("go.application.active")
