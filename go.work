@@ -2,6 +2,9 @@ go 1.20
 
 use (
 	./main
-	//./member
 	./lv_framework
+)
+replace (
+    // 方便本地库与github库的代码切换
+	github.com/lv_framework v1.0.0  => ./lv_framework
 )
