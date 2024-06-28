@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -44,4 +45,27 @@ func PostJSON(url string, data interface{}) error {
 		return errors.New(msg)
 	}
 
+}
+
+func PostJsonAndHeader(url string, json []byte, headers map[string]string) ([]byte, error) {
+	//把post表单发送给目标服务器
+	client := &http.Client{}
+	//生成要访问的url
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
+	request.Header.Set("Content-Type", "application/json")
+	//增加header选项
+	for k, v := range headers {
+		request.Header.Add(k, v)
+	}
+	request.Header.Add("X-Requested-With", "test")
+
+	if err != nil {
+		panic(err)
+	}
+	//处理返回结果
+	res, _ := client.Do(request)
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+
+	return body, nil
 }

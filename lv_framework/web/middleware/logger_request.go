@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/logme"
+	"github.com/lv_framework/logme"
 	"time"
 )
 

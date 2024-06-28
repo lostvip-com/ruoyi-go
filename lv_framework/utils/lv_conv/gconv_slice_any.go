@@ -7,7 +7,7 @@
 package lv_conv
 
 import (
-	"lostvip.com/utils/lv_logic"
+	"github.com/lv_framework/utils/lv_logic"
 	"reflect"
 )
 

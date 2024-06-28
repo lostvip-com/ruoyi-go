@@ -2,7 +2,7 @@ package lv_web
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/web/dto"
+	"github.com/lv_framework/web/dto"
 	"net/http"
 )
 

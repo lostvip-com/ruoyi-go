@@ -27,14 +27,26 @@ func (g *GenericCRUD[T]) Create(model *T) error {
 	return g.db.Create(model).Error
 }
 
+// Create 创建一条记录
+func (g *GenericCRUD[T]) Save(model *T) error {
+	return g.db.Save(model).Error
+}
+
 // Find 根据ID查找记录
-func (g *GenericCRUD[T]) Find(out *T, id uint) error {
+func (g *GenericCRUD[T]) FindById(out *T, id uint) error {
 	return g.db.First(out, id).Error
 }
 
 // Find 根据ID查找记录
-func (g *GenericCRUD[T]) FindWhere(out *T, condition string, args ...any) error {
-	return g.db.Where(condition, args...).First(out).Error
+func (g *GenericCRUD[T]) FindList(list *[]T, start int, pageSize int, condition string, args ...any) error {
+	result := g.db.Where(condition, args...).Offset(start).Limit(pageSize).Find(list)
+	return result.Error
+}
+
+// Find 根据ID查找记录
+func (g *GenericCRUD[T]) FindFirst(out *T, condition string, args ...any) error {
+	result := g.db.Where(condition, args...).First(out)
+	return result.Error
 }
 
 // Update 更新记录

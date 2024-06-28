@@ -6,12 +6,29 @@ package namedsql
 
 import (
 	"database/sql"
+	"github.com/lv_framework/logme"
+	"github.com/lv_framework/utils/lv_sql"
 	"gorm.io/gorm"
-	"lostvip.com/logme"
-	"lostvip.com/utils/lv_sql"
 	"main/app/common/global"
 	"strings"
 )
+
+func Exec(db *gorm.DB, dmlSql string, req map[string]any) (int64, error) {
+	if global.GetConfigInstance().IsDebug() {
+		db = db.Debug()
+	}
+	if strings.Contains(dmlSql, "@") {
+		kvMap, isMap := checkAndExtractMap(req)
+		if isMap {
+			req = kvMap
+		}
+		tx := db.Exec(dmlSql, req)
+		return tx.RowsAffected, tx.Error
+	} else {
+		tx := db.Exec(dmlSql)
+		return tx.RowsAffected, tx.Error
+	}
+}
 
 /**
  * 通用泛型查询

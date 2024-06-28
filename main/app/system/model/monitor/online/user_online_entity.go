@@ -1,7 +1,7 @@
 package online
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"time"
 )
 

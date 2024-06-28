@@ -2,7 +2,7 @@ package mywork
 
 import (
 	"fmt"
-	"lostvip.com/web/router"
+	"github.com/lv_framework/web/router"
 	"main/app/mywork/controller"
 )
 

@@ -6,7 +6,7 @@
 package mywork
 
 import (
-	"lostvip.com/web/router"
+	"github.com/lv_framework/web/router"
 	"main/app/common/middleware/auth"
 	"main/app/mywork/controller"
 )

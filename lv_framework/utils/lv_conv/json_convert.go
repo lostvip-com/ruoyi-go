@@ -11,3 +11,17 @@ func ToJsonStr(e interface{}) (string, error) {
 		return "", err
 	}
 }
+
+func ToStructPtr(jsonStr string, ptr any) error {
+	err := json.Unmarshal([]byte(jsonStr), ptr)
+	return err
+}
+
+func ToMap(jsonStr string) (map[string]any, error) {
+	var result map[string]interface{}
+	err := json.Unmarshal([]byte(jsonStr), &result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}

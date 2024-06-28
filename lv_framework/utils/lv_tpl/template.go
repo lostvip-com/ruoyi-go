@@ -2,7 +2,7 @@ package lv_tpl
 
 import (
 	"bytes"
-	"lostvip.com/utils/lv_secret"
+	"github.com/lv_framework/utils/lv_secret"
 	"os"
 	"strings"
 	"text/template"

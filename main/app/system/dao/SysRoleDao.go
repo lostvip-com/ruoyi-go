@@ -2,7 +2,7 @@ package dao
 
 import (
 	"errors"
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"main/app/system/model"
 	"main/app/system/vo"
 )

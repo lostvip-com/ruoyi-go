@@ -1,10 +1,10 @@
 package lv_office
 
 import (
+	"github.com/lv_framework/utils/lv_file"
 	"github.com/tealeg/xlsx"
 	"log"
 	"lostvip.com/logme"
-	"main/app/common/global"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,9 +12,7 @@ import (
 )
 
 var (
-	file         *xlsx.File
 	sheet        *xlsx.Sheet
-	row          *xlsx.Row
 	cell         *xlsx.Cell
 	downloadData []interface{}
 	err          error
@@ -40,7 +38,7 @@ func DownlaodExcel(heads []string, data [][]string) (string, error) {
 		return "", err
 	}
 	curdate := time.Now().UnixNano()
-	filename := strconv.FormatInt(curdate, 10) + ".xls"
+	filename := strconv.FormatInt(curdate, 10) + ".xlsx"
 
 	filePath := curDir + "/static/upload/" + filename
 
@@ -51,19 +49,18 @@ func DownlaodExcel(heads []string, data [][]string) (string, error) {
 	}
 
 	// 创建文件
-	file = xlsx.NewFile()
+	file := xlsx.NewFile()
 	// 添加新工作表
 	sheet, err = file.AddSheet("Sheet1")
 	if err != nil {
 		return "", err
 	}
 	// 向工作表中添加新行
-	row = sheet.AddRow()
+	row := sheet.AddRow()
 
 	// 头部写入
 	for _, head := range heads {
-		cell = row.AddCell()
-		cell.Value = head
+		row.AddCell().Value = head
 	}
 	// 设置单元格样式
 	//sheet.SetColWidth(5, 5, 60) // 设置单元格宽度 0-A 1-B 2-C
@@ -92,11 +89,8 @@ func DownlaodExcelByListMap(heads, cols *[]string, listMap *[]map[string]string)
 		return "", err
 	}
 	curdate := time.Now().UnixNano()
-	filename := strconv.FormatInt(curdate, 10) + ".xls"
+	filename := strconv.FormatInt(curdate, 10) + ".xlsx"
 	filePath := curDir + "/static/upload/" + filename
-	if global.GetConfigInstance().IsDebug() {
-		logme.Debug("filePath: " + filePath)
-	}
 	err = CreateFilePath(filePath)
 	if err != nil {
 		log.Printf("%s", err.Error())
@@ -104,14 +98,14 @@ func DownlaodExcelByListMap(heads, cols *[]string, listMap *[]map[string]string)
 	}
 
 	// 创建文件
-	file = xlsx.NewFile()
+	file := xlsx.NewFile()
 	// 添加新工作表
 	sheet, err = file.AddSheet("Sheet1")
 	if err != nil {
 		return "", err
 	}
 	// 向工作表中添加新行
-	row = sheet.AddRow()
+	row := sheet.AddRow()
 
 	// 头部写入
 	for _, head := range *heads {
@@ -135,4 +129,47 @@ func DownlaodExcelByListMap(heads, cols *[]string, listMap *[]map[string]string)
 		return "", err
 	}
 	return filename, nil
+}
+
+// 下载Excel
+func Write2Xls(filePath string, sheetName string, heads []string, listRows [][]string) error {
+	var fileXls *xlsx.File
+	if lv_file.IsFileExist(filePath) {
+		fileXls, err = xlsx.OpenFile(filePath)
+		sheet = fileXls.Sheet[sheetName]
+	} else {
+		err = CreateFilePath(filePath)
+		if err != nil {
+			logme.Error(err.Error())
+			return err
+		}
+		fileXls = xlsx.NewFile()
+		sheet, err = fileXls.AddSheet(sheetName)
+		if err != nil {
+			return err
+		}
+	}
+	// 头部写入
+	if heads != nil {
+		row := sheet.AddRow()
+		for _, head := range heads {
+			cell = row.AddCell()
+			cell.Value = head
+		}
+	}
+	// 设置单元格样式
+	//sheet.SetColWidth(5, 5, 60) // 设置单元格宽度 0-A 1-B 2-C
+	// 主体写入数据
+	for _, cells := range listRows {
+		row := sheet.AddRow()
+		for _, cellData := range cells {
+			row.AddCell().Value = cellData
+		}
+	}
+	// 在提供的路径中将文件保存到xlsx文件
+	err = fileXls.Save(filePath)
+	if err != nil {
+		return err
+	}
+	return nil
 }

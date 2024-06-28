@@ -1,14 +1,14 @@
 package model
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"time"
 )
 
 type SysDept struct {
 	DeptId     int64     `gorm:"type:bigint(20);primary_key;auto_increment;部门id;" json:"deptId"`
 	ParentId   int64     `gorm:"type:bigint(20);comment:父部门id;" json:"parentId"`
-	Ancestors  string    `gorm:"type:varchar(50);comment:祖级列表;" json:"ancestors"`
+	Ancestors  string    `gorm:"type:varchar(50);comment:祖级列表;uniqueIndex:idx_ancestors" json:"ancestors"`
 	DeptName   string    `gorm:"type:varchar(30);comment:部门名称;" json:"deptName"`
 	OrderNum   int       `gorm:"type:int(10);comment:显示顺序;" json:"orderNum"`
 	Leader     string    `gorm:"type:varchar(20);comment:负责人;" json:"leader"`

@@ -1,15 +1,16 @@
 package server
 
 import (
+	"context"
 	"fmt"
+	"github.com/lv_framework/conf"
+	"github.com/lv_framework/logme"
+	functions2 "github.com/lv_framework/web/functions"
+	"github.com/lv_framework/web/gintemplate"
+	"github.com/lv_framework/web/middleware"
+	"github.com/lv_framework/web/router"
 	"github.com/spf13/cast"
 	"html/template"
-	"lostvip.com/conf"
-	"lostvip.com/logme"
-	functions2 "lostvip.com/web/functions"
-	"lostvip.com/web/gintemplate"
-	"lostvip.com/web/middleware"
-	"lostvip.com/web/router"
 	"main/app/common/global"
 	//gintemplate "github.com/foolin/gin-template"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ import (
 
 // HTTP服务结构体
 type MyServer struct {
+	server         *http.Server
 	ServerName     string        //服务名称
 	Addr           string        //监听地址端口
 	ServerRoot     string        //静态资源文件夹
@@ -34,7 +36,7 @@ type MyServer struct {
 
 // 启动服务
 func (mySvr *MyServer) Start() {
-	server := &http.Server{
+	mySvr.server = &http.Server{
 		Addr:           mySvr.Addr,
 		Handler:        mySvr.Handler,
 		ReadTimeout:    mySvr.ReadTimeout,
@@ -43,8 +45,6 @@ func (mySvr *MyServer) Start() {
 	}
 
 	log.Printf("[%v]Server listen: %v Actual pid is %d", mySvr.ServerName, mySvr.Addr, syscall.Getpid())
-
-	println("app服务启动成功！！")
 	host := conf.Config().GetServerIP()
 	path := conf.Config().GetContextPath()
 	port := cast.ToString(conf.Config().GetServerPort())
@@ -57,7 +57,11 @@ func (mySvr *MyServer) Start() {
 	fmt.Println("http://127.0.0.l:" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("##############################################################")
-	server.ListenAndServe()
+	mySvr.server.ListenAndServe()
+}
+
+func (mySvr *MyServer) ShutDown() {
+	mySvr.server.Shutdown(context.Background())
 }
 
 // 创建服务

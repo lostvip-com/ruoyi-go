@@ -2,11 +2,12 @@ package conf
 
 import (
 	"fmt"
+	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lv_framework/utils/lv_file"
+	"github.com/lv_framework/utils/lv_net"
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
-	"lostvip.com/utils/lv_conv"
-	"lostvip.com/utils/lv_file"
-	"lostvip.com/utils/lv_net"
+	"lostvip.com/logme"
 	"os"
 	"strings"
 )
@@ -83,7 +84,7 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.AddConfigPath("./")
 		e.vipperCfg.ReadInConfig()
 	} else {
-		panic("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
+		logme.Warn("未找到配置文件 bootstrap.yml 将使用默认配置！！！")
 	}
 	//加载第二个配置文件
 	if lv_file.IsFileExist("application.yml") || lv_file.IsFileExist("application.yaml") {
@@ -92,7 +93,7 @@ func (e *ConfigDefault) LoadConf() *viper.Viper {
 		e.vipperCfg.AddConfigPath("./")
 		e.vipperCfg.MergeInConfig()
 	} else {
-		fmt.Println("!!!!!!!!!!!!当前路径下未找到配置文件bootstrap.yml,开发模式下请进入main目录中启动！！！！！！！！！！！！")
+		logme.Warn("未找到配置文件 application.yml 将使用默认配置！！！")
 	}
 	if e.vipperCfg.GetBool("go.proxy.enable") == true {
 		e.proxyEnable = true

@@ -2,6 +2,7 @@ package lv_net
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -49,6 +50,6 @@ func Get(url string) (string, error) {
 		return "", err
 	}
 	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	return string(body), nil
 }

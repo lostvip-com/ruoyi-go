@@ -8,10 +8,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lv_framework/utils/lv_err"
+	"github.com/lv_framework/utils/lv_web"
+	"github.com/lv_framework/web/dto"
 	"github.com/spf13/cast"
-	"lostvip.com/utils/lv_err"
-	"lostvip.com/utils/lv_web"
-	"lostvip.com/web/dto"
 	"main/app/mywork/model"
 	"main/app/mywork/service"
 	"main/app/mywork/vo"
@@ -154,5 +154,5 @@ func (w AppGenParamsController) Export(c *gin.Context) {
 	var svc service.AppGenParamsService
 	url, err := svc.ExportAll(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.SucessDataMsg(c, url, url)
+	lv_web.SucessDataMsg(c, url, "")
 }

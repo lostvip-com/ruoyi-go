@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/lv_web"
-	"lostvip.com/web/dto"
+	"github.com/lv_framework/utils/lv_web"
+	"github.com/lv_framework/web/dto"
 	"main/app/system/service"
 	userModel "main/app/system/vo"
 	"net/http"

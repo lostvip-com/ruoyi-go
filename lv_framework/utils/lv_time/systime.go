@@ -1,9 +1,9 @@
-package util_db
+package lv_time
 
 import (
 	"errors"
 	"fmt"
-	"lostvip.com/utils/lv_os"
+	"github.com/lv_framework/utils/lv_os"
 	"os/exec"
 	"strings"
 	"time"
@@ -82,4 +82,13 @@ func TimeAddDay(date time.Time, day int) time.Time {
 
 func GetTimeStr(time time.Time) string {
 	return time.Format("2006-01-02 15:04:05")
+}
+
+func GetSeconds(datetime string) (int64, error) {
+	//日期转化为时间戳
+	timeLayout := "2006-01-02 15:04:05"    //转化所需模板
+	loc, err := time.LoadLocation("Local") //获取时区
+	tmp, err := time.ParseInLocation(timeLayout, datetime, loc)
+	timestamp := tmp.Unix() //转化为时间戳 类型是int64
+	return timestamp, err
 }

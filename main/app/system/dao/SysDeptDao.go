@@ -1,9 +1,9 @@
 package dao
 
 import (
+	"github.com/lv_framework/db"
+	"github.com/lv_framework/db/lvdao"
 	"github.com/spf13/cast"
-	"lostvip.com/db"
-	"lostvip.com/db/lvdao"
 	"main/app/system/model"
 	"main/app/system/vo"
 )

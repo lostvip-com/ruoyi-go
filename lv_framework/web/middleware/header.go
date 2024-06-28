@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/satori/go.uuid"
-	"lostvip.com/conf"
+	"lostvip.com/lv_global"
 	"net/http"
 	"strings"
 	"time"
@@ -13,12 +13,12 @@ import (
 
 func SetTraceId(c *gin.Context) {
 
-	traceId := c.GetHeader(conf.TraceId)
+	traceId := c.GetHeader(lv_global.TraceId)
 	if traceId == "" {
 		traceId := strings.ReplaceAll(uuid.NewV4().String(), "-", "")
-		c.Header(conf.TraceId, traceId)
-		c.Request.Header.Set(conf.TraceId, traceId)
-		c.Set(conf.TraceId, traceId)
+		c.Header(lv_global.TraceId, traceId)
+		c.Request.Header.Set(lv_global.TraceId, traceId)
+		c.Set(lv_global.TraceId, traceId)
 		//c.Writer.Header().Set(key, traceId)
 	}
 	c.Next()

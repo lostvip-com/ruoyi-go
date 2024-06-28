@@ -2,11 +2,11 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
-	"lostvip.com/utils/lv_net"
-	"lostvip.com/utils/lv_web"
-	"lostvip.com/web/dto"
-	"lostvip.com/web/functions"
+	"github.com/lv_framework/utils/lv_net"
+	"github.com/lv_framework/utils/lv_web"
+	"github.com/lv_framework/web/dto"
+	"github.com/lv_framework/web/functions"
+	"io"
 	"main/app/common/global"
 	"main/app/system/model"
 	"main/app/system/service"
@@ -107,14 +107,11 @@ func (w *MainController) Download(c *gin.Context) {
 		})
 		return
 	}
-	b, _ := ioutil.ReadAll(file)
+	b, _ := io.ReadAll(file)
 	c.Writer.Header().Add("Content-Disposition", "attachment")
 	c.Writer.Header().Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	c.Writer.Write(b)
-	//if delete == "true" {
-	//	os.Remove(filepath)
-	//}
-
+	c.Abort()
 }
 
 // 切换皮肤

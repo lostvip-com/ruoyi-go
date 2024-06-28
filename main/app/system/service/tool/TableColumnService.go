@@ -1,7 +1,7 @@
 package tool
 
 import (
-	"lostvip.com/utils/lv_conv"
+	"github.com/lv_framework/utils/lv_conv"
 	"main/app/system/model/tool"
 )
 

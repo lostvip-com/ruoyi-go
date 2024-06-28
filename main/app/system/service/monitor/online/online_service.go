@@ -6,7 +6,7 @@
 package online
 
 import (
-	"lostvip.com/utils/lv_web"
+	"github.com/lv_framework/utils/lv_web"
 	"main/app/system/model/monitor/online"
 )
 

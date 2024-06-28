@@ -1,7 +1,7 @@
 package model
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"time"
 )
 
@@ -20,7 +20,7 @@ type SysRole struct {
 	//Remark     string    `json:"remark" xorm:"comment('备注') VARCHAR(500)"`
 	RoleId     int64     `gorm:"type:bigint(20);primary_key;auto_increment;角色ID;" json:"roleId"`
 	RoleName   string    `gorm:"type:varchar(30);comment:角色名称;" json:"roleName"`
-	RoleKey    string    `gorm:"type:varchar(100);comment:角色权限字符串;" json:"roleKey"`
+	RoleKey    string    `gorm:"type:varchar(100);comment:角色权限字符串;uniqueIndex:idx_roleKey" json:"roleKey"`
 	RoleSort   int       `gorm:"type:int(11);comment:显示顺序;" json:"roleSort"`
 	DataScope  string    `gorm:"type:char(1);comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）;" json:"dataScope"`
 	Status     string    `gorm:"type:char(1);comment:角色状态（0正常 1停用）;" json:"status"`

@@ -2,7 +2,7 @@ package demo
 
 import (
 	"fmt"
-	"lostvip.com/web/router"
+	"github.com/lv_framework/web/router"
 	"main/app/common/middleware/auth"
 	controller2 "main/app/demo/controller"
 )

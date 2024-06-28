@@ -1,6 +1,6 @@
 package vo
 
-import "lostvip.com/utils/lv_web"
+import "github.com/lv_framework/utils/lv_web"
 
 // 新增页面请求参数
 type AddPostReq struct {

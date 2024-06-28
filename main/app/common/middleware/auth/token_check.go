@@ -2,8 +2,8 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"lostvip.com/logme"
-	"lostvip.com/utils/lv_net"
+	"github.com/lv_framework/logme"
+	"github.com/lv_framework/utils/lv_net"
 	"main/app/common/global"
 	"main/app/system/service"
 	"net/http"

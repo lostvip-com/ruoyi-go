@@ -2,7 +2,7 @@ package tool
 
 import (
 	"errors"
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 )
 
 // 数据库字符串类型

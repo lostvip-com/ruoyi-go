@@ -1,7 +1,7 @@
 package model
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 )
 
 // 用户和角色关联

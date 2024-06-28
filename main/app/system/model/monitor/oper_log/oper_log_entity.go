@@ -1,7 +1,7 @@
 package oper_log
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"time"
 )
 

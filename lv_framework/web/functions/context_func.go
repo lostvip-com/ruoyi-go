@@ -2,10 +2,10 @@ package functions
 
 import (
 	"context"
-	"lostvip.com/cache/myredis"
-	"lostvip.com/conf"
-	"lostvip.com/logme"
-	"lostvip.com/utils/lv_err"
+	"github.com/lv_framework/cache/myredis"
+	"github.com/lv_framework/conf"
+	"github.com/lv_framework/logme"
+	"github.com/lv_framework/utils/lv_err"
 	"main/app/system/model"
 	"strings"
 

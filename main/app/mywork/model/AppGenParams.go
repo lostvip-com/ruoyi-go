@@ -6,7 +6,7 @@
 package model
 
 import (
-	"lostvip.com/db"
+	"github.com/lv_framework/db"
 	"time"
 )
 

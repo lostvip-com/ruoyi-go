@@ -3,9 +3,10 @@ package global
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/cache/myredis"
-	"lostvip.com/conf"
-	"lostvip.com/logme"
+	"github.com/lv_framework/cache/myredis"
+	"github.com/lv_framework/conf"
+	"github.com/lv_framework/logme"
+	"lostvip.com/lv_global"
 	"os"
 )
 
@@ -47,20 +48,20 @@ func resetCfg() {
 	if conig.IsDebug() {
 		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
-		os.Setenv(conf.KEY_SWAGGER_OFF, "")
+		os.Setenv(lv_global.KEY_SWAGGER_OFF, "")
 	} else {
 		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
-		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
+		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
 	if conig.IsDebug() {
 		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
-		os.Setenv(conf.KEY_SWAGGER_OFF, "")
+		os.Setenv(lv_global.KEY_SWAGGER_OFF, "")
 	} else {
 		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
-		os.Setenv(conf.KEY_SWAGGER_OFF, "off")
+		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
 	myredis.GetInstance()
 	fmt.Println(conig.GetAppName() + " ############# 数据库初始化完毕 ####################")

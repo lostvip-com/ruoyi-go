@@ -3,7 +3,7 @@ package lv_web
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/web/dto"
+	"github.com/lv_framework/web/dto"
 	"net/http"
 )
 

@@ -4,8 +4,8 @@ package auth
 //import (
 //	"context"
 //	"github.com/gin-gonic/gin"
-//	"lostvip.com/myredis"
-//	"lostvip.com/utils/token"
+//	"github.com/lv_framework/myredis"
+//	"github.com/lv_framework/utils/token"
 //	"net/http"
 //	"main/app/global"
 //	"strings"

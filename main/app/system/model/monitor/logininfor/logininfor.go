@@ -2,9 +2,9 @@ package logininfor
 
 import (
 	"errors"
-	"lostvip.com/db"
-	"lostvip.com/utils/lv_office"
-	"lostvip.com/utils/lv_web"
+	"github.com/lv_framework/db"
+	"github.com/lv_framework/utils/lv_office"
+	"github.com/lv_framework/utils/lv_web"
 	"xorm.io/builder"
 )
 

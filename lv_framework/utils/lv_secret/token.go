@@ -3,8 +3,8 @@ package lv_secret
 import (
 	"encoding/base64"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/lv_framework/conf"
 	"github.com/spf13/cast"
-	"lostvip.com/conf"
 	"time"
 )
 

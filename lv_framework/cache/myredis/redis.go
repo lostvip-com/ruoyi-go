@@ -3,9 +3,9 @@ package myredis
 import (
 	"context"
 	"fmt"
+	"github.com/lv_framework/conf"
+	"github.com/lv_framework/logme"
 	"github.com/redis/go-redis/v9"
-	"lostvip.com/conf"
-	"lostvip.com/logme"
 	"sync"
 )
 

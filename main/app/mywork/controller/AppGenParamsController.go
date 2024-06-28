@@ -7,27 +7,29 @@
 package controller
 
 import (
-    "github.com/gin-gonic/gin"
-    "lostvip.com/utils/lv_conv"
-    "lostvip.com/utils/lv_web"
-    "main/app/mywork/service"
+	"github.com/gin-gonic/gin"
+	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lv_framework/utils/lv_web"
+	"main/app/mywork/service"
 )
 
 // List 查询页
 func (w AppGenParamsController) List(c *gin.Context) {
 	lv_web.BuildTpl(c, "mywork/params/list.html").WriteTpl()
 }
+
 // Add 新增页
 func (w AppGenParamsController) Add(c *gin.Context) {
 	lv_web.BuildTpl(c, "mywork/params/add.html").WriteTpl()
 }
+
 // Edit 修改页
 func (w AppGenParamsController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
-    paramsService :=service.AppGenParamsService{}
+	paramsService := service.AppGenParamsService{}
 	entity, err := paramsService.FindById(id)
 	if err != nil || entity == nil {
-		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
+		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在"})
 		return
 	}
 	lv_web.BuildTpl(c, "mywork/params/edit.html").WriteTpl(gin.H{

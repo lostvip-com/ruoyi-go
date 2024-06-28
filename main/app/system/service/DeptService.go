@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"lostvip.com/utils/lv_conv"
-	"lostvip.com/web/dto"
+	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lv_framework/web/dto"
 	"main/app/system/dao"
 	"main/app/system/model"
 	"main/app/system/vo"
