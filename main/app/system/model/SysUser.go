@@ -8,6 +8,7 @@ package model
 
 import (
 	"github.com/lv_framework/db"
+	"main/app/common/cm_model"
 	"time"
 )
 
@@ -30,10 +31,8 @@ type SysUser struct {
 	UpdateBy    string    `gorm:"type:varchar(64);comment:更新者;" json:"updateBy" form:"updateBy"`
 	UpdateTime  time.Time `gorm:"type:datetime;comment:更新时间;" json:"updateTime" form:"updateTime" time_format:"2006-01-02 15:04:05"`
 	Remark      string    `gorm:"type:varchar(500);comment:备注;" json:"remark"   form:"remark"`
-	TenantId    int64     `gorm:"type:bigint(20);comment:租户id;" json:"tenantId" form:"tenantId"`
-	CreateTime  time.Time `gorm:"type:datetime;comment:创建时间;column:create_time;" json:"createTime"  time_format:"2006-01-02 15:04:05"`
 	CreateBy    string    `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
-	DelFlag     int       `gorm:"type:tinyint(1);default:0;comment:删除标记;column:del_flag;" json:"delFlag"`
+	cm_model.BaseModel
 	//临时属性
 	RoleKeys string `gorm:"-"  json:"roleKeys"`
 }

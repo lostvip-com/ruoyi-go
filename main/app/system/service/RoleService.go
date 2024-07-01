@@ -43,7 +43,6 @@ func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, erro
 	role.Status = req.Status
 	role.Remark = req.Remark
 	role.CreateTime = time.Now()
-	role.CreateBy = ""
 	role.DataScope = "1"
 	var userService UserService
 	user := userService.GetProfile(c)
@@ -51,13 +50,9 @@ func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, erro
 	if user != nil {
 		role.CreateBy = user.LoginName
 	}
-
-	session := db.GetInstance().Engine().NewSession()
-
-	err := session.Begin()
-
-	_, err = session.Insert(role)
-
+	session := db.GetMasterGorm().Begin()
+	err := session.Save(role).Error
+	lv_err.HasErrAndPanic(err)
 	if err != nil {
 		session.Rollback()
 		return 0, err
@@ -76,7 +71,7 @@ func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, erro
 				}
 			}
 			if len(roleMenus) > 0 {
-				_, err := session.Table("sys_role").Insert(roleMenus)
+				err := session.Save(roleMenus).Error
 				if err != nil {
 					session.Rollback()
 					return 0, err
@@ -84,7 +79,7 @@ func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, erro
 			}
 		}
 	}
-	err = session.Commit()
+	err = session.Commit().Error
 	return role.RoleId, err
 }
 
@@ -271,52 +266,23 @@ func (svc *RoleService) DeleteUserRoleInfos(roleId int64, ids string) error {
 }
 
 // 检查角色名是否唯一
-func (svc *RoleService) CheckRoleNameUniqueAll(roleName string) string {
+func (svc *RoleService) IsRoleNameExist(roleName string) (bool, error) {
 	var dao dao.SysRoleDao
-	entity, _ := dao.CheckRoleNameUniqueAll(roleName)
-	if entity != nil && entity.RoleId > 0 {
-		return "1"
+	_, err := dao.FindRoleByName(roleName)
+	if err == nil {
+		return true, err
 	}
-	return "0"
+	return false, err
 }
 
 // 检查角色键是否唯一
-func (svc *RoleService) CheckRoleKeyUniqueAll(roleKey string) string {
+func (svc *RoleService) IsRoleKeyExist(roleKey string) (bool, error) {
 	var dao dao.SysRoleDao
-	entity, err := dao.CheckRoleKeyUniqueAll(roleKey)
-	if err != nil {
-		return "1"
+	_, err := dao.FindRoleByRoleKey(roleKey)
+	if err == nil {
+		return true, err
 	}
-	if entity != nil && entity.RoleId > 0 {
-		return "1"
-	}
-	return "0"
-}
-
-// 检查角色名是否唯一
-func (svc *RoleService) CheckRoleNameUnique(roleName string, roleId int64) string {
-	var dao dao.SysRoleDao
-	entity, err := dao.CheckRoleNameUniqueAll(roleName)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.RoleId > 0 && entity.RoleId != roleId {
-		return "1"
-	}
-	return "0"
-}
-
-// 检查角色键是否唯一
-func (svc *RoleService) CheckRoleKeyUnique(roleKey string, roleId int64) string {
-	var dao dao.SysRoleDao
-	entity, err := dao.CheckRoleKeyUniqueAll(roleKey)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.RoleId > 0 && entity.RoleId != roleId {
-		return "1"
-	}
-	return "0"
+	return false, err
 }
 
 // 判断是否是管理员

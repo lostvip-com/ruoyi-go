@@ -3,7 +3,6 @@ package lv_time
 import (
 	"errors"
 	"fmt"
-	"github.com/lv_framework/utils/lv_os"
 	"os/exec"
 	"strings"
 	"time"
@@ -12,18 +11,18 @@ import (
 /**
  * 同步操作系统时间
  */
-func UpdateSystemDate(ntpdateUrl string) error {
-	if ntpdateUrl == "" {
-		return errors.New("请配置时间同步服务器地址")
-	}
-	ntpdateUrl = strings.TrimSpace(ntpdateUrl)
-	//先杀ntpd进程，防止端口123冲突
-	data, err := exec.Command("./stop-ntpd.sh").Output()
-	fmt.Println("杀ntpd: ./stop-ntpd.sh --------->", string(data), "<-----")
-	out, err := lv_os.RunCommand("ntpdate " + ntpdateUrl)
-	fmt.Printf("ntpdate同步时间完成=========%v", out)
-	return err
-}
+//func UpdateSystemDate(ntpdateUrl string) error {
+//	if ntpdateUrl == "" {
+//		return errors.New("请配置时间同步服务器地址")
+//	}
+//	ntpdateUrl = strings.TrimSpace(ntpdateUrl)
+//	//先杀ntpd进程，防止端口123冲突
+//	data, err := exec.Command("./stop-ntpd.sh").Output()
+//	fmt.Println("杀ntpd: ./stop-ntpd.sh --------->", string(data), "<-----")
+//	out, err := lv_os.RunCommand("ntpdate " + ntpdateUrl)
+//	fmt.Printf("ntpdate同步时间完成=========%v", out)
+//	return err
+//}
 
 /**
  * 修改操作系统时区

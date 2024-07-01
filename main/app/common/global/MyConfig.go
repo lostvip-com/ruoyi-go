@@ -41,6 +41,8 @@ func (e *MyConfig) LoadConf() {
 	//	nacos.LoadRemoteConfig(e.ConfigDefault, resetCfg)
 	//}
 	//日志
+	lv_global.IsDebug = e.IsDebug()
+	lv_global.LogOutputType = e.GetLogOutput()
 }
 
 func resetCfg() {

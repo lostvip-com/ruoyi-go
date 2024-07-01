@@ -6,6 +6,7 @@ import (
 	"github.com/lv_framework/utils/lv_conv"
 	"github.com/lv_framework/utils/lv_web"
 	"github.com/lv_framework/web/dto"
+	"main/app/system/dao"
 	"main/app/system/model"
 	"main/app/system/service"
 	"main/app/system/vo"
@@ -41,17 +42,19 @@ func (w *RoleController) AddSave(c *gin.Context) {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 		return
 	}
-	roleService := service.RoleService{}
-	if roleService.CheckRoleNameUniqueAll(req.RoleName) == "1" {
+	roleDao := dao.SysRoleDao{}
+
+	count, err := roleDao.FindCount("", req.RoleName)
+	if count >= 1 {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
-
-	if roleService.CheckRoleKeyUniqueAll(req.RoleKey) == "1" {
+	count, err = roleDao.FindCount(req.RoleKey, "")
+	if count >= 1 {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
 		return
 	}
-
+	roleService := service.RoleService{}
 	rid, err := roleService.AddSave(req, c)
 
 	if err != nil || rid <= 0 {
@@ -222,56 +225,4 @@ func (w *RoleController) Cancel(c *gin.Context) {
 	} else {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).SetMsg("参数错误").WriteJsonExit()
 	}
-}
-
-// 检查角色是否已经存在不包括本角色
-func (w *RoleController) CheckRoleNameUnique(c *gin.Context) {
-	var req *vo.CheckRoleNameReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	roleService := service.RoleService{}
-	result := roleService.CheckRoleNameUnique(req.RoleName, req.RoleId)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查角色是否已经存在
-func (w *RoleController) CheckRoleNameUniqueAll(c *gin.Context) {
-	var req *vo.CheckRoleNameALLReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	roleService := service.RoleService{}
-	result := roleService.CheckRoleNameUniqueAll(req.RoleName)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查角色是否已经存在不包括本角色
-func (w *RoleController) CheckRoleKeyUnique(c *gin.Context) {
-	var req *vo.CheckRoleKeyReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	roleService := service.RoleService{}
-	result := roleService.CheckRoleKeyUnique(req.RoleKey, req.RoleId)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查角色是否已经存在
-func (w *RoleController) CheckRoleKeyUniqueAll(c *gin.Context) {
-	var req *vo.CheckRoleKeyALLReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	roleService := service.RoleService{}
-	result := roleService.CheckRoleKeyUniqueAll(req.RoleKey)
-
-	c.Writer.WriteString(result)
 }

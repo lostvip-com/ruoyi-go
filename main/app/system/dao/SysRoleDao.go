@@ -109,7 +109,7 @@ func (dao *SysRoleDao) SelectRoleContactVo(userId int64) ([]model.SysRole, error
 }
 
 // 检查角色键是否唯一
-func (dao *SysRoleDao) CheckRoleNameUniqueAll(roleName string) (*model.SysRole, error) {
+func (dao *SysRoleDao) FindRoleByName(roleName string) (*model.SysRole, error) {
 	var entity model.SysRole
 	entity.RoleName = roleName
 	err := entity.FindOne()
@@ -117,9 +117,22 @@ func (dao *SysRoleDao) CheckRoleNameUniqueAll(roleName string) (*model.SysRole, 
 }
 
 // 检查角色键是否唯一
-func (dao *SysRoleDao) CheckRoleKeyUniqueAll(roleKey string) (*model.SysRole, error) {
+func (dao *SysRoleDao) FindRoleByRoleKey(roleKey string) (*model.SysRole, error) {
 	var entity model.SysRole
 	entity.RoleKey = roleKey
 	err := entity.FindOne()
 	return &entity, err
+}
+
+func (e *SysRoleDao) FindCount(roleKey, roleName string) (int64, error) {
+	var count int64 = 0
+	tb := db.GetMasterGorm()
+	if roleName != "" {
+		tb = tb.Where("role_name=? and del_flag=0", roleName)
+	}
+	if roleKey != "" {
+		tb = tb.Where("role_key=? and del_flag=0", roleKey)
+	}
+	err := tb.Count(&count).Error
+	return count, err
 }
