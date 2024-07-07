@@ -21,9 +21,9 @@ LV自动生成列表页面代码,只生成一次,按需修改.
                         <li>
                             <p>启用状态：</p>
                             <select name="useFlag">
+                                <option value="">所有</option>
                                 <option value="0">未启用</option>
                                 <option value="1">已启用</option>
-                                <option value="">所有</option>
                             </select>
                         </li>
                         <li>
@@ -67,7 +67,7 @@ LV自动生成列表页面代码,只生成一次,按需修改.
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            {{getPermiButton .uid "mywork:params:add" "$.operate.addFull()" "新增" "btn btn-success" "fa fa-plus"}}
+            {{getPermiButton .uid "mywork:params:add" "showPrompt()" "生成10个参量号" "btn btn-success" "fa fa-plus"}}
             {{getPermiButton .uid "mywork:params:edit" "$.operate.editFull()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}
             {{getPermiButton .uid "mywork:params:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
             {{getPermiButton .uid "mywork:params:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
@@ -252,6 +252,32 @@ LV自动生成列表页面代码,只生成一次,按需修改.
                 "name": input.name,
                 "id": id,
                 "value": input.value
+            },
+            success: function(r) {
+                if (r.code == web_status.SUCCESS) {
+                    $.modal.msgSuccess(r.msg)
+                } else {
+                    $.modal.msgError(r.msg);
+                }
+            }
+        });
+    }
+
+    function showPrompt(){
+        let baseNum = 0;
+        layer.prompt({title: '输入参量号的基数：', formType: 0}, function(inputVal, index){
+            baseNum =inputVal;
+            genParams(baseNum,10)
+            layer.close(index);
+        });
+    }
+    function genParams(baseNum,amount){
+        $.ajax({
+            type: "post",
+            url: prefix + "/genParams",
+            data: {
+                "baseNum": baseNum,
+                "amount": amount,
             },
             success: function(r) {
                 if (r.code == web_status.SUCCESS) {

@@ -1,12 +1,12 @@
 module main
 
 require (
+    github.com/lv_framework v1.0.0
 	github.com/mojocn/base64Captcha v1.2.2
 	github.com/mssola/user_agent v0.5.1
 	github.com/shirou/gopsutil v2.19.12+incompatible
 	github.com/spf13/cast v1.5.1
 	xorm.io/builder v0.3.11-0.20220531020008-1bd24a7dc978
-	xorm.io/core v0.7.2
 )
 
 require (

@@ -2,16 +2,17 @@ go:
   application:
     debug: true
   log:
-    output: stdout #生产环境要注释，不会记录到文件
+    output: stdout # stdout：只写控制台，file:只写文件，默认：双写
   redis:
     host: ${REDIS_HOST:192.168.81.228}
     port: ${REDIS_PORT:6379}
-    password:
+    password: ${REDIS_PWD:qwer1234}
+#    password:
   datasource:
     #    driver: sqlite3
     #    master: data.db
     driver: mysql
-    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:3306)/dpc_tools?charset=utf8"}
+    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.88.114:3307)/dpc?charset=utf8"}
     slave: ""
  #代理转发
 #  proxy:

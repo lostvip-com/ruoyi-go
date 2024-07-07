@@ -211,3 +211,47 @@ func ListArrStr(db *gorm.DB, sqlQuery string, params any) (*[][]string, error) {
 	}
 	return &listRows, err
 }
+
+// ListOneColStr 查询某一列，放到数组中
+func ListOneColStr(db *gorm.DB, sqlQuery string, params any) ([]string, error) {
+	if global.GetConfigInstance().IsDebug() {
+		db = db.Debug()
+	}
+	var rows *sql.Rows
+	var err error
+	if strings.Contains(sqlQuery, "@") {
+		kvMap, isMap := checkAndExtractMap(params)
+		if isMap {
+			params = kvMap
+		}
+		rows, err = db.Raw(sqlQuery, params).Rows()
+	} else {
+		rows, err = db.Raw(sqlQuery).Rows()
+	}
+	if err != nil {
+		return nil, err
+	}
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+	values := make([]sql.RawBytes, len(cols))
+	scanArgs := make([]interface{}, len(values))
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	arr := make([]string, 0)
+	for rows.Next() {
+		err = rows.Scan(scanArgs...)
+		if err != nil {
+			return nil, err
+		}
+		for _, col := range values {
+			if col != nil {
+				arr = append(arr, string(col))
+			}
+		}
+	}
+	return arr, err
+}

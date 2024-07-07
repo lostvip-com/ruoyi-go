@@ -62,53 +62,10 @@
 		    };
 			$.tree.init(options);
 		});
-		
-		$("#form-role-add").validate({
-			rules:{
-				onkeyup: false,
-				roleName:{
-					remote: {
-		                url: ctx + "/system/role/checkRoleNameUniqueAll",
-		                type: "post",
-		                dataType: "json",
-		                data: {
-		                	"roleName" : function() {
-		                		return $.common.trim($("#roleName").val());
-		                    }
-		                }
-		            }
-				},
-				roleKey:{
-					remote: {
-		                url: ctx + "/system/role/checkRoleKeyUniqueAll",
-		                type: "post",
-		                dataType: "json",
-		                data: {
-		                	"roleKey" : function() {
-		                        return $.common.trim($("#roleKey").val());
-		                    }
-		                }
-		            }
-				},
-				roleSort:{
-					digits:true
-				},
-			},
-			messages: {
-		        "roleName": {
-		            remote: "角色名称已经存在"
-		        },
-		        "roleKey": {
-		            remote: "角色权限已经存在"
-		        }
-		    },
-		    focusCleanup: true
-		});
+
 		
 		function submitHandler() {
-	        if ($.validate.form()) {
 	        	add();
-	        }
 	    }
 	
 		function add() {
