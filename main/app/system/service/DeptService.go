@@ -58,9 +58,6 @@ func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, er
 	pdept := &model.SysDept{DeptId: req.ParentId}
 	var dao dao.SysDeptDao
 	err = pdept.FindOne()
-	if pdept == nil {
-		return 0, errors.New("父部门不能为空")
-	}
 	if pdept.Status != "0" {
 		return 0, errors.New("部门停用，不允许新增")
 	} else {
