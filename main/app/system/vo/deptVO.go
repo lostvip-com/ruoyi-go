@@ -28,7 +28,7 @@ type DeptPageReq struct {
 
 // 新增页面请求参数
 type AddDeptReq struct {
-	ParentId int64  `form:"parentId"  binding:"required"`
+	ParentId int64  `form:"parentId"`
 	DeptName string `form:"deptName"  binding:"required"`
 	OrderNum int    `form:"orderNum" binding:"required"`
 	Leader   string `form:"leader"`

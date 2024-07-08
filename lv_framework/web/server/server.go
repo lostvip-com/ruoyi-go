@@ -53,8 +53,8 @@ func (mySvr *MyServer) Start() {
 	fmt.Println("go.redis.host: " + global.GetConfigInstance().GetValueStr("go.redis.host"))
 	fmt.Println("go.datasource.master: " + global.GetConfigInstance().GetMaster())
 	//加载模板引擎
-	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path, "//", "/"))
-	fmt.Println("http://127.0.0.l:" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
+	fmt.Println("http://localhost:" + port + strings.ReplaceAll(path, "//", "/"))
+	fmt.Println("http://localhost:" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("http://" + host + ":" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
 	fmt.Println("##############################################################")
 	mySvr.server.ListenAndServe()

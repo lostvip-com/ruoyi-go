@@ -46,7 +46,7 @@ type AddMenuReq struct {
 // 修改页面请求参数
 type EditMenuReq struct {
 	MenuId   int64  `form:"menuId" binding:"required"`
-	ParentId int64  `form:"parentId"  binding:"required"`
+	ParentId int64  `form:"parentId" `
 	MenuType string `form:"menuType"  binding:"required"`
 	MenuName string `form:"menuName"  binding:"required"`
 	OrderNum int    `form:"orderNum" binding:"required"`
