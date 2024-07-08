@@ -46,8 +46,8 @@ function login() {
         },
         success: function (r){
             console.log("login<====",r)
-            //debugger
-            if (r.code == web_status.SUCCESS) {
+            debugger
+            if (r.code == 200) {
                 let target =  ctx+'/index?token='+r.data
                 console.log("即将跳转："+target)
                 window.location =target ;

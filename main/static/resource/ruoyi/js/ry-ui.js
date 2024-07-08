@@ -41,13 +41,14 @@ var table = {
                     method: 'post',
                     height: undefined,
                     sidePagination: "server",
+                    undefinedText: '-',
                     sortName: undefined,
                     sortOrder: "asc",
                     pagination: true,
                     paginationLoop: false,
                     pageSize: 10,
                     pageNumber: 1,
-                    pageList: [10, 25, 50],
+                    pageList: [10, 25, 50, 100],
                     toolbar: "toolbar",
                     loadingFontSize: 13,
                     striped: false,
@@ -87,6 +88,7 @@ var table = {
                     cache: false,                                       // 是否使用缓存
                     height: options.height,                             // 表格的高度
                     striped: options.striped,                           // 是否显示行间隔色
+                    undefinedText: options.undefinedText,               // 数据值为空时显示的内容
                     sortable: true,                                     // 是否启用排序
                     sortStable: true,                                   // 设置为 true 将获得稳定的排序
                     sortName: options.sortName,                         // 排序列名称
@@ -101,6 +103,7 @@ var table = {
                     showFooter: options.showFooter,                     // 是否显示表尾
                     iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
                     toolbar: '#' + options.toolbar,                     // 指定工作栏
+                    virtualScroll: options.virtualScroll,               // 是否启动虚拟滚动（大量数据纯展示时使用)
                     loadingFontSize: options.loadingFontSize,           // 自定义加载文本的字体大小
                     sidePagination: options.sidePagination,             // server启用服务端分页client客户端分页
                     search: options.search,                             // 是否显示搜索框功能
@@ -169,8 +172,8 @@ var table = {
                     pageSize:       params.limit,
                     pageNum:        params.offset / params.limit + 1,
                     searchValue:    params.search,
-                    sortName:       params.sort,
-                    sortOrder:      params.order
+                    orderByColumn:  params.sort,
+                    isAsc:          params.order
                 };
                 var currentId = $.common.isEmpty(table.options.formId) ? $('form').attr('id') : table.options.formId;
                 return $.extend(curParams, $.common.formToJSON(currentId)); 
@@ -316,7 +319,7 @@ var table = {
                     _value = _value.replace(/\'/g,"&apos;");
                     _value = _value.replace(/\"/g,"&quot;");
                     var actions = [];
-                    actions.push($.common.sprintf('<input style="opacity: 0;position: absolute;width:5px;z-index:-1" type="text" value="%s"/>', _value));
+                    actions.push($.common.sprintf('<input style="opacity: 0;position: absolute;z-index:-1" type="text" value="%s"/>', _value));
                     actions.push($.common.sprintf('<a href="###" class="tooltip-show" data-toggle="tooltip" data-target="%s" title="%s">%s</a>', _target, _value, _text));
                     return actions.join('');
                 } else {
@@ -363,7 +366,7 @@ var table = {
                 if ($.common.isNotEmpty(pageSize)) {
                     params.pageSize = pageSize;
                 }
-                if ($.common.isNotEmpty(tableId)){
+                if ($.common.isNotEmpty(tableId)) {
                     $("#" + tableId).bootstrapTable('refresh', params);
                 } else{
                     $("#" + table.options.id).bootstrapTable('refresh', params);
@@ -376,12 +379,12 @@ var table = {
                     var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                     var params = $("#" + table.options.id).bootstrapTable('getOptions');
                     var dataParam = $("#" + currentId).serializeArray();
-                    dataParam.push({ "name": "sortName", "value": params.sortName });
-                    dataParam.push({ "name": "sortOrder", "value": params.sortOrder });
+                    dataParam.push({ "name": "orderByColumn", "value": params.sortName });
+                    dataParam.push({ "name": "isAsc", "value": params.sortOrder });
                     $.modal.loading("正在导出数据，请稍候...");
                     $.post(table.options.exportUrl, dataParam, function(result) {
                         if (result.code == web_status.SUCCESS) {
-                            window.location.href = ctx + "/system/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                            window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
                         } else if (result.code == web_status.WARNING) {
                             $.modal.alertWarning(result.msg)
                         } else {
@@ -395,7 +398,7 @@ var table = {
             importTemplate: function() {
                 $.get(activeWindow().table.options.importTemplateUrl, function(result) {
                     if (result.code == web_status.SUCCESS) {
-                        window.location.href = ctx + "/system/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
                     } else if (result.code == web_status.WARNING) {
                         $.modal.alertWarning(result.msg)
                     } else {
@@ -423,7 +426,7 @@ var table = {
                     shadeClose: true,
                     btn1: function(index, layero){
                         var file = layero.find('#file').val();
-                        if (file == '' || (!$.common.endWith(file, '.xls') && !$.common.endWith(file, '.xlsx'))){
+                        if (file == '' || (!$.common.endWith(file, '.xls') && !$.common.endWith(file, '.xlsx'))) {
                             $.modal.msgWarning("请选择后缀为 “xls”或“xlsx”的文件。");
                             return false;
                         }
@@ -539,7 +542,8 @@ var table = {
                 $.each(datas, function(index, dict) {
                     if (dict.dictValue == ('' + value)) {
                         var listClass = $.common.equals("default", dict.listClass) || $.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
-                        actions.push($.common.sprintf("<span class='%s'>%s</span>", listClass, dict.dictLabel));
+                        var cssClass = $.common.isNotEmpty(dict.cssClass) ? dict.cssClass : listClass;
+                        actions.push($.common.sprintf("<span class='%s'>%s</span>", cssClass, dict.dictLabel));
                         return false;
                     }
                 });
@@ -803,7 +807,7 @@ var table = {
             },
             // 获取iframe页的DOM
             getChildFrame: function (index) {
-                if ($.common.isEmpty(index)){
+                if ($.common.isEmpty(index)) {
                     var index = parent.layer.getFrameIndex(window.name);
                     return parent.layer.getChildFrame('body', index);
                 } else {
@@ -812,7 +816,7 @@ var table = {
             },
             // 关闭窗体
             close: function (index) {
-                if ($.common.isEmpty(index)){
+                if ($.common.isEmpty(index)) {
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 } else {
@@ -908,10 +912,10 @@ var table = {
                 }
                 var index = top.layer.open($.extend({
                     id: options.id,       // 唯一id
-                    // anim: options.anim,   // 弹出动画 0-6
-                    anim: 0,   // 无动画
+                    anim: options.anim,   // 弹出动画 0-6
                     type: 2,
                     maxmin: $.common.isEmpty(options.maxmin) ? true : options.maxmin,
+                    offset: $.common.isEmpty(options.offset) ? 'auto' : options.offset,
                     shade: 0.3,
                     title: _title,
                     fix: false,
@@ -987,18 +991,38 @@ var table = {
                 createMenuItem(url, title);
                 closeItem(dataId);
             },
+            // 右侧弹出窗口打开
+            popupRight: function(title, url){
+                var width = 150;
+                if (top.location !== self.location) {
+                    if ($(top.window).outerWidth() < 400) {
+                        width = 50;
+                    }
+                }
+                top.layer.open({
+                    type: 2,
+                    offset: 'r',
+                    anim: 'slideLeft',
+                    move: false,
+                    title: title,
+                    shade: 0.3,
+                    shadeClose: true,
+                    area: [($(window).outerWidth() - width) + 'px', '100%'],
+                    content: url
+                });
+            },
             // 关闭选项卡
             closeTab: function (dataId) {
                 closeItem(dataId);
             },
             // 禁用按钮
             disable: function() {
-                var doc = window.top == window.parent ? window.document : window.parent.document;
+                var doc = window.top == window.parent ? top.window.document : window.parent.document;
                 $("a[class*=layui-layer-btn]", doc).addClass("layer-disabled");
             },
             // 启用按钮
             enable: function() {
-                var doc = window.top == window.parent ? window.document : window.parent.document;
+                var doc = window.top == window.parent ? top.window.document : window.parent.document;
                 $("a[class*=layui-layer-btn]", doc).removeClass("layer-disabled");
             },
             // 打开遮罩层
@@ -1054,14 +1078,48 @@ var table = {
                     width: width,
                     height: height,
                     url: _url,
-                    skin: 'layui-layer-gray', 
-                    btn: ['关闭'],
+                    btn: 0,
                     yes: function (index, layero) {
                         $.modal.close(index);
                     }
                 };
                 $.modal.openOptions(options);
             },
+            detailRight: function(id, width, height) {
+                // table.set();
+                // var _url = $.operate.detailUrl(id);
+                // var options = {
+                //     title: table.options.modalName + "详细",
+                //     anim: 'slideLeft', // 从左往右
+                //     offset: 'r', //到右边缘
+                //     width: $.common.isEmpty(width) ? "320" : width,
+                //     height: $.common.isEmpty(height) ?  ($(window).height() - 50) : height,
+                //     url: _url,
+                //     skin: 'layui-layer-gray',
+                //     btn: ['关闭'],
+                //     yes: function (index, layero) {
+                //         $.modal.close(index);
+                //     }
+                // };
+                // $.modal.openOptions(options);
+
+                table.set();
+                var _url = $.operate.detailUrl(id);
+                var options = {
+                    title: table.options.modalName + "详细",
+                    anim: 'slideLeft', // 从左往右
+                    offset: 'r', //到右边缘
+                    width: $.common.isEmpty(width) ? "320" : width,
+                    height: $.common.isEmpty(height) ?  ($(window).height() - 50) : height,
+                    url: _url,
+                    btn: 0,
+                    yes: function (index, layero) {
+                        $.modal.close(index);
+                    }
+                };
+                $.modal.openOptions(options);
+            },
+
             // 详细信息，以tab页展现
             detailTab: function(id) {
                 table.set();
@@ -1192,6 +1250,12 @@ var table = {
                     url = table.options.updateUrl.replace("{id}", id);
                 }
                 return url;
+            },
+            // 右侧弹出详情
+            view: function(id){
+                table.set();
+                var url = table.options.viewUrl.replace("{id}", id);
+                $.modal.popupRight(table.options.modalName + "信息详情", url);
             },
             // 保存信息 刷新表格
             save: function(url, data, callback) {

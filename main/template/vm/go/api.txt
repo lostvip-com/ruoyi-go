@@ -11,9 +11,9 @@ import (
     "lostvip.com/utils/lv_web"
     "lostvip.com/utils/lv_err"
     "lostvip.com/web/dto"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/vo"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/service"
-    sysService "main/app/system/service"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
+    sysService "main/internal/system/service"
 )
 type {{.table.ClassName}}Controller struct{}
 //	========================================================================

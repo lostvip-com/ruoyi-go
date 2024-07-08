@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/lv_framework/conf"
 	"github.com/lv_framework/db/xorm"
 	"github.com/lv_framework/logme"
 	_ "github.com/mattn/go-sqlite3"
@@ -11,7 +10,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"main/app/common/global"
+	"lostvip.com/lv_global"
 	"strings"
 	"sync"
 	"xorm.io/core"
@@ -45,12 +44,12 @@ func (db *dbEngine) GetOrm(dbType string) *gorm.DB {
 func GetMasterGorm() *gorm.DB {
 	master := GetInstance().gormMaster
 	if master == nil {
-		var config = conf.Config()
+		var config = lv_global.Config()
 		driverName := config.GetDriver()
 		master = createGorm(driverName, config.GetMaster())
 		GetInstance().gormMaster = master
 	}
-	if global.GetConfigInstance().IsDebug() {
+	if lv_global.Config().IsDebug() {
 		master = master.Debug()
 	}
 	return master
@@ -62,7 +61,7 @@ func GetMasterGorm() *gorm.DB {
 func GetSlaveGorm() *gorm.DB {
 	slave := GetInstance().gormSlave
 	if slave == nil {
-		var config = conf.Config()
+		var config = lv_global.Config()
 		driverName := config.GetDriver()
 		slave = createGorm(driverName, config.GetSlave())
 		GetInstance().gormMaster = slave
@@ -160,7 +159,7 @@ func GetInstance() *dbEngine {
 	once.Do(func() {
 		//driverName := core.SQLITE
 		var db dbEngine
-		var config = conf.Config()
+		var config = lv_global.Config()
 		driverName := config.GetDriver()
 		//没有配置从数据库
 		if config.GetMaster() != "" {
@@ -182,7 +181,7 @@ func (db *dbEngine) Engine(dbType ...string) *xorm.Engine {
 	}
 
 	if db == nil {
-		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>masterXorm:\n " + conf.Config().GetMaster() + "\n ------------>slave:\n " + conf.Config().GetSlave())
+		panic("\n ------------>错误信息：\n无法链接到数据库!!!! 检查相关配置，如：\n ------------>masterXorm:\n " + lv_global.Config().GetMaster() + "\n ------------>slave:\n " + lv_global.Config().GetSlave())
 	}
 	return db.masterXorm
 }

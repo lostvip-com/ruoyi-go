@@ -10,7 +10,7 @@ import (
     "github.com/gin-gonic/gin"
     "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_web"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/service"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
 )
 
 // List 查询页

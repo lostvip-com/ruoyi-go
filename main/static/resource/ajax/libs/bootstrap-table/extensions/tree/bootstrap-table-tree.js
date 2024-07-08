@@ -131,6 +131,9 @@
                     $th = $('<th style="width:36px"></th>');
                 } else {
                     $th = $('<th style="' + ((column.width) ? ('width:' + column.width + ((column.widthUnit) ? column.widthUnit : 'px')) : '') + '" class="' + column.field + '_cls"></th>');
+                    if (column.align) {
+                        $th.css("text-align", column.align);
+                    }
                 }
                 if((!target.isFixWidth)&& column.width){
                     target.isFixWidth = column.width.indexOf("px")>-1?true:false;
@@ -217,6 +220,8 @@
             if (!data || data.length <= 0) {
                 var _empty = '<tr><td colspan="' + options.columns.length + '"><div style="display: block;text-align: center;">没有找到匹配的记录</div></td></tr>'
                 $tbody.html(_empty);
+                options.pageNumber = 1;
+                initPagination(0, 0);
                 return;
             }
             // 缓存并格式化数据
@@ -271,6 +276,9 @@
             var pageTo = options.pageNumber * options.pageSize;
             if (pageTo > target.totalRows) {
                 pageTo = target.totalRows;
+            }
+            if (pageFrom > pageTo) {
+                pageFrom = pageTo;
             }
             html.push('<div class="pull-left pagination-detail">');
             html.push('<span class="pagination-info">' + formatShowingRows(pageFrom, pageTo, target.totalRows) + '</span>');

@@ -11,8 +11,8 @@ import (
 	"lostvip.com/db/lvdao"
 	"lostvip.com/utils/lv_err"
 	"lostvip.com/utils/lv_reflect"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/vo"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/model"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/model"
 )
 
 //新增页面请求参数

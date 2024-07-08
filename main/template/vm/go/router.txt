@@ -7,8 +7,8 @@ package {{.table.PackageName}}
 
 import (
         "lostvip.com/web/router"
-        "{{.table.ModuleName}}/app/common/middleware/auth"
-        "{{.table.ModuleName}}/app/{{.table.PackageName}}/controller"
+        "{{.table.ModuleName}}/internal/common/middleware/auth"
+        "{{.table.ModuleName}}/internal/{{.table.PackageName}}/controller"
 )
 
 //加载路由

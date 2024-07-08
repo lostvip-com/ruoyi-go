@@ -6,7 +6,7 @@ go:
   redis:
     host: ${REDIS_HOST:192.168.81.228}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:qwer1234}
+    password: ${REDIS_PWD:dpctest}
 #    password:
   datasource:
     #    driver: sqlite3

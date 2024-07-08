@@ -3,8 +3,8 @@ package lv_secret
 import (
 	"encoding/base64"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/lv_framework/conf"
 	"github.com/spf13/cast"
+	"lostvip.com/lv_global"
 	"time"
 )
 
@@ -36,13 +36,13 @@ type Token struct {
 // encryptKey = "cm9ibm90ZQ=="
 // 创建Claims
 func New(loginName string, userId, tenantId int64) *MyClaims {
-	timeOut := cast.ToInt(conf.Config().GetVipperCfg().Get("token.timeout"))
+	timeOut := cast.ToInt(lv_global.Config().GetVipperCfg().Get("token.timeout"))
 
 	if timeOut <= 0 {
 		timeOut = 3600
 	}
 
-	refresh := cast.ToInt(conf.Config().GetVipperCfg().Get("token.refresh"))
+	refresh := cast.ToInt(lv_global.Config().GetVipperCfg().Get("token.refresh"))
 
 	if refresh <= 0 {
 		refresh = timeOut / 2
@@ -86,7 +86,7 @@ func (c *MyClaims) Valid() error {
 // 创建token
 func (claims *MyClaims) CreateToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	encryptKey := cast.ToString(conf.Config().GetVipperCfg().Get("token.encryptKey"))
+	encryptKey := cast.ToString(lv_global.Config().GetVipperCfg().Get("token.encryptKey"))
 	mySignKeyBytes, err := base64.URLEncoding.DecodeString(encryptKey)
 	if err != nil {
 		return "", err
@@ -96,7 +96,7 @@ func (claims *MyClaims) CreateToken() (string, error) {
 
 // 验证token
 func VerifyAuthToken(token string) (*Token, error) {
-	encryptKey := cast.ToString(conf.Config().GetVipperCfg().Get("token.encryptKey"))
+	encryptKey := cast.ToString(lv_global.Config().GetVipperCfg().Get("token.encryptKey"))
 	mySignKeyBytes, err := base64.URLEncoding.DecodeString(encryptKey) //需要用和加密时同样的方式转化成对应的字节数组
 	if err != nil {
 		return nil, err

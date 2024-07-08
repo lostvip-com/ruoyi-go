@@ -10,9 +10,9 @@ import (
     "lostvip.com/utils/lv_conv"
     "lostvip.com/utils/lv_err"
     "lostvip.com/utils/lv_office"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/model"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/dao"
-    "{{.table.ModuleName}}/app/{{.table.PackageName}}/vo"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/model"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/dao"
+    "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
 )
 type {{.table.ClassName}}Service struct{}
 // FindById 根据主键查询数据

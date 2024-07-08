@@ -37,6 +37,19 @@
 	</div>
     {{template "footer" (OssUrl)}}
     <script type="text/javascript">
+		// function test(){
+		// 	layer.open({
+		// 		type: 1,  // layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。 若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
+		// 		offset: 'r',
+		// 		anim: 'slideRight', // 从左往右
+		// 		area: ['320px', '100%'],
+		// 		shade: 0.1,
+		// 		shadeClose: true,
+		// 		id: 'ID-demo-layer-direction-l',
+		// 		content: '<div style="padding: 16px;">任意 HTML 内容</div>'
+		// 	});
+		// }
+
         var prefix = ctx + "/demo/operate";
         var datas = {{getDictTypeData "sys_common_status"}};
 
@@ -98,7 +111,7 @@
 		            formatter: function(value, row, index) {
 		            	var actions = [];
 		            	actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.userId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detail(\'' + row.userId + '\')"><i class="fa fa-search"></i>详细</a> ');
+                        actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.detailRight(\'' + row.userId + '\')"><i class="fa fa-search"></i>详细</a> ');
                         actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.userId + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');
 		            }

@@ -3,15 +3,13 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/lv_framework/conf"
 	"github.com/lv_framework/logme"
-	functions2 "github.com/lv_framework/web/functions"
 	"github.com/lv_framework/web/gintemplate"
 	"github.com/lv_framework/web/middleware"
 	"github.com/lv_framework/web/router"
 	"github.com/spf13/cast"
 	"html/template"
-	"main/app/common/global"
+	"lostvip.com/lv_global"
 	//gintemplate "github.com/foolin/gin-template"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -45,13 +43,13 @@ func (mySvr *MyServer) Start() {
 	}
 
 	log.Printf("[%v]Server listen: %v Actual pid is %d", mySvr.ServerName, mySvr.Addr, syscall.Getpid())
-	host := conf.Config().GetServerIP()
-	path := conf.Config().GetContextPath()
-	port := cast.ToString(conf.Config().GetServerPort())
+	host := lv_global.Config().GetServerIP()
+	path := lv_global.Config().GetContextPath()
+	port := cast.ToString(lv_global.Config().GetServerPort())
 	fmt.Println("##############################################################")
-	fmt.Println("go.application.name: " + global.GetConfigInstance().GetAppName())
-	fmt.Println("go.redis.host: " + global.GetConfigInstance().GetValueStr("go.redis.host"))
-	fmt.Println("go.datasource.master: " + global.GetConfigInstance().GetMaster())
+	fmt.Println("go.application.name: " + lv_global.Config().GetAppName())
+	fmt.Println("go.redis.host: " + lv_global.Config().GetValueStr("go.redis.host"))
+	fmt.Println("go.datasource.master: " + lv_global.Config().GetMaster())
 	//加载模板引擎
 	fmt.Println("http://localhost:" + port + strings.ReplaceAll(path, "//", "/"))
 	fmt.Println("http://localhost:" + port + strings.ReplaceAll(path+"/swagger/index.html", "//", "/"))
@@ -67,12 +65,12 @@ func (mySvr *MyServer) ShutDown() {
 // 创建服务
 func New(addr string) *MyServer {
 	gin.DefaultWriter = logme.GetLog().Out
-	contextPath := conf.Config().GetContextPath()
+	contextPath := lv_global.Config().GetContextPath()
 	var s MyServer
 	s.WriteTimeout = 60 * time.Second
 	s.ReadTimeout = 60 * time.Second
 	s.Addr = addr
-	s.ServerName = conf.Config().GetAppName()
+	s.ServerName = lv_global.Config().GetAppName()
 	s.MaxHeaderBytes = 1 << 20
 	s.Handler = InitGinRouter(contextPath)
 
@@ -104,24 +102,11 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	routerBase.StaticFile("/favicon.ico", staticPath+"/favicon.ico")
 	//加载模板引擎
 	engine.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
-		Root:      "template",
-		Extension: ".html",
-		Master:    "",
-		Partials:  []string{"header", "footer", "system/menu/icon"},
-		Funcs: template.FuncMap{
-			"hasPermi":          functions2.HasPermi,
-			"getPermiButton":    functions2.GetPermiButton,
-			"getDictLabel":      functions2.GetDictLabel,
-			"getDictTypeSelect": functions2.GetDictTypeSelect,
-			"getDictTypeRadio":  functions2.GetDictTypeRadio,
-			"getDictTypeData":   functions2.GetDictTypeData,
-			"Copyright":         functions2.GetCopyright,
-			"OssUrl":            functions2.GetOssUrl,
-			"Ctx":               functions2.GetCtx,
-			"getCtxPath":        functions2.GetCtxPath,
-			"addInt":            functions2.AddInt,
-			"contains":          functions2.Contains,
-		},
+		Root:         "template",
+		Extension:    ".html",
+		Master:       "",
+		Partials:     []string{"header", "footer", "system/menu/icon"},
+		Funcs:        template.FuncMap(lv_global.Config().GetFuncMap()),
 		DisableCache: true,
 	})
 	//注册路由

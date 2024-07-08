@@ -7,10 +7,10 @@ import (
 	"github.com/lv_framework/utils/lv_err"
 	"github.com/lv_framework/web/server"
 	"github.com/spf13/cast"
-	_ "main/app"
-	"main/app/common/global"
-	my "main/app/mywork/model"
-	"main/app/system/model/monitor/online"
+	_ "main/internal"
+	"main/internal/common/myconf"
+	my "main/internal/mywork/model"
+	"main/internal/system/model/monitor/online"
 	"os"
 	"os/signal"
 	"syscall"
@@ -24,7 +24,7 @@ var httpSvr *server.MyServer
 // @host localhost
 // @BasePath /
 func main() {
-	cfg := global.GetConfigInstance()
+	cfg := myconf.GetConfigInstance()
 	logme.InitLog("logru.log")
 	if cfg.IsDebug() {
 		gin.SetMode("debug")
