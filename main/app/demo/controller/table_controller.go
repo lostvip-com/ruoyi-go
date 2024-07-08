@@ -76,7 +76,7 @@ func (w DemoController) Recorder(c *gin.Context) {
 }
 
 func (w DemoController) Search(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/lv_sql").WriteTpl()
+	lv_web.BuildTpl(c, "demo/table/search").WriteTpl()
 }
 
 type us struct {

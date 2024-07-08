@@ -68,6 +68,7 @@ func init() {
 	g5.GET("/sparkline", "", demo.Sparkline)
 
 	g6 := router.New("/demo/table", auth.TokenCheck())
+	g6.GET("/search", "", demo.Search)
 	g6.GET("/button", "", demo.Button)
 	g6.GET("/child", "", demo.Child)
 	g6.GET("/curd", "", demo.Curd)
