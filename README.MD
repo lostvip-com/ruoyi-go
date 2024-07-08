@@ -50,8 +50,9 @@
 ~~~
 main[]()     
 ├── docs               // 资料备份
+│   └── deploy-swarm-ry.yml      // docker swarm 服务编排脚本
 ├── main               // 系统管理
-│   └── app                      // go源码存放目录
+│   └── internal                 // 源码存放目录,internal禁止其它模块引用
 │   └── static                   // 静态文件目录
 │   └── mapper                   // 类mybatis映射文件存放目录
 │   └── template                 // 模板存放目录
@@ -61,7 +62,6 @@ main[]()
 │   └── build-cgo.sh             // 编译脚本，启用cgo,需要打包sqlite时有用
 │   └── build-linux.bat          // 编译脚本，windows环境交叉编译用
 │   └── data.db                  // 使用sqlite数据库时有用，只使用mysql可删除                             
-│   └── deploy-swarm-ry.yml      // docker swarm 服务编排脚本
 │   └── Dockerfile               // Docker镜像文件
 ├── lv_framework       // 框架通用模块
 │       └── cache               // 通用缓存处理
@@ -76,6 +76,10 @@ main[]()
 ~~~
 
 ## 启动
+前置条件：
+> 1. 配置GO_PROXY环境变量，如：export GO_PROXY=https://goproxy.cn
+> 2. 分别cd到[lv_framework](lv_framework) 和 [main](main)目录下，调整go.mod目录中的go版本号，并执行go mod tidy
+安装相关依赖！
 ### 1. 修改应该的数据库及缓存配置
 * sqlite：默认使用sqlite数据库，可不做任何修改
 * mysql： 导入docs中的sql文件，修改application.yml中的mysql相关信息
