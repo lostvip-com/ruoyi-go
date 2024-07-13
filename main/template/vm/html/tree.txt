@@ -28,8 +28,8 @@ LV自动生成数据选择树页面代码,只生成一次,按需修改.
         <button class="btn" id="btn" onclick="$.tree.searchNode()"> 搜索 </button>
     </div>
     <div class="treeExpandCollapse">
-        <a href="#" onclick="$.tree.expand()">展开</a> /
-        <a href="#" onclick="$.tree.collapse()">折叠</a>
+        <a href="javascript:void(0)" onclick="$.tree.expand()">展开</a> /
+        <a href="javascript:void(0)" onclick="$.tree.collapse()">折叠</a>
     </div>
     <div id="tree" class="ztree treeselect"></div>
 </div>

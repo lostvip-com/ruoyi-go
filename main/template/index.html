@@ -39,7 +39,7 @@
 				</a>
 				<div class="pull-left info">
 					<p>{{.loginname}}</p>
-					<a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+					<a href="javascript:void(0)"><i class="fa fa-circle text-success"></i> 在线</a>
 					<a href="{{Ctx}}/logout" style="padding-left:5px;"><i class="fa fa-sign-out text-danger"></i>
 						注销</a>
 				</div>
@@ -60,7 +60,7 @@
 							</a>
 						</li>
 						{{else}}
-						<a href="#"><i class="{{$cmenu.Icon}}"></i>{{$cmenu.MenuName}}<span class="fa arrow"></span></a>
+						<a href="javascript:void(0)"><i class="{{$cmenu.Icon}}"></i>{{$cmenu.MenuName}}<span class="fa arrow"></span></a>
 						<ul class="nav nav-third-level">
 							{{range $index, $emenu := $cmenu.Children}}
 							<li>
@@ -71,7 +71,7 @@
 									</a>
 								</li>
 								{{else}}
-								<a href="#">{{$emenu.MenuName}}<span class="fa arrow"></span></a>
+								<a href="javascript:void(0)">{{$emenu.MenuName}}<span class="fa arrow"></span></a>
 								<ul class="nav nav-four-level">
 									{{range $index, $fmenu := $emenu.Children}}
 									<li>
@@ -112,7 +112,7 @@
 		<div class="row border-bottom">
 			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 				<div class="navbar-header">
-					<a class="navbar-minimalize minimalize-styl-2" style="color:#FFF;" href="#" title="收起菜单">
+					<a class="navbar-minimalize minimalize-styl-2" style="color:#FFF;" href="javascript:void(0)" title="收起菜单">
 						<i class="fa fa-bars"></i>
 					</a>
 				</div>
@@ -188,7 +188,7 @@
 			</button>
 			<a href="javascript:void(0);" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
 		</div>
-		<a id="ax_close_max" class="ax_close_max" href="#" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
+		<a id="ax_close_max" class="ax_close_max" href="javascript:void(0)" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
 		<div class="row mainContent" id="content-main">
 			<iframe class="RuoYi_iframe" name="iframe0" width="100%" height="100%" data-id="{{Ctx}}/system/main"
 					src="{{Ctx}}/system/main" frameborder="0" seamless></iframe>
