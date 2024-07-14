@@ -1,4 +1,4 @@
-{{define "index"}}
+<!DOCTYPE html>
 <html lang="zh">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,11 +14,11 @@
 	<link href="{{OssUrl}}/resource/css/animate.min.css" rel="stylesheet"/>
 	<link href="{{OssUrl}}/resource/css/style.min.css" rel="stylesheet"/>
 	<link href="{{OssUrl}}/resource/css/skins.css" rel="stylesheet"/>
-	<link href="{{OssUrl}}/resource/ruoyi/css/ry-ui.css?v=4.6.1" rel="stylesheet"/>
+	<link href="{{OssUrl}}/resource/ruoyi/css/ry-ui.css?v=v=4.7.9" rel="stylesheet"/>
+	<style type="text/css">.fixed-sidebar .nav:not(.navbar-toolbar)>li.active{border-left:0px!important;}</style>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg " style="overflow: hidden">
 <div id="wrapper">
-
 	<!--左侧导航开始-->
 	<nav class="navbar-default navbar-static-side" role="navigation">
 		<div class="nav-close">
@@ -29,7 +29,7 @@
 				<span class="logo-lg"> ruoyi-go </span>
 			</li>
 		</a>
-		<div class="slimScrollDiv" style="position: relative; width: auto; height: 96%;"><div class="sidebar-collapse tab-content" id="side-menu" style="width: auto; height: 96%;">
+		<div class="sidebar-collapse tab-content" id="side-menu">
 			<div class="user-panel">
 				<a class="menuItem noactive" title="个人中心" href="{{Ctx}}/system/user/profile">
 					<div class="hide">个人中心</div>
@@ -40,8 +40,7 @@
 				<div class="pull-left info">
 					<p>{{.loginname}}</p>
 					<a href="javascript:void(0)"><i class="fa fa-circle text-success"></i> 在线</a>
-					<a href="{{Ctx}}/logout" style="padding-left:5px;"><i class="fa fa-sign-out text-danger"></i>
-						注销</a>
+					<a href="{{Ctx}}/logout" style="padding-left:5px;"><i class="fa fa-sign-out text-danger"></i>注销</a>
 				</div>
 			</div>
 
@@ -52,38 +51,37 @@
 				<ul class="nav">
 					{{range $index00, $cmenu := $menu.Children}}
 
+					{{if le (len $cmenu.Children) 0}}
 					<li>
-						{{if le (len $cmenu.Children) 0}}
+						<a class="menu-content menuItem" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
+							<i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span>
+						</a>
+					</li>
+					{{else}}
+					<li>
+					<a href="javascript:void(0)"><i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span><span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+						{{range $index, $emenu := $cmenu.Children}}
 						<li>
-							<a class="menu-content menuItem" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
-								<i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span>
+							{{if le (len $emenu.Children) 0}}
+						<li>
+							<a class="menu-content menuItem" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
+								<i class="{{$emenu.Icon}}"></i> <span>{{$emenu.MenuName}}</span>
 							</a>
 						</li>
 						{{else}}
-						<a href="javascript:void(0)"><i class="{{$cmenu.Icon}}"></i>{{$cmenu.MenuName}}<span class="fa arrow"></span></a>
-						<ul class="nav nav-third-level">
-							{{range $index, $emenu := $cmenu.Children}}
+						<a href="javascript:void(0)"> <i class="fa fa-table"></i><span class="nav-label">{{$emenu.MenuName}}</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level collapse">
+							{{range $index, $fmenu := $emenu.Children}}
 							<li>
-								{{if le (len $emenu.Children) 0}}
-								<li>
-									<a class="menu-content menuItem" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
-										<i class="{{$emenu.Icon}}"></i> <span class="nav-label">{{$emenu.MenuName}}</span>
-									</a>
-								</li>
-								{{else}}
-								<a href="javascript:void(0)">{{$emenu.MenuName}}<span class="fa arrow"></span></a>
-								<ul class="nav nav-four-level">
-									{{range $index, $fmenu := $emenu.Children}}
-									<li>
-										<a class="{{$fmenu.Target}}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
-									</li>
-									{{end}}
-								</ul>
-								{{end}}
+								<a class="{{$fmenu.Target}}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
 							</li>
 							{{end}}
 						</ul>
 						{{end}}
+						{{end}}
+					</ul>
+					{{end}}
 					</li>
 
 					{{end}}
@@ -91,7 +89,6 @@
 			</div>
 
 			{{end}}
-
 
 			<!-- 左侧菜单-首页菜单 -->
 			<div class="tab-pane fade height-full" id="index">
@@ -102,7 +99,6 @@
 					</li>
 				</ul>
 			</div>
-		</div>
 		</div>
 	</nav>
 	<!--左侧导航结束-->
@@ -118,7 +114,7 @@
 				</div>
 				<!-- 顶部栏 hidden-xs -->
 				<div id="navMenu">
-					<ul class="nav navbar-toolbar nav-tabs navbar-left">
+					<ul class="nav navbar-toolbar nav-tabs navbar-left hidden-xs">
 						<!-- 顶部菜单列表 -->
 						{{range $index, $menu := .menus}}
 						{{if eq $menu.ParentId 0}}
@@ -157,10 +153,10 @@
 								<a onclick="switchSkin()">
 									<i class="fa fa-dashboard"></i> 切换主题</a>
 							</li>
-<!--							<li>-->
-<!--								<a onclick="toggleMenu()">-->
-<!--									<i class="fa fa-toggle-off"></i> 左侧菜单</a>-->
-<!--							</li>-->
+							<!--							<li>-->
+							<!--								<a onclick="toggleMenu()">-->
+							<!--									<i class="fa fa-toggle-off"></i> 左侧菜单</a>-->
+							<!--							</li>-->
 							<li class="divider"></li>
 							<li>
 								<a href="{{Ctx}}/logout">
@@ -228,7 +224,7 @@
 	let historyPath = storage.get("historyPath");
 	// 是否页签与菜单联动
 	let isLinkage = true;
-   console.log("=====>skin:",skin)
+	console.log("=====>skin:",skin)
 	// 本地主题优先，未设置取系统配置
 	if($.common.isNotEmpty(skin)){
 		$("body").addClass(skin.split('|')[0]);
@@ -334,4 +330,3 @@
 
 </body>
 </html>
-{{end}}

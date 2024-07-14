@@ -2,7 +2,9 @@ package demo
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/lv_framework/web/router"
+	"lostvip.com/utils/lv_web"
 	"main/internal/common/middleware/auth"
 	controller2 "main/internal/demo/controller"
 )
@@ -91,4 +93,12 @@ func init() {
 	g6.GET("/remember", "", demo.Remember)
 	g6.GET("/recorder", "", demo.Recorder)
 	g6.GET("/lv_sql", "", demo.Search)
+
+	//20240714
+	g6.GET("/customView", "", func(c *gin.Context) {
+		lv_web.BuildTpl(c, "demo/table/customView").WriteTpl()
+	})
+	g6.GET("/subdata", "", func(c *gin.Context) {
+		lv_web.BuildTpl(c, "demo/table/subdata").WriteTpl()
+	})
 }

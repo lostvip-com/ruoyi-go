@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cast"
 	_ "main/internal"
 	"main/internal/common/myconf"
-	my "main/internal/mywork/model"
+	"main/internal/system/model"
 	"main/internal/system/model/monitor/online"
 	"os"
 	"os/signal"
@@ -30,7 +30,7 @@ func main() {
 		gin.SetMode("debug")
 	}
 	//自动建表
-	err := db.GetMasterGorm().AutoMigrate(my.DpcTask{}, online.UserOnline{})
+	err := db.GetMasterGorm().AutoMigrate(model.SysUser{}, model.SysMenu{}, model.SysRole{}, online.UserOnline{})
 	lv_err.HasErrAndPanic(err)
 	httpSvr = server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	go httpSvr.Start()
