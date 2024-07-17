@@ -1,11 +1,11 @@
 package lvdao
 
 import (
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/lvbatis"
-	"github.com/lv_framework/db/namedsql"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/lvbatis"
+	"github.com/lostvip-com/lv_framework/db/namedsql"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/web/dto"
 )
 
 func ListMapByNamedSql(sql string, req any, isCamel bool) (*[]map[string]string, error) {

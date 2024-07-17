@@ -7,10 +7,10 @@ package service
 
 import (
 	"fmt"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_office"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 	"main/internal/mywork/dao"

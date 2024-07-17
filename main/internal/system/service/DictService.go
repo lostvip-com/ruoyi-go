@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"html/template"
 	dictDataModel "main/internal/system/model"
 	"strings"

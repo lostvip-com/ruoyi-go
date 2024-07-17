@@ -2,9 +2,9 @@ package logininfor
 
 import (
 	"context"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_web"
-	"lostvip.com/cache/lv_redis"
+	"github.com/lostvip-com/lv_framework/cache/lv_redis"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"main/internal/common/global"
 	logininfor2 "main/internal/system/model/monitor/logininfor"
 	"time"

@@ -3,8 +3,8 @@ package lv_redis
 import (
 	"context"
 	"fmt"
-	"github.com/lv_framework/conf"
-	"github.com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/conf"
+	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/redis/go-redis/v9"
 	"sync"
 )

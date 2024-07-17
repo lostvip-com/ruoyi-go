@@ -2,12 +2,12 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_net"
-	"github.com/lv_framework/utils/lv_secret"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_net"
+	"github.com/lostvip-com/lv_framework/utils/lv_secret"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
 	global2 "main/internal/common/global"

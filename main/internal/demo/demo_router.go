@@ -3,8 +3,8 @@ package demo
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/web/router"
-	"lostvip.com/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/middleware/auth"
 	controller2 "main/internal/demo/controller"
 )

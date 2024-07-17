@@ -7,7 +7,7 @@
 package model
 
 import (
-	"github.com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db"
 )
 
 // SysUserPost 用户与岗位关联

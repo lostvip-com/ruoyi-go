@@ -10,7 +10,7 @@ package lv_secret
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"io"
 	"os"
 )

@@ -1,4 +1,4 @@
-module lostvip.com
+module github.com/lostvip-com/lv_framework
 
 go 1.20
 

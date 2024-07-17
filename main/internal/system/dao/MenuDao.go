@@ -2,8 +2,8 @@ package dao
 
 import (
 	"errors"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"main/internal/system/model"
 	"main/internal/system/vo"
 )

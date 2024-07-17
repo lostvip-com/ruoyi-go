@@ -8,9 +8,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"github.com/spf13/cast"
 	"main/internal/mywork/model"
 	"main/internal/mywork/service"

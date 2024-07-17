@@ -1,8 +1,8 @@
 package cm_model
 
 import (
+	"github.com/lostvip-com/lv_framework/utils/lv_time"
 	"gorm.io/gorm"
-	"lostvip.com/utils/lv_time"
 	"time"
 )
 

@@ -1,7 +1,7 @@
 package logininfor
 
 import (
-	"github.com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db"
 	"time"
 )
 

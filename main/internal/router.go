@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/lv_framework/web/router"
+	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/middleware/auth"
 	_ "main/internal/demo"
 	_ "main/internal/mywork"

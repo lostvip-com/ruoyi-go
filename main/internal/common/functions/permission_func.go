@@ -1,7 +1,7 @@
 package functions
 
 import (
-	"github.com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"html/template"
 	"main/internal/system/dao"
 	"main/internal/system/model"

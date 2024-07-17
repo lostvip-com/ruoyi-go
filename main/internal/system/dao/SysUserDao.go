@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/namedsql"
-	"github.com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/namedsql"
+	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
 	"main/internal/system/vo"

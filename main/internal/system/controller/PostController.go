@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	postService "main/internal/system/service"
 	"main/internal/system/vo"
 )

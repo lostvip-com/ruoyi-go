@@ -8,10 +8,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/mywork/service"
 	"main/internal/mywork/vo"
 	sysService "main/internal/system/service"

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"html/template"
 	"main/internal/system/model/monitor/oper_log"
 	operlogService "main/internal/system/service/monitor/operlog"

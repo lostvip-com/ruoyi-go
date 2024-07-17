@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lostvip-com/lv_framework/lv_global"
 	"github.com/satori/go.uuid"
-	"lostvip.com/lv_global"
 	"net/http"
 	"strings"
 	"time"

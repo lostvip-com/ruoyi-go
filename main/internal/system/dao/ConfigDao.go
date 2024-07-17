@@ -2,9 +2,9 @@ package dao
 
 import (
 	"errors"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/namedsql"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/namedsql"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
 	"main/internal/system/vo"

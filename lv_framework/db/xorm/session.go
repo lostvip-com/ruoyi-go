@@ -9,7 +9,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"hash/crc32"
 	"reflect"
 	"strings"

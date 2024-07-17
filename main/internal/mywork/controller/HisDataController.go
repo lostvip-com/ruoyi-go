@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_net"
+	"github.com/lostvip-com/lv_framework/utils/lv_net"
 	"net/url"
 )
 

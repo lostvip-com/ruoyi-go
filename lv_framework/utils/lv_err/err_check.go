@@ -1,8 +1,8 @@
 package lv_err
 
 import (
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"log"
 	"runtime"
 )

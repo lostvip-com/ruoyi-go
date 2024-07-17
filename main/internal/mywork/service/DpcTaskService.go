@@ -6,9 +6,9 @@
 package service
 
 import (
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_office"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	"main/internal/mywork/dao"
 	"main/internal/mywork/model"
 	"main/internal/mywork/vo"

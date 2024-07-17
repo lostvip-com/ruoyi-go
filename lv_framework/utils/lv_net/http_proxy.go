@@ -3,7 +3,7 @@ package lv_net
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"log"
 	"net/http"
 	"net/http/httputil"

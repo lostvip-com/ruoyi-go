@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>自定义视图分页</title>
+    <link href="/static/resource/css/bootstrap.min.css?v=3.3.7" rel="stylesheet"/>
+    <link href="/static/resource/css/font-awesome.min.css?v=4.7.0" rel="stylesheet"/>
+    <!-- bootstrap-table 表格插件样式 -->
+    <link href="/static/resource/ajax/libs/bootstrap-table/bootstrap-table.min.css?v=1.22.6" rel="stylesheet"/>
+    <link href="/css/animate.min.css?v=20210831" rel="stylesheet"/>
+    <link href="/static/resource/css/style.min.css?v=20210831" rel="stylesheet"/>
+    <link href="/static/resource/ruoyi/css/ry-ui.css?v=4.7.9" rel="stylesheet"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-page-size="10"
+                   data-show-custom-view="true" data-custom-view="customViewFormatter"
+                   data-custom-view-default-view="true">
+            </table>
+        </div>
+    </div>
+</div>
+
+<template id="profileTemplate">
+    <div class="col-sm-4">
+        <div class="contact-box">
+            <a href="profile.html">
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <img alt="image" class="img-circle m-t-xs img-responsive" src="/static/resource/%IMAGE%">
+                        <div class="m-t-xs font-bold">%userName%</div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <h3><strong>%userCode%</strong></h3>
+                    <p><i class="fa fa-jpy"></i> %userBalance%</p>
+                    <address>
+                        <strong>RuoYi, Inc.</strong><br>
+                        E-mail: %userEmail%<br>
+                        <abbr title="Phone">Tel:</abbr> %userPhone%
+                    </address>
+                </div>
+                <div class="clearfix"></div>
+            </a>
+        </div>
+    </div>
+</template>
+
+<div>
+    <script> var ctx = "\/"; var lockscreen = null; if(lockscreen){window.top.location=ctx+"lockscreen";} </script>
+    <a id="scroll-up" href="javascript:;" class="btn btn-sm display"><i class="fa fa-angle-double-up"></i></a>
+    <script src="/static/resource/js/jquery.min.js?v=3.6.3"></script>
+    <script src="/static/resource/js/bootstrap.min.js?v=3.3.7"></script>
+    <!-- bootstrap-table 表格插件 -->
+    <script src="/static/resource/ajax/libs/bootstrap-table/bootstrap-table.min.js?v=1.22.6"></script>
+    <script src="/static/resource/ajax/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js?v=1.22.6"></script>
+    <script src="/static/resource/ajax/libs/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js?v=1.22.6"></script>
+    <!-- jquery-validate 表单验证插件 -->
+    <script src="/static/resource/ajax/libs/validate/jquery.validate.min.js?v=1.19.3"></script>
+    <script src="/static/resource/ajax/libs/validate/jquery.validate.extend.js?v=1.19.3"></script>
+    <script src="/static/resource/ajax/libs/validate/messages_zh.js?v=1.19.3"></script>
+    <!-- bootstrap-table 表格树插件 -->
+    <script src="/static/resource/ajax/libs/bootstrap-table/extensions/tree/bootstrap-table-tree.min.js?v=1.22.6"></script>
+    <!-- 遮罩层 -->
+    <script src="/static/resource/ajax/libs/blockUI/jquery.blockUI.js?v=2.70.0"></script>
+    <script src="/static/resource/ajax/libs/iCheck/icheck.min.js?v=1.0.3"></script>
+    <script src="/static/resource/ajax/libs/layer/layer.min.js?v=3.7.0"></script>
+    <script src="/static/resource/ajax/libs/layui/layui.min.js?v=2.8.18"></script>
+    <script src="/static/resource/ruoyi/js/common.js?v=4.7.9"></script>
+    <script src="/static/resource//ruoyi/js/ry-ui.js?v=4.7.9"></script>
+</div>
+
+<script src="/static/resource/ajax/libs/bootstrap-table/extensions/custom-view/bootstrap-table-custom-view.js?v=1.22.6"></script>
+
+<script>
+    var prefix = ctx + "demo/table";
+    var datas = [{"createBy":"admin","createTime":"2024-06-06 02:06:39","updateBy":null,"updateTime":null,"remark":"\u6B63\u5E38\u72B6\u6001","dictCode":6,"dictSort":1,"dictLabel":"\u6B63\u5E38","dictValue":"0","dictType":"sys_normal_disable","cssClass":"","listClass":"primary","isDefault":"Y","status":"0","default":true},{"createBy":"admin","createTime":"2024-06-06 02:06:39","updateBy":null,"updateTime":null,"remark":"\u505C\u7528\u72B6\u6001","dictCode":7,"dictSort":2,"dictLabel":"\u505C\u7528","dictValue":"1","dictType":"sys_normal_disable","cssClass":"","listClass":"danger","isDefault":"N","status":"0","default":false}];
+
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field : 'userId',
+                    title : '用户ID'
+                },
+                {
+                    field : 'userCode',
+                    title : '用户编号'
+                },
+                {
+                    field : 'userName',
+                    title : '用户姓名'
+                },
+                {
+                    field : 'userPhone',
+                    title : '用户手机'
+                },
+                {
+                    field : 'userEmail',
+                    title : '用户邮箱'
+                },
+                {
+                    field : 'userBalance',
+                    title : '用户余额'
+                },
+                {
+                    field: 'status',
+                    title: '用户状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="javascript:;"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" href="javascript:;"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function customViewFormatter (data) {
+        var template = $('#profileTemplate').html()
+        var view = ''
+        $.each(data, function (i, row) {
+            view += template.replace('%userCode%', row.userCode)
+                .replace('%IMAGE%', "http://demo.ruoyi.vip/img/profile.jpg")
+                .replace('%userName%', row.userName)
+                .replace('%userEmail%', row.userEmail)
+                .replace('%userPhone%', row.userPhone)
+                .replace('%userBalance%', row.userBalance);
+        })
+
+        return `<div class="row mx-0">${view}</div>`
+    }
+</script>
+</body>
+</html>

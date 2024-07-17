@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/vo"

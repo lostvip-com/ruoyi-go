@@ -3,10 +3,10 @@ server:
 #  context-path: /go
 copyright: © 2023 lostvip.com Copyright
 ## 注释以下配置时，不会使用 nacos #################
-## 开户后会到nacos中加载  app-mywork-dev.yml
+## 开启后会加载nacos中的 go-ruoyi-dev.yml
 #go:
 #  application:
-#    name:  app-mywork     # 微服务名
+#    name:  go-ruoyi     # 微服务名
 #    active: dev
 #    debug: true
 #  cloud:

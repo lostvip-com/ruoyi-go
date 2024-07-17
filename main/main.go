@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/logme"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/web/server"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/web/server"
 	"github.com/spf13/cast"
 	_ "main/internal"
 	"main/internal/common/myconf"

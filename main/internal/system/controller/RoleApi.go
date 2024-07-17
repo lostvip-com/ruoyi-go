@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	db2 "github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	db2 "github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/service"

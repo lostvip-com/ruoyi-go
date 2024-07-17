@@ -2,9 +2,9 @@ package oper_log
 
 import (
 	"errors"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_office"
-	"github.com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_office"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"xorm.io/builder"
 )
 

@@ -2,14 +2,14 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/lvbatis"
-	"github.com/lv_framework/logme"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_file"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/lvbatis"
+	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_file"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"html/template"
 	"main/internal/common/myconf"
 	menuModel "main/internal/system/model"
@@ -531,7 +531,7 @@ func canGenIt(overwrite bool, file string) bool {
 	if overwrite { //允许覆盖
 		logme.Warn("--------->您配置了 overwrite 开关的值为true，旧文件会被覆盖！！！！ ")
 		return true
-	} else {                      // 不允许覆盖
+	} else { // 不允许覆盖
 		if lv_file.Exists(file) { //文件已经存在，不允许重新生成
 			logme.Warn("=======> 文件已经存在，本次将不会生成新文件！！！！！！！！！！！！ ")
 			return false

@@ -8,8 +8,8 @@ package online
 
 import (
 	"errors"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"time"
 )
 

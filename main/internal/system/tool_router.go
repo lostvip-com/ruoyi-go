@@ -1,7 +1,7 @@
 package system
 
 import (
-	"github.com/lv_framework/web/router"
+	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/middleware/auth"
 	"main/internal/system/controller"
 )

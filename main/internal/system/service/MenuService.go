@@ -2,12 +2,12 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/lvdao"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
-	"github.com/lv_framework/utils/lv_web"
-	"github.com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/lvdao"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/vo"

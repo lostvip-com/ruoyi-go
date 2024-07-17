@@ -6,10 +6,10 @@
 package dao
 
 import (
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/db/lvbatis"
-	"github.com/lv_framework/db/lvdao"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/db/lvbatis"
+	"github.com/lostvip-com/lv_framework/db/lvdao"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"main/internal/mywork/model"
 	"main/internal/mywork/vo"
 )

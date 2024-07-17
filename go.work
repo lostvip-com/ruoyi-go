@@ -2,9 +2,10 @@ go 1.20
 
 use (
 	./main
+	//./webapi
 	./lv_framework
 )
 replace (
     // 方便本地库与github库的代码切换
-	github.com/lv_framework v1.0.0  => ./lv_framework
+	github.com/lostvip-com/lv_framework  v1.0.1  => ./lv_framework
 )

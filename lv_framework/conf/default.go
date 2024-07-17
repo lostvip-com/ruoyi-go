@@ -2,12 +2,12 @@ package conf
 
 import (
 	"fmt"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_file"
-	"github.com/lv_framework/utils/lv_net"
+	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_file"
+	"github.com/lostvip-com/lv_framework/utils/lv_net"
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
-	"lostvip.com/logme"
 	"os"
 	"strings"
 )

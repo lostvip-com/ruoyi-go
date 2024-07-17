@@ -1,6 +1,6 @@
 package vo
 
-import "github.com/lv_framework/utils/lv_web"
+import "github.com/lostvip-com/lv_framework/utils/lv_web"
 
 // Fill with you ideas below.
 // 新增页面请求参数

@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/lv_framework/db"
-	"github.com/lv_framework/utils/lv_conv"
-	"github.com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"gorm.io/gorm"
 	"main/internal/system/dao"
 	"main/internal/system/model"
