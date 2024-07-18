@@ -3,14 +3,15 @@ go:
     debug: true
   log:
     output: stdout # stdout：只写控制台，file:只写文件，默认：双写
+  cache: ram  # ram , redis
   redis:
     host: ${REDIS_HOST:192.168.81.228}
     password: ${REDIS_PWD:qwer1234}
   datasource:
-    #    driver: sqlite3
-    #    master: data.db
-    driver: mysql
-    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:3306)/test?charset=utf8"}
+    driver: sqlite3
+    master: data.db
+#    driver: mysql
+#    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:3306)/test?charset=utf8"}
     slave: ""
  #代理转发
 #  proxy:
