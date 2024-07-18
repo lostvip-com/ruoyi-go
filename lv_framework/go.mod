@@ -27,7 +27,11 @@ require (
 	xorm.io/core v0.7.3
 )
 
-require github.com/denisenkom/go-mssqldb v0.0.0-20190707035753-2be1aa521ff4
+require (
+	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
+	github.com/denisenkom/go-mssqldb v0.0.0-20190707035753-2be1aa521ff4
+	github.com/lib/pq v1.10.9
+)
 
 require (
 	cloud.google.com/go v0.105.0 // indirect

@@ -539,10 +539,10 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, '主框架页-默认皮肤样式名称', 'system.index.skinName', 'skin-red', 'Y', 'admin', '2018-03-16 11:33:00', '', '2023-11-23 11:09:43', '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow');
-INSERT INTO `sys_config` VALUES (2, '用户管理-账号初始密码', 'system.user.initPassword', '123456', 'Y', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '初始化密码 123456');
-INSERT INTO `sys_config` VALUES (3, '主框架页-侧边栏主题', 'system.index.sideTheme', 'theme-blue', 'Y', 'admin', '2018-03-16 11:33:00', '', '2023-11-30 20:05:01', '深黑主题theme-dark，浅色主题theme-light，深蓝主题theme-blue');
-INSERT INTO `sys_config` VALUES (4, '静态资源网盘存储', 'system.resource.url', '/static', 'Y', 'admin', '2020-02-18 20:10:33', '', '2020-03-23 20:51:39', 'public目录下的静态资源存储到OSS/COS等网盘，将键值设为/public表示本地');
+INSERT INTO `sys_config` VALUES (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName', 'skin-red', 'Y', 'admin', '2018-03-16 11:33:00', '', '2023-11-23 11:09:43', '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow');
+INSERT INTO `sys_config` VALUES (2, '用户管理-账号初始密码', 'sys.user.initPassword', '123456', 'Y', 'admin', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', '初始化密码 123456');
+INSERT INTO `sys_config` VALUES (3, '主框架页-侧边栏主题', 'sys.index.sideTheme', 'theme-blue', 'Y', 'admin', '2018-03-16 11:33:00', '', '2023-11-30 20:05:01', '深黑主题theme-dark，浅色主题theme-light，深蓝主题theme-blue');
+INSERT INTO `sys_config` VALUES (4, '静态资源网盘存储', 'sys.resource.url', '/static', 'Y', 'admin', '2020-02-18 20:10:33', '', '2020-03-23 20:51:39', 'public目录下的静态资源存储到OSS/COS等网盘，将键值设为/public表示本地');
 
 -- ----------------------------
 -- Table structure for sys_dept

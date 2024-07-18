@@ -78,7 +78,6 @@ main[]()
 ## 启动
 前置条件：
 > 1. 配置GO_PROXY环境变量，如：export GO_PROXY=https://goproxy.cn
-> 2. 分别cd到[lv_framework](lv_framework) 和 [main](main)目录下，调整go.mod目录中的go版本号，并执行go mod tidy
 安装相关依赖！
 ### 1. 修改应该的数据库及缓存配置
 * sqlite：默认使用sqlite数据库，可不做任何修改

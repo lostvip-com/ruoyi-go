@@ -4,11 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/spf13/cast"
 	"net/http"
 )
 
 func (w DemoController) Button(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/button").WriteTpl()
+	lv_web.BuildTpl(c, "demo/github.com/lostvip-com/lv_framework/utils/button").WriteTpl()
 }
 
 func (w DemoController) Child(c *gin.Context) {
@@ -83,7 +84,7 @@ type us struct {
 	UserId      int64   `json:"userId"`
 	UserCode    string  `json:"userCode"`
 	UserName    string  `json:"userName"`
-	UserSex     string  `json:"userName"`
+	UserSex     string  `json:"userSex"`
 	UserPhone   string  `json:"userPhone"`
 	UserEmail   string  `json:"userEmail"`
 	UserBalance float64 `json:"userBalance"`
@@ -96,11 +97,11 @@ func (w DemoController) List(c *gin.Context) {
 	for i := 1; i <= 10; i++ {
 		var tmp us
 		tmp.UserId = int64(i)
-		tmp.UserName = "测试" + string(i)
+		tmp.UserName = "测试" + cast.ToString(i)
 		tmp.Status = "0"
 		tmp.CreateTime = "2020-01-12 02:02:02"
 		tmp.UserBalance = 100
-		tmp.UserCode = "100000" + string(i)
+		tmp.UserCode = cast.ToString(i)
 		tmp.UserSex = "0"
 		tmp.UserPhone = "15888888888"
 		tmp.UserEmail = "111@qq.com"

@@ -30,7 +30,7 @@ func main() {
 		gin.SetMode("debug")
 	}
 	//自动建表
-	err := db.GetMasterGorm().AutoMigrate(model.SysUser{}, model.SysMenu{}, model.SysRole{}, online.UserOnline{})
+	err := db.GetMasterGorm().AutoMigrate(model.SysPost{}, model.SysUser{}, model.SysMenu{}, model.SysRole{}, online.UserOnline{})
 	lv_err.HasErrAndPanic(err)
 	httpSvr = server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	go httpSvr.Start()

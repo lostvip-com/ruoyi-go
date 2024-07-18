@@ -27,7 +27,7 @@ func (e *UserOnline) TableName() string {
 
 // 增
 func (e *UserOnline) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return db.GetMasterGorm().Create(e).Error
 }
 
 // 查

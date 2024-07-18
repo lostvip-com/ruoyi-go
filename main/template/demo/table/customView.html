@@ -14,14 +14,14 @@
     <!-- bootstrap-table 表格插件样式 -->
     <link href="/static/resource/ajax/libs/bootstrap-table/bootstrap-table.min.css?v=1.22.6" rel="stylesheet"/>
     <link href="/css/animate.min.css?v=20210831" rel="stylesheet"/>
-    <link href="/static/resource/css/style.min.css?v=20210831" rel="stylesheet"/>
+    <link href="/static/resource/css/style.css?v=20210831" rel="stylesheet"/>
     <link href="/static/resource/ruoyi/css/ry-ui.css?v=4.7.9" rel="stylesheet"/>
 </head>
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
         <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table" data-page-size="10"
+            <table id="bootstrap-table" data-page-size="15"
                    data-show-custom-view="true" data-custom-view="customViewFormatter"
                    data-custom-view-default-view="true">
             </table>
@@ -29,30 +29,6 @@
     </div>
 </div>
 
-<template id="profileTemplate">
-    <div class="col-sm-4">
-        <div class="contact-box">
-            <a href="profile.html">
-                <div class="col-sm-4">
-                    <div class="text-center">
-                        <img alt="image" class="img-circle m-t-xs img-responsive" src="/static/resource/%IMAGE%">
-                        <div class="m-t-xs font-bold">%userName%</div>
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <h3><strong>%userCode%</strong></h3>
-                    <p><i class="fa fa-jpy"></i> %userBalance%</p>
-                    <address>
-                        <strong>RuoYi, Inc.</strong><br>
-                        E-mail: %userEmail%<br>
-                        <abbr title="Phone">Tel:</abbr> %userPhone%
-                    </address>
-                </div>
-                <div class="clearfix"></div>
-            </a>
-        </div>
-    </div>
-</template>
 
 <div>
     <script> var ctx = "\/"; var lockscreen = null; if(lockscreen){window.top.location=ctx+"lockscreen";} </script>
@@ -82,7 +58,7 @@
 
 <script>
     var prefix = ctx + "demo/table";
-    var datas = [{"createBy":"admin","createTime":"2024-06-06 02:06:39","updateBy":null,"updateTime":null,"remark":"\u6B63\u5E38\u72B6\u6001","dictCode":6,"dictSort":1,"dictLabel":"\u6B63\u5E38","dictValue":"0","dictType":"sys_normal_disable","cssClass":"","listClass":"primary","isDefault":"Y","status":"0","default":true},{"createBy":"admin","createTime":"2024-06-06 02:06:39","updateBy":null,"updateTime":null,"remark":"\u505C\u7528\u72B6\u6001","dictCode":7,"dictSort":2,"dictLabel":"\u505C\u7528","dictValue":"1","dictType":"sys_normal_disable","cssClass":"","listClass":"danger","isDefault":"N","status":"0","default":false}];
+    var datas = [{"dictCode":6,"dictSort":1,"dictLabel":"\u6B63\u5E38","dictValue":"0","dictType":"sys_normal_disable","cssClass":"","listClass":"primary","isDefault":"Y","status":"0","default":true},{"dictCode":7,"dictSort":2,"dictLabel":"\u505C\u7528","dictValue":"1","dictType":"sys_normal_disable","cssClass":"","listClass":"danger","isDefault":"N","status":"0","default":false}];
 
     $(function() {
         var options = {
@@ -145,16 +121,63 @@
         var template = $('#profileTemplate').html()
         var view = ''
         $.each(data, function (i, row) {
-            view += template.replace('%userCode%', row.userCode)
-                .replace('%IMAGE%', "http://demo.ruoyi.vip/img/profile.jpg")
-                .replace('%userName%', row.userName)
-                .replace('%userEmail%', row.userEmail)
-                .replace('%userPhone%', row.userPhone)
-                .replace('%userBalance%', row.userBalance);
+            view += template.replace('RPL_userCode', row.userCode)
+                .replace('RPL_IMAGE', "img/profile.jpg")
+                .replace('RPL_userName', row.userName)
+                .replace('RP_userEmail', row.userEmail)
+                .replace('RPL_userPhone', row.userPhone)
+                .replace('RPL_userBalance', row.userBalance);
         })
 
         return `<div class="row mx-0">${view}</div>`
     }
 </script>
+
+
+<template id="profileTemplate">
+    <div class="col-sm-3 col-lg-2">
+
+        <div class="contact-box">
+            <a href="profile.html">
+            <div class="my_card_head" style="width: 100%;height: 100px;background-image:url('/static/resource/RPL_IMAGE')">
+                <div class="my_card_title">RPL_userName</div>
+            </div>
+            </a>
+
+            <div style="padding: 10px">
+                <h3><strong>RPL_userCode</strong></h3>
+                <p><i class="fa fa-jpy"></i> RPL_userBalance</p>
+                <address>
+                    <strong>RuoYi, Inc.</strong><br>
+                    E-mail: RPL_userEmail<br>
+                    <abbr title="Phone">Tel:</abbr> RPL_userPhone
+                </address>
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+</template>
+<style>
+    .my_card_head {
+        display: flex;
+        flex-direction: column; /* 使子项垂直排列 */
+        width: 100%;
+        height: 100px;
+        background-image: url('/static/resource/RPL_IMAGE.jpg'); /* 确保有正确的文件扩展名 */
+        background-size: cover; /* 或者其他你想要的背景图片大小设置 */
+        background-position: center; /* 背景图片居中显示 */
+
+        box-sizing: border-box; /* 确保padding不会增加元素的宽度 */
+    }
+
+    .my_card_title {
+        color: #fff; /* 假设你想让文字颜色为白色，以便在图片上清晰可见 */
+        margin-top: auto; /* 将title推至底部 */
+        text-align: left; /* 可选，让文字在#name中居中 */
+        padding-left: 10px; /* 可选，为内容添加一些内边距 */
+        background-color: rgba(128, 128, 128, 0.2); /* 灰色，20%透明度 */
+    }
+</style>
 </body>
 </html>

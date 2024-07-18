@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"github.com/lostvip-com/lv_framework/db"
 	"time"
 )
@@ -46,6 +47,9 @@ func (e *SysConfig) FindOne() error {
 	}
 
 	err := tb.First(e).Error
+	if err != nil {
+		return errors.New("未找到系统配置信息Key:" + e.ConfigKey)
+	}
 	return err
 }
 
