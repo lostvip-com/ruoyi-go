@@ -1,9 +1,8 @@
 package service
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
@@ -19,13 +18,13 @@ type ConfigService struct {
 // 根据键获取值
 func (svc *ConfigService) GetValueByKey(key string) string {
 	//从缓存读取
-	result := lv_redis.GetInstance().Get(context.Background(), key).Val()
+	result, _ := lv_cache.GetCacheClient().Get(key)
 	if result == "" {
 		entity := &model.SysConfig{ConfigKey: key}
 		err := entity.FindOne()
 		lv_err.HasErrAndPanic(err)
 		result = entity.ConfigValue
-		lv_redis.GetInstance().SetEx(context.Background(), key, result, 10*time.Minute)
+		lv_cache.GetCacheClient().Set(key, result, 10*time.Minute)
 	}
 
 	return result
@@ -46,7 +45,7 @@ func (svc *ConfigService) DeleteRecordById(id int64) bool {
 	err = entity.Delete()
 	if err == nil {
 		//从缓存删除
-		lv_redis.GetInstance().Del(context.Background(), entity.ConfigKey)
+		lv_cache.GetCacheClient().Del(entity.ConfigKey)
 		return true
 	}
 	return false
@@ -62,7 +61,7 @@ func (svc *ConfigService) DeleteRecordByIds(ids string) {
 	lv_err.HasErrAndPanic(err)
 	for _, item := range list {
 		//从缓存删除
-		lv_redis.GetInstance().Del(context.Background(), item.ConfigKey)
+		lv_cache.GetCacheClient().Del(item.ConfigKey)
 	}
 }
 
@@ -109,7 +108,7 @@ func (svc *ConfigService) EditSave(req *vo.EditConfigReq, c *gin.Context) {
 	err = entity.Update()
 	lv_err.HasErrAndPanic(err)
 	//保存到缓存
-	lv_redis.GetInstance().SetEx(context.Background(), entity.ConfigKey, entity.ConfigValue, 10*time.Minute)
+	lv_cache.GetCacheClient().Set(entity.ConfigKey, entity.ConfigValue, 10*time.Minute)
 }
 
 // 根据条件分页查询角色数据

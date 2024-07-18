@@ -1,11 +1,10 @@
 package functions
 
 import (
-	"context"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
+	"errors"
 	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/lv_global"
-	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"main/internal/system/model"
 	"strings"
 
@@ -51,14 +50,15 @@ func AddInt(a, b int) int {
 // 根据键获取值
 func GetValueByKey(key string) string {
 	//从缓存读取
-	result := lv_redis.GetInstance().Get(context.Background(), key).Val()
-	if result == "" {
+	result, err := lv_cache.GetCacheClient().Get(key)
+	if err != err {
 		entity := &model.SysConfig{ConfigKey: key}
 		err := entity.FindOne()
-		lv_err.HasErrAndPanic(err)
+		if err != nil {
+			panic(errors.New("获取配置失败,检查配置表：sys_config 中是否存在配置项：" + key))
+		}
 		result = entity.ConfigValue
-		lv_redis.GetInstance().SetEx(context.Background(), key, result, 10*time.Minute)
+		lv_cache.GetCacheClient().Set(key, result, 10*time.Minute)
 	}
-
 	return result
 }

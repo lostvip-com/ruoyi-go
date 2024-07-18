@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_net"
@@ -113,6 +114,7 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 		ip := lv_net.GetClientRealIP(c)
 		err = svc.SaveUserToSession(token, user, roles, ua, ip)
 		if err != nil {
+			logme.Error(err)
 			lv_err.PrintStackTrace(err)
 			w.SaveLogs(c, &req, "登录失败"+err.Error()) //记录日志
 			lv_web.Fail(c, "登录失败")

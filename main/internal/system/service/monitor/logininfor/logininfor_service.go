@@ -1,10 +1,10 @@
 package logininfor
 
 import (
-	"context"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/spf13/cast"
 	"main/internal/common/global"
 	logininfor2 "main/internal/system/model/monitor/logininfor"
 	"time"
@@ -58,12 +58,12 @@ func Export(param *logininfor2.SelectPageReq) (string, error) {
 // 记录密码尝试次数
 func SetPasswordCounts(loginName string) int {
 	curTimes := 0
-	curTimeObj := lv_redis.GetInstance().Get(context.Background(), USER_NOPASS_TIME+loginName)
-	if curTimeObj != nil {
-		curTimes, _ = curTimeObj.Int()
+	curTimeObj, err := lv_cache.GetCacheClient().Get(USER_NOPASS_TIME + loginName)
+	if err == nil {
+		curTimes = cast.ToInt(curTimeObj)
 	}
 	curTimes = curTimes + 1
-	lv_redis.GetInstance().SetEx(context.Background(), USER_NOPASS_TIME+loginName, curTimes, 1*time.Minute)
+	lv_cache.GetCacheClient().Set(USER_NOPASS_TIME+loginName, curTimes, 1*time.Minute)
 
 	if curTimes >= global.ErrTimes2Lock {
 		Lock(loginName)
@@ -74,32 +74,32 @@ func SetPasswordCounts(loginName string) int {
 // 记录密码尝试次数
 func GetPasswordCounts(loginName string) int {
 	curTimes := 0
-	curTimeObj := lv_redis.GetInstance().Get(context.Background(), USER_NOPASS_TIME+loginName)
-	if curTimeObj != nil {
-		curTimes, _ = curTimeObj.Int()
+	curTimeObj, err := lv_cache.GetCacheClient().Get(USER_NOPASS_TIME + loginName)
+	if err != nil {
+		curTimes = cast.ToInt(curTimeObj)
 	}
 	return curTimes
 }
 
 // 移除密码错误次数
 func RemovePasswordCounts(loginName string) {
-	lv_redis.GetInstance().Del(context.Background(), USER_NOPASS_TIME+loginName)
+	lv_cache.GetCacheClient().Del(USER_NOPASS_TIME + loginName)
 }
 
 // 锁定账号
 func Lock(loginName string) {
-	lv_redis.GetInstance().SetEx(context.Background(), USER_LOCK+loginName, true, 30*time.Minute)
+	lv_cache.GetCacheClient().Set(USER_LOCK+loginName, true, 30*time.Minute)
 }
 
 // 解除锁定
 func Unlock(loginName string) {
-	lv_redis.GetInstance().Del(context.Background(), USER_LOCK+loginName)
+	lv_cache.GetCacheClient().Del(USER_LOCK + loginName)
 }
 
 // 检查账号是否锁定
 func CheckLock(loginName string) bool {
 	result := false
-	rs := lv_redis.GetInstance().Get(context.Background(), USER_LOCK+loginName).Val()
+	rs, _ := lv_cache.GetCacheClient().Get(USER_LOCK + loginName)
 	if rs != "" {
 		result = true
 	}

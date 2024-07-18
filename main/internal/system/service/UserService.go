@@ -1,12 +1,11 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
 	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_gen"
@@ -235,9 +234,9 @@ func (svc UserService) IsAdmin(userId int64) bool {
 
 func (svc UserService) IsSignedIn(tokenStr string) bool {
 	key := "login:" + tokenStr
-	yes := lv_redis.GetInstance().Exists(context.Background(), key).Val()
+	yes, err := lv_cache.GetCacheClient().Exists(key)
 	fmt.Println("===============" + string(yes))
-	return yes > 0
+	return err == nil && yes > 0
 }
 
 // 用户登录，成功返回用户信息，否则返回nil; passport应当会md5值字符串
@@ -266,7 +265,7 @@ func (svc UserService) SignIn(loginnName, password string) (*model.SysUser, erro
 func (svc UserService) SignOut(c *gin.Context) error {
 	//user := svc.GetProfile(c)
 	tokenStr := lv_net.GetParam(c, "token")
-	lv_redis.GetInstance().Del(context.Background(), "login:"+tokenStr)
+	lv_cache.GetCacheClient().Del("login:" + tokenStr)
 	//userId := c.MustGet("userId").(int64)
 	return nil
 }
@@ -311,8 +310,8 @@ func (svc UserService) CheckLoginName(loginName string) bool {
 func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 	token := lv_net.GetParam(c, "token")
 	key := "login:" + token
-	userId := lv_redis.GetInstance().HGet(context.Background(), key, "userId").Val()
-	roleKeys := lv_redis.GetInstance().HGet(context.Background(), key, "roleKeys").Val()
+	userId, _ := lv_cache.GetCacheClient().HGet(key, "userId")
+	roleKeys, _ := lv_cache.GetCacheClient().HGet(key, "roleKeys")
 	u := new(model.SysUser)
 	u.UserId = cast.ToInt64(userId)
 	err := u.FindOne()

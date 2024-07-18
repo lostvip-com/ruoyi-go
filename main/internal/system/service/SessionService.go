@@ -1,9 +1,8 @@
 package service
 
 import (
-	"context"
 	"errors"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_net"
 	"github.com/lostvip-com/lv_framework/utils/lv_secret"
 	"github.com/mssola/user_agent"
@@ -18,8 +17,8 @@ type SessionService struct{}
 
 func (svc *SessionService) IsSignedIn(tokenStr string) bool {
 	key := "login:" + tokenStr
-	yes := lv_redis.GetInstance().Exists(context.Background(), key).Val()
-	return yes > 0
+	num, err := lv_cache.GetCacheClient().Exists(key)
+	return err == nil && num > 0
 }
 
 // 用户登录，成功返回用户信息，否则返回nil; passport应当会md5值字符串
@@ -47,7 +46,7 @@ func (svc *SessionService) SignIn(loginnName, password string) (*model.SysUser, 
 
 // 用户注销
 func (svc *SessionService) SignOut(tokenStr string) error {
-	lv_redis.GetInstance().Del(context.Background(), "login:"+tokenStr)
+	lv_cache.GetCacheClient().Del("login:" + tokenStr)
 	entity := online.UserOnline{SessionId: "login:" + tokenStr}
 	entity.Delete()
 	return nil
@@ -65,8 +64,6 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	// 保存用户信息到session
 	loginLocation := lv_net.GetCityByIp(ip)
 	//记录到redis
-	redis := lv_redis.GetInstance()
-	ctx := context.Background()
 	fieldMap := make(map[string]interface{})
 	fieldMap["userName"] = user.UserName
 	fieldMap["userId"] = user.UserId
@@ -106,11 +103,11 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	}
 	//
 	key := "login:" + token
-	err = redis.HMSet(ctx, key, fieldMap).Err()
+	err = lv_cache.GetCacheClient().HSet(key, fieldMap)
 	if err != nil {
 		return err
 	}
-	err = redis.Expire(ctx, key, time.Hour).Err()
+	err = lv_cache.GetCacheClient().Expire(key, time.Hour)
 	if err != nil {
 		return err
 	}
@@ -119,5 +116,5 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 
 func (svc *SessionService) Refresh(token string) {
 	token = "login:" + token
-	lv_redis.GetInstance().Expire(context.Background(), token, 8*time.Hour)
+	lv_cache.GetCacheClient().Expire(token, 8*time.Hour)
 }

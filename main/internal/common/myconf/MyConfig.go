@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/alecthomas/template"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
 	"github.com/lostvip-com/lv_framework/conf"
 	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/lostvip-com/lv_framework/lv_global"
@@ -67,7 +66,6 @@ func resetCfg() {
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
-	lv_redis.GetInstance()
 	fmt.Println(conig.GetAppName() + " ############# 数据库初始化完毕 ####################")
 	InitTables()
 	fmt.Println(conig.GetAppName() + " ############# 修改表结构完毕 ####################")

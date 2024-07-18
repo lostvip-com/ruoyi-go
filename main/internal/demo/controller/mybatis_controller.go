@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/cache/lv_redis"
 	"github.com/lostvip-com/lv_framework/db/lvbatis"
 	"github.com/lostvip-com/lv_framework/db/lvdao"
+	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"main/internal/system/model"
@@ -65,18 +64,17 @@ func (w DemoController) MybatisStructPage(c *gin.Context) {
 
 func (w DemoController) TestRedis(c *gin.Context) {
 	//reid
-	ctx := context.Background()
-	redis := lv_redis.GetInstance()
+	redis := lv_cache.GetCacheClient()
 	data := map[string]any{"test": "123"}
-	redis.HMSet(ctx, "mapKey1", data)
+	redis.HSet("mapKey1", data)
 
 	fieldMap := make(map[string]interface{})
 	fieldMap["field1"] = "val1"
 	fieldMap["field2"] = "val2"
-	redis.HMSet(ctx, "key", fieldMap)
-	redis.Expire(ctx, "key", 100*time.Second)
+	redis.HSet("key", fieldMap)
+	redis.Expire("key", 100*time.Second)
 	fmt.Println("------------myredis----------------------123")
-	data1 := redis.HGet(ctx, "mapKey1", "test")
+	data1, _ := redis.HGet("mapKey1", "test")
 	fmt.Println(data1)
 	lv_web.SucessData(c, data1)
 }
