@@ -14,6 +14,7 @@ type ICache interface {
 	Del(key ...string) error
 
 	HSet(key string, values ...interface{}) error
+	HMSet(key string, mp map[string]any, duration time.Duration) error
 	HGet(key, field string) (string, error)
 	HDel(key string, fields ...string) error
 	HGetAll(key string) (map[string]string, error)

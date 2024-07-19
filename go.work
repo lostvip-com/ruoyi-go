@@ -6,5 +6,5 @@ use (
 )
 replace (
     // 方便本地库与github库的代码切换
-	github.com/lostvip-com/lv_framework  v1.0.1  => ./lv_framework
+	github.com/lostvip-com/lv_framework  v1.0.2  => ./lv_framework
 )

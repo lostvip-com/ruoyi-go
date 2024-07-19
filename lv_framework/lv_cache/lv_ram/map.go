@@ -109,7 +109,7 @@ func (rcc *RamCacheClient) HSet(key string, values ...interface{}) error {
 		case string:
 			field = values[i].(string)
 		case map[string]any:
-			return rcc.HMSet(key, values[i].(map[string]any))
+			return rcc.HMSet(key, values[i].(map[string]any), gocache.DefaultExpiration)
 		default:
 			err = HashSetFieldTypeError
 			return err
@@ -234,9 +234,10 @@ func (rcc *RamCacheClient) invalidFieldValue(field, value string) error {
 	return rcc.invalidValue(value)
 }
 
-func (rcc *RamCacheClient) HMSet(pk string, m map[string]any) error {
+func (rcc *RamCacheClient) HMSet(pk string, m map[string]any, duration time.Duration) error {
 	for k, v := range m {
 		rcc.HSet(pk, k, v)
+		rcc.Expire(pk+":"+k, duration)
 	}
 	return nil
 }

@@ -1,7 +1,7 @@
 package lv_conv
 
 import (
-	"encoding/json"
+	"github.com/goccy/go-json"
 )
 
 func ToJsonStr(e interface{}) (string, error) {

@@ -54,8 +54,13 @@ func NewRedisClient(indexDb int) *RedisClient {
 	return redisClient
 }
 
-func (rcc *RedisClient) HMSet(key string, values ...interface{}) error {
-	return rcc.c.HMSet(context.Background(), key, values...).Err()
+func (rcc *RedisClient) HMSet(key string, mp map[string]any, expiration time.Duration) error {
+	err := rcc.c.HSet(context.Background(), key, mp).Err()
+	if err != nil {
+		return err
+	}
+	err = rcc.c.Expire(context.Background(), key, expiration).Err()
+	return err
 }
 
 func (rcc *RedisClient) Expire(key string, duration time.Duration) error {
