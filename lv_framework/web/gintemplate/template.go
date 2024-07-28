@@ -16,6 +16,7 @@ package gintemplate
 import (
 	"bytes"
 	"fmt"
+	"github.com/lostvip-com/lv_framework/lv_global"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -32,21 +33,12 @@ import (
 var (
 	htmlContentType   = []string{"text/html; charset=utf-8"}
 	templateEngineKey = "github.com/foolin/gin-template/templateEngine"
-	DefaultConfig = TemplateConfig{
-		Root:         "views",
-		Extension:    ".html",
-		Master:       "layouts/master",
-		Partials:     []string{},
-		Funcs:        make(template.FuncMap),
-		DisableCache: false,
-		Delims:       Delims{Left: "{{", Right: "}}"},
-	}
 )
 
 type TemplateEngine struct {
-	config   TemplateConfig
-	tplMap   map[string]*template.Template
-	tplMutex sync.RWMutex
+	config      TemplateConfig
+	tplMap      map[string]*template.Template
+	tplMutex    sync.RWMutex
 	fileHandler FileHandler
 }
 
@@ -57,13 +49,13 @@ type TemplateRender struct {
 }
 
 type TemplateConfig struct {
-	Root         string           //view root
-	Extension    string           //template extension
-	Master       string           //template master
-	Partials     []string         //template partial, such as head, foot
-	Funcs        template.FuncMap //template functions
-	DisableCache bool             //disable cache, debug mode
-	Delims       Delims           //delimeters
+	Root      string           //view root
+	Extension string           //template extension
+	Master    string           //template master
+	Partials  []string         //template partial, such as head, foot
+	Funcs     template.FuncMap //template functions
+	CacheTpl  bool             //cache template, debug mode
+	Delims    Delims           //delimeters
 }
 
 type Delims struct {
@@ -75,14 +67,24 @@ type FileHandler func(config TemplateConfig, tplFile string) (content string, er
 
 func New(config TemplateConfig) *TemplateEngine {
 	return &TemplateEngine{
-		config:   config,
-		tplMap:   make(map[string]*template.Template),
-		tplMutex: sync.RWMutex{},
+		config:      config,
+		tplMap:      make(map[string]*template.Template),
+		tplMutex:    sync.RWMutex{},
 		fileHandler: DefaultFileHandler(),
 	}
 }
 
 func Default() *TemplateEngine {
+	cachePage := lv_global.Config().IsCacheTpl()
+	DefaultConfig := TemplateConfig{
+		Root:      "views",
+		Extension: ".html",
+		Master:    "layouts/master",
+		Partials:  []string{},
+		Funcs:     make(template.FuncMap),
+		CacheTpl:  cachePage,
+		Delims:    Delims{Left: "{{", Right: "}}"},
+	}
 	return New(DefaultConfig)
 }
 
@@ -98,7 +100,7 @@ func HTML(ctx *gin.Context, code int, name string, data interface{}) {
 	ctx.HTML(code, name, data)
 }
 
-//New gin middleware for func `gintemplate.HTML()`
+// New gin middleware for func `gintemplate.HTML()`
 func NewMiddleware(config TemplateConfig) gin.HandlerFunc {
 	return Middleware(New(config))
 }
@@ -133,64 +135,41 @@ func (e *TemplateEngine) executeRender(out io.Writer, name string, data interfac
 }
 
 func (e *TemplateEngine) executeTemplate(out io.Writer, name string, data interface{}, useMaster bool) error {
-	var tpl *template.Template
-	var err error
-	var ok bool
 
+	var err error
 	allFuncs := make(template.FuncMap, 0)
 	allFuncs["include"] = func(layout string) (template.HTML, error) {
 		buf := new(bytes.Buffer)
 		err := e.executeTemplate(buf, layout, data, false)
 		return template.HTML(buf.String()), err
 	}
-
 	// Get the plugin collection
 	for k, v := range e.config.Funcs {
 		allFuncs[k] = v
 	}
 
-	e.tplMutex.RLock()
-	tpl, ok = e.tplMap[name]
-	e.tplMutex.RUnlock()
+	//e.tplMutex.RLock()
+	var tpl *template.Template
+	if e.config.CacheTpl {
+		tpl = e.tplMap[name]
+		if tpl == nil {
+			tpl, err = e.LoadTpl(useMaster, name, allFuncs)
+			if tpl == nil {
+				panic("读取模板失败！" + name)
+			}
+			e.tplMap[name] = tpl
+		}
+	} else {
+		tpl, err = e.LoadTpl(useMaster, name, allFuncs)
+	}
+	//e.tplMutex.RUnlock()
 
+	if err != nil {
+		return err
+	}
 	exeName := name
 	if useMaster && e.config.Master != "" {
 		exeName = e.config.Master
-	}
-
-	if !ok || e.config.DisableCache {
-		tplList := make([]string, 0)
-		if useMaster {
-			//render()
-			if e.config.Master != "" {
-				tplList = append(tplList, e.config.Master)
-			}
-		}
-		tplList = append(tplList, name)
-		tplList = append(tplList, e.config.Partials...)
-
-		// Loop through each template and test the full path
-		tpl = template.New(name).Funcs(allFuncs).Delims(e.config.Delims.Left, e.config.Delims.Right)
-		for _, v := range tplList {
-			var data string
-			data, err = e.fileHandler(e.config, v)
-			if err != nil {
-				return err
-			}
-			var tmpl *template.Template
-			if v == name {
-				tmpl = tpl
-			} else {
-				tmpl = tpl.New(v)
-			}
-			_, err = tmpl.Parse(data)
-			if err != nil {
-				return fmt.Errorf("TemplateEngine render parser name:%v, error: %v", v, err)
-			}
-		}
-		e.tplMutex.Lock()
-		e.tplMap[name] = tpl
-		e.tplMutex.Unlock()
 	}
 
 	// Display the content to the screen
@@ -200,6 +179,41 @@ func (e *TemplateEngine) executeTemplate(out io.Writer, name string, data interf
 	}
 
 	return nil
+}
+
+func (e *TemplateEngine) LoadTpl(useMaster bool, name string, allFuncs template.FuncMap) (*template.Template, error) {
+	tplList := make([]string, 0)
+	if useMaster {
+		//render()
+		if e.config.Master != "" {
+			tplList = append(tplList, e.config.Master)
+		}
+	}
+	tplList = append(tplList, name)
+	tplList = append(tplList, e.config.Partials...)
+
+	// Loop through each template and test the full path
+	tpl := template.New(name).Funcs(allFuncs).Delims(e.config.Delims.Left, e.config.Delims.Right)
+	for _, v := range tplList {
+		var data string
+		data, err := e.fileHandler(e.config, v)
+		if err != nil {
+			return nil, err
+		}
+		var tmpl *template.Template
+		if v == name {
+			tmpl = tpl
+		} else {
+			tmpl = tpl.New(v)
+		}
+		_, err = tmpl.Parse(data)
+		if err != nil {
+			return nil, fmt.Errorf("TemplateEngine render parser name:%v, error: %v", v, err)
+		}
+	}
+	e.tplMutex.Lock()
+	e.tplMutex.Unlock()
+	return tpl, nil
 }
 
 func (e *TemplateEngine) SetFileHandler(handle FileHandler) {

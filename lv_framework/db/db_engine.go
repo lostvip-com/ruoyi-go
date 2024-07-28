@@ -49,7 +49,7 @@ func GetMasterGorm() *gorm.DB {
 		master = createGorm(driverName, config.GetMaster())
 		GetInstance().gormMaster = master
 	}
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		master = master.Debug()
 	}
 	return master

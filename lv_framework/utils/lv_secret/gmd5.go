@@ -18,7 +18,7 @@ import (
 // Encrypt encrypts any type of variable using MD5 algorithms.
 // It uses lv_conv package to convert <v> to its bytes type.
 func Encrypt(data interface{}) (encrypt string, err error) {
-	return EncryptBytes(lv_conv.Bytes(data))
+	return EncryptBytes(lv_conv.ToBytes(data))
 }
 
 // MustEncrypt encrypts any type of variable using MD5 algorithms.

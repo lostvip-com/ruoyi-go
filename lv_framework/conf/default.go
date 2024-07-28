@@ -16,10 +16,30 @@ type ConfigDefault struct {
 	vipperCfg   *viper.Viper
 	proxyMap    map[string]string
 	proxyEnable bool
+	cacheTpl    bool //默认不缓存模板，方便调试
+	contextPath string
+	debug       string
+	autoMigrate string
+}
+
+func (e *ConfigDefault) IsCacheTpl() bool {
+	return e.cacheTpl
+}
+
+func (e *ConfigDefault) SetCacheTpl(cache bool) {
+	e.cacheTpl = cache
 }
 
 func (e *ConfigDefault) GetVipperCfg() *viper.Viper {
 	return e.vipperCfg
+}
+
+func (e *ConfigDefault) GetValueStrDefault(key string, defaultVal string) string {
+	val := e.GetValueStr(key)
+	if val == "" {
+		val = defaultVal
+	}
+	return val
 }
 
 func (e *ConfigDefault) GetValueStr(key string) string {
@@ -129,8 +149,11 @@ func (e *ConfigDefault) GetServerIP() string {
 }
 
 func (e *ConfigDefault) GetContextPath() string {
-	path := e.GetValueStr("server.context-path")
-	return path
+	return e.contextPath
+}
+
+func (e *ConfigDefault) SetContextPath(ctxPath string) {
+	e.contextPath = ctxPath
 }
 
 func (e *ConfigDefault) GetConf(key string) string {
@@ -167,10 +190,21 @@ func (e *ConfigDefault) GetSlave() string {
 	return e.GetValueStr("go.datasource.slave")
 }
 
-func (e *ConfigDefault) IsDebug() bool {
-	debug := e.GetBool("go.application.debug")
-	return debug
+// IsDebug todo
+func (e *ConfigDefault) IsDebug() string {
+	if e.debug == "" {
+		e.debug = e.GetValueStr("go.application.debug")
+	}
+	return e.debug
 }
+
+func (e *ConfigDefault) GetAutoMigrate() string {
+	if e.autoMigrate == "" {
+		e.autoMigrate = e.GetValueStr("go.application.datasource.auto-migrate")
+	}
+	return e.autoMigrate
+}
+
 func (e *ConfigDefault) GetLogOutput() string {
 	output := e.GetValueStr("go.log.output")
 	return output

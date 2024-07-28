@@ -1,8 +1,16 @@
 package lv_conv
 
 import (
+	"github.com/spf13/cast"
 	"strings"
 )
+
+func String(str any) string {
+	return cast.ToString(str)
+}
+func Int64(str any) int64 {
+	return cast.ToInt64(str)
+}
 
 func SubStr(str string, startIndex, endIndex int) string {
 	rs := []rune(str)
@@ -15,38 +23,13 @@ func ToInt64Array(str, split string) []int64 {
 	if str == "" {
 		return result
 	}
-
 	arr := strings.Split(str, split)
-
 	if len(arr) > 0 {
 		for i := range arr {
 			if arr[i] != "" {
-				result = append(result, Int64(arr[i]))
+				result = append(result, cast.ToInt64(arr[i]))
 			}
 		}
 	}
-
-	return result
-
-}
-
-// 过滤收尾有分隔符的数字字符串
-func ReplaceHeadAndEndStr(str, split string) string {
-	result := ""
-	arr := strings.Split(str, split)
-	if len(arr) <= 0 {
-		return result
-	}
-
-	for i := range arr {
-		if arr[i] != "" {
-			if i == 0 {
-				result = arr[i]
-			} else {
-				result += "," + arr[i]
-			}
-		}
-	}
-
 	return result
 }

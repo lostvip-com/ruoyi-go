@@ -28,6 +28,13 @@ type RamCacheClient struct {
 	c *gocache.Cache
 }
 
+func GetRamCacheClient() *RamCacheClient {
+	if rdb == nil {
+		rdb = NewRamCacheClient()
+	}
+	return rdb
+}
+
 func NewRamCacheClient() *RamCacheClient {
 	return &RamCacheClient{
 		c: gocache.New(gocache.DefaultExpiration, gocache.DefaultExpiration),

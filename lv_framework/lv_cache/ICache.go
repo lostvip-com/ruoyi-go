@@ -30,9 +30,9 @@ func GetCacheClient() ICache {
 		var config = lv_global.Config()
 		cacheType := config.GetVipperCfg().GetString("go.cache")
 		if cacheType == "redis" {
-			cacheClient = lv_redis.NewRedisClient(0)
+			cacheClient = lv_redis.GetInstance(0)
 		} else {
-			cacheClient = lv_ram.NewRamCacheClient()
+			cacheClient = lv_ram.GetRamCacheClient()
 		}
 	}
 	return cacheClient

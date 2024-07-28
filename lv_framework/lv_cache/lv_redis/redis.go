@@ -17,14 +17,13 @@ type RedisClient struct {
 	c *redis.Client
 }
 
-//
-//// 获取缓存单例
-//func GetInstance() lv_cache.ICache {
-//	if rdb == nil {
-//		rdb = NewInstance(0)
-//	}
-//	return rdb
-//}
+// // 获取缓存单例
+func GetInstance(indexDb int) *RedisClient {
+	if redisClient == nil {
+		redisClient = NewRedisClient(indexDb)
+	}
+	return redisClient
+}
 
 // 获取缓存单例
 func NewRedisClient(indexDb int) *RedisClient {

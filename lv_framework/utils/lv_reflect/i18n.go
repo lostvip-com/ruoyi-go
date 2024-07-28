@@ -1,35 +1,24 @@
-package util
+package lv_reflect
 
 import (
 	"github.com/lostvip-com/lv_framework/logme"
 	"reflect"
 )
 
-/**
- *  翻译中文 到 它国语言 ，按 手动翻译，指定具体的field
- */
-func TranslateField(dstPtr interface{}, keyField string) (err error) {
-	// 防止意外panic
+func TranslateField(dstPtr interface{}, keyField string, local string) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			logme.Error(e)
 		}
 	}()
-
 	dstValue1 := reflect.ValueOf(dstPtr)
 	key := dstValue1.Elem().FieldByName(keyField).String()
-	localeValue := GetTextLocale(key)
+	localeValue := GetTextLocale(local, key)
 	dstValue1.Elem().FieldByName(keyField).SetString(localeValue)
-
 	// dst必须结构体指针类型
-	println(dstPtr)
-
-	return nil
+	return
 }
 
-/**
- * 翻译中文 到 它国语言 ,遍历所有field.按tag中是否存在locale, 自动翻译
- */
 func TranslateByTag(dstPtr interface{}) (err error) {
 	// 防止意外panic
 	defer func() {
@@ -37,10 +26,8 @@ func TranslateByTag(dstPtr interface{}) (err error) {
 			logme.Error(e)
 		}
 	}()
-
 	dstType1 := reflect.TypeOf(dstPtr)
 	dstValue1 := reflect.ValueOf(dstPtr)
-
 	// dst必须结构体指针类型
 	if dstType1.Kind() != reflect.Ptr {
 		logme.Error("dst type should be a struct pointer : ", dstType1.Kind())
@@ -75,37 +62,12 @@ func TranslateByTag(dstPtr interface{}) (err error) {
 		}
 		//这里修改 中文key 到它国语言
 		key := fieldValue.String() //中文key
-		localeValue := GetTextLocale(key)
+		localeValue := GetTextLocale(locale, key)
 		if err != nil {
 			logme.Warn("XXXXXXXXXx=========>GetLocaleValueByKey:", fieldValue, locale, err)
 			continue
 		}
 		fieldValue.Set(reflect.ValueOf(localeValue))
-
 	}
-
 	return nil
 }
-
-//
-//
-//
-///**
-// * 翻译中文 到 它国语言 ,遍历所有field.按tag中是否存在locale, 自动翻译
-// */
-//func TranslateSliceByTag(slicePtr []interface{}) (err error) {
-//	// 防止意外panic
-//	defer func() {
-//		if e := recover(); e != nil {
-//			logMy.Error(e)
-//		}
-//	}()
-//	for ele := range slicePtr {
-//		err = TranslateByTag(ele)
-//		if err!=nil{
-//			break
-//		}
-//	}
-//
-//	return err
-//}

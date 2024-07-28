@@ -102,12 +102,12 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	routerBase.StaticFile("/favicon.ico", staticPath+"/favicon.ico")
 	//加载模板引擎
 	engine.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
-		Root:         "template",
-		Extension:    ".html",
-		Master:       "",
-		Partials:     []string{"header", "footer", "system/menu/icon"},
-		Funcs:        template.FuncMap(lv_global.Config().GetFuncMap()),
-		DisableCache: true,
+		Root:      "template",
+		Extension: ".html",
+		Master:    "",
+		Partials:  []string{"header", "footer", "system/menu/icon"},
+		Funcs:     template.FuncMap(lv_global.Config().GetFuncMap()),
+		CacheTpl:  lv_global.Config().IsCacheTpl(),
 	})
 	//注册路由
 	if len(router.GroupList) > 0 {

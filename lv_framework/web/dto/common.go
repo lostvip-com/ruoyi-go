@@ -51,13 +51,14 @@ type TableDataInfo struct {
 
 // 通用的树形结构
 type Ztree struct {
-	Id      int64  `json:"id"`      //节点ID
-	Pid     int64  `json:"pId"`     //节点父ID
-	Name    string `json:"name"`    //节点名称
-	Title   string `json:"title"`   //节点标题
-	Checked bool   `json:"checked"` //是否勾选
-	Open    bool   `json:"open"`    //是否展开
-	Nocheck bool   `json:"nocheck"` //是否能勾选
+	Id       int64  `json:"id"`       //节点ID
+	Pid      int64  `json:"pId"`      //节点父ID
+	Name     string `json:"name"`     //节点名称
+	Title    string `json:"title"`    //节点标题
+	Checked  bool   `json:"checked"`  //是否勾选
+	Open     bool   `json:"open"`     //是否展开
+	Nocheck  bool   `json:"nocheck"`  //是否能勾选
+	NodeType string `json:"nodeType"` //节点类型
 }
 
 // 通用的删除请求

@@ -31,7 +31,8 @@ type IConfig interface {
 	GetGroupDefault() string
 
 	GetDataId() string
-	IsDebug() bool
+	IsDebug() string
+	IsCacheTpl() bool
 	GetVipperCfg() *viper.Viper
 	GetConf(key string) string
 	GetValueStr(key string) string
@@ -40,4 +41,5 @@ type IConfig interface {
 	IsProxyEnabled() bool
 	LoadConf()
 	GetFuncMap() template.FuncMap
+	GetAutoMigrate() string
 }

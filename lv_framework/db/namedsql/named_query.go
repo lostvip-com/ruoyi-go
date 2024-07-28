@@ -14,7 +14,7 @@ import (
 )
 
 func Exec(db *gorm.DB, dmlSql string, req map[string]any) (int64, error) {
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 	if strings.Contains(dmlSql, "@") {
@@ -36,7 +36,7 @@ func Exec(db *gorm.DB, dmlSql string, req map[string]any) (int64, error) {
 func ListData[T any](db *gorm.DB, limitSql string, req any) (*[]T, error) {
 	var list = make([]T, 0)
 	var err error
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 	if strings.Contains(limitSql, "@") {
@@ -53,7 +53,7 @@ func ListData[T any](db *gorm.DB, limitSql string, req any) (*[]T, error) {
 }
 
 func Count(db *gorm.DB, countSql string, params any) (int64, error) {
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 
@@ -111,7 +111,7 @@ func checkAndExtractMap(value interface{}) (map[string]any, bool) {
 func ListMap(db *gorm.DB, sqlQuery string, params any, isCamel bool) (*[]map[string]string, error) {
 	var rows *sql.Rows
 	var err error
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 	if strings.Contains(sqlQuery, "@") {
@@ -164,7 +164,7 @@ func ListMap(db *gorm.DB, sqlQuery string, params any, isCamel bool) (*[]map[str
 }
 
 func ListArrStr(db *gorm.DB, sqlQuery string, params any) (*[][]string, error) {
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 	var rows *sql.Rows
@@ -214,7 +214,7 @@ func ListArrStr(db *gorm.DB, sqlQuery string, params any) (*[][]string, error) {
 
 // ListOneColStr 查询某一列，放到数组中
 func ListOneColStr(db *gorm.DB, sqlQuery string, params any) ([]string, error) {
-	if lv_global.Config().IsDebug() {
+	if lv_global.IsDebug {
 		db = db.Debug()
 	}
 	var rows *sql.Rows

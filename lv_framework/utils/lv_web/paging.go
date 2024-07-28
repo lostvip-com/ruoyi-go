@@ -4,14 +4,20 @@ import (
 	"math"
 )
 
+const PageSize int = 15
+
 type Paging struct {
-	PageNum   int    `form:"pageNum"  json:"pageNum"`       //当前页
-	PageSize  int    `form:"pageSize" json:"pageSize"`      //每页条数
-	Total     int64  `form:"total"    json:"total"`         //每页条数//总条数
-	SortOrder string `form:"sortOrder"    json:"sortOrder"` //排序
-	SortName  string `form:"sortName"    json:"sortName"`   //每页条数//总条数
-	PageCount int    //总页数
-	StartNum  int    //起始行
+	PageNum  int   `form:"pageNum"  json:"pageNum"`  //当前页
+	PageSize int   `form:"pageSize" json:"pageSize"` //每页条数
+	Total    int64 `form:"total"    json:"total"`    //每页条数//总条数
+	//SortOrder string `form:"sortOrder"    json:"sortOrder"` //排序
+	//SortName  string `form:"sortName"    json:"sortName"`   //每页条数//总条数
+	// 注意这里的注解，前端传过来的是 isAsc
+	SortOrder string `form:"isAsc"          json:"sortOrder"` //排序
+	SortName  string `form:"orderByColumn"  json:"sortName"`  //每页条数//总条数
+
+	PageCount int //总页数
+	StartNum  int //起始行
 }
 
 // 创建分页
@@ -20,7 +26,7 @@ func (p *Paging) GetStartNum() int {
 		p.PageNum = 1
 	}
 	if p.PageSize < 1 {
-		p.PageSize = 10
+		p.PageSize = PageSize
 	}
 	p.StartNum = p.PageSize * (p.PageNum - 1)
 	return p.StartNum
@@ -29,7 +35,7 @@ func (p *Paging) GetStartNum() int {
 // 创建分页
 func (p *Paging) GetPageSize() int {
 	if p.PageSize < 1 {
-		p.PageSize = 10
+		p.PageSize = PageSize
 	}
 	return p.PageSize
 }
@@ -40,7 +46,7 @@ func CreatePaging(pageNum, pagesize int, total int64) *Paging {
 		pageNum = 1
 	}
 	if pagesize < 1 {
-		pagesize = 10
+		pagesize = PageSize
 	}
 	paging := new(Paging)
 	paging.PageNum = pageNum

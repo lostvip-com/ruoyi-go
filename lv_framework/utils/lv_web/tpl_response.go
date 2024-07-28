@@ -1,8 +1,10 @@
 package lv_web
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 // 通用tpl响应
@@ -43,11 +45,13 @@ func (resp *TplResp) WriteTpl(params ...gin.H) {
 	//session := sessions.Default(resp.c)
 	//uid := session.Get(model_cmn.USER_ID)
 	uid := 1
+	s := time.Now().UnixMilli()
 	if params == nil || len(params) == 0 {
 		resp.c.HTML(http.StatusOK, resp.tpl, gin.H{"uid": uid})
 	} else {
 		params[0]["uid"] = uid
 		resp.c.HTML(http.StatusOK, resp.tpl, params[0])
 	}
+	fmt.Println(time.Now().UnixMilli() - s)
 	//resp.c.Abort()
 }
