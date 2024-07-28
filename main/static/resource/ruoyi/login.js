@@ -14,7 +14,9 @@ $.validator.setDefaults({
 });
 
 function captcha() {
-    var url = ctx + "/captchaImage?s=" + Math.random();
+    let url = ctx + "captchaImage?s=" + Math.random();
+    console.log(" login: "+url)
+
     $.ajax({
         type: "get",
         url: url,
@@ -36,7 +38,7 @@ function login() {
     var rememberMe = $("input[name='rememberme']").is(':checked');
     $.ajax({
         type: "post",
-        url: ctx + "/login",
+        url: ctx + "login",
         data: {
             "username": username,
             "password": password,
@@ -45,10 +47,8 @@ function login() {
             "rememberMe": rememberMe
         },
         success: function (r){
-            console.log("login<====",r)
-            debugger
             if (r.code == 200) {
-                let target =  ctx+'/index?token='+r.data
+                let target =  ctx+'index?token='+r.data
                 console.log("即将跳转："+target)
                 window.location =target ;
             } else {

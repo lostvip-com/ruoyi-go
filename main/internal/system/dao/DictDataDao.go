@@ -1,12 +1,12 @@
 package dao
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"xorm.io/builder"
 )
 
@@ -14,7 +14,7 @@ type DictDataDao struct {
 }
 
 // 根据条件分页查询数据
-func (dao *DictDataDao) SelectListByPage(param *vo.SelectDictDataPageReq) (*[]model.SysDictData, *lv_web.Paging, error) {
+func (dao *DictDataDao) SelectListByPage(param *cm_vo.SelectDictDataPageReq) (*[]model.SysDictData, *lv_web.Paging, error) {
 	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
@@ -63,7 +63,7 @@ func (dao *DictDataDao) SelectListByPage(param *vo.SelectDictDataPageReq) (*[]mo
 }
 
 // 导出excel
-func (dao *DictDataDao) SelectListExport(param *vo.SelectDictDataPageReq, head, col []string) (string, error) {
+func (dao *DictDataDao) SelectListExport(param *cm_vo.SelectDictDataPageReq, head, col []string) (string, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {
@@ -103,7 +103,7 @@ func (dao *DictDataDao) SelectListExport(param *vo.SelectDictDataPageReq, head, 
 }
 
 // 获取所有数据
-func (dao *DictDataDao) SelectListAll(param *vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
+func (dao *DictDataDao) SelectListAll(param *cm_vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {

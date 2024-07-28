@@ -39,7 +39,7 @@ func (r *DictType) Delete() (int64, error) {
 
 // 根据结构体中已有的非空数据来获得单条数据
 func (r *DictType) FindOne() (bool, error) {
-	return db.GetInstance().Engine().Table("sys_dict_type").Get(r)
+	return db.GetInstance().Engine().Table("sys_dict_type").Where("dict_id = ?", r.DictId).Get(r)
 }
 
 // 根据条件查询

@@ -50,15 +50,20 @@
 		                	name : function() {
 		                        return $.common.trim($("#dictType").val());
 		                    }
-		                }
-		            }
+		                },
+						dataFilter: function(response) {
+							let json = $.parseJSON(response);
+							let exist = json.data
+							if (json.code == 200 && exist == false) {//不
+								return true;
+							}else{
+								return "\"" + json.msg + "\"";
+							}
+							return true;
+						}
+					}
 				},
 			},
-			messages: {
-		        "dictType": {
-		            remote: "该字典类型已经存在"
-		        }
-		    },
 		    focusCleanup: true
 		});
 		

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/db"
@@ -9,7 +10,6 @@ import (
 	"gorm.io/gorm"
 	"main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"time"
 )
 
@@ -23,19 +23,19 @@ func (svc *RoleService) SelectRecordById(id int64) (*model.SysRole, error) {
 }
 
 // 根据主键查询数据
-func (svc *RoleService) SelectRecordPage(params *vo.RolePageReq) ([]model.SysRole, int64, error) {
+func (svc *RoleService) SelectRecordPage(params *cm_vo.RolePageReq) ([]model.SysRole, int64, error) {
 	var d dao.SysRoleDao
 	return d.SelectListPage(params)
 }
 
 // 根据条件查询数据
-func (svc *RoleService) SelectRecordAll(params *vo.RolePageReq) ([]vo.SysRoleFlag, error) {
+func (svc *RoleService) SelectRecordAll(params *cm_vo.RolePageReq) ([]cm_vo.SysRoleFlag, error) {
 	var dao dao.SysRoleDao
 	return dao.SelectListAll(params)
 }
 
 // 添加数据
-func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) AddSave(req *cm_vo.AddRoleReq, c *gin.Context) (int64, error) {
 
 	role := new(model.SysRole)
 	role.RoleName = req.RoleName
@@ -84,7 +84,7 @@ func (svc *RoleService) AddSave(req *vo.AddRoleReq, c *gin.Context) (int64, erro
 }
 
 // 修改数据
-func (svc *RoleService) EditSave(req *vo.EditRoleReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) EditSave(req *cm_vo.EditRoleReq, c *gin.Context) (int64, error) {
 	r := &model.SysRole{RoleId: req.RoleId}
 	err := r.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -138,7 +138,7 @@ func (svc *RoleService) EditSave(req *vo.EditRoleReq, c *gin.Context) (int64, er
 }
 
 // 保存数据权限
-func (svc *RoleService) AuthDataScope(req *vo.DataScopeReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) AuthDataScope(req *cm_vo.DataScopeReq, c *gin.Context) (int64, error) {
 	entity := &model.SysRole{RoleId: req.RoleId}
 	err := entity.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -199,8 +199,8 @@ func (svc *RoleService) DeleteRecordByIds(ids string) (int64, error) {
 }
 
 // 根据用户ID查询角色
-func (svc *RoleService) SelectRoleContactVo(userId int64) ([]vo.SysRoleFlag, error) {
-	var paramsPost *vo.RolePageReq
+func (svc *RoleService) SelectRoleContactVo(userId int64) ([]cm_vo.SysRoleFlag, error) {
+	var paramsPost *cm_vo.RolePageReq
 	var dao dao.SysRoleDao
 	roleAll, err := dao.SelectListAll(paramsPost)
 	if err != nil || roleAll == nil {

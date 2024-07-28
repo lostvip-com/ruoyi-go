@@ -1,13 +1,13 @@
 package controller
 
 import (
+	userModel "common/cm_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	service2 "main/internal/system/service"
-	userModel "main/internal/system/vo"
 )
 
 // 用户列表页

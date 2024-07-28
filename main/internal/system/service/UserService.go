@@ -1,6 +1,7 @@
 package service
 
 import (
+	"common/cm_vo"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -16,7 +17,6 @@ import (
 	"gorm.io/gorm"
 	"main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"strings"
 	"time"
 )
@@ -31,7 +31,7 @@ func (svc *UserService) SelectRecordById(id int64) (*model.SysUser, error) {
 }
 
 // 根据条件分页查询用户列表
-func (svc UserService) SelectRecordList(param *vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
+func (svc UserService) SelectRecordList(param *cm_vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
 	var deptService DeptService
 	var dept = deptService.SelectDeptById(param.DeptId)
 	if dept != nil { //数据权限
@@ -42,7 +42,7 @@ func (svc UserService) SelectRecordList(param *vo.SelectUserPageReq) (*[]map[str
 }
 
 // 导出excel
-func (svc UserService) Export(param *vo.SelectUserPageReq) (string, error) {
+func (svc UserService) Export(param *cm_vo.SelectUserPageReq) (string, error) {
 	head := []string{"用户名", "呢称", "Email", "电话号码", "性别", "部门", "领导", "状态", "删除标记", "创建人", "创建时间", "备注"}
 	col := []string{"loginName", "userName", "u.email", "phonenumber", "sex", "deptName", "leader", "status", "delFlag", "createBy", "createTime", "Remark"}
 	var d dao.SysUserDao
@@ -52,7 +52,7 @@ func (svc UserService) Export(param *vo.SelectUserPageReq) (string, error) {
 }
 
 // 新增用户
-func (svc UserService) AddSave(req *vo.AddUserReq, c *gin.Context) (int64, error) {
+func (svc UserService) AddSave(req *cm_vo.AddUserReq, c *gin.Context) (int64, error) {
 	var u model.SysUser
 	u.LoginName = req.LoginName
 	u.UserName = req.UserName
@@ -75,7 +75,7 @@ func (svc UserService) AddSave(req *vo.AddUserReq, c *gin.Context) (int64, error
 	if createUser != nil {
 		u.CreateBy = createUser.LoginName
 	}
-	u.DelFlag = 0
+	u.DelFlag = "0"
 
 	err := db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&u).Error; err != nil {
@@ -124,7 +124,7 @@ func (svc UserService) AddSave(req *vo.AddUserReq, c *gin.Context) (int64, error
 }
 
 // 新增用户
-func (svc UserService) EditSave(req *vo.EditUserReq, c *gin.Context) error {
+func (svc UserService) EditSave(req *cm_vo.EditUserReq, c *gin.Context) error {
 	userPtr := &model.SysUser{UserId: req.UserId}
 	err := userPtr.FindOne()
 	if err != nil {
@@ -324,7 +324,7 @@ func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 }
 
 // 更新用户信息详情
-func (svc UserService) UpdateProfile(profile *vo.ProfileReq, c *gin.Context) error {
+func (svc UserService) UpdateProfile(profile *cm_vo.ProfileReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.UserName != "" {
@@ -370,7 +370,7 @@ func (svc UserService) UpdateAvatar(avatar string, c *gin.Context) error {
 }
 
 // 修改用户密码
-func (svc UserService) UpdatePassword(profile *vo.PasswordReq, c *gin.Context) error {
+func (svc UserService) UpdatePassword(profile *cm_vo.PasswordReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.OldPassword == "" {
@@ -419,7 +419,7 @@ func (svc UserService) UpdatePassword(profile *vo.PasswordReq, c *gin.Context) e
 }
 
 // 重置用户密码
-func (svc UserService) ResetPassword(params *vo.ResetPwdReq) (bool, error) {
+func (svc UserService) ResetPassword(params *cm_vo.ResetPwdReq) (bool, error) {
 	user := model.SysUser{UserId: params.UserId}
 	if err := user.FindOne(); err != nil {
 		return false, errors.New("用户不存在")

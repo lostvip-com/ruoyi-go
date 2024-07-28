@@ -131,54 +131,15 @@ func (svc SysPostService) SelectPostsByUserId(userId int64) (*[]model.SysPost, e
 	return postAll, err
 }
 
-// 检查角色名是否唯一
-func (svc SysPostService) CheckPostNameUniqueAll(postName string) string {
-	var d dao.SysPostDao
-	post, err := d.CheckPostNameUniqueAll(postName)
-	if err != nil {
-		return "1"
-	}
-	if post != nil && post.PostId > 0 {
-		return "1"
-	}
-	return "0"
-}
-
-// 检查岗位名称是否唯一
-func (svc SysPostService) CheckPostNameUnique(postName string, postId int64) string {
-	var d dao.SysPostDao
-	post, err := d.CheckPostNameUniqueAll(postName)
-	if err != nil {
-		return "1"
-	}
-	if post != nil && post.PostId > 0 && post.PostId != postId {
-		return "1"
-	}
-	return "0"
-}
-
 // 检查岗位编码是否唯一
-func (svc SysPostService) CheckPostCodeUniqueAll(postCode string) string {
+func (svc SysPostService) IsPostCodeExist(postCode string) bool {
 	var d dao.SysPostDao
 	post, err := d.CheckPostCodeUniqueAll(postCode)
 	if err != nil {
-		return "1"
+		return false
 	}
 	if post != nil && post.PostId > 0 {
-		return "1"
+		return true
 	}
-	return "0"
-}
-
-// 检查岗位编码是否唯一
-func (svc SysPostService) CheckPostCodeUnique(postCode string, postId int64) string {
-	var d dao.SysPostDao
-	post, err := d.CheckPostCodeUniqueAll(postCode)
-	if err != nil {
-		return "1"
-	}
-	if post != nil && post.PostId > 0 && post.PostId != postId {
-		return "1"
-	}
-	return "0"
+	return true
 }

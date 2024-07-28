@@ -1,12 +1,12 @@
 package dao
 
 import (
+	"common/cm_vo"
 	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/db/namedsql"
 	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 )
 
 // Fill with you ideas below.
@@ -24,7 +24,7 @@ func (e SysUserDao) DeleteByIds(ida []int64) int64 {
 }
 
 // 根据条件分页查询用户列表
-func (d SysUserDao) SelectPageList(param *vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
+func (d SysUserDao) SelectPageList(param *cm_vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
 	db := db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	logme.Info("============sqlParams:", sqlParams)
@@ -36,7 +36,7 @@ func (d SysUserDao) SelectPageList(param *vo.SelectUserPageReq) (*[]map[string]s
 	return result, total, err
 }
 
-func (d SysUserDao) GetSql(param *vo.SelectUserPageReq) (map[string]interface{}, string) {
+func (d SysUserDao) GetSql(param *cm_vo.SelectUserPageReq) (map[string]interface{}, string) {
 	sqlParams := make(map[string]interface{})
 	sql := `
             select u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password,u.sex, u.salt, u.status, u.del_flag, 
@@ -84,7 +84,7 @@ func (d SysUserDao) GetSql(param *vo.SelectUserPageReq) (map[string]interface{},
 }
 
 // 导出excel
-func (d SysUserDao) SelectExportList(param *vo.SelectUserPageReq) (*[]map[string]string, error) {
+func (d SysUserDao) SelectExportList(param *cm_vo.SelectUserPageReq) (*[]map[string]string, error) {
 	db := db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.user_id desc "

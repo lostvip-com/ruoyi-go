@@ -1,28 +1,28 @@
 package controller
 
 import (
+	"common/cm_vo"
+	"common/session"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
-	"main/internal/common/session"
 	"main/internal/system/service"
-	"main/internal/system/vo"
 	"net/http"
 )
 
 type DeptController struct {
 }
 
-// 列表页
+// List 列表页
 func (w *DeptController) List(c *gin.Context) {
 	lv_web.BuildTpl(c, "system/dept/list").WriteTpl()
 }
 
-// 列表分页数据
+// ListAjax 列表分页数据
 func (w *DeptController) ListAjax(c *gin.Context) {
 	var service service.DeptService
-	var req = vo.DeptPageReq{}
+	var req = cm_vo.DeptPageReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
@@ -36,7 +36,7 @@ func (w *DeptController) ListAjax(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-// 新增页面
+// Add 新增页面
 func (w *DeptController) Add(c *gin.Context) {
 	pid := lv_conv.Int64(c.Query("pid"))
 
@@ -49,30 +49,24 @@ func (w *DeptController) Add(c *gin.Context) {
 	lv_web.BuildTpl(c, "system/dept/add").WriteTpl(gin.H{"dept": tmp})
 }
 
-// 新增页面保存
+// AddSave 新增页面保存
 func (w *DeptController) AddSave(c *gin.Context) {
-	var req *vo.AddDeptReq
+	var req *cm_vo.AddDeptReq
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
-		return
-	}
-
-	if service.CheckDeptNameUniqueAll(req.DeptName, req.ParentId) == "1" {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	rid, err := service.AddSave(req, c)
-
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(dto.Buniss_Add).Log("部门管理", req).WriteJsonExit()
+	lv_web.SucessResp(c).SetBtype(dto.Buniss_Add).WriteJsonExit()
 }
 
-// 修改页面
+// Edit 修改页面
 func (w *DeptController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
@@ -96,11 +90,11 @@ func (w *DeptController) Edit(c *gin.Context) {
 	})
 }
 
-// 修改页面保存
+// EditSave 修改页面保存
 func (w *DeptController) EditSave(c *gin.Context) {
 	var service service.DeptService
 
-	var req *vo.EditDeptReq
+	var req *cm_vo.EditDeptReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
@@ -122,9 +116,9 @@ func (w *DeptController) Remove(c *gin.Context) {
 	service := service.DeptService{}
 	err := service.DeleteDeptById(id)
 	if err != nil {
-		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.Fail(c, err.Error())
 	} else {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("部门管理", gin.H{"id": id}).WriteJsonExit()
+		lv_web.Success(c, id, "success")
 	}
 }
 
@@ -164,31 +158,4 @@ func (w *DeptController) RoleDeptTreeData(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, result)
-}
-
-// 检查部门名称是否已经存在
-func (w *DeptController) CheckDeptNameUnique(c *gin.Context) {
-	var service service.DeptService
-	var req *vo.CheckDeptNameReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-
-	result := service.CheckDeptNameUnique(req.DeptName, req.DeptId, req.ParentId)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查部门名称是否已经存在
-func (w *DeptController) CheckDeptNameUniqueAll(c *gin.Context) {
-	var req *vo.CheckDeptNameALLReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var service service.DeptService
-	result := service.CheckDeptNameUniqueAll(req.DeptName, req.ParentId)
-
-	c.Writer.WriteString(result)
 }

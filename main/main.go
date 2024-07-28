@@ -2,17 +2,15 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/logme"
-	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/lv_global"
 	"github.com/lostvip-com/lv_framework/web/server"
 	"github.com/spf13/cast"
 	_ "main/internal"
 	"main/internal/common/myconf"
-	"main/internal/system/model"
-	"main/internal/system/model/monitor/online"
 	"os"
 	"os/signal"
+	_ "plugins"
 	"syscall"
 )
 
@@ -26,12 +24,9 @@ var httpSvr *server.MyServer
 func main() {
 	cfg := myconf.GetConfigInstance()
 	logme.InitLog("logru.log")
-	if cfg.IsDebug() {
+	if lv_global.IsDebug {
 		gin.SetMode("debug")
 	}
-	//自动建表
-	err := db.GetMasterGorm().AutoMigrate(model.SysPost{}, model.SysUser{}, model.SysMenu{}, model.SysRole{}, online.UserOnline{})
-	lv_err.HasErrAndPanic(err)
 	httpSvr = server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	go httpSvr.Start()
 	//监听信号

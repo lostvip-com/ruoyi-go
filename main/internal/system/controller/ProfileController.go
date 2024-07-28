@@ -1,11 +1,11 @@
 package controller
 
 import (
+	userModel "common/cm_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/service"
-	userModel "main/internal/system/vo"
 	"net/http"
 	"os"
 	"strconv"

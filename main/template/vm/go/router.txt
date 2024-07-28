@@ -6,7 +6,7 @@
 package {{.table.PackageName}}
 
 import (
-        "lostvip.com/web/router"
+        "github.com/lostvip-com/lv_framework/web/router"
         "{{.table.ModuleName}}/internal/common/middleware/auth"
         "{{.table.ModuleName}}/internal/{{.table.PackageName}}/controller"
 )
@@ -18,11 +18,12 @@ func init() {
 
 	web := controller.{{.table.ClassName}}Controller{}
 	g1.GET("/", "{{.table.PackageName}}:{{.table.BusinessName}}:view", web.List)
-	g1.POST("/list", "{{.table.PackageName}}:{{.table.BusinessName}}:list", web.ListAjax)
 	g1.GET("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.Add)
+	g1.GET("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit", web.Edit)
+	// api
+	g1.POST("/list", "{{.table.PackageName}}:{{.table.BusinessName}}:list", web.ListAjax)
 	g1.POST("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.AddSave)
 	g1.POST("/remove", "{{.table.PackageName}}:{{.table.BusinessName}}:remove", web.Remove)
-	g1.GET("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit", web.Edit)
 	g1.POST("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit",web.EditSave)
 	g1.POST("/export", "{{.table.PackageName}}:{{.table.BusinessName}}:export", web.Export)
 }

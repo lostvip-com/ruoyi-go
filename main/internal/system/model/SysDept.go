@@ -1,24 +1,25 @@
 package model
 
 import (
+	"common/cm_model"
 	"github.com/lostvip-com/lv_framework/db"
-	"main/internal/common/cm_model"
 )
 
 type SysDept struct {
 	DeptId    int64  `gorm:"type:bigint(20);primary_key;auto_increment;部门id;" json:"deptId"`
 	ParentId  int64  `gorm:"type:bigint(20);comment:父部门id;" json:"parentId"`
-	Ancestors string `gorm:"type:varchar(50);comment:祖级列表;uniqueIndex:idx_ancestors" json:"ancestors"`
+	Ancestors string `gorm:"type:varchar(50);comment:祖级列表;index:idx_ancestors" json:"ancestors"`
 	DeptName  string `gorm:"type:varchar(30);comment:部门名称;" json:"deptName"`
 	OrderNum  int    `gorm:"type:int(10);comment:显示顺序;" json:"orderNum"`
 	Leader    string `gorm:"type:varchar(20);comment:负责人;" json:"leader"`
 	Phone     string `gorm:"type:varchar(11);comment:联系电话;" json:"phone"`
-	Email     string `gorm:"type:varchar(50);comment:邮箱;" json:"email"`
+	DeptType  string `gorm:"type:varchar(50);default:0;comment:组织类型;" json:"deptType"`
 	Status    string `gorm:"type:char(1);comment:部门状态（0正常 1停用）;" json:"status"`
 	UpdateBy  string `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
 	CreateBy  string `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
 	TenantId  int64  `gorm:"type:bigint(20);comment:租户id;" json:"tenantId" form:"tenantId"`
 	cm_model.BaseModel
+	ParentName string `gorm:"-" json:"parentName"`
 }
 
 // 映射数据表
@@ -32,9 +33,9 @@ func (e *SysDept) Save() error {
 }
 
 // 查
-func (e *SysDept) FindById() error {
-	err := db.GetMasterGorm().Take(e, e.DeptId).Error
-	return err
+func (e *SysDept) FindById(id int64) (*SysDept, error) {
+	err := db.GetMasterGorm().Take(e, id).Error
+	return e, err
 }
 
 // 查第一条
@@ -56,6 +57,9 @@ func (e *SysDept) FindOne() error {
 // 改
 func (e *SysDept) Update() error {
 	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+}
+func (e *SysDept) UpdateDelFlag(id int64) error {
+	return db.GetMasterGorm().Table(e.TableName()).Where("dept_id=?", id).Update("del_flag", "1").Error
 }
 
 // 删

@@ -6,7 +6,7 @@ select
  {{if ne $index 0}} ,{{end}} t.{{$column.ColumnName}}
  {{- end }}
 
-from {{.table.TbName}} t where 1=1 and del_flag=0
+from {{.table.TbName}} t where 1=1 and t.del_flag=0
 {{range $index, $column := .table.Columns -}}
 {{if eq $column.IsQuery "0"}}
     {{- continue -}}

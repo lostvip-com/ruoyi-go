@@ -13,7 +13,7 @@ LV自动生成修改页面代码,只生成一次,按需修改.
     <link href="{{printf `{{OssUrl}}`}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 </head>
 <body class="white-bg">
-<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+<div class="wrapper wrapper-content   ibox-content">
     <form class="form-horizontal m" id="form-{{.table.BusinessName}}-edit">
         <input name="{{.table.PkColumn.HtmlField}}" value="{{printf "{{.%v.%v}}" .table.BusinessName .table.PkColumn.GoField}}" type="hidden">
         {{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}} {{if and (ne $treeParentCode "") (eq $column.HtmlField $treeParentCode)}}

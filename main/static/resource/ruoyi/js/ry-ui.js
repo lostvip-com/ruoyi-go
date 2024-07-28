@@ -384,7 +384,9 @@ var table = {
                     $.modal.loading("正在导出数据，请稍候...");
                     $.post(table.options.exportUrl, dataParam, function(result) {
                         if (result.code == web_status.SUCCESS) {
-                            window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                            let downUrl = ctx + "/common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true
+                            console.log(downUrl)
+                            window.location.href = downUrl;
                         } else if (result.code == web_status.WARNING) {
                             $.modal.alertWarning(result.msg)
                         } else {
@@ -398,7 +400,7 @@ var table = {
             importTemplate: function() {
                 $.get(activeWindow().table.options.importTemplateUrl, function(result) {
                     if (result.code == web_status.SUCCESS) {
-                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                        window.location.href = ctx + "/common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
                     } else if (result.code == web_status.WARNING) {
                         $.modal.alertWarning(result.msg)
                     } else {
@@ -1144,6 +1146,7 @@ var table = {
             remove: function(id) {
                 table.set();
                 $.modal.confirm("确定删除该条" + table.options.modalName + "信息吗？", function() {
+                    // debugger
                     var url = $.common.isEmpty(id) ? table.options.removeUrl : table.options.removeUrl.replace("{id}", id);
                     if (table.options.type == table_type.bootstrapTreeTable) {
                         $.operate.get(url);
@@ -1205,9 +1208,9 @@ var table = {
                         return;
                     }
                     var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-                    $.modal.open("修改" + table.options.modalName, url);
+                    $.modal.open("修改1" + table.options.modalName, url);
                 } else {
-                    $.modal.open("修改" + table.options.modalName, $.operate.editUrl(id));
+                    $.modal.open("修改2" + table.options.modalName, $.operate.editUrl(id));
                 }
             },
             // 修改信息，以tab页展现
@@ -1352,6 +1355,7 @@ var table = {
             },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function(result) {
+                // debugger;
                 if (result.code == web_status.SUCCESS) {
                     var parent = activeWindow();
                     if ($.common.isEmpty(parent.table)) {

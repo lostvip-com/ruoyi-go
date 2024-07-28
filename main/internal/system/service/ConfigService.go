@@ -1,14 +1,16 @@
 package service
 
 import (
+	"common/cm_vo"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/lv_cache"
+	"github.com/lostvip-com/lv_framework/lv_cache/lv_ram"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"time"
 )
 
@@ -16,10 +18,10 @@ type ConfigService struct {
 }
 
 // 根据键获取值
-func (svc *ConfigService) GetValueByKey(key string) string {
+func (svc *ConfigService) GetValueFromCache(key string) string {
 	//从缓存读取
-	result, _ := lv_cache.GetCacheClient().Get(key)
-	if result == "" {
+	result, err := lv_cache.GetCacheClient().Get(key)
+	if err != nil {
 		entity := &model.SysConfig{ConfigKey: key}
 		err := entity.FindOne()
 		lv_err.HasErrAndPanic(err)
@@ -27,6 +29,23 @@ func (svc *ConfigService) GetValueByKey(key string) string {
 		lv_cache.GetCacheClient().Set(key, result, 10*time.Minute)
 	}
 
+	return result
+}
+
+// 根据键获取值
+func (svc *ConfigService) GetValueFromRam(key string) string {
+	// 这里为了提高速度使用内在缓存
+	result, err := lv_ram.GetRamCacheClient().Get(key)
+	if err != nil {
+		entity := &model.SysConfig{ConfigKey: key}
+		err := entity.FindOne()
+		if err != nil {
+			panic(errors.New("获取配置失败,检查配置表：sys_config 中是否存在配置项：" + key))
+		}
+		result = entity.ConfigValue
+		//内存续期
+		lv_ram.GetRamCacheClient().Set(key, result, 10*time.Minute)
+	}
 	return result
 }
 
@@ -66,7 +85,7 @@ func (svc *ConfigService) DeleteRecordByIds(ids string) {
 }
 
 // 添加数据
-func (svc *ConfigService) AddSave(req *vo.AddConfigReq, c *gin.Context) (int64, error) {
+func (svc *ConfigService) AddSave(req *cm_vo.AddConfigReq, c *gin.Context) (int64, error) {
 	var entity model.SysConfig
 	entity.ConfigName = req.ConfigName
 	entity.ConfigKey = req.ConfigKey
@@ -87,7 +106,7 @@ func (svc *ConfigService) AddSave(req *vo.AddConfigReq, c *gin.Context) (int64, 
 }
 
 // 修改数据
-func (svc *ConfigService) EditSave(req *vo.EditConfigReq, c *gin.Context) {
+func (svc *ConfigService) EditSave(req *cm_vo.EditConfigReq, c *gin.Context) {
 	entity := &model.SysConfig{ConfigId: req.ConfigId}
 	err := entity.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -112,19 +131,19 @@ func (svc *ConfigService) EditSave(req *vo.EditConfigReq, c *gin.Context) {
 }
 
 // 根据条件分页查询角色数据
-func (svc *ConfigService) SelectListAll(params *vo.SelectConfigPageReq) ([]model.SysConfig, error) {
+func (svc *ConfigService) SelectListAll(params *cm_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
 	var config dao2.ConfigDao
 	return config.SelectListAll(params)
 }
 
 // 根据条件分页查询角色数据
-func (svc *ConfigService) SelectListByPage(params *vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
+func (svc *ConfigService) SelectListByPage(params *cm_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
 	var config dao2.ConfigDao
 	return config.SelectPageList(params)
 }
 
 // 导出excel
-func (svc *ConfigService) Export(param *vo.SelectConfigPageReq) (string, error) {
+func (svc *ConfigService) Export(param *cm_vo.SelectConfigPageReq) (string, error) {
 	head := []string{"参数主键", "参数名称", "参数键名", "参数键值", "系统内置（Y是 N否）", "状态"}
 	col := []string{"config_id", "config_name", "config_key", "config_value", "config_type"}
 	var d dao2.ConfigDao

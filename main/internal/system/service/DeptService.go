@@ -1,13 +1,15 @@
 package service
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_reflect"
 	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/spf13/cast"
 	"main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"strings"
 	"time"
 )
@@ -15,10 +17,13 @@ import (
 type DeptService struct{}
 
 // 新增保存信息
-func (svc *DeptService) AddSave(req *vo.AddDeptReq, c *gin.Context) (int64, error) {
-	dept0 := new(model.SysDept)
-	parent := &model.SysDept{DeptId: req.ParentId}
-	err := parent.FindOne()
+func (svc *DeptService) AddSave(req *cm_vo.AddDeptReq, c *gin.Context) (int64, error) {
+	if req.OrderNum == 0 {
+		req.OrderNum = 100
+	}
+
+	parent := new(model.SysDept)
+	parent, err := parent.FindById(req.ParentId)
 	if err == nil {
 		if parent.Status != "0" {
 			return 0, errors.New("部门停用，不允许新增")
@@ -26,30 +31,26 @@ func (svc *DeptService) AddSave(req *vo.AddDeptReq, c *gin.Context) (int64, erro
 	} else {
 		return 0, errors.New("父部门不能为空")
 	}
+	dept0 := new(model.SysDept)
 	var userService UserService
-	dept0.DeptName = req.DeptName
-	dept0.Status = req.Status
-	dept0.ParentId = req.ParentId
-	dept0.Email = req.Email
-	dept0.Leader = req.Leader
-	dept0.Phone = req.Phone
-	dept0.OrderNum = req.OrderNum
-	dept0.TenantId = req.TenantId
+	lv_reflect.CopyProperties(req, dept0)
 	user := userService.GetProfile(c)
-
 	if user != nil && user.UserId > 0 {
 		dept0.CreateBy = user.LoginName
 	}
-
 	dept0.CreateTime = time.Now()
 	//这里跟原版不一样了，多加了一级自己的ID，以方便数据权限控制
-	dept0.Ancestors = parent.Ancestors + "," + lv_conv.String(dept0.DeptId)
 	err = dept0.Save()
+	if err != nil {
+		return 0, err
+	}
+	dept0.Ancestors = parent.Ancestors + "," + cast.ToString(dept0.DeptId)
+	dept0.Update()
 	return dept0.DeptId, err
 }
 
 // 修改保存信息
-func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, error) {
+func (svc *DeptService) EditSave(req *cm_vo.EditDeptReq, c *gin.Context) (int64, error) {
 	dept0 := &model.SysDept{DeptId: req.DeptId}
 	err := dept0.FindOne()
 	if err != nil {
@@ -64,7 +65,7 @@ func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, er
 		dept0.DeptName = req.DeptName
 		dept0.Status = req.Status
 		dept0.ParentId = req.ParentId
-		dept0.Email = req.Email
+		dept0.DeptType = req.NodeType
 		dept0.Leader = req.Leader
 		dept0.Phone = req.Phone
 		dept0.OrderNum = req.OrderNum
@@ -82,7 +83,7 @@ func (svc *DeptService) EditSave(req *vo.EditDeptReq, c *gin.Context) (int64, er
 }
 
 // 根据分页查询部门管理数据
-func (svc *DeptService) SelectListAll(param *vo.DeptPageReq) (*[]model.SysDept, error) {
+func (svc *DeptService) SelectListAll(param *cm_vo.DeptPageReq) (*[]model.SysDept, error) {
 	if param == nil {
 		return svc.SelectDeptList(0, "", "", param.TenantId)
 	} else {
@@ -96,15 +97,21 @@ func (svc *DeptService) DeleteDeptById(deptId int64) error {
 	return dao.DeleteDeptById(deptId)
 }
 
-// 根据部门ID查询信息
-func (svc *DeptService) SelectDeptById(deptId int64) *vo.SysDeptExtend {
+// SelectDeptById 根据部门ID查询信息
+func (svc *DeptService) SelectDeptById(deptId int64) *model.SysDept {
 	var dao dao.SysDeptDao
-	deptEntity, err := dao.SelectDeptById(deptId)
+	dept, err := dao.SelectDeptById(deptId)
+	if dept.ParentId > 0 {
+		parentDept, err := dao.SelectDeptById(dept.ParentId)
+		if err == nil {
+			dept.ParentName = parentDept.DeptName
+		}
+	}
 	if err != nil {
 		return nil
 	}
 
-	return deptEntity
+	return dept
 }
 
 // 根据ID查询所有子部门
@@ -168,6 +175,7 @@ func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]str
 			ztree.Pid = (*deptList)[i].ParentId
 			ztree.Name = (*deptList)[i].DeptName
 			ztree.Title = (*deptList)[i].DeptName
+			ztree.NodeType = (*deptList)[i].DeptType
 			if isCheck {
 				tmp := lv_conv.String((*deptList)[i].DeptId) + (*deptList)[i].DeptName
 				tmpcheck := false
@@ -197,30 +205,19 @@ func (svc *DeptService) SelectDeptCount(deptId, parentId int64) int64 {
 	return dao.SelectDeptCount(deptId, parentId)
 }
 
-// 校验部门名称是否唯一
-func (svc *DeptService) CheckDeptNameUniqueAll(deptName string, parentId int64) string {
-	var dao dao.SysDeptDao
-	dept, err := dao.CheckDeptNameUniqueAll(deptName, parentId)
-	if err != nil {
-		return "1"
-	}
-	if dept != nil && dept.DeptId > 0 {
-		return "1"
-	} else {
-		return "0"
-	}
-}
-
-// 校验部门名称是否唯一
-func (svc *DeptService) CheckDeptNameUnique(deptName string, deptId, parentId int64) string {
-	var dao dao.SysDeptDao
-	dept, err := dao.CheckDeptNameUniqueAll(deptName, parentId)
-
-	if err != nil {
-		return "1"
-	}
-	if dept != nil && dept.DeptId > 0 && dept.DeptId != deptId {
-		return "1"
-	}
-	return "0"
-}
+//
+///**
+// * 0
+// */
+//func (svc *DeptService) IsExistDeptName(deptName string, parentId int64) (bool, error) {
+//	var dao dao.SysDeptDao
+//	dept, err := dao.FindOne(deptName, parentId)
+//	if err != nil {
+//		return false, err
+//	}
+//	if err == nil && dept.DeptId > 0 {
+//		return true, err
+//	} else {
+//		return false, err
+//	}
+//}

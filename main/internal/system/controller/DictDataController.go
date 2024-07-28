@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"common/cm_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/model"
 	"main/internal/system/service"
-	"main/internal/system/vo"
 )
 
 type DictDataController struct {
@@ -15,7 +15,7 @@ type DictDataController struct {
 
 // 列表分页数据
 func (w *DictDataController) ListAjax(c *gin.Context) {
-	var req *vo.SelectDictDataPageReq
+	var req *cm_vo.SelectDictDataPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典数据管理", req).WriteJsonExit()
@@ -40,7 +40,7 @@ func (w *DictDataController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *DictDataController) AddSave(c *gin.Context) {
-	var req *vo.AddDictDataReq
+	var req *cm_vo.AddDictDataReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("字典数据管理", req).WriteJsonExit()
@@ -82,7 +82,7 @@ func (w *DictDataController) Edit(c *gin.Context) {
 
 // 修改页面保存
 func (w *DictDataController) EditSave(c *gin.Context) {
-	var req *vo.EditDictDataReq
+	var req *cm_vo.EditDictDataReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("字典数据管理", req).WriteJsonExit()
@@ -118,7 +118,7 @@ func (w *DictDataController) Remove(c *gin.Context) {
 
 // 导出
 func (w *DictDataController) Export(c *gin.Context) {
-	var req *vo.SelectDictDataPageReq
+	var req *cm_vo.SelectDictDataPageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典数据导出", req).WriteJsonExit()

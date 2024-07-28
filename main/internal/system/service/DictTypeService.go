@@ -1,14 +1,16 @@
 package service
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/spf13/cast"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"time"
 )
 
@@ -34,17 +36,25 @@ func (svc *DictTypeService) DeleteRecordById(id int64) bool {
 }
 
 // 批量删除数据记录
-func (svc *DictTypeService) DeleteRecordByIds(ids string) int64 {
+func (svc *DictTypeService) DeleteRecordByIds(ids string) error {
 	ida := lv_conv.ToInt64Array(ids, ",")
-	result, err := model.DeleteBatch(ida...)
-	if err != nil {
-		return 0
+	data := new(model.SysDictData)
+	//data.DeleteBatch()
+	tp := new(model.DictType)
+	for _, id := range ida {
+		tp.DictId = cast.ToInt64(id)
+		_, err := tp.FindOne()
+		lv_err.HasErrAndPanic(err)
+		//
+		data.DeleteByDictType(tp.DictType)
+		_, err = tp.Delete()
+		lv_err.HasErrAndPanic(err)
 	}
-	return result
+	return nil
 }
 
 // 添加数据
-func (svc *DictTypeService) AddSave(req *model.DictType, c *gin.Context) (int64, error) {
+func (svc *DictTypeService) AddSave(req *cm_vo.AddDictTypeReq, c *gin.Context) (int64, error) {
 	var entity model.DictType
 	entity.Status = req.Status
 	entity.DictType = req.DictType
@@ -62,7 +72,7 @@ func (svc *DictTypeService) AddSave(req *model.DictType, c *gin.Context) (int64,
 }
 
 // 修改数据
-func (svc *DictTypeService) EditSave(req *vo.EditDictTypeReq, c *gin.Context) (int64, error) {
+func (svc *DictTypeService) EditSave(req *cm_vo.EditDictTypeReq, c *gin.Context) (int64, error) {
 	entity := &model.DictType{DictId: req.DictId}
 	ok, err := entity.FindOne()
 
@@ -90,13 +100,13 @@ func (svc *DictTypeService) EditSave(req *vo.EditDictTypeReq, c *gin.Context) (i
 }
 
 // 根据条件分页查询角色数据
-func (svc *DictTypeService) SelectListAll(params *vo.SelectDictTypePageReq) ([]model.DictType, error) {
+func (svc *DictTypeService) SelectListAll(params *cm_vo.DictTypePageReq) ([]model.DictType, error) {
 	var dao dao2.DictTypeDao
 	return dao.SelectListAll(params)
 }
 
 // 根据条件分页查询角色数据
-func (svc *DictTypeService) SelectListByPage(params *vo.SelectDictTypePageReq) ([]model.DictType, *lv_web.Paging, error) {
+func (svc *DictTypeService) SelectListByPage(params *cm_vo.DictTypePageReq) ([]model.DictType, *lv_web.Paging, error) {
 	var dao dao2.DictTypeDao
 	return dao.SelectListByPage(params)
 }
@@ -112,7 +122,7 @@ func (svc *DictTypeService) SelectDictTypeByType(dictType string) *model.DictTyp
 }
 
 // 导出excel
-func (svc *DictTypeService) Export(param *vo.SelectDictTypePageReq) (string, error) {
+func (svc *DictTypeService) Export(param *cm_vo.DictTypePageReq) (string, error) {
 	head := []string{"字典主键", "字典名称", "字典类型", "状态", "创建者", "创建时间", "更新者", "更新时间", "备注"}
 	col := []string{"dict_id", "dict_name", "dict_type", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
 	var dao dao2.DictTypeDao
@@ -120,33 +130,23 @@ func (svc *DictTypeService) Export(param *vo.SelectDictTypePageReq) (string, err
 }
 
 // 检查字典类型是否唯一
-func (svc *DictTypeService) CheckDictTypeUniqueAll(configKey string) string {
+func (svc *DictTypeService) CheckDictTypeUniqueAll(configKey string) (bool, error) {
 	var dao dao2.DictTypeDao
-	entity, err := dao.CheckDictTypeUniqueAll(configKey)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.DictId > 0 {
-		return "1"
-	}
-	return "0"
+	exist, err := dao.CheckDictTypeUniqueAll(configKey)
+
+	return exist, err
 }
 
 // 检查字典类型是否唯一
-func (svc *DictTypeService) CheckDictTypeUnique(configKey string, dictId int64) string {
+func (svc *DictTypeService) IsDictTypeExist(configKey string) bool {
 	var dao dao2.DictTypeDao
-	entity, err := dao.CheckDictTypeUniqueAll(configKey)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.DictId > 0 && entity.DictId != dictId {
-		return "1"
-	}
-	return "0"
+	exist, err := dao.CheckDictTypeUniqueAll(configKey)
+	lv_err.HasErrAndPanic(err)
+	return exist
 }
 
 // 查询字典类型树
-func (svc *DictTypeService) SelectDictTree(params *vo.SelectDictTypePageReq) *[]dto.Ztree {
+func (svc *DictTypeService) SelectDictTree(params *cm_vo.DictTypePageReq) *[]dto.Ztree {
 	var result []dto.Ztree
 	var dao dao2.DictTypeDao
 	dictList, err := dao.SelectListAll(params)

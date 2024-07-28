@@ -46,55 +46,6 @@
 {{template "footer" (OssUrl)}}
 <script type="text/javascript">
     var prefix = ctx + "/system/post";
-
-    // $("#form-post-edit").validate({
-    //     onkeyup: false,
-    //     rules: {
-    //         postName: {
-    //             remote: {
-    //                 url: ctx + "/system/post/checkPostNameUnique",
-    //                 type: "post",
-    //                 dataType: "json",
-    //                 data: {
-    //                     "postId": function () {
-    //                         return $("input[name='postId']").val();
-    //                     },
-    //                     "postName": function () {
-    //                         return $.common.trim($("#postName").val());
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         postCode: {
-    //             remote: {
-    //                 url: ctx + "/system/post/checkPostCodeUnique",
-    //                 type: "post",
-    //                 dataType: "json",
-    //                 data: {
-    //                     "postId": function () {
-    //                         return $("input[name='postId']").val();
-    //                     },
-    //                     "postCode": function () {
-    //                         return $.common.trim($("#postCode").val());
-    //                     }
-    //                 },
-    //             }
-    //         },
-    //         postSort: {
-    //             digits: true
-    //         },
-    //     },
-    //     messages: {
-    //         "postCode": {
-    //             remote: "岗位编码已经存在"
-    //         },
-    //         "postName": {
-    //             remote: "岗位名称已经存在"
-    //         }
-    //     },
-    //     focusCleanup: true
-    // });
-
     function submitHandler() {
         if ($.validate.form()) {
             $.operate.save(prefix + "/edit", $('#form-post-edit').serialize());

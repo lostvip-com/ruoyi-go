@@ -5,7 +5,6 @@ import (
 	"github.com/lostvip-com/lv_framework/db/lvdao"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 )
 
 // Fill with you ideas below.
@@ -15,15 +14,10 @@ type SysDeptDao struct {
 }
 
 // 根据部门ID查询信息
-func (dao SysDeptDao) SelectDeptById(deptId int64) (*vo.SysDeptExtend, error) {
-	var result vo.SysDeptExtend
-	sql := ` select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status,(select dept_name from sys_dept where dept_id = d.parent_id) parent_name
-             from sys_dept d 
-             where d.del_flag =0 and d.dept_id = @deptId
-             `
-	param := map[string]any{"deptId": deptId}
-	err := db.GetMasterGorm().Raw(sql, param).Scan(&result).Error
-	return &result, err
+func (dao SysDeptDao) SelectDeptById(deptId int64) (*model.SysDept, error) {
+	var result = new(model.SysDept)
+	result, err := result.FindById(deptId)
+	return result, err
 }
 
 // 根据ID查询所有子部门
@@ -38,8 +32,7 @@ func (dao SysDeptDao) SelectChildrenDeptById(deptId int64) []*model.SysDept {
 // 删除部门管理信息
 func (dao SysDeptDao) DeleteDeptById(deptId int64) error {
 	var entity model.SysDept
-	entity.DeptId = deptId
-	err := entity.Update()
+	err := entity.UpdateDelFlag(deptId)
 	return err
 }
 
@@ -142,7 +135,7 @@ func (dao SysDeptDao) SelectDeptCount(deptId, parentId int64) int64 {
 }
 
 // 校验部门名称是否唯一
-func (dao SysDeptDao) CheckDeptNameUniqueAll(deptName string, parentId int64) (*model.SysDept, error) {
+func (dao SysDeptDao) FindOne(deptName string, parentId int64) (*model.SysDept, error) {
 	var entity model.SysDept
 	entity.DeptName = deptName
 	entity.ParentId = parentId

@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"common/cm_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/service"
-	"main/internal/system/vo"
 )
 
 type ConfigController struct{}
@@ -19,7 +19,7 @@ func (w *ConfigController) List(c *gin.Context) {
 
 // 列表分页数据
 func (w *ConfigController) ListAjax(c *gin.Context) {
-	req := new(vo.SelectConfigPageReq)
+	req := new(cm_vo.SelectConfigPageReq)
 	var configService service.ConfigService
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
@@ -38,7 +38,7 @@ func (w *ConfigController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *ConfigController) AddSave(c *gin.Context) {
-	req := new(vo.AddConfigReq)
+	req := new(cm_vo.AddConfigReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
@@ -85,7 +85,7 @@ func (w *ConfigController) Edit(c *gin.Context) {
 
 // 修改页面保存
 func (w *ConfigController) EditSave(c *gin.Context) {
-	req := new(vo.EditConfigReq)
+	req := new(cm_vo.EditConfigReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
@@ -115,7 +115,7 @@ func (w *ConfigController) Remove(c *gin.Context) {
 
 // 导出
 func (w *ConfigController) Export(c *gin.Context) {
-	req := new(vo.SelectConfigPageReq)
+	req := new(cm_vo.SelectConfigPageReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
 		lv_web.ErrorResp(c).Log("参数管理", req).WriteJsonExit()
@@ -134,7 +134,7 @@ func (w *ConfigController) Export(c *gin.Context) {
 
 // 检查参数键名是否已经存在不包括本参数
 func (w *ConfigController) CheckConfigKeyUnique(c *gin.Context) {
-	var req *vo.CheckConfigKeyReq
+	var req *cm_vo.CheckConfigKeyReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
@@ -147,7 +147,7 @@ func (w *ConfigController) CheckConfigKeyUnique(c *gin.Context) {
 
 // 检查参数键名是否已经存在
 func (w *ConfigController) CheckConfigKeyUniqueAll(c *gin.Context) {
-	var req *vo.AddConfigReq
+	var req *cm_vo.AddConfigReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return

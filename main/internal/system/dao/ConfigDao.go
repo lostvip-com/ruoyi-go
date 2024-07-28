@@ -1,13 +1,13 @@
 package dao
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/db/namedsql"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 )
 
 type ConfigDao struct {
@@ -20,7 +20,7 @@ func (d *ConfigDao) DeleteBatch(ids ...int64) error {
 }
 
 // 根据条件分页查询用户列表
-func (d ConfigDao) SelectPageList(param *vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
+func (d ConfigDao) SelectPageList(param *cm_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
 	db := db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	countSql := "select count(*) from (" + sql + ") t "
@@ -33,7 +33,7 @@ func (d ConfigDao) SelectPageList(param *vo.SelectConfigPageReq) (*[]map[string]
 	return result, total, err
 }
 
-func (d ConfigDao) GetSql(param *vo.SelectConfigPageReq) (map[string]interface{}, string) {
+func (d ConfigDao) GetSql(param *cm_vo.SelectConfigPageReq) (map[string]interface{}, string) {
 	sqlParams := make(map[string]interface{})
 	sql := `
            select * from sys_config u where 1=1
@@ -115,7 +115,7 @@ func (d ConfigDao) GetSql(param *vo.SelectConfigPageReq) (map[string]interface{}
 //}
 
 // 导出excel
-func (d ConfigDao) SelectExportList(param *vo.SelectConfigPageReq) (*[]map[string]string, error) {
+func (d ConfigDao) SelectExportList(param *cm_vo.SelectConfigPageReq) (*[]map[string]string, error) {
 	db := db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.user_id desc "
@@ -158,7 +158,7 @@ func (d ConfigDao) SelectExportList(param *vo.SelectConfigPageReq) (*[]map[strin
 //}
 
 // 获取所有数据
-func (dao *ConfigDao) SelectListAll(param *vo.SelectConfigPageReq) ([]model.SysConfig, error) {
+func (dao *ConfigDao) SelectListAll(param *cm_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {

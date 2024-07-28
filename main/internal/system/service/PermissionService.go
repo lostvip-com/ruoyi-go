@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/spf13/cast"
 	"html/template"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
@@ -30,7 +30,7 @@ func (svc *PermissionService) HasPermi(u interface{}, permission string) string 
 		return "disabled"
 	}
 
-	uid := lv_conv.Int64(u)
+	uid := cast.ToInt64(u)
 	var userService UserService
 	if uid <= 0 {
 		return "disabled"

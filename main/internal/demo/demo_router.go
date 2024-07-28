@@ -22,6 +22,8 @@ func init() {
 	//lv_web
 	g1 := router.New("/demo/form")
 	g1.GET("/autocomplete", "", demo.Autocomplete)
+	g1.GET("/userModel", "", demo.UserModel)
+
 	g1.GET("/basic", "", demo.Basic)
 	g1.GET("/button", "", demo.Button)
 	g1.GET("/cards", "", demo.Cards)
@@ -44,7 +46,8 @@ func init() {
 	g2.GET("/fontawesome", "", demo.Fontawesome)
 	g2.GET("/glyphicons", "", demo.Glyphicons)
 
-	g3 := router.New("/demo/modal", auth.TokenCheck())
+	//g3 := router.New("/demo/modal", auth.TokenCheck())
+	g3 := router.New("/demo/modal")
 	g3.GET("/dialog", "", demo.Dialog)
 	g3.GET("/form", "", demo.Form)
 	g3.GET("/layer", "", demo.Layer)

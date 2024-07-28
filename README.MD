@@ -7,6 +7,7 @@
 * 支持在yaml文件中使用表达式从环境变量中取值，便于切换生产、开发、测试环境参数（模仿springboot）,如：
 ~~~
     host: ${REDIS_HOST:lostvip.com}
+    如: 环境变量添加 REDIS_HOST=192.168.88.114;REDIS_PORT=6379;REDIS_PWD=dpctest
 ~~~
 * 1.x版本是基于xorm开发，2.0之后的版本将全面切换到gorm。
 ## 核心技术及组件

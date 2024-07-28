@@ -8,8 +8,8 @@ package controller
 
 import (
     "github.com/gin-gonic/gin"
-    "lostvip.com/utils/lv_conv"
-    "lostvip.com/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/utils/lv_web"
+    "github.com/lostvip-com/lv_framework/utils/lv_conv"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
 )
 

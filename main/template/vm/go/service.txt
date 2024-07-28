@@ -7,9 +7,10 @@ package service
 
 import (
 	"time"
-    "lostvip.com/utils/lv_conv"
-    "lostvip.com/utils/lv_err"
-    "lostvip.com/utils/lv_office"
+	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/utils/lv_office"
+	"github.com/lostvip-com/lv_framework/utils/lv_reflect"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/model"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/dao"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
@@ -39,17 +40,7 @@ func (svc {{.table.ClassName}}Service) DeleteByIds(ids string) int64 {
 // AddSave 添加数据
 func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Req) ({{.table.PkColumn.GoType}}, error) {
 	var entity = new(model.{{.table.ClassName}})
-	{{range $index, $column := .table.Columns}}
-        {{- if or (eq $column.GoField "DelFlag") -}}
-        {{- continue -}}
-        {{- end }}
-	    {{- if eq $column.IsInsert "0"}}
-        {{- continue -}}
-	    {{- end }}
-	    {{- if eq $column.IsPk "0" -}}
-            entity.{{$column.GoField}} = req.{{$column.GoField}}
-        {{- end }}
-	{{ end}}
+	lv_reflect.CopyProperties(req, entity)
 	entity.CreateTime = time.Now()
 	entity.UpdateTime = entity.CreateTime
 	entity.CreateBy = req.CreateBy
@@ -63,8 +54,7 @@ func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}
 	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
 	err := entity.FindById()
     lv_err.HasErrAndPanic(err)
-	{{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}}
-	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
+	lv_reflect.CopyProperties(req, entity)
 	entity.UpdateTime = time.Now()
 	entity.UpdateBy = req.UpdateBy
 	return entity.Updates()

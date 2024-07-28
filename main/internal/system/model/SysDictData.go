@@ -43,8 +43,13 @@ func (r *SysDictData) Delete() (int64, error) {
 }
 
 // 批量删除
-func DeleteBatch(ids ...int64) (int64, error) {
-	return db.GetInstance().Engine().Table("sys_dict_data").In("dictCode", ids).Delete(new(SysDictData))
+func (r *SysDictData) DeleteBatch(ids ...int64) (int64, error) {
+	return db.GetInstance().Engine().Table("sys_dict_data").In("dict_code", ids).Delete(new(SysDictData))
+}
+
+// 批量删除
+func (r *SysDictData) DeleteByDictType(dictType string) (int64, error) {
+	return db.GetInstance().Engine().Table("sys_dict_data").Where("dict_type=?", dictType).Delete(new(SysDictData))
 }
 
 // 根据结构体中已有的非空数据来获得单条数据

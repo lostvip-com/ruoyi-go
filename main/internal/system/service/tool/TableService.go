@@ -9,6 +9,7 @@ import (
 	"github.com/lostvip-com/lv_framework/lv_global"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/spf13/cast"
 	"main/internal/common/functions"
 	"main/internal/system/model/tool"
 	"main/internal/system/service"
@@ -354,9 +355,9 @@ func (svc TableService) InitColumnField(column *tool.Entity, table *tool.GenTabl
 			end := strings.Index(tmp, ")")
 			result := tmp[start+1 : end]
 			arr := strings.Split(result, ",")
-			if len(arr) == 2 && lv_conv.Int(arr[1]) > 0 {
+			if len(arr) == 2 && cast.ToInt(arr[1]) > 0 {
 				column.GoType = "float64"
-			} else if len(arr) == 1 && lv_conv.Int(arr[0]) <= 10 {
+			} else if len(arr) == 1 && cast.ToInt(arr[0]) <= 10 {
 				column.GoType = "int"
 			} else {
 				column.GoType = "int64"
@@ -578,7 +579,7 @@ func (svc TableService) GetColumnLength(columnType string) int {
 	start := strings.Index(columnType, "(")
 	end := strings.Index(columnType, ")")
 	result := columnType[start+1 : end-1]
-	return lv_conv.Int(result)
+	return cast.ToInt(result)
 }
 
 // 获取Go类别下拉框

@@ -1,13 +1,13 @@
 package service
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"time"
 )
 
@@ -33,7 +33,8 @@ func (svc *DictDataService) DeleteRecordById(id int64) bool {
 // 批量删除数据记录
 func (svc *DictDataService) DeleteRecordByIds(ids string) int64 {
 	ida := lv_conv.ToInt64Array(ids, ",")
-	result, err := model.DeleteBatch(ida...)
+	data := new(model.SysDictData)
+	result, err := data.DeleteBatch(ida...)
 	if err != nil {
 		return 0
 	}
@@ -41,7 +42,7 @@ func (svc *DictDataService) DeleteRecordByIds(ids string) int64 {
 }
 
 // 添加数据
-func (svc *DictDataService) AddSave(req *vo.AddDictDataReq, c *gin.Context) (int64, error) {
+func (svc *DictDataService) AddSave(req *cm_vo.AddDictDataReq, c *gin.Context) (int64, error) {
 	var entity model.SysDictData
 	entity.DictType = req.DictType
 	entity.Status = req.Status
@@ -67,7 +68,7 @@ func (svc *DictDataService) AddSave(req *vo.AddDictDataReq, c *gin.Context) (int
 }
 
 // 修改数据
-func (svc *DictDataService) EditSave(req *vo.EditDictDataReq, c *gin.Context) (int64, error) {
+func (svc *DictDataService) EditSave(req *cm_vo.EditDictDataReq, c *gin.Context) (int64, error) {
 	entity := &model.SysDictData{DictCode: req.DictCode}
 	ok, err := entity.FindOne()
 
@@ -101,19 +102,19 @@ func (svc *DictDataService) EditSave(req *vo.EditDictDataReq, c *gin.Context) (i
 }
 
 // 根据条件分页查询角色数据
-func (svc *DictDataService) SelectListAll(params *vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
+func (svc *DictDataService) SelectListAll(params *cm_vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
 	var dao dao2.DictDataDao
 	return dao.SelectListAll(params)
 }
 
 // 根据条件分页查询角色数据
-func (svc *DictDataService) SelectListByPage(params *vo.SelectDictDataPageReq) (*[]model.SysDictData, *lv_web.Paging, error) {
+func (svc *DictDataService) SelectListByPage(params *cm_vo.SelectDictDataPageReq) (*[]model.SysDictData, *lv_web.Paging, error) {
 	var dao dao2.DictDataDao
 	return dao.SelectListByPage(params)
 }
 
 // 导出excel
-func (svc *DictDataService) Export(param *vo.SelectDictDataPageReq) (string, error) {
+func (svc *DictDataService) Export(param *cm_vo.SelectDictDataPageReq) (string, error) {
 	head := []string{"字典编码", "字典排序", "字典标签", "字典键值", "字典类型", "样式属性", "表格回显样式", "是否默认", "状态", "创建者", "创建时间", "更新者", "更新时间", "备注"}
 	col := []string{"dictCode", "dictSort", "dict_label", "dict_value", "dict_type", "css_class", "list_class", "is_default", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
 	var dao dao2.DictDataDao

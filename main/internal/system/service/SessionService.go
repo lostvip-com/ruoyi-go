@@ -60,19 +60,30 @@ func (svc *SessionService) ForceLogout(token string) error {
 	return nil
 }
 
-func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, roleKeys string, userAgent string, ip string) error {
-	// 保存用户信息到session
-	loginLocation := lv_net.GetCityByIp(ip)
+func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, roleKeys string) error {
 	//记录到redis
 	fieldMap := make(map[string]interface{})
 	fieldMap["userName"] = user.UserName
 	fieldMap["userId"] = user.UserId
 	fieldMap["loginName"] = user.LoginName
 	fieldMap["avatar"] = user.Avatar
-	fieldMap["ip"] = ip
-	fieldMap["location"] = loginLocation
 	fieldMap["roleKeys"] = roleKeys
+	fieldMap["deptId"] = user.DeptId
+	fieldMap["tenantId"] = user.TenantId //租户ID
 	//其它
+	key := "login:" + token
+	err := lv_cache.GetCacheClient().HSet(key, fieldMap)
+	if err != nil {
+		return errors.New("redis 故障！" + err.Error())
+	}
+	err = lv_cache.GetCacheClient().Expire(key, time.Hour)
+	if err != nil {
+		return errors.New("redis 故障！" + err.Error())
+	}
+	return err
+}
+
+func (svc *SessionService) SaveLoginLog2DB(token string, user *model.SysUser, userAgent string, ip string) error {
 	//save to db
 	ua := user_agent.New(userAgent)
 	os := ua.OS()
@@ -81,6 +92,8 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 	logininforService.RemovePasswordCounts(user.UserName)
 	//
 	var userOnline online.UserOnline
+	// 保存用户信息到session
+	loginLocation := lv_net.GetCityByIp(ip)
 	userOnline.LoginName = user.UserName
 	userOnline.Browser = browser
 	userOnline.Os = os
@@ -98,16 +111,6 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 		return err
 	}
 	err = userOnline.Save()
-	if err != nil {
-		return err
-	}
-	//
-	key := "login:" + token
-	err = lv_cache.GetCacheClient().HSet(key, fieldMap)
-	if err != nil {
-		return err
-	}
-	err = lv_cache.GetCacheClient().Expire(key, time.Hour)
 	if err != nil {
 		return err
 	}

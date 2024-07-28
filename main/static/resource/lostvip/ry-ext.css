@@ -1,0 +1,22 @@
+
+.search-collapse,.select-table {
+	border-radius: 3px;
+}
+
+.select-list li input {
+	border-radius: 3px;
+}
+
+select-list li select {
+	border-radius: 3px;
+}
+
+
+.search-collapse,.select-table {
+	border-radius: 3px;
+}
+
+
+::-webkit-scrollbar-thumb {
+	border-radius:3px;
+}

@@ -69,3 +69,14 @@ func (w DemoController) Validate(c *gin.Context) {
 func (w DemoController) Wizard(c *gin.Context) {
 	lv_web.BuildTpl(c, "demo/form/wizard").WriteTpl()
 }
+
+func (w DemoController) UserModel(c *gin.Context) {
+	data := make([]map[string]any, 6)
+	data[0] = map[string]any{"userId": 1, "userName": "abcdefg 1 "}
+	data[1] = map[string]any{"userId": 2, "userName": "ruoyi 2 "}
+	data[2] = map[string]any{"userId": 3, "userName": "ruoyi 3 "}
+	data[3] = map[string]any{"userId": 4, "userName": "test 4 "}
+	data[4] = map[string]any{"userId": 5, "userName": "lostvip 5 "}
+	data[5] = map[string]any{"userId": 6, "userName": "gogo 6 "}
+	lv_web.Success(c, data, "success")
+}

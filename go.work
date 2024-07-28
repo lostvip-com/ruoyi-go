@@ -1,10 +1,12 @@
+go 1.20
+
 
 use (
-	./main
-	//./webapi
+	./common
 	./lv_framework
+	./main
+	./plugins
 )
-replace (
-    // 方便本地库与github库的代码切换
-	github.com/lostvip-com/lv_framework  v1.0.2  => ./lv_framework
-)
+
+// 方便本地库与github库的代码切换
+replace github.com/lostvip-com/lv_framework v1.0.4 => ./lv_framework

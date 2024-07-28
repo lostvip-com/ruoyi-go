@@ -1,12 +1,12 @@
 package dao
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 	"xorm.io/builder"
 )
 
@@ -14,7 +14,7 @@ type DictTypeDao struct {
 }
 
 // 根据条件分页查询数据
-func (dao *DictTypeDao) SelectListByPage(param *vo.SelectDictTypePageReq) ([]model.DictType, *lv_web.Paging, error) {
+func (dao *DictTypeDao) SelectListByPage(param *cm_vo.DictTypePageReq) ([]model.DictType, *lv_web.Paging, error) {
 	db := db.GetInstance().Engine()
 	p := new(lv_web.Paging)
 	if db == nil {
@@ -67,7 +67,7 @@ func (dao *DictTypeDao) SelectListByPage(param *vo.SelectDictTypePageReq) ([]mod
 }
 
 // 导出excel
-func (dao *DictTypeDao) SelectListExport(param *vo.SelectDictTypePageReq, head, col []string) (string, error) {
+func (dao *DictTypeDao) SelectListExport(param *cm_vo.DictTypePageReq, head, col []string) (string, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {
@@ -107,7 +107,7 @@ func (dao *DictTypeDao) SelectListExport(param *vo.SelectDictTypePageReq, head, 
 }
 
 // 获取所有数据
-func (dao *DictTypeDao) SelectListAll(param *vo.SelectDictTypePageReq) ([]model.DictType, error) {
+func (dao *DictTypeDao) SelectListAll(param *cm_vo.DictTypePageReq) ([]model.DictType, error) {
 	db := db.GetInstance().Engine()
 
 	if db == nil {
@@ -144,14 +144,14 @@ func (dao *DictTypeDao) SelectListAll(param *vo.SelectDictTypePageReq) ([]model.
 }
 
 // 校验字典类型是否唯一
-func (dao *DictTypeDao) CheckDictTypeUniqueAll(dictType string) (*model.DictType, error) {
+func (dao *DictTypeDao) CheckDictTypeUniqueAll(dictType string) (bool, error) {
 	var entity model.DictType
 	entity.DictType = dictType
 	ok, err := entity.FindOne()
 	if ok {
-		return &entity, err
+		return ok, err
 	} else {
-		return nil, err
+		return ok, err
 	}
 }
 

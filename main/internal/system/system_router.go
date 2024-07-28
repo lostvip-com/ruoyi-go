@@ -7,12 +7,16 @@ import (
 )
 
 func init() {
+
+	gcommon := router.New("/common", auth.TokenCheck(), auth.PermitCheck)
+	common := controller.CommonController{}
+	gcommon.GET("/download", "", common.Download)
 	// 加载框架路由
 	g0 := router.New("/system", auth.TokenCheck(), auth.PermitCheck)
 	index := controller.MainController{}
 	g0.GET("/main", "", index.Main)
 	g0.GET("/switchSkin", "", index.SwitchSkin)
-	g0.GET("/download", "", index.Download)
+
 	//系统配置
 	g1 := router.New("/system/config", auth.TokenCheck(), auth.PermitCheck)
 	config := controller.ConfigController{}
@@ -64,8 +68,6 @@ func init() {
 	groupDept.GET("/remove", "system:dept:remove", deptContr.Remove)
 	groupDept.GET("/edit", "system:dept:edit", deptContr.Edit)
 	groupDept.POST("/edit", "system:dept:edit", deptContr.EditSave)
-	groupDept.POST("/checkDeptNameUnique", "system:dept:view", deptContr.CheckDeptNameUnique)
-	groupDept.POST("/checkDeptNameUniqueAll", "system:dept:view", deptContr.CheckDeptNameUniqueAll)
 	groupDept.GET("/treeData", "system:dept:view", deptContr.TreeData)
 	groupDept.GET("/selectDeptTree", "system:dept:view", deptContr.SelectDeptTree)
 	groupDept.GET("/roleDeptTreeData", "system:dept:view", deptContr.RoleDeptTreeData)
@@ -149,8 +151,5 @@ func init() {
 	groupPost.GET("/edit", "system:post:edit", postController.Edit)
 	groupPost.POST("/edit", "system:post:edit", postController.EditSave)
 	groupPost.POST("/export", "system:post:export", postController.Export)
-	groupPost.POST("/checkPostCodeUniqueAll", "system:post:list", postController.CheckPostCodeUniqueAll)
-	groupPost.POST("/checkPostCodeUnique", "system:post:list", postController.CheckPostCodeUnique)
-	groupPost.POST("/checkPostNameUniqueAll", "system:post:list", postController.CheckPostNameUniqueAll)
-	groupPost.POST("/checkPostNameUnique", "system:post:list", postController.CheckPostNameUnique)
+	groupPost.POST("/isPostCodeExist", "system:post:add", postController.IsPostCodeExist)
 }

@@ -17,7 +17,8 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="suggest-demo-1">
+                                <input type="hidden" id="selectdId" value="我用来存储选中的ID">
+                                <input type="text" class="form-control" id="suggest-demo-1" value="我是默认值">
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
                                         <span class="caret"></span>
@@ -105,14 +106,14 @@
         <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>搜索自动补全<small>https://github.com/bassjobsen/Bootstrap-3-Typeahead</small></h5>
+                    <h5>搜索自动补全 Bootstrap-3-Typeahead 使用 <small>https://github.com/bassjobsen/Bootstrap-3-Typeahead</small></h5>
                 </div>
                 <div class="ibox-content">
                     <p>通过数据属性的基本示例。</p>
                     <div class="row">
                         <div class="col-lg-6">
-                            <input type="text" placeholder="YunjieGo..." data-provide="typeahead"
-                                   data-source='["YunjieGo 1","YunjieGo 2","YunjieGo 3"]' class="form-control"/>
+                            <input type="text" placeholder=" ruoyi..." data-provide="typeahead"
+                                   data-source='[" ruoyi 1"," ruoyi 2"," ruoyi 3"]' class="form-control"/>
                         </div>
                     </div>
                     <hr>
@@ -120,7 +121,7 @@
                     <p>通过javascript的基本示例。</p>
                     <div class="row">
                         <div class="col-lg-6">
-                            <input type="text" placeholder="YunjieGo..." class="form-control" id="typeahead-demo-1"/>
+                            <input type="text" placeholder=" ruoyi..." class="form-control" id="typeahead-demo-1"/>
                         </div>
                     </div>
 
@@ -128,7 +129,7 @@
                     <p>通过javascript的复杂示例。</p>
                     <div class="row">
                         <div class="col-lg-6">
-                            <input type="text" placeholder="YunjieGo..." class="form-control" id="typeahead-demo-2"/>
+                            <input type="text" placeholder=" ruoyi..." class="form-control" id="typeahead-demo-2"/>
                         </div>
                     </div>
 
@@ -136,7 +137,7 @@
                     <p>后台url中获取简单数据</p>
                     <div class="row">
                         <div class="col-lg-6">
-                            <input type="text" placeholder="YunjieGo..." class="form-control" id="typeahead-demo-3"/>
+                            <input type="text" placeholder=" ruoyi..." class="form-control" id="typeahead-demo-3"/>
                         </div>
                     </div>
 
@@ -148,13 +149,30 @@
 </div>
 {{template "footer" (OssUrl)}}
 <script src="{{OssUrl}}/resource/ajax/libs/suggest/bootstrap-suggest.min.js"></script>
-<script src="{{OssUrl}}/resource/ajax/libs/typeahead/bootstrap3-typeahead.min.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/typeahead/bootstrap-typeahead.min.js"></script>
 <script type="text/javascript">
 
     var testBsSuggest = $("#suggest-demo-1").bsSuggest({
         url: ctx + "/demo/form/userModel",
         idField: "userId",
-        keyField: "userName"
+        keyField: "userName",
+        processData: function (json) { // 数据格式处理
+
+            if (json.code!=200) {
+                alert(json.msg)
+                return false;
+            }
+            console.log(json);
+
+            let dataAdapter = { value: []  };
+            console.log(json);
+            let len = json.data.length;
+            for (let i = 0; i < len; i++) {
+                dataAdapter.value.push(json.data[i]);
+            }
+            //字符串转化为 js 对象
+            return dataAdapter;
+        }
     }).on('onDataRequestSuccess', function (e, result) {
         console.log('onDataRequestSuccess: ', result);
     }).on('onSetSelectValue', function (e, keyword) {
@@ -167,7 +185,25 @@
         url: ctx + "/demo/form/userModel",
         showBtn: false,
         idField: "userId",
-        keyField: "userName"
+        keyField: "userName",
+        processData: function (json) { // 数据格式处理
+
+            if (json.code!=200) {
+                alert(json.msg)
+                return false;
+            }
+            console.log(json);
+
+            let dataAdapter = { value: []  };
+            let len = json.data.length;
+            // for (let i = 0; i < len; i++) {
+            //     dataAdapter.value.push(json.data[i]);
+            // }
+            dataAdapter.value = json.data
+            console.log(dataAdapter)
+            //字符串转化为 js 对象
+            return dataAdapter;
+        }
     }).on('onDataRequestSuccess', function (e, result) {
         console.log('onDataRequestSuccess: ', result);
     }).on('onSetSelectValue', function (e, keyword) {
@@ -294,7 +330,7 @@
     });
 
     $('#typeahead-demo-1').typeahead({
-        source: ["YunjieGo 1", "YunjieGo 2", "YunjieGo 3"]
+        source: [" ruoyi 1", " ruoyi 2", " ruoyi 3"]
     });
 
     $('#typeahead-demo-2').typeahead({
@@ -306,9 +342,9 @@
         ]
     });
 
-    $.get(ctx + "/demo/form/collection", function (data) {
+    $.get(ctx + "/demo/form/userModel", function (json) {
         $("#typeahead-demo-3").typeahead({
-            source: data.value
+            source: json.data
         });
     }, 'json');
 </script>

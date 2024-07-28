@@ -1,13 +1,14 @@
 package controller
 
 import (
+	"common/cm_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	"main/internal/system/model"
 	"main/internal/system/service"
-	"main/internal/system/vo"
 	"net/http"
 )
 
@@ -21,7 +22,7 @@ func (w *DictTypeController) List(c *gin.Context) {
 
 // 列表分页数据
 func (w *DictTypeController) ListAjax(c *gin.Context) {
-	var req *vo.SelectDictTypePageReq
+	var req *cm_vo.DictTypePageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
@@ -45,19 +46,21 @@ func (w *DictTypeController) Add(c *gin.Context) {
 
 // 新增页面保存
 func (w *DictTypeController) AddSave(c *gin.Context) {
-	var req *model.DictType
+	var req cm_vo.AddDictTypeReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 		return
 	}
 	var dictTypeService service.DictTypeService
-	if dictTypeService.CheckDictTypeUniqueAll(req.DictType) == "1" {
+	exist, err := dictTypeService.CheckDictTypeUniqueAll(req.DictType)
+	lv_err.HasErrAndPanic(err)
+	if exist {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("字典类型已存在").Log("字典管理", req).WriteJsonExit()
 		return
 	}
 
-	rid, err := dictTypeService.AddSave(req, c)
+	rid, err := dictTypeService.AddSave(&req, c)
 
 	if err != nil || rid <= 0 {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).Log("字典管理", req).WriteJsonExit()
@@ -92,14 +95,14 @@ func (w *DictTypeController) Edit(c *gin.Context) {
 
 // 修改页面保存
 func (w *DictTypeController) EditSave(c *gin.Context) {
-	var req *vo.EditDictTypeReq
+	var req *cm_vo.EditDictTypeReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
 	var dictTypeService service.DictTypeService
-	if dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId) == "1" {
+	if req.DictId == 0 && dictTypeService.IsDictTypeExist(req.DictType) {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg("字典类型已存在").Log("字典类型管理", req).WriteJsonExit()
 		return
 	}
@@ -124,7 +127,7 @@ func (w *DictTypeController) Remove(c *gin.Context) {
 	var dictTypeService service.DictTypeService
 	rs := dictTypeService.DeleteRecordByIds(req.Ids)
 
-	if rs > 0 {
+	if rs == nil {
 		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("字典管理", req).WriteJsonExit()
 	} else {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("字典管理", req).WriteJsonExit()
@@ -194,7 +197,7 @@ func (w *DictTypeController) SelectDictTree(c *gin.Context) {
 
 // 导出
 func (w *DictTypeController) Export(c *gin.Context) {
-	var req *vo.SelectDictTypePageReq
+	var req *cm_vo.DictTypePageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
@@ -212,27 +215,33 @@ func (w *DictTypeController) Export(c *gin.Context) {
 
 // 检查字典类型是否唯一不包括本参数
 func (w *DictTypeController) CheckDictTypeUnique(c *gin.Context) {
-	var req *vo.CheckDictTypeReq
+	var req *cm_vo.CheckDictTypeALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
 	var dictTypeService service.DictTypeService
-	result := dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId)
-	c.Writer.WriteString(result)
+	yes := dictTypeService.IsDictTypeExist(req.DictType)
+	var msg string
+	if yes {
+		msg = "已经存在！"
+	} else {
+		msg = "不存在！"
+	}
+	lv_web.Success(c, yes, msg)
 }
 
 // 检查字典类型是否唯一
 func (w *DictTypeController) CheckDictTypeUniqueAll(c *gin.Context) {
-	var req *vo.CheckDictTypeALLReq
+	var req *cm_vo.CheckDictTypeALLReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
 	var dictTypeService service.DictTypeService
-	result := dictTypeService.CheckDictTypeUniqueAll(req.DictType)
-
-	c.Writer.WriteString(result)
+	exist, err := dictTypeService.CheckDictTypeUniqueAll(req.DictType)
+	lv_err.HasErrAndPanic(err)
+	lv_web.Success(c, exist, "exist or not ")
 }
 
 // 加载部门列表树结构的数据

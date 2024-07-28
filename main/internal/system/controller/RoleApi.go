@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"common/cm_vo"
 	"github.com/gin-gonic/gin"
 	db2 "github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
@@ -9,7 +10,6 @@ import (
 	"main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/service"
-	"main/internal/system/vo"
 	"net/http"
 )
 
@@ -18,7 +18,7 @@ type RoleController struct {
 
 // 列表分页数据
 func (w *RoleController) ListAjax(c *gin.Context) {
-	var req *vo.RolePageReq
+	var req *cm_vo.RolePageReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
@@ -36,7 +36,7 @@ func (w *RoleController) ListAjax(c *gin.Context) {
 
 // 新增页面保存
 func (w *RoleController) AddSave(c *gin.Context) {
-	var req *vo.AddRoleReq
+	var req *cm_vo.AddRoleReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
@@ -66,7 +66,7 @@ func (w *RoleController) AddSave(c *gin.Context) {
 
 // 修改页面保存
 func (w *RoleController) EditSave(c *gin.Context) {
-	var req *vo.EditRoleReq
+	var req *cm_vo.EditRoleReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
@@ -131,7 +131,7 @@ func (w *RoleController) Remove(c *gin.Context) {
 
 // 数据权限保存
 func (w *RoleController) AuthDataScopeSave(c *gin.Context) {
-	var req *vo.DataScopeReq
+	var req *cm_vo.DataScopeReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
 		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()

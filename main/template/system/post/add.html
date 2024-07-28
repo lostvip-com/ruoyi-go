@@ -42,31 +42,27 @@
 {{template "footer" (OssUrl)}}
 <script type="text/javascript">
     var prefix = ctx + "/system/post";
-
+    // 远程验证，接口必须返回 "true" 或 "false",返回false时会显示错误信息
     $("#form-post-add").validate({
         onkeyup: false,
         rules: {
-            postName: {
-                remote: {
-                    url: ctx + "/system/post/checkPostNameUniqueAll",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "postName": function () {
-                            return $.common.trim($("#postName").val());
-                        }
-                    }
-                }
-            },
             postCode: {
                 remote: {
-                    url: ctx + "/system/post/checkPostCodeUniqueAll",
+                    url: ctx + "/system/post/isPostCodeExist",
                     type: "post",
                     dataType: "json",
                     data: {
                         "postCode": function () {
                             return $.common.trim($("#postCode").val());
                         }
+                    },
+                    dataFilter: function(response) {
+                        let json = $.parseJSON(response);
+                        let exist = json.data
+                        if (exist) { // 不能过
+                            return  "\"" + json.msg + "\"";
+                        }
+                        return true; //通过
                     }
                 }
             },
@@ -74,14 +70,11 @@
                 digits: true
             },
         },
-        messages: {
-            "postCode": {
-                remote: "岗位编码已经存在"
-            },
-            "postName": {
-                remote: "岗位名称已经存在"
-            }
-        },
+        // messages: {
+        //     "postCode": {
+        //         remote: "岗位编码已经存在"
+        //     },
+        // },
         focusCleanup: true
     });
 

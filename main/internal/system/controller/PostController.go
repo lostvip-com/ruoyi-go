@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_logic"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	postService "main/internal/system/service"
@@ -47,12 +48,8 @@ func (w *PostController) AddSave(c *gin.Context) {
 		return
 	}
 	var postService postService.SysPostService
-	if postService.CheckPostNameUniqueAll(req.PostName) == "1" {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
-		return
-	}
 
-	if postService.CheckPostCodeUniqueAll(req.PostCode) == "1" {
+	if postService.IsPostCodeExist(req.PostCode) {
 		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
 		return
 	}
@@ -142,54 +139,14 @@ func (w *PostController) Export(c *gin.Context) {
 	lv_web.SucessResp(c).SetMsg(url).SetBtype(dto.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 }
 
-// 检查岗位名称是否已经存在不包括本岗位
-func (w *PostController) CheckPostNameUnique(c *gin.Context) {
-	var req *vo.CheckPostNameReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var postService postService.SysPostService
-	result := postService.CheckPostNameUnique(req.PostName, req.PostId)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查岗位名称是否已经存在
-func (w *PostController) CheckPostNameUniqueAll(c *gin.Context) {
-	var req *vo.CheckPostNameALLReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var postService postService.SysPostService
-	result := postService.CheckPostNameUniqueAll(req.PostName)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查岗位编码是否已经存在不包括本岗位
-func (w *PostController) CheckPostCodeUnique(c *gin.Context) {
-	var req *vo.CheckPostCodeReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var postService postService.SysPostService
-	result := postService.CheckPostCodeUnique(req.PostCode, req.PostId)
-
-	c.Writer.WriteString(result)
-}
-
 // 检查岗位编码是否已经存在
-func (w *PostController) CheckPostCodeUniqueAll(c *gin.Context) {
+func (w *PostController) IsPostCodeExist(c *gin.Context) {
 	var req *vo.CheckPostCodeALLReq
 	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
+		lv_web.ErrorResp(c)
 		return
 	}
 	var postService postService.SysPostService
-	result := postService.CheckPostCodeUniqueAll(req.PostCode)
-
-	c.Writer.WriteString(result)
+	exist := postService.IsPostCodeExist(req.PostCode)
+	lv_web.Success(c, exist, lv_logic.IfTrue(exist, "编码冲突！", "ok").(string))
 }

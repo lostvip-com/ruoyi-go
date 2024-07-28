@@ -6,7 +6,6 @@ import (
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
 	"io"
-	"main/internal/common/functions"
 	"main/internal/common/myconf"
 	"main/internal/system/model"
 	"main/internal/system/service"
@@ -48,8 +47,8 @@ func (w *MainController) goMain(c *gin.Context, indexPageDefault string) {
 
 	//获取配置数据
 	var configService service.ConfigService
-	sideTheme := functions.GetValueByKey("sys.index.sideTheme")
-	skinName := configService.GetValueByKey("sys.index.skinName")
+	sideTheme := configService.GetValueFromRam("sys.index.sideTheme")
+	skinName := configService.GetValueFromRam("sys.index.skinName")
 	//设置首页风格
 	menuStyle := c.Query("menuStyle")
 	cookie, _ := c.Request.Cookie("menuStyle")

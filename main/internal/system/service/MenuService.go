@@ -8,6 +8,7 @@ import (
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/spf13/cast"
 	"main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/vo"
@@ -310,7 +311,7 @@ func (svc *MenuService) InitZtree(menuList *[]model.SysMenu, roleMenuList *[]str
 		ztree.Name = svc.transMenuName(obj.MenuName, permsFlag)
 		ztree.Pid = obj.ParentId
 		if isCheck {
-			tmp := lv_conv.String(obj.MenuId) + obj.Perms
+			tmp := cast.ToString(obj.MenuId) + obj.Perms
 			tmpcheck := false
 			for j := range *roleMenuList {
 				if strings.Compare((*roleMenuList)[j], tmp) == 0 {

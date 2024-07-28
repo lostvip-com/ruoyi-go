@@ -19,6 +19,9 @@
 	                </div>
 	            </div>
 	        </div>
+
+
+
 	        <div class="col-sm-12">
 	            <div class="ibox">
 	                <div class="ibox-title">
@@ -26,11 +29,16 @@
 	                </div>
 	                <div class="ibox-content" id="test">
 	                    <p>弹出复选框表格及单选框表格（点击提交后得到数据并回显到父窗体）。 </p>
-	                    <button type="button" class="btn btn-info" onclick="selectUsersToParent()">弹出表格（复选框）</button>
-	                    <p id="userids"> </p>
+						<button type="button" class="btn btn-primary" onclick="selectUsersToParent()">弹出表格（方式一）</button>
+						<button type="button" class="btn btn-success" onclick="selectUsersToParentCallBack2()">弹出表格（方式二）</button>
+						<button type="button" class="btn btn-info" onclick="selectUsersToParentCallBack3()">弹出表格（方式三）</button>
+						<p id="userids"> </p>
 	                </div>
 	            </div>
 	        </div>
+
+
+
 	    </div>
 	</div>
     {{template "footer" (OssUrl)}}
@@ -44,14 +52,47 @@
 		function selectRadioUser(){
 			$.modal.open("选择用户", prefix + "/radio");
         }
-		
+
+
+
+
+		// 根据当前激活的选项卡获取（方式一）
 		function selectUsersToParent(){
 			$.modal.open("选择用户", prefix + "/parent");
-        }
-		
-		function selectUsers(){
-			alert(1);
 		}
+
+		// callBack获取父窗口方法（方式二）
+		function selectUsersToParentCallBack2(){
+			var options = {
+				title: '选择用户',
+				url: prefix + "/parent",
+				callBack: function (index, layero){
+							let rows = layero.find("iframe")[0].contentWindow.getSelections();
+							if (rows.length == 0) {
+								$.modal.alertWarning("请至少选择一条记录");
+								return;
+							}
+							$('#userids').html('我是通过方式二来的：' + rows.join())
+							$.modal.close(index);
+						}
+			};
+			$.modal.openOptions(options);
+		}
+
+		// callBack获取父窗口值（方式三）
+		function selectUsersToParentCallBack3(){
+			var options = {
+				title: '选择用户',
+				url: prefix + "/parent",
+				callBack: function(index, layero){
+					var body = $.modal.getChildFrame(index);
+					$("#userids").html('我是通过方式三来的：' + body.find('#rowIds').val());
+					$.modal.close(index);
+				}
+			};
+			$.modal.openOptions(options);
+		}
+
 	</script>
 </body>
 </html>

@@ -26,7 +26,10 @@ func (w DemoController) Check(c *gin.Context) {
 }
 
 func (w DemoController) Parent(c *gin.Context) {
+	//s := time.Now().UnixMilli()
 	lv_web.BuildTpl(c, "demo/modal/table/parent").WriteTpl()
+
+	//fmt.Println(time.Now().UnixMilli() - s)
 }
 
 func (w DemoController) Radio(c *gin.Context) {

@@ -1,17 +1,17 @@
 package dao
 
 import (
+	"common/cm_vo"
 	"errors"
 	"github.com/lostvip-com/lv_framework/db"
 	"main/internal/system/model"
-	"main/internal/system/vo"
 )
 
 type SysRoleDao struct {
 }
 
 // 根据条件分页查询角色数据
-func (dao *SysRoleDao) SelectListPage(param *vo.RolePageReq) (result []model.SysRole, total int64, err error) {
+func (dao *SysRoleDao) SelectListPage(param *cm_vo.RolePageReq) (result []model.SysRole, total int64, err error) {
 	db := db.GetMasterGorm()
 	if db == nil {
 		return nil, 0, errors.New("获取数据库连接失败")
@@ -48,7 +48,7 @@ func (dao *SysRoleDao) SelectListPage(param *vo.RolePageReq) (result []model.Sys
 }
 
 // 获取所有角色数据
-func (dao *SysRoleDao) SelectListAll(param *vo.RolePageReq) ([]vo.SysRoleFlag, error) {
+func (dao *SysRoleDao) SelectListAll(param *cm_vo.RolePageReq) ([]cm_vo.SysRoleFlag, error) {
 	db := db.GetMasterGorm()
 
 	if db == nil {
@@ -81,7 +81,7 @@ func (dao *SysRoleDao) SelectListAll(param *vo.RolePageReq) ([]vo.SysRoleFlag, e
 			model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
-	var result []vo.SysRoleFlag
+	var result []cm_vo.SysRoleFlag
 
 	err := model.Find(&result).Error
 	return result, err

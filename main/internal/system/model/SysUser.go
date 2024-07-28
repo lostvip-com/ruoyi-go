@@ -7,8 +7,8 @@
 package model
 
 import (
+	"common/cm_model"
 	"github.com/lostvip-com/lv_framework/db"
-	"main/internal/common/cm_model"
 	"time"
 )
 
