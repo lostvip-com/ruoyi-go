@@ -8,12 +8,9 @@
 package lv_conv
 
 import (
-	"encoding/json"
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 )
 
 // Type assert api for String().
@@ -141,95 +138,6 @@ func Runes(i interface{}) []rune {
 	return []rune(String(i))
 }
 
-// String converts <i> to string.
-// It's most common used converting function.
-func String(i interface{}) string {
-	if i == nil {
-		return ""
-	}
-	switch value := i.(type) {
-	case int:
-		return strconv.Itoa(value)
-	case int8:
-		return strconv.Itoa(int(value))
-	case int16:
-		return strconv.Itoa(int(value))
-	case int32:
-		return strconv.Itoa(int(value))
-	case int64:
-		return strconv.FormatInt(value, 10)
-	case uint:
-		return strconv.FormatUint(uint64(value), 10)
-	case uint8:
-		return strconv.FormatUint(uint64(value), 10)
-	case uint16:
-		return strconv.FormatUint(uint64(value), 10)
-	case uint32:
-		return strconv.FormatUint(uint64(value), 10)
-	case uint64:
-		return strconv.FormatUint(value, 10)
-	case float32:
-		return strconv.FormatFloat(float64(value), 'f', -1, 32)
-	case float64:
-		return strconv.FormatFloat(value, 'f', -1, 64)
-	case bool:
-		return strconv.FormatBool(value)
-	case string:
-		return value
-	case []byte:
-		return string(value)
-	case time.Time:
-		if value.IsZero() {
-			return ""
-		}
-		return value.String()
-	case *time.Time:
-		if value == nil {
-			return ""
-		}
-		return value.String()
-	default:
-		// Empty checks.
-		if value == nil {
-			return ""
-		}
-		if f, ok := value.(apiString); ok {
-			// If the variable implements the String() interface,
-			// then use that interface to perform the conversion
-			return f.String()
-		} else if f, ok := value.(apiError); ok {
-			// If the variable implements the Error() interface,
-			// then use that interface to perform the conversion
-			return f.Error()
-		} else {
-			// Reflect checks.
-			rv := reflect.ValueOf(value)
-			kind := rv.Kind()
-			switch kind {
-			case reflect.Chan,
-				reflect.Map,
-				reflect.Slice,
-				reflect.Func,
-				reflect.Ptr,
-				reflect.Interface,
-				reflect.UnsafePointer:
-				if rv.IsNil() {
-					return ""
-				}
-			}
-			if kind == reflect.Ptr {
-				return String(rv.Elem().Interface())
-			}
-			// Finally we use json.Marshal to convert.
-			if jsonContent, err := json.Marshal(value); err != nil {
-				return fmt.Sprint(value)
-			} else {
-				return string(jsonContent)
-			}
-		}
-	}
-}
-
 // Bool converts <i> to bool.
 // It returns false if <i> is: false, "", 0, "false", "off", "no", empty slice/map.
 func Bool(i interface{}) bool {
@@ -314,82 +222,6 @@ func Int32(i interface{}) int32 {
 		return v
 	}
 	return int32(Int64(i))
-}
-
-// Int64 converts <i> to int64.
-func Int64(i interface{}) int64 {
-	if i == nil {
-		return 0
-	}
-	switch value := i.(type) {
-	case int:
-		return int64(value)
-	case int8:
-		return int64(value)
-	case int16:
-		return int64(value)
-	case int32:
-		return int64(value)
-	case int64:
-		return value
-	case uint:
-		return int64(value)
-	case uint8:
-		return int64(value)
-	case uint16:
-		return int64(value)
-	case uint32:
-		return int64(value)
-	case uint64:
-		return int64(value)
-	case float32:
-		return int64(value)
-	case float64:
-		return int64(value)
-	case bool:
-		if value {
-			return 1
-		}
-		return 0
-	default:
-		s := String(value)
-		isMinus := false
-		if len(s) > 0 {
-			if s[0] == '-' {
-				isMinus = true
-				s = s[1:]
-			} else if s[0] == '+' {
-				s = s[1:]
-			}
-		}
-		// Hexadecimal
-		if len(s) > 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X') {
-			if v, e := strconv.ParseInt(s[2:], 16, 64); e == nil {
-				if isMinus {
-					return -v
-				}
-				return v
-			}
-		}
-		// Octal
-		if len(s) > 1 && s[0] == '0' {
-			if v, e := strconv.ParseInt(s[1:], 8, 64); e == nil {
-				if isMinus {
-					return -v
-				}
-				return v
-			}
-		}
-		// Decimal
-		if v, e := strconv.ParseInt(s, 10, 64); e == nil {
-			if isMinus {
-				return -v
-			}
-			return v
-		}
-		// Float64
-		return int64(Float64(value))
-	}
 }
 
 // Uint converts <i> to uint.
