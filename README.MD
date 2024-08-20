@@ -129,25 +129,15 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 <img alt="" height="400" src="bak/readme/4.png" width="600" />
 
 ## 感谢(排名不分先后)
-> xorm  https://xorm.io/zh/docs/   
-> 
-> web框架 [https://github.com/gin-gonic/gin](https://github.com/gin-gonic/gin)
->
+> GORM  https://https://gorm.io/
+> Tealeg https://github.com/tealeg/xlsx
+> Swaggo https://github.com/swaggo/swag
+> WEB框架 https://github.com/gin-gonic/gin
 > 缓存框架  https://github.com/redis/go-redis
->
-> 配置文档   [https://github.com/BurntSushi/toml](https://github.com/BurntSushi/toml)
->
-> RuoYi框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
->
-> tealeg [https://github.com/tealeg/xlsx](https://github.com/tealeg/xlsx)
->
-> swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
->
-> 若依goframe版 https://github.com/guolingege/yjgo
->
+> 若依yjgo https://github.com/guolingege/yjgo
+> RuoYi https://github.com/yangzongzhuan/RuoYi
+> SQL文件解析: https://github.com/qustavo/dotsql
 > 热加载框架  http://github.com/pilu/fresh
->
-> sql文件解析: https://github.com/qustavo/dotsql
 ## 项目支持
 
 
