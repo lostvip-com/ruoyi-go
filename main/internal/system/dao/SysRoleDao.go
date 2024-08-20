@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"errors"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"main/internal/system/model"
 )
 
@@ -11,8 +11,8 @@ type SysRoleDao struct {
 }
 
 // 根据条件分页查询角色数据
-func (dao *SysRoleDao) SelectListPage(param *cm_vo.RolePageReq) (result []model.SysRole, total int64, err error) {
-	db := db.GetMasterGorm()
+func (dao *SysRoleDao) SelectListPage(param *common_vo.RolePageReq) (result []model.SysRole, total int64, err error) {
+	db := lv_db.GetMasterGorm()
 	if db == nil {
 		return nil, 0, errors.New("获取数据库连接失败")
 	}
@@ -48,8 +48,8 @@ func (dao *SysRoleDao) SelectListPage(param *cm_vo.RolePageReq) (result []model.
 }
 
 // 获取所有角色数据
-func (dao *SysRoleDao) SelectListAll(param *cm_vo.RolePageReq) ([]cm_vo.SysRoleFlag, error) {
-	db := db.GetMasterGorm()
+func (dao *SysRoleDao) SelectListAll(param *common_vo.RolePageReq) ([]common_vo.SysRoleFlag, error) {
+	db := lv_db.GetMasterGorm()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -81,7 +81,7 @@ func (dao *SysRoleDao) SelectListAll(param *cm_vo.RolePageReq) ([]cm_vo.SysRoleF
 			model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
-	var result []cm_vo.SysRoleFlag
+	var result []common_vo.SysRoleFlag
 
 	err := model.Find(&result).Error
 	return result, err
@@ -89,7 +89,7 @@ func (dao *SysRoleDao) SelectListAll(param *cm_vo.RolePageReq) ([]cm_vo.SysRoleF
 
 // 根据用户ID查询角色
 func (dao *SysRoleDao) SelectRoleContactVo(userId int64) ([]model.SysRole, error) {
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
@@ -126,7 +126,7 @@ func (dao *SysRoleDao) FindRoleByRoleKey(roleKey string) (*model.SysRole, error)
 
 func (e *SysRoleDao) FindCount(roleKey, roleName string) (int64, error) {
 	var count int64 = 0
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if roleName != "" {
 		tb = tb.Where("role_name=? and del_flag=0", roleName)
 	}

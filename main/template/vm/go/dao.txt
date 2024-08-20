@@ -30,12 +30,12 @@ func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 	return rows, count, nil
 }
 // 根据条件分页查询数据
-func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}}, int64, error) {
+func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]vo.{{.table.ClassName}}Resp, int64, error) {
 	ibatis := lvbatis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.sql") //under the mapper directory
 	// 对应sql文件中的同名tagName
 	limitSQL, err := ibatis.GetLimitSql("List{{.table.ClassName}}", req)
 	//查询数据
-	rows, err := lvdao.ListByNamedSql[model.{{.table.ClassName}}](limitSQL, req)
+	rows, err := lvdao.ListByNamedSql[vo.{{.table.ClassName}}Resp](limitSQL, req)
 	lv_err.HasErrAndPanic(err)
 	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), req)
 	lv_err.HasErrAndPanic(err)

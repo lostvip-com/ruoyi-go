@@ -140,53 +140,6 @@
 <script type="text/javascript">
     var prefix = ctx + "/system/user";
 
-    $("#form-user-edit").validate({
-        onkeyup: false,
-        rules: {
-            email: {
-                email: true,
-                remote: {
-                    url: prefix + "/profile/checkEmailUnique",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "userId": function () {
-                            return $("#userId").val();
-                        },
-                        "email": function () {
-                            return $.common.trim($("#email").val());
-                        }
-                    }
-                }
-            },
-            phonenumber: {
-                isPhone: true,
-                remote: {
-                    url: prefix + "/profile/checkPhoneUnique",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "userId": function () {
-                            return $("#userId").val();
-                        },
-                        "phonenumber": function () {
-                            return $.common.trim($("#phonenumber").val());
-                        }
-                    }
-                }
-            },
-        },
-        messages: {
-            "email": {
-                remote: "Email已经存在"
-            },
-            "phonenumber": {
-                remote: "手机号码已经存在"
-            }
-        },
-        focusCleanup: true
-    });
-
     function submitHandler() {
         if ($.validate.form()) {
             var data = $("#form-user-edit").serializeArray();

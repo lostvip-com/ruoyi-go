@@ -1,13 +1,13 @@
 package controller
 
 import (
+	util2 "common/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/db/lvbatis"
-	"github.com/lostvip-com/lv_framework/db/lvdao"
 	"github.com/lostvip-com/lv_framework/lv_cache"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_batis"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_dao"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"main/internal/system/model"
 	"main/internal/system/vo"
 	"time"
@@ -19,34 +19,34 @@ var SQL_FILE_POST = "sys_post/sys_post_mapper.sql"
 func (w DemoController) MybatisMap(c *gin.Context) {
 	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		util2.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 
-	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
+	ibatis := lv_batis.NewInstance(SQL_FILE_POST)
 	sql, err := ibatis.GetLimitSql("listSql", &req)
 	lv_err.HasErrAndPanic(err)
-	listMap, err := lvdao.ListMapByNamedSql(sql, &req, true)
+	listMap, err := lv_dao.ListMapByNamedSql(sql, &req, true)
 	lv_err.HasErrAndPanic(err)
-	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
+	count, err := lv_dao.CountByNamedSql(ibatis.GetCountSql(), &req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.PageOK2(c, listMap, count)
+	util2.PageOK2(c, listMap, count)
 }
 
 func (w DemoController) MybatisStruct(c *gin.Context) {
 	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		util2.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	ibatis := lvbatis.NewInstance(SQL_FILE_POST)
+	ibatis := lv_batis.NewInstance(SQL_FILE_POST)
 	sql, err := ibatis.GetLimitSql("listSql", &req)
 	lv_err.HasErrAndPanic(err)
-	list, err := lvdao.ListByNamedSql[model.SysPost](sql, &req)
+	list, err := lv_dao.ListByNamedSql[model.SysPost](sql, &req)
 	lv_err.HasErrAndPanic(err)
-	count, err := lvdao.CountByNamedSql(ibatis.GetCountSql(), &req)
+	count, err := lv_dao.CountByNamedSql(ibatis.GetCountSql(), &req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.PageOK2(c, list, count)
+	util2.PageOK2(c, list, count)
 }
 
 /**
@@ -55,11 +55,11 @@ func (w DemoController) MybatisStruct(c *gin.Context) {
 func (w DemoController) MybatisStructPage(c *gin.Context) {
 	req := vo.SelectPostPageReq{}
 	if err := c.ShouldBind(&req); err != nil { //获取参数
-		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		util2.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
-	resp := lvdao.GetPageByNamedSql[model.SysPost](SQL_FILE_POST, "listSql", &req)
-	lv_web.PageOK(c, resp)
+	resp := lv_dao.GetPageByNamedSql[model.SysPost](SQL_FILE_POST, "listSql", &req)
+	util2.PageOK(c, resp)
 }
 
 func (w DemoController) TestRedis(c *gin.Context) {
@@ -76,5 +76,5 @@ func (w DemoController) TestRedis(c *gin.Context) {
 	fmt.Println("------------myredis----------------------123")
 	data1, _ := redis.HGet("mapKey1", "test")
 	fmt.Println(data1)
-	lv_web.SucessData(c, data1)
+	util2.SucessData(c, data1)
 }

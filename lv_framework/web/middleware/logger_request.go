@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"time"
 )
 
@@ -41,9 +41,9 @@ func LoggerToFile() gin.HandlerFunc {
 			"method":      reqMethod,
 			"uri":         reqUri,
 		}
-		logme.Info(c, logData)
+		lv_log.Info(c, logData)
 		// 禁用日志写入数据库的功能 ssz20210702
-		//if c.Request.Method != "GET" && c.Request.Method != "OPTIONS" && conf.LoggerConfig.EnabledDB {
+		//if c.Request.Method != "GET" && c.Request.Method != "OPTIONS" && lv_conf.LoggerConfig.EnabledDB {
 		//	SetDBOperLog(c, clientIP, statusCode, reqUri, reqMethod, latencyTime)
 		//}
 	}

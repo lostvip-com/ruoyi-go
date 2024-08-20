@@ -33,8 +33,8 @@ type GeneralGetDto struct {
 }
 
 //
-//func MakeCondition(q interface{}) func(db *lvbatis.DB) *lvbatis.DB {
-//	return func(db *lvbatis.DB) *lvbatis.DB {
+//func MakeCondition(q interface{}) func(lv_db *lv_batis.DB) *lv_batis.DB {
+//	return func(lv_db *lv_batis.DB) *lv_batis.DB {
 //		condition := &GormCondition{
 //			GormPublic: GormPublic{},
 //			Join:       make([]*GormJoin, 0),
@@ -44,36 +44,36 @@ type GeneralGetDto struct {
 //			if join == nil {
 //				continue
 //			}
-//			db = db.Joins(join.JoinOn)
+//			lv_db = lv_db.Joins(join.JoinOn)
 //			for k, v := range join.Where {
-//				db = db.Where(k, v...)
+//				lv_db = lv_db.Where(k, v...)
 //			}
 //			for k, v := range join.Or {
-//				db = db.Or(k, v...)
+//				lv_db = lv_db.Or(k, v...)
 //			}
 //			for _, o := range join.Order {
-//				db = db.Order(o)
+//				lv_db = lv_db.Order(o)
 //			}
 //		}
 //		for k, v := range condition.Where {
-//			db = db.Where(k, v...)
+//			lv_db = lv_db.Where(k, v...)
 //		}
 //		for k, v := range condition.Or {
-//			db = db.Or(k, v...)
+//			lv_db = lv_db.Or(k, v...)
 //		}
 //		for _, o := range condition.Order {
-//			db = db.Order(o)
+//			lv_db = lv_db.Order(o)
 //		}
-//		return db
+//		return lv_db
 //	}
 //}
 //
-//func Paginate(pageSize, pageIndex int) func(db *lvbatis.DB) *lvbatis.DB {
-//	return func(db *lvbatis.DB) *lvbatis.DB {
+//func Paginate(pageSize, pageIndex int) func(lv_db *lv_batis.DB) *lv_batis.DB {
+//	return func(lv_db *lv_batis.DB) *lv_batis.DB {
 //		offset := (pageIndex - 1) * pageSize
 //		if offset < 0 {
 //			offset = 0
 //		}
-//		return db.Offset(offset).Limit(pageSize)
+//		return lv_db.Offset(offset).Limit(pageSize)
 //	}
 //}

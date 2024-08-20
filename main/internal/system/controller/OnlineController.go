@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"main/internal/system/model/monitor/online"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"main/internal/system/model"
 	"main/internal/system/service"
-	onlineService "main/internal/system/service/monitor/online"
+	"main/internal/system/vo"
 	"strings"
 )
 
@@ -14,50 +16,72 @@ type OnlineController struct {
 
 // 列表页
 func (w *OnlineController) List(c *gin.Context) {
-	sessinIdArr := make([]string, 0)
-
-	//global.SessionList.Range(func(k, v interface{}) bool {
-	//	return true
-	//})
-	if len(sessinIdArr) > 0 {
-		onlineService.DeleteRecordNotInIds(sessinIdArr)
-	}
-
-	lv_web.BuildTpl(c, "monitor/online/list").WriteTpl()
+	util.WriteTpl(c, "monitor/list_online")
 }
 
 // 列表分页数据
 func (w *OnlineController) ListAjax(c *gin.Context) {
-	var req *online.SelectPageReq
+	var param vo.OnlinePageReq
 	//获取参数
-	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
-		return
-	}
-	rows := make([]online.UserOnline, 0)
-	result, page, err := onlineService.SelectListByPage(req)
-
-	if err == nil && len(result) > 0 {
-		rows = result
+	err := c.ShouldBind(&param)
+	lv_err.HasErrAndPanic(err)
+	rows := make([]model.SysUserOnline, 0)
+	db := lv_db.GetMasterGorm()
+	tb := db.Table("sys_user_online t")
+	if param.SessionId != "" {
+		tb.Where("t.session_id = ?", param.SessionId)
 	}
 
-	lv_web.BuildTable(c, page.Total, rows).WriteJsonExit()
+	if param.LoginName != "" {
+		tb.Where("t.login_name like ?", "%"+param.LoginName+"%")
+	}
+
+	if param.DeptName != "" {
+		tb.Where("t.dept_name like ?", "%"+param.DeptName+"%")
+	}
+
+	if param.Ipaddr != "" {
+		tb.Where("t.ipaddr = ?", param.Ipaddr)
+	}
+
+	if param.LoginLocation != "" {
+		tb.Where("t.login_location = ?", param.LoginLocation)
+	}
+
+	if param.Browser != "" {
+		tb.Where("t.browser = ?", param.Browser)
+	}
+
+	if param.Os != "" {
+		tb.Where("t.os = ?", param.Os)
+	}
+
+	if param.Status != "" {
+		tb.Where("t.status = ?", param.Status)
+	}
+
+	if param.BeginTime != "" {
+		tb.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+	}
+
+	if param.EndTime != "" {
+		tb.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+	}
+	var total int64
+	tb = tb.Count(&total)
+	tb.Order("t.login_time desc").Offset((param.PageNum - 1) * param.PageSize).Limit(param.PageSize).Find(&rows)
+	err = tb.Error
+	lv_err.HasErrAndPanic(err)
+	util.SucessPage(c, rows, total)
 }
 
 // 用户强退
 func (w *OnlineController) ForceLogout(c *gin.Context) {
 	sessionId := c.PostForm("sessionId")
-	if sessionId == "" {
-		lv_web.ErrorResp(c).SetMsg("参数错误").Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
-		return
-	}
 	var userService service.SessionService
 	err := userService.ForceLogout(sessionId)
-	if err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
-		return
-	}
-	lv_web.SucessResp(c).Log("用户强退", gin.H{"sessionId": sessionId}).WriteJsonExit()
+	lv_err.HasErrAndPanic(err)
+	util.Success(c, gin.H{"sessionId": sessionId}, "success")
 }
 
 // 批量强退
@@ -65,7 +89,7 @@ func (w *OnlineController) BatchForceLogout(c *gin.Context) {
 	var userService service.SessionService
 	ids := c.Query("ids")
 	if ids == "" {
-		lv_web.ErrorResp(c).SetMsg("参数错误").Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
+		util.ErrorResp(c).SetMsg("参数错误").Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
 		return
 	}
 	ids = strings.ReplaceAll(ids, "[", "")
@@ -79,5 +103,5 @@ func (w *OnlineController) BatchForceLogout(c *gin.Context) {
 			}
 		}
 	}
-	lv_web.SucessResp(c).Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
+	util.SucessResp(c).Log("批量强退", gin.H{"ids": ids}).WriteJsonExit()
 }

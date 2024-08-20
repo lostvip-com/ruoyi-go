@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"main/internal/system/dao"
 	"main/internal/system/model"
 	"main/internal/system/service"
@@ -17,7 +17,7 @@ type MenuController struct {
 
 // 列表页
 func (w *MenuController) List(c *gin.Context) {
-	lv_web.BuildTpl(c, "system/menu/list").WriteTpl()
+	util.BuildTpl(c, "system/menu/list").WriteTpl()
 }
 
 // 列表分页数据
@@ -25,7 +25,7 @@ func (w *MenuController) ListAjax(c *gin.Context) {
 	var req = new(vo.SelectMenuPageReq)
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
+		util.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
 	rows := make([]model.SysMenu, 0)
@@ -50,7 +50,7 @@ func (w *MenuController) Add(c *gin.Context) {
 		pmenu.MenuId = tmp.MenuId
 		pmenu.MenuName = tmp.MenuName
 	}
-	lv_web.BuildTpl(c, "system/menu/add").WriteTpl(gin.H{"menu": pmenu})
+	util.BuildTpl(c, "system/menu/add").WriteTpl(gin.H{"menu": pmenu})
 }
 
 // 新增页面保存
@@ -58,24 +58,24 @@ func (w *MenuController) AddSave(c *gin.Context) {
 	var req = new(vo.AddMenuReq)
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
 	var service service.MenuService
 	id, err := service.AddSave(req, c)
 
 	if err != nil || id <= 0 {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(dto.Buniss_Add).SetData(id).Log("菜单管理", req).WriteJsonExit()
+	util.SucessResp(c).SetBtype(lv_dto.Buniss_Add).SetData(id).Log("菜单管理", req).WriteJsonExit()
 }
 
 // 修改页面
 func (w *MenuController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -83,7 +83,7 @@ func (w *MenuController) Edit(c *gin.Context) {
 	var dao dao.MenuDao
 	menu, err := dao.SelectRecordById(id)
 	if err != nil || menu == nil {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "菜单不存在",
 		})
 		return
@@ -92,7 +92,7 @@ func (w *MenuController) Edit(c *gin.Context) {
 	if err == nil {
 		menu.ParentName = parent.MenuName
 	}
-	lv_web.BuildTpl(c, "system/menu/edit").WriteTpl(gin.H{
+	util.BuildTpl(c, "system/menu/edit").WriteTpl(gin.H{
 		"menu": menu,
 	})
 }
@@ -102,17 +102,17 @@ func (w *MenuController) EditSave(c *gin.Context) {
 	var req = new(vo.EditMenuReq)
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
 	var service service.MenuService
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).Log("菜单管理", req).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).Log("菜单管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).SetData(rs).Log("菜单管理", req).WriteJsonExit()
+	util.SucessResp(c).SetBtype(lv_dto.Buniss_Edit).SetData(rs).Log("菜单管理", req).WriteJsonExit()
 }
 
 // 删除数据
@@ -121,9 +121,9 @@ func (w *MenuController) Remove(c *gin.Context) {
 	var service service.MenuService
 	rs := service.DeleteRecordById(id)
 	if rs {
-		lv_web.SucessResp(c).SetBtype(dto.Buniss_Del).Log("菜单管理", gin.H{"id": id}).WriteJsonExit()
+		util.SucessResp(c).SetBtype(lv_dto.Buniss_Del).Log("菜单管理", gin.H{"id": id}).WriteJsonExit()
 	} else {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Del).Log("菜单管理", gin.H{"id": id}).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Del).Log("菜单管理", gin.H{"id": id}).WriteJsonExit()
 	}
 }
 
@@ -133,12 +133,12 @@ func (w *MenuController) SelectMenuTree(c *gin.Context) {
 	var dao dao.MenuDao
 	menu, err := dao.SelectRecordById(menuId)
 	if err != nil {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "菜单不存在",
 		})
 		return
 	}
-	lv_web.BuildTpl(c, "system/menu/tree").WriteTpl(gin.H{
+	util.BuildTpl(c, "system/menu/tree").WriteTpl(gin.H{
 		"menu": menu,
 	})
 }
@@ -148,13 +148,13 @@ func (w *MenuController) MenuTreeData(c *gin.Context) {
 	var userService service.UserService
 	user := userService.GetProfile(c)
 	if user == nil {
-		lv_web.ErrorResp(c).SetMsg("登录超时").Log("菜单管理", gin.H{"userId": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetMsg("登录超时").Log("菜单管理", gin.H{"userId": user.UserId}).WriteJsonExit()
 		return
 	}
 	var service service.MenuService
 	ztrees, err := service.MenuTreeData(user.UserId)
 	if err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", gin.H{"userId": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", gin.H{"userId": user.UserId}).WriteJsonExit()
 		return
 	}
 	c.JSON(http.StatusOK, ztrees)
@@ -162,7 +162,7 @@ func (w *MenuController) MenuTreeData(c *gin.Context) {
 
 // 选择图标
 func (w *MenuController) Icon(c *gin.Context) {
-	lv_web.BuildTpl(c, "system/menu/icon").WriteTpl()
+	util.BuildTpl(c, "system/menu/icon").WriteTpl()
 }
 
 // 加载角色菜单列表树
@@ -171,14 +171,14 @@ func (w *MenuController) RoleMenuTreeData(c *gin.Context) {
 	roleId := lv_conv.Int64(c.Query("roleId"))
 	user := userService.GetProfile(c)
 	if user == nil || user.UserId <= 0 {
-		lv_web.ErrorResp(c).SetMsg("登录超时").Log("菜单管理", gin.H{"roleId": roleId}).WriteJsonExit()
+		util.ErrorResp(c).SetMsg("登录超时").Log("菜单管理", gin.H{"roleId": roleId}).WriteJsonExit()
 		return
 	}
 	var service service.MenuService
 	result, err := service.RoleMenuTreeData(roleId, user.UserId)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", gin.H{"roleId": roleId}).WriteJsonExit()
+		util.ErrorResp(c).SetMsg(err.Error()).Log("菜单管理", gin.H{"roleId": roleId}).WriteJsonExit()
 		return
 	}
 

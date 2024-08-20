@@ -2,9 +2,9 @@ package functions
 
 import (
 	"errors"
-	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/lostvip-com/lv_framework/lv_cache/lv_ram"
 	"github.com/lostvip-com/lv_framework/lv_global"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"main/internal/common/global"
 	"main/internal/system/model"
 	"strings"
@@ -28,7 +28,7 @@ func GetCtxPath(url string) string {
 			url = ctxPath + "/" + url
 		}
 	} else {
-		logme.Info("外链：" + ctxPath)
+		lv_log.Info("外链：" + ctxPath)
 	}
 	return url
 }

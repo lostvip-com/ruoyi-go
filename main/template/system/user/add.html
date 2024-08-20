@@ -160,7 +160,7 @@
                 minlength: 2,
                 maxlength: 20,
                 remote: {
-                    url: prefix + "/profile/checkLoginNameUnique",
+                    url: prefix + "/profile/checkLoginNameOK",
                     type: "post",
                     dataType: "json",
                     data: {
@@ -177,7 +177,7 @@
             email: {
                 email: true,
                 remote: {
-                    url: prefix + "/profile/checkEmailUniqueAll",
+                    url: prefix + "/profile/checkEmailOK",
                     type: "post",
                     dataType: "json",
                     data: {
@@ -190,7 +190,7 @@
             phonenumber: {
                 isPhone: true,
                 remote: {
-                    url: prefix + "/profile/checkPhoneUniqueAll",
+                    url: prefix + "/profile/checkPhoneOK",
                     type: "post",
                     dataType: "json",
                     data: {

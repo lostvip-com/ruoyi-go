@@ -1,7 +1,7 @@
 package vo
 
 import (
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 )
 
 // 检查菜单名称请求参数
@@ -27,7 +27,7 @@ type SelectMenuPageReq struct {
 	PageSize  int    `form:"pageSize"`  //每页数
 	SortName  string `form:"sortName"`  //排序字段
 	SortOrder string `form:"sortOrder"` //排序方式
-	lv_web.Paging
+	lv_dto.Paging
 }
 
 // 新增页面请求参数

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 type SysRoleMenu struct {
@@ -16,23 +16,23 @@ func (r *SysRoleMenu) TableName() string {
 
 // 插入数据
 func (r *SysRoleMenu) Insert() error {
-	return db.GetMasterGorm().Save(r).Error
+	return lv_db.GetMasterGorm().Save(r).Error
 }
 
 // 增
 func (e *SysRoleMenu) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *SysRoleMenu) FindById() error {
-	err := db.GetMasterGorm().Take(e, e.RoleId).Error
+	err := lv_db.GetMasterGorm().Take(e, e.RoleId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysRoleMenu) FindOne() error {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if e.MenuId != 0 && e.RoleId != 0 {
 		tb = tb.Where("role_id=? and menu_id=?", e.RoleId, e.MenuId)
 	}
@@ -42,5 +42,5 @@ func (e *SysRoleMenu) FindOne() error {
 
 // 改
 func (e *SysRoleMenu) Updates() error {
-	return db.GetMasterGorm().Updates(e).Error
+	return lv_db.GetMasterGorm().Updates(e).Error
 }

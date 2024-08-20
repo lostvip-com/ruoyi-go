@@ -7,7 +7,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"time"
 )
 
@@ -37,21 +37,21 @@ func (e *DpcTask) TableName() string {
 
 // 增
 func (e *DpcTask) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *DpcTask) FindById() error {
-	err := db.GetMasterGorm().Find(e, e.Id).Error
+	err := lv_db.GetMasterGorm().Find(e, e.Id).Error
 	return err
 }
 
 // 改
 func (e *DpcTask) Updates() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 删
 func (e *DpcTask) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
 }

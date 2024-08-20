@@ -51,3 +51,20 @@ type Page{{.table.ClassName}}Req struct {
 	EndTime    string `form:"endTime"`    //结束时间
 	lv_web.Paging
 }
+
+
+//分页请求结果
+type {{.table.ClassName}}Resp struct {
+      {{.table.PkColumn.GoField}}    {{.table.PkColumn.GoType}}  `json:"{{.table.PkColumn.HtmlField}}"`
+      {{- range $index, $column := .table.Columns}}
+      	{{- if and (eq $column.IsInsert "1") (ne $column.IsPk "1")}}
+            {{ $column.GoField}} {{$column.GoType}} `json:"{{$column.HtmlField}}"
+            {{- if eq $column.ColumnType "date"}} time_format:"2006-01-02" {{end}}
+            {{- if eq $column.ColumnType "datetime"}} time_format:"2006-01-02 15:04:05" {{end}}`
+      	{{- end }}
+      {{- end}}
+      UpdateBy string      `json:"updateBy"`
+      UpdateTime time.Time `json:"updateTime" time_format:"2006-01-02 15:04:05"`
+      CreateTime time.Time `json:"createTime" time_format:"2006-01-02 15:04:05"`
+      CreateBy   string    `json:"createBy"`
+}

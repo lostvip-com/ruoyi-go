@@ -1,14 +1,14 @@
 package lv_reflect
 
 import (
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"reflect"
 )
 
 func TranslateField(dstPtr interface{}, keyField string, local string) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			logme.Error(e)
+			lv_log.Error(e)
 		}
 	}()
 	dstValue1 := reflect.ValueOf(dstPtr)
@@ -23,18 +23,18 @@ func TranslateByTag(dstPtr interface{}) (err error) {
 	// 防止意外panic
 	defer func() {
 		if e := recover(); e != nil {
-			logme.Error(e)
+			lv_log.Error(e)
 		}
 	}()
 	dstType1 := reflect.TypeOf(dstPtr)
 	dstValue1 := reflect.ValueOf(dstPtr)
 	// dst必须结构体指针类型
 	if dstType1.Kind() != reflect.Ptr {
-		logme.Error("dst type should be a struct pointer : ", dstType1.Kind())
+		lv_log.Error("dst type should be a struct pointer : ", dstType1.Kind())
 		panic("TranslateByTag --------dst type should be a struct pointer ")
 	}
 	if dstType1.Elem().Kind() != reflect.Struct {
-		logme.Error("dstType1.Elem().Kind() should be a struct", dstType1.Elem().Kind())
+		lv_log.Error("dstType1.Elem().Kind() should be a struct", dstType1.Elem().Kind())
 		panic("CopyProperties XXXXXXXXXXXX--------dstType1.Elem().Kind() should be a struct  ：")
 	}
 	// 取具体内容
@@ -64,7 +64,7 @@ func TranslateByTag(dstPtr interface{}) (err error) {
 		key := fieldValue.String() //中文key
 		localeValue := GetTextLocale(locale, key)
 		if err != nil {
-			logme.Warn("XXXXXXXXXx=========>GetLocaleValueByKey:", fieldValue, locale, err)
+			lv_log.Warn("XXXXXXXXXx=========>GetLocaleValueByKey:", fieldValue, locale, err)
 			continue
 		}
 		fieldValue.Set(reflect.ValueOf(localeValue))

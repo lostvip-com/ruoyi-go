@@ -7,7 +7,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 // SysUserPost 用户与岗位关联
@@ -23,18 +23,18 @@ func (e *SysUserPost) TableName() string {
 
 // 增
 func (e *SysUserPost) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *SysUserPost) FindById() error {
-	err := db.GetMasterGorm().Take(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
+	err := lv_db.GetMasterGorm().Take(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysUserPost) FindOne() error {
-	err := db.GetMasterGorm().First(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
+	err := lv_db.GetMasterGorm().First(e, "user_id=? and post_id=?", e.UserId, e.PostId).Error
 	return err
 }
 
@@ -42,7 +42,7 @@ func (e *SysUserPost) FindOne() error {
 func (e *SysUserPost) Delete() error {
 	err := e.FindById()
 	if err == nil {
-		return db.GetMasterGorm().Delete(e).Error
+		return lv_db.GetMasterGorm().Delete(e).Error
 	}
 	return err
 }

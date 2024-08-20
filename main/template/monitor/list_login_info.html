@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="logininfor-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>登录地址：</label><input type="text" name="ipaddr"/>
+                        </li>
+                        <li>
+                            <label>登录名称：</label><input type="text" name="loginName"/>
+                        </li>
+                        <li>
+                            <label>登录状态：</label>
+                            {{getDictTypeSelect "sys_common_status" "status" "status" "" "" "所有" ""}}
+                        </li>
+                        <li class="select-time">
+                            <label>登录时间： </label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                        class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                        class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            {{getPermiButton .uid "monitor:logininfor:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}
+            {{getPermiButton .uid "monitor:logininfor:clean" "$.operate.clean()" "清空" "btn btn-danger" "fa fa-trash"}}
+            {{getPermiButton .uid "monitor:logininfor:unlock" "unlock()" "解锁" "btn btn-primary single disabled" "fa fa-unlock"}}
+            {{getPermiButton .uid "monitor:logininfor:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+
+{{template "footer" (OssUrl)}}
+<script type="text/javascript">
+    var datas ={{getDictTypeData "sys_common_status"}};
+    var prefix = ctx + "/monitor/logininfor";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            cleanUrl: prefix + "/clean",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            sortName: "loginTime",
+            sortOrder: "desc",
+            modalName: "登录日志",
+            escape: true,
+            showPageGo: true,
+            rememberSelected: true,
+            columns: [{
+                field: 'state',
+                checkbox: true
+            },
+                {
+                    field: 'infoId',
+                    title: '访问编号'
+                },
+                {
+                    field: 'loginName',
+                    title: '登录名称',
+                    sortable: true
+                },
+                {
+                    field: 'ipaddr',
+                    title: '登录地址'
+                },
+                {
+                    field: 'loginLocation',
+                    title: '登录地点'
+                },
+                {
+                    field: 'browser',
+                    title: '浏览器'
+                },
+                {
+                    field: 'os',
+                    title: '操作系统'
+                },
+                {
+                    field: 'status',
+                    title: '登录状态',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    field: 'msg',
+                    title: '操作信息'
+                },
+                {
+                    field: 'loginTime',
+                    title: '登录时间',
+                    sortable: true,
+                    formatter:function (value,row,index) {
+                        return value;
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function unlock() {
+        $.operate.post(prefix + "/unlock?loginName=" + $.table.selectColumns("loginName"));
+    }
+</script>
+</body>
+</html>

@@ -46,14 +46,14 @@ func (e *{{.table.ClassName}}) Save() error {
 	return db.GetMasterGorm().Save(e).Error
 }
 // 查
-func (e *{{.table.ClassName}}) FindById() error {
-	err := db.GetMasterGorm().Take(e,e.{{.table.PkColumn.GoField}}).Error
-	return err
+func (e *{{.table.ClassName}}) FindById(id int64) (*{{.table.ClassName}},error) {
+	err := db.GetMasterGorm().Take(e,id).Error
+	return e,err
 }
 
 // 查第一条
-func (e *{{.table.ClassName}}) FindOne() error {
-    tb := db.GetMasterGorm().Table(e.TableName())
+func (e *{{.table.ClassName}}) FindOne() (*{{.table.ClassName}},error) {
+    tb := db.GetMasterGorm().Table(e.TbName())
 {{range $index, $column := .table.Columns -}}
 {{if eq $column.IsQuery "0"}}
     {{- continue -}}
@@ -70,7 +70,7 @@ func (e *{{.table.ClassName}}) FindOne() error {
 {{- end -}}
 {{- end }}
     err := tb.First(e).Error
-    return err
+    return e,err
 }
 
 // 改
@@ -82,3 +82,24 @@ func (e *{{.table.ClassName}}) Delete() error {
 	return db.GetMasterGorm().Delete(e).Error
 }
 
+func (e *{{.table.ClassName}}) Count() (int64, error) {
+	sql := " select count(*) from {{.table.TbName}} where del_flag = 0 "
+
+	{{range $index, $column := .table.Columns -}}
+    {{if eq $column.IsQuery "0"}}
+        {{- continue -}}
+    {{- end -}}
+    {{ if contains $column.GoType "int"}}
+        if e.{{$column.GoField}} != 0 {
+            sql += " and {{$column.ColumnName}} = @{{$column.GoField}} "
+        }
+    {{- end -}}
+    {{ if eq $column.GoType "string" }}
+         if e.{{$column.GoField}} != "" {
+            sql += " and {{$column.ColumnName}} = @{{$column.GoField}} "
+         }
+    {{- end -}}
+    {{- end }}
+
+	return namedsql.Count(db.GetMasterGorm(), sql, e)
+}

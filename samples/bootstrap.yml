@@ -1,0 +1,4 @@
+server:
+  port: ${PORT:8081}
+  context-path: /samples
+copyright: © 2024 robiv.com Copyright

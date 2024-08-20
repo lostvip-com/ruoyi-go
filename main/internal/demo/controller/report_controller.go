@@ -1,22 +1,22 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 )
 
 func (w DemoController) Echarts(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/report/echarts").WriteTpl()
+	util.BuildTpl(c, "demo/report/echarts").WriteTpl()
 }
 
 func (w DemoController) Metrics(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/report/metrics").WriteTpl()
+	util.BuildTpl(c, "demo/report/metrics").WriteTpl()
 }
 
 func (w DemoController) Peity(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/report/peity").WriteTpl()
+	util.BuildTpl(c, "demo/report/peity").WriteTpl()
 }
 
 func (w DemoController) Sparkline(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/report/sparkline").WriteTpl()
+	util.BuildTpl(c, "demo/report/sparkline").WriteTpl()
 }

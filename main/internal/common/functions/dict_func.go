@@ -1,10 +1,12 @@
 package functions
 
 import (
+	"common/common_vo"
+	dictDataModel "common/model"
 	"encoding/json"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"html/template"
-	dictDataModel "main/internal/system/model"
+	"main/internal/system/dao"
 	"strings"
 )
 
@@ -15,8 +17,8 @@ type DictService struct {
 func GetDictLabel(dictType string, dictValue interface{}) template.HTML {
 	result := ""
 	dictData := &dictDataModel.SysDictData{DictType: dictType, DictValue: lv_conv.String(dictValue)}
-	ok, _ := dictData.FindOne()
-	if ok {
+	dictData, err := dictData.FindOne()
+	if err == nil {
 		result = dictData.DictLabel
 
 	}
@@ -105,5 +107,7 @@ func GetDictTypeData(dictType string) template.JS {
 
 // 根据字典类型查询字典数据
 func SelectDictDataByType(dictType string) ([]dictDataModel.SysDictData, error) {
-	return dictDataModel.Find("status = '0' and dict_type = '"+dictType+"'", "dict_sort asc")
+	var dictDataModel dao.DictDataDao
+	var req = common_vo.SelectDictDataPageReq{DictType: dictType, Status: "0"}
+	return dictDataModel.SelectListAll(&req)
 }

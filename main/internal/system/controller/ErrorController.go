@@ -1,20 +1,20 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 )
 
 type ErrorController struct{}
 
 func (w *ErrorController) Unauth(c *gin.Context) {
-	lv_web.BuildTpl(c, "error/unauth").WriteTpl()
+	util.BuildTpl(c, "error/unauth").WriteTpl()
 }
 
 func (w *ErrorController) Error(c *gin.Context) {
-	lv_web.BuildTpl(c, "error/500").WriteTpl()
+	util.BuildTpl(c, "error/500").WriteTpl()
 }
 
 func (w *ErrorController) NotFound(c *gin.Context) {
-	lv_web.BuildTpl(c, "error/404").WriteTpl()
+	util.BuildTpl(c, "error/404").WriteTpl()
 }

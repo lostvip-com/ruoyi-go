@@ -1,10 +1,9 @@
 package dao
 
 import (
-	"common/cm_vo"
-	"errors"
-	"github.com/lostvip-com/lv_framework/db"
-	"github.com/lostvip-com/lv_framework/db/namedsql"
+	"common/common_vo"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
@@ -14,14 +13,20 @@ type ConfigDao struct {
 }
 
 // 批量删除
+func (d *ConfigDao) Count(configKey string) (total int64, err error) {
+	err = lv_db.GetMasterGorm().Table("sys_config").Where("config_key=?", configKey).Count(&total).Error
+	return total, err
+}
+
+// 批量删除
 func (d *ConfigDao) DeleteBatch(ids ...int64) error {
-	err := db.GetMasterGorm().Delete(&model.SysConfig{}, ids).Error
+	err := lv_db.GetMasterGorm().Delete(&model.SysConfig{}, ids).Error
 	return err
 }
 
 // 根据条件分页查询用户列表
-func (d ConfigDao) SelectPageList(param *cm_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
-	db := db.GetMasterGorm()
+func (d ConfigDao) SelectPageList(param *common_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
+	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	countSql := "select count(*) from (" + sql + ") t "
 	total, err := namedsql.Count(db, countSql, sqlParams)
@@ -33,7 +38,7 @@ func (d ConfigDao) SelectPageList(param *cm_vo.SelectConfigPageReq) (*[]map[stri
 	return result, total, err
 }
 
-func (d ConfigDao) GetSql(param *cm_vo.SelectConfigPageReq) (map[string]interface{}, string) {
+func (d ConfigDao) GetSql(param *common_vo.SelectConfigPageReq) (map[string]interface{}, string) {
 	sqlParams := make(map[string]interface{})
 	sql := `
            select * from sys_config u where 1=1
@@ -68,12 +73,12 @@ func (d ConfigDao) GetSql(param *cm_vo.SelectConfigPageReq) (map[string]interfac
 //
 //// 根据条件分页查询数据
 //func (dao *ConfigDao) SelectListByPage(param *vo.SelectConfigPageReq) ([]model.SysConfig, *lv_web.Paging, error) {
-//	db := db.GetInstance().Engine()
+//	lv_db := lv_db.GetInstance().Engine()
 //	p := new(lv_web.Paging)
-//	if db == nil {
+//	if lv_db == nil {
 //		return nil, p, errors.New("获取数据库连接失败")
 //	}
-//	tb := db.Table("sys_config").Alias("t")
+//	tb := lv_db.Table("sys_config").Alias("t")
 //
 //	if param != nil {
 //		if param.ConfigName != "" {
@@ -115,57 +120,19 @@ func (d ConfigDao) GetSql(param *cm_vo.SelectConfigPageReq) (map[string]interfac
 //}
 
 // 导出excel
-func (d ConfigDao) SelectExportList(param *cm_vo.SelectConfigPageReq) (*[]map[string]string, error) {
-	db := db.GetMasterGorm()
+func (d ConfigDao) SelectExportList(param *common_vo.SelectConfigPageReq) (*[]map[string]string, error) {
+	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.user_id desc "
 	result, err := namedsql.ListMap(db, limitSql, &sqlParams, false)
 	return result, err
 }
 
-//// 导出excel
-//func (dao *ConfigDao) SelectListExport(param *vo.SelectConfigPageReq, head, col []string) (string, error) {
-//	db := db.GetMasterGorm()
-//	build := builder.Select(col...).From("sys_config", "t")
-//	if param != nil {
-//		if param.ConfigName != "" {
-//			build.Where(builder.Like{"t.config_name", param.ConfigName})
-//		}
-//
-//		if param.ConfigType != "" {
-//			build.Where(builder.Eq{"t.status": param.ConfigType})
-//		}
-//
-//		if param.ConfigKey != "" {
-//			build.Where(builder.Like{"t.config_key", param.ConfigKey})
-//		}
-//
-//		if param.BeginTime != "" {
-//			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
-//		}
-//
-//		if param.EndTime != "" {
-//			build.Where(builder.Lte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.EndTime + "','%y%m%d')"})
-//		}
-//	}
-//
-//	sqlStr, _, _ := build.ToSQL()
-//	arr, err := db.Raw(sqlStr).QuerySliceString()
-//
-//	path, err := lv_office.DownlaodExcel(head, arr)
-//
-//	return path, err
-//}
-
 // 获取所有数据
-func (dao *ConfigDao) SelectListAll(param *cm_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
-	db := db.GetInstance().Engine()
+func (dao *ConfigDao) SelectListAll(param *common_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
+	db := lv_db.GetMasterGorm()
 
-	if db == nil {
-		return nil, errors.New("获取数据库连接失败")
-	}
-
-	tb := db.Table("sys_config").Alias("t")
+	tb := db.Table("sys_config t")
 
 	if param != nil {
 		if param.ConfigName != "" {
@@ -188,30 +155,14 @@ func (dao *ConfigDao) SelectListAll(param *cm_vo.SelectConfigPageReq) ([]model.S
 			tb.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
-
 	var result []model.SysConfig
-	err := tb.Find(&result)
+	err := tb.Find(&result).Error
 	return result, err
 }
 
-// 校验参数键名是否唯一
-func (dao *ConfigDao) CheckPostCodeUniqueAll(configKey string) (*model.SysConfig, error) {
+func (dao *ConfigDao) FindOne(configKey string) (*model.SysConfig, error) {
 	var entity model.SysConfig
 	entity.ConfigKey = configKey
 	err := entity.FindOne()
 	return &entity, err
-}
-
-// 指定字段集合查询
-func (r *ConfigDao) FindIn(column string, args ...interface{}) ([]model.SysConfig, error) {
-	var list []model.SysConfig
-	err := db.GetInstance().Engine().Table("sys_config").In(column, args).Find(&list)
-	return list, err
-}
-
-// 排除指定字段集合查询
-func (r *ConfigDao) FindNotIn(column string, args ...interface{}) ([]model.SysConfig, error) {
-	var list []model.SysConfig
-	err := db.GetInstance().Engine().Table("sys_config").NotIn(column, args).Find(&list)
-	return list, err
 }

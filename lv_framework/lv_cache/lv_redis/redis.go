@@ -3,8 +3,8 @@ package lv_redis
 import (
 	"context"
 	"fmt"
-	"github.com/lostvip-com/lv_framework/conf"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_conf"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -27,7 +27,7 @@ func GetInstance(indexDb int) *RedisClient {
 
 // 获取缓存单例
 func NewRedisClient(indexDb int) *RedisClient {
-	conf := conf.ConfigDefault{}
+	conf := lv_conf.ConfigDefault{}
 	addr := conf.GetValueStr("go.redis.host")
 	port := conf.GetValueStr("go.redis.port")
 	password := conf.GetValueStr("go.redis.password")
@@ -47,7 +47,7 @@ func NewRedisClient(indexDb int) *RedisClient {
 			  password: %v
              `
 		host := conf.GetValueStr("go.redis.host")
-		logme.Error(fmt.Sprintf(msg, host, conf.GetValueStr("go.redis.port"), conf.GetValueStr("go.redis.password")))
+		lv_log.Error(fmt.Sprintf(msg, host, conf.GetValueStr("go.redis.port"), conf.GetValueStr("go.redis.password")))
 		panic("redis 错误:" + host + " port:" + port)
 	}
 	return redisClient

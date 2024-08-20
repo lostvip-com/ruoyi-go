@@ -1,10 +1,10 @@
 package service
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"gorm.io/gorm"
@@ -23,19 +23,19 @@ func (svc *RoleService) SelectRecordById(id int64) (*model.SysRole, error) {
 }
 
 // 根据主键查询数据
-func (svc *RoleService) SelectRecordPage(params *cm_vo.RolePageReq) ([]model.SysRole, int64, error) {
+func (svc *RoleService) SelectRecordPage(params *common_vo.RolePageReq) ([]model.SysRole, int64, error) {
 	var d dao.SysRoleDao
 	return d.SelectListPage(params)
 }
 
 // 根据条件查询数据
-func (svc *RoleService) SelectRecordAll(params *cm_vo.RolePageReq) ([]cm_vo.SysRoleFlag, error) {
+func (svc *RoleService) SelectRecordAll(params *common_vo.RolePageReq) ([]common_vo.SysRoleFlag, error) {
 	var dao dao.SysRoleDao
 	return dao.SelectListAll(params)
 }
 
 // 添加数据
-func (svc *RoleService) AddSave(req *cm_vo.AddRoleReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) AddSave(req *common_vo.AddRoleReq, c *gin.Context) (int64, error) {
 
 	role := new(model.SysRole)
 	role.RoleName = req.RoleName
@@ -50,7 +50,7 @@ func (svc *RoleService) AddSave(req *cm_vo.AddRoleReq, c *gin.Context) (int64, e
 	if user != nil {
 		role.CreateBy = user.LoginName
 	}
-	session := db.GetMasterGorm().Begin()
+	session := lv_db.GetMasterGorm().Begin()
 	err := session.Save(role).Error
 	lv_err.HasErrAndPanic(err)
 	if err != nil {
@@ -84,7 +84,7 @@ func (svc *RoleService) AddSave(req *cm_vo.AddRoleReq, c *gin.Context) (int64, e
 }
 
 // 修改数据
-func (svc *RoleService) EditSave(req *cm_vo.EditRoleReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) EditSave(req *common_vo.EditRoleReq, c *gin.Context) (int64, error) {
 	r := &model.SysRole{RoleId: req.RoleId}
 	err := r.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -99,7 +99,7 @@ func (svc *RoleService) EditSave(req *cm_vo.EditRoleReq, c *gin.Context) (int64,
 	if user == nil {
 		r.CreateBy = user.LoginName
 	}
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	err = db.Transaction(func(tx *gorm.DB) error {
 		//更新role表
 		if err := tx.Updates(&r).Error; err != nil {
@@ -138,7 +138,7 @@ func (svc *RoleService) EditSave(req *cm_vo.EditRoleReq, c *gin.Context) (int64,
 }
 
 // 保存数据权限
-func (svc *RoleService) AuthDataScope(req *cm_vo.DataScopeReq, c *gin.Context) (int64, error) {
+func (svc *RoleService) AuthDataScope(req *common_vo.DataScopeReq, c *gin.Context) (int64, error) {
 	entity := &model.SysRole{RoleId: req.RoleId}
 	err := entity.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -152,7 +152,7 @@ func (svc *RoleService) AuthDataScope(req *cm_vo.DataScopeReq, c *gin.Context) (
 	}
 	entity.UpdateTime = time.Now()
 
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	err = db.Transaction(func(tx *gorm.DB) error {
 		//更新role表
 		if err := tx.Updates(&entity).Error; err != nil {
@@ -186,7 +186,7 @@ func (svc *RoleService) AuthDataScope(req *cm_vo.DataScopeReq, c *gin.Context) (
 }
 
 // 批量删除数据记录
-func (svc *RoleService) DeleteRecordByIds(ids string) (int64, error) {
+func (svc *RoleService) DeleteRecordByIds(ids string) error {
 	idArr := lv_conv.ToInt64Array(ids, ",")
 	idsDel := make([]int64, 0)
 	for _, id := range idArr {
@@ -194,13 +194,13 @@ func (svc *RoleService) DeleteRecordByIds(ids string) (int64, error) {
 			idsDel = append(idsDel, id)
 		}
 	}
-	result, _ := db.GetInstance().Engine().Exec("delete from sys_role where role_id in ?  ", idsDel)
-	return result.RowsAffected()
+	err := lv_db.GetMasterGorm().Exec("delete from sys_role where role_id in ?  ", idsDel).Error
+	return err
 }
 
 // 根据用户ID查询角色
-func (svc *RoleService) SelectRoleContactVo(userId int64) ([]cm_vo.SysRoleFlag, error) {
-	var paramsPost *cm_vo.RolePageReq
+func (svc *RoleService) SelectRoleContactVo(userId int64) ([]common_vo.SysRoleFlag, error) {
+	var paramsPost *common_vo.RolePageReq
 	var dao dao.SysRoleDao
 	roleAll, err := dao.SelectListAll(paramsPost)
 	if err != nil || roleAll == nil {
@@ -230,7 +230,7 @@ func (svc *RoleService) InsertAuthUsers(roleId int64, userIds string) error {
 		tmp.RoleId = roleId
 		roleUserList = append(roleUserList, tmp)
 	}
-	err := db.GetMasterGorm().CreateInBatches(roleUserList, len(roleUserList)).Error
+	err := lv_db.GetMasterGorm().CreateInBatches(roleUserList, len(roleUserList)).Error
 	return err
 }
 
@@ -261,7 +261,7 @@ func (svc *RoleService) DeleteUserRoleInfos(roleId int64, ids string) error {
 			}
 		}
 	}
-	err := db.GetMasterGorm().Exec("delete from sys_user_role where role_id=? and user_id in (?)", roleId, idStr).Error
+	err := lv_db.GetMasterGorm().Exec("delete from sys_user_role where role_id=? and user_id in (?)", roleId, idStr).Error
 	return err
 }
 

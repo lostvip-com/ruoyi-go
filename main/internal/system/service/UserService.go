@@ -1,12 +1,12 @@
 package service
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/db"
 	"github.com/lostvip-com/lv_framework/lv_cache"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_gen"
@@ -31,7 +31,7 @@ func (svc *UserService) SelectRecordById(id int64) (*model.SysUser, error) {
 }
 
 // 根据条件分页查询用户列表
-func (svc UserService) SelectRecordList(param *cm_vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
+func (svc UserService) SelectRecordList(param *common_vo.SelectUserPageReq) (*[]map[string]string, int64, error) {
 	var deptService DeptService
 	var dept = deptService.SelectDeptById(param.DeptId)
 	if dept != nil { //数据权限
@@ -42,7 +42,7 @@ func (svc UserService) SelectRecordList(param *cm_vo.SelectUserPageReq) (*[]map[
 }
 
 // 导出excel
-func (svc UserService) Export(param *cm_vo.SelectUserPageReq) (string, error) {
+func (svc UserService) Export(param *common_vo.SelectUserPageReq) (string, error) {
 	head := []string{"用户名", "呢称", "Email", "电话号码", "性别", "部门", "领导", "状态", "删除标记", "创建人", "创建时间", "备注"}
 	col := []string{"loginName", "userName", "u.email", "phonenumber", "sex", "deptName", "leader", "status", "delFlag", "createBy", "createTime", "Remark"}
 	var d dao.SysUserDao
@@ -52,7 +52,7 @@ func (svc UserService) Export(param *cm_vo.SelectUserPageReq) (string, error) {
 }
 
 // 新增用户
-func (svc UserService) AddSave(req *cm_vo.AddUserReq, c *gin.Context) (int64, error) {
+func (svc UserService) AddSave(req *common_vo.AddUserReq, c *gin.Context) (int64, error) {
 	var u model.SysUser
 	u.LoginName = req.LoginName
 	u.UserName = req.UserName
@@ -62,7 +62,8 @@ func (svc UserService) AddSave(req *cm_vo.AddUserReq, c *gin.Context) (int64, er
 	u.Sex = req.Sex
 	u.DeptId = req.DeptId
 	u.Remark = req.Remark
-
+	t := time.Now()
+	u.LoginDate = &t
 	//生成密码
 	newSalt := lv_gen.GenerateSubId(6)
 	newToken := req.LoginName + req.Password + newSalt
@@ -77,7 +78,7 @@ func (svc UserService) AddSave(req *cm_vo.AddUserReq, c *gin.Context) (int64, er
 	}
 	u.DelFlag = "0"
 
-	err := db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+	err := lv_db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&u).Error; err != nil {
 			return err
 		}
@@ -124,7 +125,7 @@ func (svc UserService) AddSave(req *cm_vo.AddUserReq, c *gin.Context) (int64, er
 }
 
 // 新增用户
-func (svc UserService) EditSave(req *cm_vo.EditUserReq, c *gin.Context) error {
+func (svc UserService) EditSave(req *common_vo.EditUserReq, c *gin.Context) error {
 	userPtr := &model.SysUser{UserId: req.UserId}
 	err := userPtr.FindOne()
 	if err != nil {
@@ -143,7 +144,7 @@ func (svc UserService) EditSave(req *cm_vo.EditUserReq, c *gin.Context) error {
 	if updateUser != nil {
 		userPtr.UpdateBy = updateUser.LoginName
 	}
-	err = db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+	err = lv_db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
 		if err := tx.Updates(userPtr).Error; err != nil {
 			return err
 		}
@@ -205,7 +206,7 @@ func (svc UserService) DeleteRecordByIds(ids string) error {
 	if len(idarr) == 0 {
 		return errors.New("ids can not be empty ")
 	}
-	err := db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
+	err := lv_db.GetMasterGorm().Transaction(func(tx *gorm.DB) error {
 		err := tx.Table("sys_user").Where("user_id in ? and user_id!=1 ", idarr).Update("del_flag", 1).Error
 		if err != nil {
 			return err
@@ -286,26 +287,6 @@ func (svc UserService) CheckPassport(loginName string) bool {
 	}
 }
 
-// 检查登录名是否存在,存在返回true,否则false
-func (svc UserService) CheckNickName(userName string) bool {
-	entity := model.SysUser{UserName: userName}
-	if err := entity.FindOne(); err != nil {
-		return false
-	} else {
-		return true
-	}
-}
-
-// 检查登录名是否存在,存在返回true,否则false
-func (svc UserService) CheckLoginName(loginName string) bool {
-	entity := model.SysUser{LoginName: loginName}
-	if err := entity.FindOne(); err != nil {
-		return false
-	} else {
-		return true
-	}
-}
-
 // 获得用户信息详情
 func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 	token := lv_net.GetParam(c, "token")
@@ -324,7 +305,7 @@ func (svc UserService) GetProfile(c *gin.Context) *model.SysUser {
 }
 
 // 更新用户信息详情
-func (svc UserService) UpdateProfile(profile *cm_vo.ProfileReq, c *gin.Context) error {
+func (svc UserService) UpdateProfile(profile *common_vo.ProfileReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.UserName != "" {
@@ -370,7 +351,7 @@ func (svc UserService) UpdateAvatar(avatar string, c *gin.Context) error {
 }
 
 // 修改用户密码
-func (svc UserService) UpdatePassword(profile *cm_vo.PasswordReq, c *gin.Context) error {
+func (svc UserService) UpdatePassword(profile *common_vo.PasswordReq, c *gin.Context) error {
 	user := svc.GetProfile(c)
 
 	if profile.OldPassword == "" {
@@ -419,7 +400,7 @@ func (svc UserService) UpdatePassword(profile *cm_vo.PasswordReq, c *gin.Context
 }
 
 // 重置用户密码
-func (svc UserService) ResetPassword(params *cm_vo.ResetPwdReq) (bool, error) {
+func (svc UserService) ResetPassword(params *common_vo.ResetPwdReq) (bool, error) {
 	user := model.SysUser{UserId: params.UserId}
 	if err := user.FindOne(); err != nil {
 		return false, errors.New("用户不存在")
@@ -442,7 +423,6 @@ func (svc UserService) CheckPassword(user *model.SysUser, password string) bool 
 	if user == nil || user.UserId <= 0 {
 		return false
 	}
-
 	//校验密码
 	token := user.LoginName + password + user.Salt
 	token = lv_secret.MustEncryptString(token)
@@ -452,30 +432,6 @@ func (svc UserService) CheckPassword(user *model.SysUser, password string) bool 
 	} else {
 		return false
 	}
-}
-
-// 检查邮箱是否已使用
-func (svc UserService) CheckEmailUnique(userId int64, email string) bool {
-	var vo dao.SysUserDao
-	return vo.CheckEmailUnique(userId, email)
-}
-
-// 检查邮箱是否存在,存在返回true,否则false
-func (svc UserService) CheckEmailUniqueAll(email string) bool {
-	var vo dao.SysUserDao
-	return vo.CheckEmailUniqueAll(email)
-}
-
-// 检查手机号是否已使用,存在返回true,否则false
-func (svc UserService) CheckPhoneUnique(userId int64, phone string) bool {
-	var vo dao.SysUserDao
-	return vo.CheckPhoneUnique(userId, phone)
-}
-
-// 检查手机号是否已使用 ,存在返回true,否则false
-func (svc UserService) CheckPhoneUniqueAll(phone string) bool {
-	var vo dao.SysUserDao
-	return vo.CheckPhoneUniqueAll(phone)
 }
 
 // 根据登录名查询用户信息
@@ -509,6 +465,12 @@ func (svc UserService) GetRoleKeys(userId int64) (string, error) {
 	}
 	var sql = " SELECT GROUP_CONCAT(r.role_key) roles from sys_user_role ur,sys_role r where ur.user_id=? and ur.role_id = r.role_id "
 	var roles string
-	err := db.GetMasterGorm().Raw(sql, userId).Scan(&roles).Error
+	err := lv_db.GetMasterGorm().Raw(sql, userId).Scan(&roles).Error
 	return roles, err
+}
+
+func (svc *UserService) CountCol(column, value string) (int64, error) {
+	var total int64
+	err := lv_db.GetMasterGorm().Table("sys_user").Where("del_flag=0 and "+column+"=?", value).Count(&total).Error
+	return total, err
 }

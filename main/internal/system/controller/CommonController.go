@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"io"
 	"os"
 )
@@ -15,7 +15,7 @@ func (w *CommonController) Download(c *gin.Context) {
 	fileName := c.Query("fileName")
 	//delete := c.Query("delete")
 	if fileName == "" {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -25,7 +25,7 @@ func (w *CommonController) Download(c *gin.Context) {
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return

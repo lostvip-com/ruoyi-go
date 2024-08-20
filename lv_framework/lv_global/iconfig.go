@@ -2,8 +2,8 @@ package lv_global
 
 import (
 	"fmt"
-	"github.com/alecthomas/template"
 	"github.com/spf13/viper"
+	"html/template"
 )
 
 var iconfig IConfig
@@ -42,4 +42,5 @@ type IConfig interface {
 	LoadConf()
 	GetFuncMap() template.FuncMap
 	GetAutoMigrate() string
+	GetPartials() []string
 }

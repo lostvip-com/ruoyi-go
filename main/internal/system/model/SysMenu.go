@@ -1,8 +1,8 @@
 package model
 
 import (
-	"common/cm_model"
-	"github.com/lostvip-com/lv_framework/db"
+	"common/model"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 // SysMenu 菜单权限
@@ -20,7 +20,7 @@ type SysMenu struct {
 	UpdateBy string `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
 	Remark   string `gorm:"type:varchar(500);comment:备注;" json:"remark"`
 	CreateBy string `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
-	cm_model.BaseModel
+	model.BaseModel
 	//
 	Children   []*SysMenu `gorm:"-" json:"children"`
 	ParentName string     `gorm:"-" json:"parentName"`
@@ -32,18 +32,18 @@ func (e *SysMenu) TableName() string {
 
 // 增
 func (e *SysMenu) Insert() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *SysMenu) FindById() error {
-	err := db.GetMasterGorm().Take(e, e.MenuId).Error
+	err := lv_db.GetMasterGorm().Take(e, e.MenuId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysMenu) FindOne() error {
-	tb := db.GetMasterGorm().Table("sys_menu")
+	tb := lv_db.GetMasterGorm().Table("sys_menu")
 	if e.MenuId != 0 {
 		tb = tb.Where("menu_id=?", e.MenuId)
 	}
@@ -64,7 +64,7 @@ func (e *SysMenu) FindOne() error {
 
 // 查第一条
 func (e *SysMenu) FindLastOne() error {
-	tb := db.GetMasterGorm().Table("sys_menu")
+	tb := lv_db.GetMasterGorm().Table("sys_menu")
 	if e.MenuId != 0 {
 		tb = tb.Where("menu_id=?", e.MenuId)
 	}
@@ -85,10 +85,10 @@ func (e *SysMenu) FindLastOne() error {
 
 // 改
 func (e *SysMenu) Update() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 删
 func (e *SysMenu) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
 }

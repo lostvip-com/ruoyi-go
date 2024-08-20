@@ -2,12 +2,11 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/db"
-	"github.com/lostvip-com/lv_framework/db/lvdao"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_dao"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/spf13/cast"
 	"main/internal/system/dao"
 	"main/internal/system/model"
@@ -30,7 +29,7 @@ func (svc *MenuService) SelectListAll(params *vo.SelectMenuPageReq) ([]model.Sys
 }
 
 // 根据条件分页查询数据
-func (svc *MenuService) SelectListPage(params *vo.SelectMenuPageReq) (*[]model.SysMenu, *lv_web.Paging, error) {
+func (svc *MenuService) SelectListPage(params *vo.SelectMenuPageReq) (*[]model.SysMenu, *lv_dto.Paging, error) {
 	return svc.SelectListPage(params)
 }
 
@@ -38,7 +37,7 @@ func (svc *MenuService) SelectListPage(params *vo.SelectMenuPageReq) (*[]model.S
 func (svc *MenuService) DeleteRecordById(id int64) bool {
 	err := (&model.SysMenu{MenuId: id}).Delete()
 	if err == nil {
-		db.GetInstance().Engine().Exec("delete from sys_menu where parent_id=?", id)
+		lv_db.GetMasterGorm().Exec("delete from sys_menu where parent_id=?", id)
 		return true
 	}
 	return false
@@ -115,8 +114,8 @@ func (svc *MenuService) DeleteRecordByIds(ids string) int64 {
 }
 
 // 加载所有菜单列表树
-func (svc *MenuService) MenuTreeData(userId int64) (*[]dto.Ztree, error) {
-	var result *[]dto.Ztree
+func (svc *MenuService) MenuTreeData(userId int64) (*[]lv_dto.Ztree, error) {
+	var result *[]lv_dto.Ztree
 	menuList, err := svc.SelectMenuNormalByUser(userId)
 	if err != nil {
 		return nil, err
@@ -275,8 +274,8 @@ func (svc *MenuService) CheckPermsUnique(perms string, menuId int64) string {
 }
 
 // 根据角色ID查询菜单
-func (svc *MenuService) RoleMenuTreeData(roleId, userId int64) (*[]dto.Ztree, error) {
-	var result *[]dto.Ztree
+func (svc *MenuService) RoleMenuTreeData(roleId, userId int64) (*[]lv_dto.Ztree, error) {
+	var result *[]lv_dto.Ztree
 	menuList, err := svc.ListMenuNormalByUser(userId)
 	if err != nil {
 		return nil, err
@@ -297,15 +296,15 @@ func (svc *MenuService) RoleMenuTreeData(roleId, userId int64) (*[]dto.Ztree, er
 }
 
 // 对象转菜单树
-func (svc *MenuService) InitZtree(menuList *[]model.SysMenu, roleMenuList *[]string, permsFlag bool) (*[]dto.Ztree, error) {
-	var result []dto.Ztree
+func (svc *MenuService) InitZtree(menuList *[]model.SysMenu, roleMenuList *[]string, permsFlag bool) (*[]lv_dto.Ztree, error) {
+	var result []lv_dto.Ztree
 	isCheck := false
 	if roleMenuList != nil && len(*roleMenuList) > 0 {
 		isCheck = true
 	}
 
 	for _, obj := range *menuList {
-		var ztree dto.Ztree
+		var ztree lv_dto.Ztree
 		ztree.Title = obj.MenuName
 		ztree.Id = obj.MenuId
 		ztree.Name = svc.transMenuName(obj.MenuName, permsFlag)
@@ -338,7 +337,7 @@ func (svc *MenuService) transMenuName(menuName string, permsFlag bool) string {
 func (svc *MenuService) IsRolePermited(roleKeys string, perms string) (bool, interface{}) {
 	roles := strings.Split(roleKeys, ",")
 	sql := "SELECT count(*) from sys_menu m,sys_role_menu rm,sys_role r where m.menu_id=rm.menu_id and rm.role_id = r.role_id and r.role_key in @Roles and m.perms=@Perms"
-	count, err := lvdao.CountByNamedSql(sql, map[string]interface{}{"Roles": roles, "Perms": perms})
+	count, err := lv_dao.CountByNamedSql(sql, map[string]interface{}{"Roles": roles, "Perms": perms})
 	return count > 0, err
 }
 

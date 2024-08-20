@@ -1,3 +1,10 @@
+<p align="center">
+	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-dd77653d7c9f197dd9d93684f3c8dcfbab6.png">
+</p>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">ruoyi-go</h1>
+<h4 align="center">go语言版轻量级快速开发框架</h4>
+
+
 ## 框架简介
 摒弃过度封装，代码风格极尽简洁，适合中小项目使用！<br>
 架构思路沿袭着若依的以辅助生成重复代码为主，不过度封装，生成的代码可以快速修改适应不同的需求。
@@ -105,13 +112,21 @@ fresh
 >
 注意,本站未做任何防护,管理员有所有权限,请不要删除任何数据!
 
-
+## 交叉编译
+> docker pull techknowlogick/xgo
+> 交叉编译工具推荐使用xgo
+~~~
+# 全平台编译：
+xgo -ldflags "-w -s"
+# arm7平台：  
+xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
+~~~
 ## 演示图
 
-<img alt="" height="400" src="bak/1.jpg" width="600" />
-<img alt="" height="400" src="bak/2.jpg" width="600" />
-<img alt="" height="400" src="bak/3.png" width="600" />
-<img alt="" height="400" src="bak/4.png" width="600" />
+<img alt="" height="400" src="bak/readme/1.jpg" width="600" />
+<img alt="" height="400" src="bak/readme/2.jpg" width="600" />
+<img alt="" height="400" src="bak/readme/3.png" width="600" />
+<img alt="" height="400" src="bak/readme/4.png" width="600" />
 
 ## 感谢(排名不分先后)
 > xorm  https://xorm.io/zh/docs/   

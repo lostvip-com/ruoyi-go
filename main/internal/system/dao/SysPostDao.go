@@ -2,8 +2,8 @@ package dao
 
 import (
 	"errors"
-	"github.com/lostvip-com/lv_framework/db"
-	"github.com/lostvip-com/lv_framework/db/namedsql"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
 	"github.com/spf13/cast"
 	"main/internal/system/model"
 	"main/internal/system/vo"
@@ -13,13 +13,13 @@ type SysPostDao struct {
 }
 
 func (e SysPostDao) DeleteByIds(ida []int64) (int64, error) {
-	db := db.GetMasterGorm().Table("sys_post").Where("post_id in ? ", ida).Update("del_flag", 1)
+	db := lv_db.GetMasterGorm().Table("sys_post").Where("post_id in ? ", ida).Update("del_flag", 1)
 	return db.RowsAffected, db.Error
 }
 
 // 根据条件分页查询用户列表
 func (d SysPostDao) SelectPageList(param *vo.SelectPostPageReq) (*[]map[string]string, int64, error) {
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.post_id desc "
 	limitSql += "  limit " + cast.ToString(param.GetStartNum()) + "," + cast.ToString(param.GetPageSize())
@@ -63,7 +63,7 @@ func (d SysPostDao) GetSql(param *vo.SelectPostPageReq) (map[string]interface{},
 
 // 导出excel
 func (d SysPostDao) ListAll(param *vo.SelectPostPageReq) (*[]model.SysPost, error) {
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	allSql := sql + " order by u.post_id desc "
 	result, err := namedsql.ListData[model.SysPost](db, allSql, &sqlParams)
@@ -72,7 +72,7 @@ func (d SysPostDao) ListAll(param *vo.SelectPostPageReq) (*[]model.SysPost, erro
 
 // 导出excel
 func (d SysPostDao) ListAllMap(param *vo.SelectPostPageReq, camel bool) (*[]map[string]string, error) {
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	allSql := sql + " order by u.post_id desc "
 	result, err := namedsql.ListMap(db, allSql, &sqlParams, camel)
@@ -81,7 +81,7 @@ func (d SysPostDao) ListAllMap(param *vo.SelectPostPageReq, camel bool) (*[]map[
 
 // 根据用户ID查询岗位
 func (dao SysPostDao) SelectPostsByUserId(userId int64) (*[]model.SysPost, error) {
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -97,18 +97,8 @@ func (dao SysPostDao) SelectPostsByUserId(userId int64) (*[]model.SysPost, error
 	return result, err
 }
 
-// 校验岗位名称是否唯一
-func (dao SysPostDao) CheckPostNameUniqueAll(postName string) (*model.SysPost, error) {
-	var entity model.SysPost
-	entity.PostName = postName
-	err := entity.FindOne()
-	return &entity, err
-}
-
-// 校验岗位名称是否唯一
-func (dao SysPostDao) CheckPostCodeUniqueAll(postCode string) (*model.SysPost, error) {
-	var entity model.SysPost
-	entity.PostCode = postCode
-	err := entity.FindOne()
-	return &entity, err
+// CountCol 按字段值统计数量
+func (dao SysPostDao) CountCol(column, value string) (total int64, err error) {
+	err = lv_db.GetMasterGorm().Table("sys_post").Where("del_flag=0 and "+column+"=?", value).Count(&total).Error
+	return
 }

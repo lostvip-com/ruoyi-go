@@ -1,13 +1,12 @@
 package myconf
 
 import (
-	"fmt"
-	"github.com/alecthomas/template"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/conf"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_conf"
 	"github.com/lostvip-com/lv_framework/lv_global"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/utils/lv_logic"
+	"html/template"
 	"main/internal/common/functions"
 	"os"
 )
@@ -19,7 +18,7 @@ func init() {
 }
 
 type MyConfig struct {
-	conf.ConfigDefault
+	lv_conf.ConfigDefault
 }
 
 func (e *MyConfig) IsProxyEnabled() bool {
@@ -49,46 +48,29 @@ func (e *MyConfig) LoadConf() {
 	//日志
 	lv_global.IsDebug = lv_logic.IfTrue(e.IsDebug() == "true", true, false).(bool)
 	lv_global.LogOutputType = e.GetLogOutput()
+	return
 }
 
 func resetCfg() {
 	conig := lv_global.Config()
 	if lv_global.IsDebug {
-		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
+		lv_log.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "")
 	} else {
-		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
+		lv_log.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
 	if conig.IsDebug() == "true" {
-		logme.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
+		lv_log.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "")
 	} else {
-		logme.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
+		lv_log.Warn(conig.GetAppName() + " ============ gin 发布模式,swagger 禁用 ============")
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
-	fmt.Println(conig.GetAppName() + " ############# 数据库初始化完毕 ####################")
-	InitTables()
-	fmt.Println(conig.GetAppName() + " ############# 修改表结构完毕 ####################")
-
-}
-
-func InitTables() {
-	fmt.Println("------------ demo 自动建表 ------------")
-	//setTableOption("App信息").AutoMigrate(model_cmn.BizApp{})
-	//setTableOption("评论信息").AutoMigrate(model_cmn.AppComments{})
-	//setTableOption("网友建议").AutoMigrate(model_cmn.AppSuggest{})
-	//setTableOption("跳绳结果").AutoMigrate(model_cmn.BizMember{})
-	////2023
-	//setTableOption("跳绳结果").AutoMigrate(model_cmn.SptRope{})
-	//setTableOption("50m短跑结果").AutoMigrate(model_cmn.SptRun{})
-	//setTableOption("体适能结果").AutoMigrate(model_cmn.SptFitness{})
-	//2022
-	fmt.Println("------------ end 自动建表 ------------")
 }
 
 func (e *MyConfig) GetFuncMap() template.FuncMap {
@@ -110,3 +92,7 @@ func (e *MyConfig) GetFuncMap() template.FuncMap {
 
 	return mp
 }
+
+func (e *MyConfig) GetPartials() []string {
+	return []string{"header", "footer", "system/menu/icon"}
+} //

@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/lostvip-com/lv_framework/logme"
 	"github.com/lostvip-com/lv_framework/lv_global"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/web/gintemplate"
 	"github.com/lostvip-com/lv_framework/web/middleware"
 	"github.com/lostvip-com/lv_framework/web/router"
@@ -46,9 +46,13 @@ func (mySvr *MyServer) Start() {
 	host := lv_global.Config().GetServerIP()
 	path := lv_global.Config().GetContextPath()
 	port := cast.ToString(lv_global.Config().GetServerPort())
+	cache := lv_global.Config().GetValueStr("go.cache")
 	fmt.Println("##############################################################")
 	fmt.Println("go.application.name: " + lv_global.Config().GetAppName())
-	fmt.Println("go.redis.host: " + lv_global.Config().GetValueStr("go.redis.host"))
+	fmt.Println("go.cache: " + cache)
+	if cache == "redis" {
+		fmt.Println("go.redis.host: " + lv_global.Config().GetValueStr("go.redis.host"))
+	}
 	fmt.Println("go.datasource.master: " + lv_global.Config().GetMaster())
 	//加载模板引擎
 	fmt.Println("http://localhost:" + port + strings.ReplaceAll(path, "//", "/"))
@@ -64,7 +68,7 @@ func (mySvr *MyServer) ShutDown() {
 
 // 创建服务
 func New(addr string) *MyServer {
-	gin.DefaultWriter = logme.GetLog().Out
+	gin.DefaultWriter = lv_log.GetLog().Out
 	contextPath := lv_global.Config().GetContextPath()
 	var s MyServer
 	s.WriteTimeout = 60 * time.Second
@@ -93,7 +97,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 	// web 页面
 	/////////////////////////////////////////////////////////////////////////////////
 	routerBase := engine.Group(contextPath)
-	//routerBase.GET("/swagger/*any", gs.DisablingWrapHandler(swaggerFiles.Handler, conf.KEY_SWAGGER_OFF))
+	//routerBase.GET("/swagger/*any", gs.DisablingWrapHandler(swaggerFiles.Handler, lv_conf.KEY_SWAGGER_OFF))
 	tmp, _ := os.Getwd()
 	staticPath := tmp + "/static"
 	fmt.Println("设置静态目录：" + staticPath)
@@ -105,7 +109,7 @@ func InitGinRouter(contextPath string) *gin.Engine {
 		Root:      "template",
 		Extension: ".html",
 		Master:    "",
-		Partials:  []string{"header", "footer", "system/menu/icon"},
+		Partials:  lv_global.Config().GetPartials(), //[]string{"header", "footer", "system/menu/icon"}
 		Funcs:     template.FuncMap(lv_global.Config().GetFuncMap()),
 		CacheTpl:  lv_global.Config().IsCacheTpl(),
 	})

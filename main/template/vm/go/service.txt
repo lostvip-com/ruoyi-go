@@ -61,7 +61,7 @@ func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}
 }
 
 // ListByPage 根据条件分页查询数据
-func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassName}}Req) (*[]model.{{.table.ClassName}},int64, error) {
+func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassName}}Req) (*[]vo.{{.table.ClassName}}Resp,int64, error) {
 	var d dao.{{.table.ClassName}}Dao
 	return d.ListByPage(params)
 }

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 // 用户和角色关联
@@ -16,18 +16,18 @@ func (e *SysUserRole) TableName() string {
 
 // 增
 func (e *SysUserRole) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *SysUserRole) FindById() error {
-	err := db.GetMasterGorm().Take(e, " user_id=? and role_id=? ", e.UserId, e.RoleId).Error
+	err := lv_db.GetMasterGorm().Take(e, " user_id=? and role_id=? ", e.UserId, e.RoleId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysUserRole) FindOne() error {
-	tb := db.GetMasterGorm().Table(e.TableName())
+	tb := lv_db.GetMasterGorm().Table(e.TableName())
 	if e.UserId != 0 && e.RoleId != 0 {
 		tb = tb.Table(e.TableName()).Where("role_id=? and user_id=?", e.RoleId, e.UserId)
 	}
@@ -39,7 +39,7 @@ func (e *SysUserRole) FindOne() error {
 func (e *SysUserRole) Delete() error {
 	err := e.FindOne()
 	if e == nil {
-		return db.GetMasterGorm().Delete(e).Error
+		return lv_db.GetMasterGorm().Delete(e).Error
 	} else {
 		return err
 	}

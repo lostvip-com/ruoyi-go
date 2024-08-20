@@ -2,9 +2,7 @@
 
 -- name: ListIotDevice
 select
-  t.id
-  , t.product_id
-  , t.gateway_id
+  t.id, t.product_id , t.gateway_id,t.dept_id
   , t.node_type
   , t.name
   , t.sn
@@ -21,7 +19,7 @@ select
   , t.update_time
   , t.update_by
   , t.create_by
-
+  ,dept.dept_name DeptName
 from iot_device t
 left join sys_dept dept on dept.dept_id = t.dept_id
 where 1=1 and t.del_flag=0

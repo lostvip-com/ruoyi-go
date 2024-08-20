@@ -28,7 +28,6 @@ func init() {
 	g1.GET("/edit", "system:config:edit", config.Edit)
 	g1.POST("/edit", "system:config:edit", config.EditSave)
 	g1.POST("/export", "system:config:export", config.Export)
-	g1.POST("/checkConfigKeyUniqueAll", "system:config:view", config.CheckConfigKeyUniqueAll)
 	g1.POST("/checkConfigKeyUnique", "system:config:view", config.CheckConfigKeyUnique)
 	// 字典类型参数路由
 	g3 := router.New("/system/dict", auth.TokenCheck(), auth.PermitCheck)
@@ -95,11 +94,9 @@ func init() {
 	groupProfile.GET("/resetPwd", "", profile.EditPwd)
 	groupProfile.POST("/update", "", profile.Update)
 	groupProfile.POST("/resetSavePwd", "", profile.UpdatePassword)
-	groupProfile.POST("/checkEmailUnique", "", profile.CheckEmailUnique)
-	groupProfile.POST("/checkPhoneUnique", "", profile.CheckPhoneUnique)
-	groupProfile.POST("/checkLoginNameUnique", "", profile.CheckLoginNameUnique)
-	groupProfile.POST("/checkEmailUniqueAll", "", profile.CheckEmailUniqueAll)
-	groupProfile.POST("/checkPhoneUniqueAll", "", profile.CheckPhoneUniqueAll)
+	groupProfile.POST("/checkPhoneOK", "", profile.CheckPhoneOK)
+	groupProfile.POST("/checkEmailOK", "", profile.CheckEmailOK)
+	groupProfile.POST("/checkLoginNameOK", "", profile.CheckLoginNameOK)
 	groupProfile.POST("/checkPassword", "", profile.CheckPassword)
 	groupProfile.POST("/updateAvatar", "", profile.UpdateAvatar)
 	// 角色路由

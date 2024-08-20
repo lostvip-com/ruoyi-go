@@ -16,6 +16,16 @@ select-list li select {
 	border-radius: 3px;
 }
 
+.bg-img-head{
+	background-image: url('/static/resource/img/head_bg.png');
+	height: 300px; /* 指定元素的高度 */
+	background-size: contain; /* 或者使用其他值，如contain、auto等 */
+	/* 背景图片不随内容滚动 */
+	background-attachment: fixed;
+	/* 背景图片填充整个div区域 */
+	height: 100vh; /* 或你想要的任何高度 */
+	width: 100%; /* 宽度可以设置为100%，或特定值 */
+}
 
 ::-webkit-scrollbar-thumb {
 	border-radius:3px;

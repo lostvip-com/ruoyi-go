@@ -1,0 +1,19 @@
+go:
+  application:
+    debug: true
+    cache-tpl: false # 默认不缓存模板,省内存，方便开发
+  log:
+    output: stdout # stdout：只写控制台，file:只写文件，默认：双写
+  cache: ram
+  datasource:
+    auto-migrate: none # update/none 同步表结构，见 init.go
+#    show-sql: true
+    driver: sqlite3
+    master: data.lv_db
+
+chrome:
+  path: C:\Program Files\Google\Chrome\Application\chrome.exe
+  port: 9222
+  user-data: d:/test
+  start-page: 22
+  end-page: 32

@@ -1,83 +1,83 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/spf13/cast"
 	"net/http"
 )
 
 func (w DemoController) Button(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/github.com/lostvip-com/lv_framework/utils/button").WriteTpl()
+	util.BuildTpl(c, "demo/github.com/lostvip-com/lv_framework/utils/button").WriteTpl()
 }
 
 func (w DemoController) Child(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/child").WriteTpl()
+	util.BuildTpl(c, "demo/table/child").WriteTpl()
 }
 
 func (w DemoController) Curd(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/curd").WriteTpl()
+	util.BuildTpl(c, "demo/table/curd").WriteTpl()
 }
 
 func (w DemoController) Detail(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/detail").WriteTpl()
+	util.BuildTpl(c, "demo/table/detail").WriteTpl()
 }
 
 func (w DemoController) Editable(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/editable").WriteTpl()
+	util.BuildTpl(c, "demo/table/editable").WriteTpl()
 }
 
 func (w DemoController) Event(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/event").WriteTpl()
+	util.BuildTpl(c, "demo/table/event").WriteTpl()
 }
 
 func (w DemoController) Export(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/export").WriteTpl()
+	util.BuildTpl(c, "demo/table/export").WriteTpl()
 }
 
 func (w DemoController) FixedColumns(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/fixedColumns").WriteTpl()
+	util.BuildTpl(c, "demo/table/fixedColumns").WriteTpl()
 }
 
 func (w DemoController) Footer(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/footer").WriteTpl()
+	util.BuildTpl(c, "demo/table/footer").WriteTpl()
 }
 
 func (w DemoController) GroupHeader(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/groupHeader").WriteTpl()
+	util.BuildTpl(c, "demo/table/groupHeader").WriteTpl()
 }
 
 func (w DemoController) Image(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/image").WriteTpl()
+	util.BuildTpl(c, "demo/table/image").WriteTpl()
 }
 
 func (w DemoController) Multi(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/multi").WriteTpl()
+	util.BuildTpl(c, "demo/table/multi").WriteTpl()
 }
 
 func (w DemoController) Other(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/other").WriteTpl()
+	util.BuildTpl(c, "demo/table/other").WriteTpl()
 }
 
 func (w DemoController) PageGo(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/pageGo").WriteTpl()
+	util.BuildTpl(c, "demo/table/pageGo").WriteTpl()
 }
 
 func (w DemoController) Params(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/params").WriteTpl()
+	util.BuildTpl(c, "demo/table/params").WriteTpl()
 }
 
 func (w DemoController) Remember(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/remember").WriteTpl()
+	util.BuildTpl(c, "demo/table/remember").WriteTpl()
 }
 
 func (w DemoController) Recorder(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/recorder").WriteTpl()
+	util.BuildTpl(c, "demo/table/recorder").WriteTpl()
 }
 
 func (w DemoController) Search(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/table/search").WriteTpl()
+	util.BuildTpl(c, "demo/table/search").WriteTpl()
 }
 
 type us struct {
@@ -107,7 +107,7 @@ func (w DemoController) List(c *gin.Context) {
 		tmp.UserEmail = "111@qq.com"
 		rows = append(rows, tmp)
 	}
-	c.JSON(http.StatusOK, dto.TableDataInfo{
+	c.JSON(http.StatusOK, lv_dto.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),

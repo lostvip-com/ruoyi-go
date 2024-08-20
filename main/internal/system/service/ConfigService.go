@@ -1,7 +1,7 @@
 package service
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/lv_cache"
@@ -9,6 +9,7 @@ import (
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
+	"github.com/spf13/cast"
 	dao2 "main/internal/system/dao"
 	"main/internal/system/model"
 	"time"
@@ -73,19 +74,18 @@ func (svc *ConfigService) DeleteRecordById(id int64) bool {
 // 批量删除数据记录
 func (svc *ConfigService) DeleteRecordByIds(ids string) {
 	idarr := lv_conv.ToInt64Array(ids, ",")
-	var dao dao2.ConfigDao
-	list, err := dao.FindIn("config_id", idarr)
-	lv_err.HasErrAndPanic(err)
-	err = dao.DeleteBatch(idarr...)
-	lv_err.HasErrAndPanic(err)
-	for _, item := range list {
+	cfg := new(model.SysConfig)
+	for _, id := range idarr {
+		cfg, err := cfg.FindById(cast.ToInt64(id))
+		lv_err.HasErrAndPanic(err)
+		cfg.Delete()
 		//从缓存删除
-		lv_cache.GetCacheClient().Del(item.ConfigKey)
+		lv_cache.GetCacheClient().Del(cfg.ConfigKey)
 	}
 }
 
 // 添加数据
-func (svc *ConfigService) AddSave(req *cm_vo.AddConfigReq, c *gin.Context) (int64, error) {
+func (svc *ConfigService) AddSave(req *common_vo.AddConfigReq, c *gin.Context) (int64, error) {
 	var entity model.SysConfig
 	entity.ConfigName = req.ConfigName
 	entity.ConfigKey = req.ConfigKey
@@ -106,7 +106,7 @@ func (svc *ConfigService) AddSave(req *cm_vo.AddConfigReq, c *gin.Context) (int6
 }
 
 // 修改数据
-func (svc *ConfigService) EditSave(req *cm_vo.EditConfigReq, c *gin.Context) {
+func (svc *ConfigService) EditSave(req *common_vo.EditConfigReq, c *gin.Context) {
 	entity := &model.SysConfig{ConfigId: req.ConfigId}
 	err := entity.FindOne()
 	lv_err.HasErrAndPanic(err)
@@ -131,19 +131,19 @@ func (svc *ConfigService) EditSave(req *cm_vo.EditConfigReq, c *gin.Context) {
 }
 
 // 根据条件分页查询角色数据
-func (svc *ConfigService) SelectListAll(params *cm_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
+func (svc *ConfigService) SelectListAll(params *common_vo.SelectConfigPageReq) ([]model.SysConfig, error) {
 	var config dao2.ConfigDao
 	return config.SelectListAll(params)
 }
 
 // 根据条件分页查询角色数据
-func (svc *ConfigService) SelectListByPage(params *cm_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
+func (svc *ConfigService) SelectListByPage(params *common_vo.SelectConfigPageReq) (*[]map[string]string, int64, error) {
 	var config dao2.ConfigDao
 	return config.SelectPageList(params)
 }
 
 // 导出excel
-func (svc *ConfigService) Export(param *cm_vo.SelectConfigPageReq) (string, error) {
+func (svc *ConfigService) Export(param *common_vo.SelectConfigPageReq) (string, error) {
 	head := []string{"参数主键", "参数名称", "参数键名", "参数键值", "系统内置（Y是 N否）", "状态"}
 	col := []string{"config_id", "config_name", "config_key", "config_value", "config_type"}
 	var d dao2.ConfigDao
@@ -152,28 +152,8 @@ func (svc *ConfigService) Export(param *cm_vo.SelectConfigPageReq) (string, erro
 	return lv_office.DownlaodExcelByListMap(&head, &col, listMap)
 }
 
-// 检查角色名是否唯一
-func (svc *ConfigService) CheckConfigKeyUniqueAll(configKey string) string {
+func (svc *ConfigService) CountKey(key string) (int64, error) {
 	var config dao2.ConfigDao
-	entity, err := config.CheckPostCodeUniqueAll(configKey)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.ConfigId > 0 {
-		return "1"
-	}
-	return "0"
-}
+	return config.Count(key)
 
-// 检查岗位名称是否唯一
-func (svc *ConfigService) CheckConfigKeyUnique(configKey string, configId int64) string {
-	var config dao2.ConfigDao
-	entity, err := config.CheckPostCodeUniqueAll(configKey)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.ConfigId > 0 && entity.ConfigId != configId {
-		return "1"
-	}
-	return "0"
 }

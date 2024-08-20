@@ -1,10 +1,14 @@
 package controller
 
 import (
-	userModel "common/cm_vo"
+	userModel "common/common_vo"
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/lv_log"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
+	"main/internal/common/global"
+	"main/internal/system/model"
 	"main/internal/system/service"
 	"net/http"
 	"os"
@@ -19,50 +23,44 @@ type ProfileController struct {
 func (w *ProfileController) Profile(c *gin.Context) {
 	var userService service.UserService
 	user := userService.GetProfile(c)
-	lv_web.BuildTpl(c, "system/user/profile/profile").WriteTpl(gin.H{
+	util.BuildTpl(c, "system/user/profile/profile").WriteTpl(gin.H{
 		"user": user,
 	})
 }
 
 // 修改用户信息
 func (w *ProfileController) Update(c *gin.Context) {
-	var req *userModel.ProfileReq
+	var req userModel.ProfileReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		lv_log.Error(err)
+		util.Fail(c, "参数错误！")
 		return
 	}
 	var userService service.UserService
-	err := userService.UpdateProfile(req, c)
-
+	err := userService.UpdateProfile(&req, c)
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
+		util.Err(c, err.Error())
 	} else {
-		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("用户管理", req).WriteJsonExit()
+		util.Success(c, "", "success")
 	}
 }
 
 // 修改用户密码
 func (w *ProfileController) UpdatePassword(c *gin.Context) {
-	var req *userModel.PasswordReq
-	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
-	}
+	var req userModel.PasswordReq
+	err := c.ShouldBind(&req)
+	lv_err.HasErrAndPanic(err)
 	var userService service.UserService
-	err := userService.UpdatePassword(req, c)
-
-	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
-	} else {
-		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("修改用户密码", req).WriteJsonExit()
-	}
+	err = userService.UpdatePassword(&req, c)
+	util.SuccessData(c, nil)
 }
 
 // 修改头像页面
 func (w *ProfileController) Avatar(c *gin.Context) {
 	var userService service.UserService
 	user := userService.GetProfile(c)
-	lv_web.BuildTpl(c, "system/user/profile/avatar").WriteTpl(gin.H{
+	util.BuildTpl(c, "system/user/profile/avatar").WriteTpl(gin.H{
 		"user": user,
 	})
 }
@@ -71,105 +69,60 @@ func (w *ProfileController) Avatar(c *gin.Context) {
 func (w *ProfileController) EditPwd(c *gin.Context) {
 	var userService service.UserService
 	user := userService.GetProfile(c)
-	lv_web.BuildTpl(c, "system/user/profile/resetPwd").WriteTpl(gin.H{
+	util.BuildTpl(c, "system/user/profile/resetPwd").WriteTpl(gin.H{
 		"user": user,
 	})
 }
 
 // 检查登录名是否存在
-func (w *ProfileController) CheckLoginNameUnique(c *gin.Context) {
-	var req *userModel.CheckLoginNameReq
+func (w *ProfileController) CheckLoginNameOK(c *gin.Context) {
+	var req userModel.CheckLoginNameReq
 	if err := c.ShouldBind(&req); err != nil {
 		c.Writer.WriteString("1")
 		return
 	}
-	var userService service.UserService
-	result := userService.CheckLoginName(req.LoginName)
-
-	if result {
-		c.Writer.WriteString("1")
+	entity := model.SysUser{LoginName: req.LoginName}
+	err := entity.FindOne()
+	if err == nil { //查到了
+		c.Writer.WriteString(global.JQ_BE_NO)
 	} else {
-		c.Writer.WriteString("0")
+		c.Writer.WriteString(global.JQ_BE_OK)
 	}
 }
 
-// 检查邮箱是否存在
-func (w *ProfileController) CheckEmailUnique(c *gin.Context) {
-	var req *userModel.CheckEmailReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
+// CheckPhoneOK 检查手机号是否存在 1 存在，0不存在
+func (w *ProfileController) CheckPhoneOK(c *gin.Context) {
+	var req userModel.CheckPhoneAllReq
+	err := c.ShouldBind(&req)
+	lv_err.HasErrAndPanic(err)
 	var userService service.UserService
-	result := userService.CheckEmailUnique(req.UserId, req.Email)
-
-	if result {
-		c.Writer.WriteString("1")
+	count, err := userService.CountCol("phonenumber", req.Phonenumber)
+	lv_err.HasError1(err)
+	if count > 0 {
+		c.Writer.WriteString(global.JQ_BE_NO)
 	} else {
-		c.Writer.WriteString("0")
+		c.Writer.WriteString(global.JQ_BE_OK)
 	}
 }
 
-// 检查邮箱是否存在
-func (w *ProfileController) CheckEmailUniqueAll(c *gin.Context) {
-	var req *userModel.CheckEmailAllReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
+// 检查手机号是否存在 1 存在，0不存在
+func (w *ProfileController) CheckEmailOK(c *gin.Context) {
+	email := c.PostForm("email")
 	var userService service.UserService
-	result := userService.CheckEmailUniqueAll(req.Email)
-
-	if result {
-		c.Writer.WriteString("1")
+	count, err := userService.CountCol("email", email)
+	lv_err.HasError1(err)
+	if count > 0 {
+		c.Writer.WriteString(global.JQ_BE_NO)
 	} else {
-		c.Writer.WriteString("0")
+		c.Writer.WriteString(global.JQ_BE_OK)
 	}
-}
-
-// 检查手机号是否存在
-func (w *ProfileController) CheckPhoneUnique(c *gin.Context) {
-	var req *userModel.CheckPhoneReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var userService service.UserService
-	result := userService.CheckPhoneUnique(req.UserId, req.Phonenumber)
-
-	if result {
-		c.Writer.WriteString("1")
-	} else {
-		c.Writer.WriteString("0")
-	}
-
-}
-
-// 检查手机号是否存在
-func (w *ProfileController) CheckPhoneUniqueAll(c *gin.Context) {
-	var req *userModel.CheckPhoneAllReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, dto.CommonRes{
-			Code: 500,
-			Msg:  err.Error(),
-		})
-	}
-	var userService service.UserService
-	result := userService.CheckPhoneUniqueAll(req.Phonenumber)
-
-	if result {
-		c.Writer.WriteString("1")
-	} else {
-		c.Writer.WriteString("0")
-	}
-
 }
 
 // 校验密码是否正确
 func (w *ProfileController) CheckPassword(c *gin.Context) {
-	var req *userModel.CheckPasswordReq
+	var req userModel.CheckPasswordReq
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusOK, dto.CommonRes{
+		c.JSON(http.StatusOK, lv_dto.CommonRes{
 			Code: 500,
 			Msg:  err.Error(),
 		})
@@ -180,9 +133,9 @@ func (w *ProfileController) CheckPassword(c *gin.Context) {
 	result := userService.CheckPassword(user, req.Password)
 
 	if result {
-		c.Writer.WriteString("true")
+		c.Writer.WriteString(global.JQ_BE_NO)
 	} else {
-		c.Writer.WriteString("false")
+		c.Writer.WriteString(global.JQ_BE_OK)
 	}
 }
 
@@ -190,27 +143,23 @@ func (w *ProfileController) CheckPassword(c *gin.Context) {
 func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	var userService service.UserService
 	user := userService.GetProfile(c)
-
 	curDir, err := os.Getwd()
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
-
 	saveDir := curDir + "/static/upload/"
-
 	fileHead, err := c.FormFile("avatarfile")
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg("没有获取到上传文件").Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg("没有获取到上传文件").Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
-
 	curdate := time.Now().UnixNano()
 	filename := user.LoginName + strconv.FormatInt(curdate, 10) + ".png"
 	dts := saveDir + filename
 
 	if err := c.SaveUploadedFile(fileHead, dts); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	avatar := "/upload/" + filename
@@ -218,8 +167,8 @@ func (w *ProfileController) UpdateAvatar(c *gin.Context) {
 	err = userService.UpdateAvatar(avatar, c)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		util.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	} else {
-		lv_web.SucessResp(c).SetBtype(dto.Buniss_Edit).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
+		util.SucessResp(c).SetBtype(lv_dto.Buniss_Edit).Log("保存头像", gin.H{"userid": user.UserId}).WriteJsonExit()
 	}
 }

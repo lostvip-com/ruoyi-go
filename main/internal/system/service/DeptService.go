@@ -1,15 +1,15 @@
 package service
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
+	"common/model"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_reflect"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/spf13/cast"
 	"main/internal/system/dao"
-	"main/internal/system/model"
 	"strings"
 	"time"
 )
@@ -17,7 +17,7 @@ import (
 type DeptService struct{}
 
 // 新增保存信息
-func (svc *DeptService) AddSave(req *cm_vo.AddDeptReq, c *gin.Context) (int64, error) {
+func (svc *DeptService) AddSave(req *common_vo.AddDeptReq, c *gin.Context) (int64, error) {
 	if req.OrderNum == 0 {
 		req.OrderNum = 100
 	}
@@ -50,7 +50,7 @@ func (svc *DeptService) AddSave(req *cm_vo.AddDeptReq, c *gin.Context) (int64, e
 }
 
 // 修改保存信息
-func (svc *DeptService) EditSave(req *cm_vo.EditDeptReq, c *gin.Context) (int64, error) {
+func (svc *DeptService) EditSave(req *common_vo.EditDeptReq, c *gin.Context) (int64, error) {
 	dept0 := &model.SysDept{DeptId: req.DeptId}
 	err := dept0.FindOne()
 	if err != nil {
@@ -83,7 +83,7 @@ func (svc *DeptService) EditSave(req *cm_vo.EditDeptReq, c *gin.Context) (int64,
 }
 
 // 根据分页查询部门管理数据
-func (svc *DeptService) SelectListAll(param *cm_vo.DeptPageReq) (*[]model.SysDept, error) {
+func (svc *DeptService) SelectListAll(param *common_vo.DeptPageReq) (*[]model.SysDept, error) {
 	if param == nil {
 		return svc.SelectDeptList(0, "", "", param.TenantId)
 	} else {
@@ -121,7 +121,7 @@ func (svc *DeptService) SelectChildrenDeptById(deptId int64) []*model.SysDept {
 }
 
 // 加载部门列表树
-func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]dto.Ztree, error) {
+func (svc *DeptService) SelectDeptTree(parentId int64, deptName, status string, tenantId int64) (*[]lv_dto.Ztree, error) {
 	var dao dao.SysDeptDao
 	list, err := dao.SelectDeptList(parentId, deptName, status, tenantId)
 	if err != nil {
@@ -139,8 +139,8 @@ func (svc *DeptService) SelectDeptList(parentId int64, deptName, status string, 
 }
 
 // 根据角色ID查询部门（数据权限）
-func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]dto.Ztree, error) {
-	var result *[]dto.Ztree
+func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]lv_dto.Ztree, error) {
+	var result *[]lv_dto.Ztree
 	var dao dao.SysDeptDao
 	deptList, err := dao.SelectDeptList(0, "", "", tenantId)
 	if err != nil {
@@ -161,8 +161,8 @@ func (svc *DeptService) RoleDeptTreeData(roleId int64, tenantId int64) (*[]dto.Z
 }
 
 // 对象转部门树
-func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]string) *[]dto.Ztree {
-	var result []dto.Ztree
+func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]string) *[]lv_dto.Ztree {
+	var result []lv_dto.Ztree
 	isCheck := false
 	if roleDeptList != nil && len(*roleDeptList) > 0 {
 		isCheck = true
@@ -170,7 +170,7 @@ func (svc *DeptService) InitZtree(deptList *[]model.SysDept, roleDeptList *[]str
 
 	for i := range *deptList {
 		if (*deptList)[i].Status == "0" {
-			var ztree dto.Ztree
+			var ztree lv_dto.Ztree
 			ztree.Id = (*deptList)[i].DeptId
 			ztree.Pid = (*deptList)[i].ParentId
 			ztree.Name = (*deptList)[i].DeptName

@@ -1,8 +1,8 @@
 package model
 
 import (
-	"common/cm_model"
-	"github.com/lostvip-com/lv_framework/db"
+	"common/model"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 type SysRole struct {
@@ -15,7 +15,7 @@ type SysRole struct {
 	UpdateBy  string `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
 	CreateBy  string `gorm:"type:varchar(64);comment:创建者;" json:"updateBy"`
 	Remark    string `gorm:"type:varchar(500);comment:备注;" json:"remark"`
-	cm_model.BaseModel
+	model.BaseModel
 }
 
 // 映射数据表
@@ -25,22 +25,22 @@ func (r *SysRole) TableName() string {
 
 // 插入数据
 func (r *SysRole) Insert() error {
-	return db.GetMasterGorm().Save(r).Error
+	return lv_db.GetMasterGorm().Save(r).Error
 }
 
 // 更新数据
 func (r *SysRole) Update() error {
-	return db.GetMasterGorm().Updates(r).Error
+	return lv_db.GetMasterGorm().Updates(r).Error
 }
 
 // 删除
 func (r *SysRole) Delete() error {
-	return db.GetMasterGorm().Delete(r).Error
+	return lv_db.GetMasterGorm().Delete(r).Error
 }
 
 // 根据结构体中已有的非空数据来获得单条数据
 func (e *SysRole) FindOne() error {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if e.RoleId != 0 {
 		tb = tb.Where("role_id=? and del_flag=0", e.RoleId)
 	}

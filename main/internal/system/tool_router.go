@@ -17,7 +17,7 @@ func init() {
 	g1.POST("/gen/list", "tool:gen:list", tool.GenList)
 	g1.POST("/gen/remove", "tool:gen:remove", tool.Remove)
 	g1.GET("/gen/importTable", "tool:gen:list", tool.ImportTable)
-	g1.POST("/gen/db/list", "tool:gen:list", tool.DataList)
+	g1.POST("/gen/lv_db/list", "tool:gen:list", tool.DataList)
 	g1.POST("/gen/importTable", "tool:gen:list", tool.ImportTableSave)
 	g1.GET("/gen/edit", "tool:gen:edit", tool.Edit)
 	g1.POST("/gen/edit", "tool:gen:edit", tool.EditSave)

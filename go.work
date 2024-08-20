@@ -5,8 +5,10 @@ use (
 	./common
 	./lv_framework
 	./main
+	./samples
 	./plugins
+	./chromedp
 )
 
 // 方便本地库与github库的代码切换
-replace github.com/lostvip-com/lv_framework v1.0.4 => ./lv_framework
+replace github.com/lostvip-com/lv_framework v1.1.0 => ./lv_framework

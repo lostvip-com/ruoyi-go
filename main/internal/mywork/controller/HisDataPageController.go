@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 )
 
 func (w HisDataController) ToWizard(c *gin.Context) {
-	lv_web.BuildTpl(c, "mywork/his_data_wizard").WriteTpl()
+	util.BuildTpl(c, "mywork/his_data_wizard").WriteTpl()
 }

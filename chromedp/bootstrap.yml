@@ -1,0 +1,16 @@
+server:
+  port: ${PORT:8080}
+#  context-path: /go
+copyright: © 2023 lostvip.com Copyright
+## 注释以下配置时，不会使用 nacos #################
+## 开启后会加载nacos中的 go-ruoyi-dev.yml
+#go:
+#  application:
+#    name:  go-ruoyi     # 微服务名
+#    active: dev
+#    debug: true
+#  cloud:
+#    nacos:
+#      discovery:       # 服务注册地址
+#        server-addr:  192.168.88.106
+#        port: 8848

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_net"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"io"
 	"main/internal/common/myconf"
 	"main/internal/system/model"
@@ -71,7 +71,7 @@ func (w *MainController) goMain(c *gin.Context, indexPageDefault string) {
 	}
 	//"menuStyle", cookie.Value, 1000, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly
 	c.SetCookie(cookie.Name, menuStyle, cookie.MaxAge, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
-	lv_web.BuildTpl(c, targetIndex).WriteTpl(gin.H{
+	util.BuildTpl(c, targetIndex).WriteTpl(gin.H{
 		"avatar":    avatar,
 		"loginname": loginname,
 		"username":  username,
@@ -83,7 +83,7 @@ func (w *MainController) goMain(c *gin.Context, indexPageDefault string) {
 
 // 后台框架欢迎页面
 func (w *MainController) Main(c *gin.Context) {
-	lv_web.BuildTpl(c, "main").WriteTpl()
+	util.BuildTpl(c, "main").WriteTpl()
 }
 
 // 下载 public/upload 文件头像之类
@@ -91,7 +91,7 @@ func (w *MainController) Download(c *gin.Context) {
 	fileName := c.Query("fileName")
 	//delete := c.Query("delete")
 	if fileName == "" {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -101,7 +101,7 @@ func (w *MainController) Download(c *gin.Context) {
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -115,7 +115,7 @@ func (w *MainController) Download(c *gin.Context) {
 
 // 切换皮肤
 func (w *MainController) SwitchSkin(c *gin.Context) {
-	lv_web.BuildTpl(c, "skin").WriteTpl()
+	util.BuildTpl(c, "skin").WriteTpl()
 }
 
 // 注销

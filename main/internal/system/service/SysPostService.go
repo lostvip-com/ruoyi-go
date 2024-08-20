@@ -3,7 +3,9 @@ package service
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_dao"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
 	"main/internal/system/dao"
 	"main/internal/system/model"
@@ -131,15 +133,13 @@ func (svc SysPostService) SelectPostsByUserId(userId int64) (*[]model.SysPost, e
 	return postAll, err
 }
 
-// 检查岗位编码是否唯一
-func (svc SysPostService) IsPostCodeExist(postCode string) bool {
-	var d dao.SysPostDao
-	post, err := d.CheckPostCodeUniqueAll(postCode)
-	if err != nil {
-		return false
+// IsPostCodeExist 检查岗位编码是否唯一
+func (svc SysPostService) IsPostCodeExist(postCode string) (exist bool) {
+	//total, err := d.CountCol("post_code", postCode)
+	total, err := lv_dao.CountCol("sys_post", "post_code", postCode)
+	lv_err.HasErrAndPanic(err)
+	if total > 0 {
+		exist = true
 	}
-	if post != nil && post.PostId > 0 {
-		return true
-	}
-	return true
+	return
 }

@@ -2,7 +2,7 @@ package dao
 
 import (
 	"errors"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"main/internal/system/model"
 	"main/internal/system/vo"
@@ -14,18 +14,18 @@ type MenuDao struct {
 
 // 批量删除
 func (r *MenuDao) DeleteBatch(ids ...int64) (int64, error) {
-	db := db.GetMasterGorm().Table("sys_menu").Where("menu_id in ? ", ids).Update("del_flag", 1)
+	db := lv_db.GetMasterGorm().Table("sys_menu").Where("menu_id in ? ", ids).Update("del_flag", 1)
 	return db.RowsAffected, db.Error
 }
 
 func (r *MenuDao) DeleteChildren(parentId int64) (int64, error) {
-	tb := db.GetMasterGorm().Table("sys_menu").Where("parent_id=?", parentId).Update("del_flag", 1)
+	tb := lv_db.GetMasterGorm().Table("sys_menu").Where("parent_id=?", parentId).Update("del_flag", 1)
 	return tb.RowsAffected, tb.Error
 }
 
 // 根据主键查询数据
 func (dao *MenuDao) SelectRecordById(id int64) (*model.SysMenu, error) {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if tb == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -42,7 +42,7 @@ func (dao *MenuDao) SelectRecordById(id int64) (*model.SysMenu, error) {
 
 // 根据条件分页查询数据
 func (dao *MenuDao) SelectListPage(param *vo.SelectMenuPageReq) (*[]model.SysMenu, int64, error) {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	tb = tb.Table("sys_menu")
 	if param != nil {
 		if param.MenuName != "" {
@@ -72,7 +72,7 @@ func (dao *MenuDao) SelectListPage(param *vo.SelectMenuPageReq) (*[]model.SysMen
 
 // 获取所有数据
 func (dao *MenuDao) SelectListAll(param *vo.SelectMenuPageReq) ([]model.SysMenu, error) {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	tb = tb.Table("sys_menu as t")
 
 	if param != nil {
@@ -109,7 +109,7 @@ func (dao *MenuDao) SelectListAll(param *vo.SelectMenuPageReq) ([]model.SysMenu,
 func (dao *MenuDao) SelectMenuNormalAll() ([]model.SysMenu, error) {
 	var result []model.SysMenu
 
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	tb = tb.Table("sys_menu as m")
 	tb.Select("distinct m.menu_id, m.parent_id, m.menu_name, m.url, m.visible, ifnull(m.perms,'') as perms, m.target, m.menu_type, m.icon, m.order_num, m.create_time")
 	tb.Where(" m.visible = 0")
@@ -127,7 +127,7 @@ func (dao *MenuDao) SelectMenuNormalAll() ([]model.SysMenu, error) {
 func (dao *MenuDao) SelectMenusByUserId(userId int64) ([]model.SysMenu, error) {
 	var result []model.SysMenu
 
-	db := db.GetMasterGorm()
+	db := lv_db.GetMasterGorm()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
@@ -149,7 +149,7 @@ func (dao *MenuDao) SelectMenusByUserId(userId int64) ([]model.SysMenu, error) {
 
 // 根据角色ID查询菜单
 func (dao *MenuDao) SelectMenuTree(roleId int64) ([]string, error) {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if tb == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}

@@ -7,19 +7,19 @@
 package controller
 
 import (
+    "common/util"
     "github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
     "github.com/lostvip-com/lv_framework/utils/lv_conv"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
 )
 
 // List 查询页
 func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
-	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/list.html")
 }
 // Add 新增页
 func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
-	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/add.html").WriteTpl()
+	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/add.html")
 }
 // Edit 修改页
 func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
@@ -30,7 +30,7 @@ func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
 		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
 		return
 	}
-	lv_web.BuildTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
+	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/edit.html",gin.H{
 		"{{.table.BusinessName}}": entity,
 	})
 }

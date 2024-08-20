@@ -5,3 +5,6 @@ const ErrTimes2Lock = 20
 
 // KeyOssUrl 获取oss地址Key
 const KeyOssUrl = "sys.resource.url"
+
+const JQ_BE_NO = "false"
+const JQ_BE_OK = "true"

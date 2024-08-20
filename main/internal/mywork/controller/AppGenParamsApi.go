@@ -7,10 +7,10 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/spf13/cast"
 	"main/internal/mywork/model"
 	"main/internal/mywork/service"
@@ -35,7 +35,7 @@ func (w AppGenParamsController) GenParams(c *gin.Context) {
 	var userService sysService.UserService
 	user := userService.GetProfile(c)
 	svc.GenParamsToDB(cast.ToInt(baseNum), cast.ToInt(amount), user.LoginName)
-	lv_web.SucessData(c, "success")
+	util.SucessData(c, "success")
 }
 
 // 修改页面保存
@@ -50,7 +50,7 @@ func (w *AppGenParamsController) ChangeProp(c *gin.Context) {
 		if strings.Contains(name, "remark") {
 			po.Remark = value
 			lv_err.HasErrAndPanic(err)
-			lv_web.SuccessData(c, po)
+			util.SuccessData(c, po)
 		} else {
 			panic("已经绑定业务，不允许修改")
 		}
@@ -72,7 +72,7 @@ func (w *AppGenParamsController) ChangeProp(c *gin.Context) {
 		po.UseFlag = "0"
 		err = po.Save()
 		lv_err.HasErrAndPanic(err)
-		lv_web.SuccessData(c, po)
+		util.SuccessData(c, po)
 	}
 
 }
@@ -94,7 +94,7 @@ func (w *AppGenParamsController) ChangeStatus(c *gin.Context) {
 	po.UseFlag = status
 	err = po.Save()
 	lv_err.HasErrAndPanic(err)
-	lv_web.SuccessData(c, po)
+	util.SuccessData(c, po)
 }
 
 // ListAjax 新增页面保存
@@ -104,7 +104,7 @@ func (w AppGenParamsController) ListAjax(c *gin.Context) {
 	lv_err.HasErrAndPanic(err)
 	var svc service.AppGenParamsService
 	result, total, _ := svc.ListByPage(req)
-	lv_web.SucessPage(c, result, total)
+	util.SucessPage(c, result, total)
 }
 
 // AddSave 新增页面保存
@@ -119,7 +119,7 @@ func (w AppGenParamsController) AddSave(c *gin.Context) {
 	req.CreateBy = user.LoginName
 	id, err := svc.AddSave(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.SucessData(c, id)
+	util.SucessData(c, id)
 }
 
 // EditSave 修改页面保存
@@ -133,17 +133,17 @@ func (w AppGenParamsController) EditSave(c *gin.Context) {
 	req.UpdateBy = user.LoginName
 	err = svc.EditSave(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.Success(c, nil, "success")
+	util.Success(c, nil, "success")
 }
 
 // Remove 删除数据
 func (w AppGenParamsController) Remove(c *gin.Context) {
-	req := new(dto.IdsReq)
+	req := new(lv_dto.IdsReq)
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
 	var svc service.AppGenParamsService
 	rs := svc.DeleteByIds(req.Ids)
-	lv_web.SuccessData(c, rs)
+	util.SuccessData(c, rs)
 }
 
 // 导出
@@ -154,5 +154,5 @@ func (w AppGenParamsController) Export(c *gin.Context) {
 	var svc service.AppGenParamsService
 	url, err := svc.ExportAll(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.SucessDataMsg(c, url, "")
+	util.SucessDataMsg(c, url, "")
 }

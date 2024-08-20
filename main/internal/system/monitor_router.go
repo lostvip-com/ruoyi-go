@@ -29,7 +29,6 @@ func init() {
 	operController := controller.OperlogController{}
 	g3.GET("/", "monitor:operlog:view", operController.List)
 	g3.POST("/list", "monitor:operlog:list", operController.ListAjax)
-	g3.POST("/export", "monitor:operlog:export", operController.Export)
 	g3.POST("/remove", "monitor:operlog:export", operController.Remove)
 	g3.POST("/clean", "monitor:operlog:export", operController.Clean)
 	g3.GET("/detail", "monitor:operlog:detail", operController.Detail)

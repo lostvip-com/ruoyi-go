@@ -1,0 +1,96 @@
+    <!DOCTYPE html>
+    <html lang="zh">
+    <head>
+        {{template "header" (OssUrl)}}
+        <link href="{{OssUrl}}/resource/css/animate.min.css?v=20210831" rel="stylesheet"/>
+    </head>
+    <body>
+    <div class="wrapper wrapper-content" style="padding: 10px;padding-left: 16px">
+        <div class="row" >
+            <div class="col-sm-12">
+                <div style="display: flex;background-image: url('/static/resource/img/head_bg.png')">
+                    <div>
+                            <img src="/static/resource/img/iot/img_prd.png"/>
+                    </div>
+                    <div style="padding-left: 16px">
+                        <div style="display: flex; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 20px; line-height: inherit;">{{.product.Name}}</h2>
+                            </div>
+                            <div>
+                                <button style="color: #1d9d74;font-size: inherit; line-height: inherit; margin-left:  10px; height: 24px;">已启用</button>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center;margin-top: 16px">
+                            <div>
+                                <div> <label>产品编码：</label> <bold>{{.product.Code}}</bold> </div>
+                                <div> <label>产品类型：</label> <bold>{{.product.NodeTypeName}}</bold></div>
+                            </div>
+                            <div style="padding-left: 32px">
+                                <div> <label>数据来源：</label><bold>本地</bold></div>
+                                <div> <label>协议类型：</label><bold>{{.product.ProtocolName}}</bold></div>
+                            </div>
+                            <div style="padding-left: 32px">
+                                <ul>
+                                    <div><label>厂商名称：</label><bold>{{.product.Manufacturer}}</bold></div>
+                                    <div><label>备注信息：</label> <bold>{{.product.Description}}</bold></div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12" >
+                <div class="panel blank-panel" >
+                    <div class="">
+                        <div class="panel-options">
+
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="tabs_panels.html#tab-5"><i class="fa fa-tags"></i>&nbsp;&nbsp;属性</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="tabs_panels.html#tab-6"><i class="fa fa-warning"></i>&nbsp;&nbsp;事件</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="tabs_panels.html#tab-7"><i class="fa fa-plug"></i>&nbsp;&nbsp;功能</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="panel-body" style="padding: 0">
+                        <div class="tab-content">
+                            <div id="tab-5" class="tab-pane active" style="width: 100%;height: 800px">
+                                <iframe id="iframe0" src="/iot_dev/property/?productId={{.product.Id}}" style="border:none;width: 100%;height: 100%;"></iframe>
+                            </div>
+                            <div id="tab-6" class="tab-pane" style="width: 100%;height: 800px">
+                                <iframe id="iframe0" src="/iot_dev/event/?productId={{.product.Id}}" style="border:none;width: 100%;height: 100%;"></iframe>
+                            </div>
+                            <div id="tab-7" class="tab-pane" style="width: 100%;height: 800px">
+                                <iframe id="iframe0" src="/iot_dev/action/?productId={{.product.Id}}" style="border:none;width: 100%;height: 100%;"></iframe>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    {{template "footer" (OssUrl)}}
+    <script>
+        {{/*var datas = {{getDictTypeData "iot_node_type"}};*/}}
+
+    </script>
+    <style>
+        label {
+            color: #999;
+        }
+    </style>
+    </body>
+    </html>

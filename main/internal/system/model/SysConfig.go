@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"time"
 )
 
@@ -27,18 +27,18 @@ func (e *SysConfig) TableName() string {
 
 // 增
 func (e *SysConfig) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
-func (e *SysConfig) FindById() error {
-	err := db.GetMasterGorm().Take(e, e.ConfigId).Error
-	return err
+func (e *SysConfig) FindById(id int64) (*SysConfig, error) {
+	err := lv_db.GetMasterGorm().First(e, id).Error
+	return e, err
 }
 
 // 查第一条
 func (e *SysConfig) FindOne() error {
-	tb := db.GetMasterGorm().Table(e.TableName())
+	tb := lv_db.GetMasterGorm().Table(e.TableName())
 	if e.ConfigId != 0 {
 		tb = tb.Where("config_id=?", e.ConfigId)
 	}
@@ -55,12 +55,12 @@ func (e *SysConfig) FindOne() error {
 
 // 改
 func (e *SysConfig) Update() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 删
 func (e *SysConfig) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
 }
 
 //
@@ -84,27 +84,27 @@ func (e *SysConfig) Delete() error {
 //
 //// 插入数据
 //func (r *SysConfig) Insert() (int64, error) {
-//	return db.GetInstance().Engine().Insert(r)
+//	return lv_db.GetInstance().Engine().Insert(r)
 //}
 //
 //// 更新数据
 //func (r *SysConfig) Update() (int64, error) {
-//	return db.GetInstance().Engine().Table("sys_config").ID(r.ConfigId).Update(r)
+//	return lv_db.GetInstance().Engine().Table("sys_config").ID(r.ConfigId).Update(r)
 //}
 //
 //// 删除
 //func (r *SysConfig) Delete() (int64, error) {
-//	return db.GetInstance().Engine().Table("sys_config").ID(r.ConfigId).Delete(r)
+//	return lv_db.GetInstance().Engine().Table("sys_config").ID(r.ConfigId).Delete(r)
 //}
 //
 //// 根据结构体中已有的非空数据来获得单条数据
 //func (r *SysConfig) FindOne() (bool, error) {
-//	return db.GetInstance().Engine().Table("sys_config").Get(r)
+//	return lv_db.GetInstance().Engine().Table("sys_config").Get(r)
 //}
 //
 //// 根据条件查询
 //func (r *SysConfig) Find(where, order string) ([]SysConfig, error) {
 //	var list []SysConfig
-//	err := db.GetInstance().Engine().Table("sys_config").Where(where).OrderBy(order).Find(&list)
+//	err := lv_db.GetInstance().Engine().Table("sys_config").Where(where).OrderBy(order).Find(&list)
 //	return list, err
 //}

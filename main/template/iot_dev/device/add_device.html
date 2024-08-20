@@ -1,0 +1,157 @@
+<!DOCTYPE html>   
+<!--
+==========================================================================
+LV自动生成新增页面代码,只生成一次,按需修改.
+生成日期：2024-07-19 17:09:35 +0800 CST
+生成路径: template/iot_dev/device/add.html
+生成人：lv
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+    <link href="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content   ibox-content">
+    <form class="form-horizontal m" id="formAdd">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备名称：</label>
+            <div class="col-sm-8">
+                <input name="name" class="form-control" type="text" required>
+            </div>
+        </div>
+
+        {{if (ne .productId 0) }}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">所属产品：</label>
+                    <div class="col-sm-8">
+                        <input name="productId"  type="hidden" value="{{.productId}}" >
+                        <input name="productName" disabled class="form-control" value="{{.productName}}"> </input>
+                    </div>
+                </div>
+        {{end}}
+        {{if (eq .productId 0) }}
+            <div class="form-group">
+                <label class="col-sm-3 control-label">所属产品：</label>
+                <div class="col-sm-8">
+                    <span>
+                    <input name="productId"  type="hidden">
+                    <input type="text" class="form-control" id="productName" value="{{.productName}}">
+                    <div  >
+                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        </ul>
+                    </div>
+                        </span>
+                </div>
+            </div>
+        {{end}}
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">序列号：</label>
+                <div class="col-sm-8">
+                    <input name="Sn" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">从机地址：</label>
+                <div class="col-sm-8">
+                    <input name="devNo" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">通信密钥：</label>
+                <div class="col-sm-8">
+                    <input name="secret" class="form-control" type="text" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">安装地址：</label>
+                <div class="col-sm-8">
+                    <input name="installLocation" class="form-control" type="text" >
+                </div>
+            </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注信息：</label>
+            <div class="col-sm-8">
+                <textarea name="description" class="form-control" ></textarea>
+            </div>
+        </div>
+                      
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+
+<script type="text/javascript">
+    var prefix = ctx + "/iot_dev/device";
+    $("#formAdd").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler(index,layero,callback) {
+        console.log("callback:",callback)
+        if ($.validate.form()) {
+            let form =  $('#formAdd').serialize()
+            $.operate.save(prefix + "/add",form,function (result){
+                $.modal.closeAll()
+                console.log(callback)
+                callback(result) //通知父页面刷新
+            });
+        }
+    }
+
+</script>
+
+<script src="{{OssUrl}}/resource/ajax/libs/suggest/bootstrap-suggest.min.js"></script>
+<script>
+    // 所属产品
+    $("#productName").bsSuggest({
+        getDataMethod: "url", //获取数据的方式，总是从 URL 获取
+        url: ctx + "/iot_dev/product/list?name=",
+        allowNoKeyword: true, //是否允许无关键字时请求数据
+        hideOnSelect:true,
+        idField: "id",
+        keyField: "name",
+        showHeader: true,
+        showBtn: false,
+        effectiveFieldsAlias: {
+            id:"ID",
+            code:"产品编号",
+            name:"产品名称"
+        },
+        processData: function (json) { // 数据格式处理
+            if (json.code!=200) {
+                alert(json.msg)
+                return false;
+            }
+            let dataAdapter = { value: []  };
+            for (let i = 0; i < json.rows.length; i++) {
+                dataAdapter.value.push({
+                    id: json.rows[i].id,
+                    name: json.rows[i].name,
+                    code: json.rows[i].code,
+                });
+            }
+            return dataAdapter;
+        }
+    }).on('onDataRequestSuccess', function (e, result) {
+        console.log('onDataRequestSuccess: ', result);
+    }).on('onSetSelectValue', function (e, item) {
+        console.log('onSetSelectValue: ', item);
+        $("#productId").val(item.id);
+    }).on('onUnsetSelectValue', function (e) {
+        console.log("onUnsetSelectValue");
+        $("#productId").val("");
+    });
+
+</script>
+</body>
+</html>

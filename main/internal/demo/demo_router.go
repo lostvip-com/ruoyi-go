@@ -1,9 +1,9 @@
 package demo
 
 import (
+	"common/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/middleware/auth"
 	controller2 "main/internal/demo/controller"
@@ -13,7 +13,7 @@ func init() {
 	fmt.Println("############## demo init ################")
 	//g1 := router.New( "/demo/form",token.TokenCheck())
 	demo := controller2.DemoController{}
-	g0 := router.New("/demo/db")
+	g0 := router.New("/demo/lv_db")
 	//mybatis
 	g0.GET("/mybatis1", "", demo.MybatisMap)
 	g0.GET("/mybatis2", "", demo.MybatisStruct)
@@ -99,9 +99,9 @@ func init() {
 
 	//20240714
 	g6.GET("/customView", "", func(c *gin.Context) {
-		lv_web.BuildTpl(c, "demo/table/customView").WriteTpl()
+		util.BuildTpl(c, "demo/table/customView").WriteTpl()
 	})
 	g6.GET("/subdata", "", func(c *gin.Context) {
-		lv_web.BuildTpl(c, "demo/table/subdata").WriteTpl()
+		util.BuildTpl(c, "demo/table/subdata").WriteTpl()
 	})
 }

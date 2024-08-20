@@ -7,8 +7,6 @@ import (
 	"github.com/lostvip-com/lv_framework/utils/lv_secret"
 	"github.com/mssola/user_agent"
 	"main/internal/system/model"
-	"main/internal/system/model/monitor/online"
-	logininforService "main/internal/system/service/monitor/logininfor"
 	"strings"
 	"time"
 )
@@ -47,7 +45,7 @@ func (svc *SessionService) SignIn(loginnName, password string) (*model.SysUser, 
 // 用户注销
 func (svc *SessionService) SignOut(tokenStr string) error {
 	lv_cache.GetCacheClient().Del("login:" + tokenStr)
-	entity := online.UserOnline{SessionId: "login:" + tokenStr}
+	entity := model.SysUserOnline{SessionId: "login:" + tokenStr}
 	entity.Delete()
 	return nil
 }
@@ -55,7 +53,7 @@ func (svc *SessionService) SignOut(tokenStr string) error {
 // 强退用户
 func (svc *SessionService) ForceLogout(token string) error {
 	svc.SignOut(token)
-	entity := online.UserOnline{SessionId: token}
+	entity := model.SysUserOnline{SessionId: token}
 	entity.Delete()
 	return nil
 }
@@ -84,14 +82,15 @@ func (svc *SessionService) SaveUserToSession(token string, user *model.SysUser, 
 }
 
 func (svc *SessionService) SaveLoginLog2DB(token string, user *model.SysUser, userAgent string, ip string) error {
-	//save to db
+	//save to lv_db
 	ua := user_agent.New(userAgent)
 	os := ua.OS()
 	browser, _ := ua.Browser()
 	//移除登录次数记录
+	var logininforService LoginInforService
 	logininforService.RemovePasswordCounts(user.UserName)
 	//
-	var userOnline online.UserOnline
+	var userOnline model.SysUserOnline
 	// 保存用户信息到session
 	loginLocation := lv_net.GetCityByIp(ip)
 	userOnline.LoginName = user.UserName

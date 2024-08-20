@@ -1,0 +1,21 @@
+go:
+  application:
+    name: simple
+    debug: true
+    cache-tpl: false # 默认不缓存模板,省内存，方便开发
+  log:
+    output: stdout # stdout：只写控制台，file:只写文件，默认：双写
+  cache: ram
+  datasource:
+    auto-migrate: update
+    show-sql: true
+    driver: sqlite3
+    master: data.lv_db
+    slave: ""
+ #代理转发
+#  proxy:
+#    enable: true
+#    prefix:
+#      - /video=192.168.100.110
+#      - /lostvip=lostvip.com
+#代码生成器配置

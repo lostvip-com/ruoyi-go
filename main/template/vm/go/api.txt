@@ -7,10 +7,10 @@
 package controller
 
 import (
+    "common/util"
     "github.com/gin-gonic/gin"
     "github.com/lostvip-com/lv_framework/utils/lv_err"
- 	"github.com/lostvip-com/lv_framework/utils/lv_web"
-    "github.com/lostvip-com/lv_framework/web/dto"
+    "github.com/lostvip-com/lv_framework/web/lv_dto"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
     sysService "main/internal/system/service"
@@ -27,14 +27,14 @@ func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
 	if req.PageSize == 0 {
-    	req.PageSize = lv_web.PageSize
+    	req.PageSize = util.PageSize
     }
     if req.PageNum == 0 {
     	req.PageNum = 1
     }
 	var svc service.{{.table.ClassName}}Service
 	result, total, _ := svc.ListByPage(req)
-	lv_web.SucessPage(c, result, total)
+	util.SucessPage(c, result, total)
 }
 
 // AddSave 新增页面保存
@@ -49,7 +49,7 @@ func (w {{.table.ClassName}}Controller) AddSave(c *gin.Context) {
     req.CreateBy = user.LoginName
 	id, err := svc.AddSave(req)
     lv_err.HasErrAndPanic(err)
-	lv_web.SucessData(c, id)
+	util.SucessData(c, id)
 }
 
 // EditSave 修改页面保存
@@ -63,17 +63,17 @@ func (w {{.table.ClassName}}Controller) EditSave(c *gin.Context) {
     req.UpdateBy = user.LoginName
 	err = svc.EditSave(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.Success(c, nil, "success")
+	util.Success(c, nil, "success")
 }
 
 // Remove 删除数据
 func (w {{.table.ClassName}}Controller) Remove(c *gin.Context) {
-	req := new(dto.IdsReq)
+	req := new(lv_dto.IdsReq)
 	err := c.ShouldBind(req)
     lv_err.HasErrAndPanic(err)
 	var svc service.{{.table.ClassName}}Service
 	rs := svc.DeleteByIds(req.Ids)
-	lv_web.SuccessData(c, rs)
+	util.SuccessData(c, rs)
 }
 
 // 导出
@@ -84,5 +84,5 @@ func (w {{.table.ClassName}}Controller) Export(c *gin.Context) {
 	var svc service.{{.table.ClassName}}Service
 	url, err := svc.ExportAll(req)
 	lv_err.HasErrAndPanic(err)
-	lv_web.SucessDataMsg(c, url, url)
+	util.SucessDataMsg(c, url, url)
 }

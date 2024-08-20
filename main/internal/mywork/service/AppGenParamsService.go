@@ -7,7 +7,7 @@ package service
 
 import (
 	"fmt"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
@@ -118,14 +118,14 @@ func (svc *AppGenParamsService) GenParamsToDB(baseNUm int, amount int, username 
 			CreateTime: time.Now(),
 			UpdateTime: time.Now(),
 		}
-		db.GetMasterGorm().Create(&app)
+		lv_db.GetMasterGorm().Create(&app)
 		logrus.Info("=============>baseNUm:" + cast.ToString(baseNUm))
 	}
 }
 
 func (s *AppGenParamsService) getParamByNo(paramNO int) (*model.AppGenParams, error) {
 	list := []model.AppGenParams{}
-	err := db.GetMasterGorm().Where("param_no=?", paramNO).Find(&list).Error
+	err := lv_db.GetMasterGorm().Where("param_no=?", paramNO).Find(&list).Error
 	if len(list) > 0 {
 		return &list[0], err
 	} else {

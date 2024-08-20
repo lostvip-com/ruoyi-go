@@ -1,7 +1,7 @@
 package session
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/lv_cache"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
@@ -14,12 +14,12 @@ func GetTenantId(c *gin.Context) int64 {
 	return 0
 }
 
-func GetLoginInfo(c *gin.Context) *cm_vo.LoginInfo {
+func GetLoginInfo(c *gin.Context) *common_vo.LoginInfo {
 	token := lv_net.GetParam(c, "token")
 	key := "login:" + token
 	mp, err := lv_cache.GetCacheClient().HGetAll(key)
 	lv_err.HasErrAndPanic(err)
-	login := new(cm_vo.LoginInfo)
+	login := new(common_vo.LoginInfo)
 	login.Username = mp["username"]
 	login.Avatar = mp["avatar"]
 	login.RoleKeys = mp["roleKeys"]

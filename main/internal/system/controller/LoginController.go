@@ -1,21 +1,21 @@
 package controller
 
 import (
+	util2 "common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
 	"github.com/lostvip-com/lv_framework/utils/lv_net"
 	"github.com/lostvip-com/lv_framework/utils/lv_secret"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/mojocn/base64Captcha"
 	"github.com/mssola/user_agent"
 	global2 "main/internal/common/global"
 	"main/internal/common/myconf"
-	logininforModel "main/internal/system/model/monitor/logininfor"
+	"main/internal/system/model"
 	"main/internal/system/service"
-	logininforService "main/internal/system/service/monitor/logininfor"
+
 	"net/http"
 	"strings"
 	"time"
@@ -38,16 +38,17 @@ type RegisterReq struct {
 func (w *LoginController) Login(c *gin.Context) {
 
 	if strings.EqualFold(c.Request.Header.Get("X-Requested-With"), "XMLHttpRequest") {
-		lv_web.ErrorResp(c).SetMsg("未登录或登录超时。请重新登录").WriteJsonExit()
+		util2.ErrorResp(c).SetMsg("未登录或登录超时。请重新登录").WriteJsonExit()
 		return
 	}
 	clientIp := lv_net.GetClientRealIP(c)
+	var logininforService service.LoginInforService
 	errTimes := logininforService.GetPasswordCounts(clientIp)
 	codeShow := 0 //默认不显示验证码
 	if errTimes > 5 {
 		codeShow = 1
 	}
-	lv_web.BuildTpl(c, "login").WriteTpl(gin.H{
+	util2.BuildTpl(c, "login").WriteTpl(gin.H{
 		"CodeShow": codeShow,
 	})
 }
@@ -57,22 +58,23 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 	var req = RegisterReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
+		util2.ErrorResp(c).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	clientIp := lv_net.GetClientRealIP(c)
+	var logininforService service.LoginInforService
 	errTimes4Ip := logininforService.GetPasswordCounts(clientIp)
 	if errTimes4Ip > 5 { //超过5次错误开始校验验证码
 		//比对验证码
 		verifyResult := base64Captcha.VerifyCaptcha(req.IdKey, req.ValidateCode)
 		if !verifyResult {
-			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("验证码不正确").WriteJsonExit()
+			util2.ErrorResp(c).SetData(errTimes4Ip).SetMsg("验证码不正确").WriteJsonExit()
 			return
 		}
 	}
 	isLock := logininforService.CheckLock(req.UserName)
 	if isLock {
-		lv_web.ErrorResp(c).SetMsg("账号已锁定，请30分钟后再试").WriteJsonExit()
+		util2.ErrorResp(c).SetMsg("账号已锁定，请30分钟后再试").WriteJsonExit()
 		return
 	}
 	var userService service.UserService
@@ -84,9 +86,9 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 		having := global2.ErrTimes2Lock - errTimes4UserName
 		w.SaveLogs(c, &req, "账号或密码不正确") //记录日志
 		if having <= 5 {
-			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确,还有" + lv_conv.String(having) + "次之后账号将锁定").WriteJsonExit()
+			util2.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确,还有" + lv_conv.String(having) + "次之后账号将锁定").WriteJsonExit()
 		} else {
-			lv_web.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确!").WriteJsonExit()
+			util2.ErrorResp(c).SetData(errTimes4Ip).SetMsg("账号或密码不正确!").WriteJsonExit()
 		}
 	} else {
 		//保存在线状态
@@ -117,19 +119,19 @@ func (w *LoginController) CheckLogin(c *gin.Context) {
 			err = svc.SaveLoginLog2DB(token, user, ua, ip)
 		}()
 		if err != nil {
-			logme.Error(err)
+			lv_log.Error(err)
 			lv_err.PrintStackTrace(err)
 			w.SaveLogs(c, &req, "登录失败！"+err.Error()) //记录日志
-			lv_web.Fail(c, "登录失败")
+			util2.Fail(c, "登录失败")
 		} else {
 			w.SaveLogs(c, &req, "login success") //记录日志
-			lv_web.Success(c, token, "login success!")
+			util2.Success(c, token, "login success!")
 		}
 	}
 }
 
 func (w *LoginController) SaveLogs(c *gin.Context, req *RegisterReq, msg string) {
-	var logininfor logininforModel.Entity
+	var logininfor model.SysLoginInfo
 	logininfor.LoginName = req.UserName
 	logininfor.Ipaddr = c.ClientIP()
 	userAgent := c.Request.Header.Get("User-Agent")
@@ -192,7 +194,7 @@ func (w *LoginController) CaptchaImage(c *gin.Context) {
 	//以base64编码
 	//base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
 
-	c.JSON(http.StatusOK, dto.CaptchaRes{
+	c.JSON(http.StatusOK, lv_dto.CaptchaRes{
 		Code:           200,
 		CaptchaEnabled: true,
 		Uuid:           idKeyC,

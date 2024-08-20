@@ -6,7 +6,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 	"time"
 )
 
@@ -33,18 +33,18 @@ func (e *AppGenParams) TableName() string {
 
 // 增
 func (e *AppGenParams) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
 
 // 查
 func (e *AppGenParams) FindById() error {
-	err := db.GetMasterGorm().Take(e, e.Id).Error
+	err := lv_db.GetMasterGorm().Take(e, e.Id).Error
 	return err
 }
 
 // 查第一条
 func (e *AppGenParams) FindOne() error {
-	tb := db.GetMasterGorm().Table(e.TableName())
+	tb := lv_db.GetMasterGorm().Table(e.TableName())
 
 	if e.ParamNo != 0 {
 		tb = tb.Where("param_no=?", e.ParamNo)
@@ -64,10 +64,10 @@ func (e *AppGenParams) FindOne() error {
 
 // 改
 func (e *AppGenParams) Updates() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 删
 func (e *AppGenParams) Delete() error {
-	return db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Delete(e).Error
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>       
+<!--
+==========================================================================
+LV自动生成修改页面代码,只生成一次,按需修改.
+生成日期：2024-07-19 17:09:35 +0800 CST
+生成路径: template/iot_dev/device/edit.html
+生成人：lv
+==========================================================================
+-->
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+    <link href="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content   ibox-content">
+    <form class="form-horizontal m" id="formEdit">
+        <input name="id" value="{{.device.Id}}" type="hidden">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">名字：</label>
+                <div class="col-sm-8">
+                    <input name="name" value="{{.device.Name}}" class="form-control"  type="text" required>
+                </div>
+            </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">序列号：</label>
+            <div class="col-sm-8">
+                <input name="sn"  value="{{.device.Sn}}" class="form-control" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">从机地址：</label>
+            <div class="col-sm-8">
+                <input name="devNo" value="{{.device.DevNo}}" class="form-control" type="text">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">密钥：</label>
+            <div class="col-sm-8">
+                <input name="secret" value="{{.device.Secret}}" class="form-control"  type="text" >
+            </div>
+        </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">安装地址：</label>
+                <div class="col-sm-8">
+                    <input name="installLocation" value="{{.device.InstallLocation}}" class="form-control"  type="text" >
+                </div>
+            </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注信息：</label>
+            <div class="col-sm-8">
+                    <textarea name="description" class="form-control"
+                    >{{.device.Description}}</textarea>
+            </div>
+        </div>
+
+
+
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script src="{{OssUrl}}/resource/lostvip/ry-ext.js?v=11"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    var prefix = ctx + "/iot_dev/device";
+    $("#formEdit").validate({
+        focusCleanup: true
+    });
+    //  由于被嵌入到了iframe中，这里要手动通过回调关闭窗口
+    function submitHandler(index,layero,callback) {
+        console.log("callback:",callback)
+        if ($.validate.form()) {
+            let form =  $('#formEdit').serialize()
+            $.operate.save(prefix + "/edit",form,function (result){
+                $.modal.closeAll()
+                console.log(callback)
+                callback(result) //通知父页面刷新
+            });
+        }
+    }
+                                                      
+    $("input[name='lastSyncTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+        
+    $("input[name='lastOnlineTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+            
+    $("input[name='createTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+        
+    $("input[name='updateTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+              
+    
+</script>
+</body>
+</html>

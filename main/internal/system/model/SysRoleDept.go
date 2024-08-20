@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
 )
 
 type SysRoleDept struct {
@@ -16,13 +16,13 @@ func (r *SysRoleDept) TableName() string {
 
 // 查
 func (e *SysRoleDept) FindById() error {
-	err := db.GetMasterGorm().Take(e, "role_id=? and dept_id=?", e.RoleId, e.DeptId).Error
+	err := lv_db.GetMasterGorm().Take(e, "role_id=? and dept_id=?", e.RoleId, e.DeptId).Error
 	return err
 }
 
 // 查第一条
 func (e *SysRoleDept) FindOne() error {
-	tb := db.GetMasterGorm()
+	tb := lv_db.GetMasterGorm()
 	if e.RoleId != 0 && e.DeptId != 0 {
 		tb = tb.Where("role_id=? and dept_id=?", e.RoleId, e.DeptId)
 	}
@@ -32,15 +32,15 @@ func (e *SysRoleDept) FindOne() error {
 
 // 改
 func (e *SysRoleDept) Update() error {
-	return db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
+	return lv_db.GetMasterGorm().Table(e.TableName()).Updates(e).Error
 }
 
 // 插入数据
 func (r *SysRoleDept) Insert() error {
-	return db.GetMasterGorm().Save(r).Error
+	return lv_db.GetMasterGorm().Save(r).Error
 }
 
 // 删除
 func (r *SysRoleDept) Delete() error {
-	return db.GetMasterGorm().Delete(r).Error
+	return lv_db.GetMasterGorm().Delete(r).Error
 }

@@ -1,16 +1,16 @@
 package controller
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"net/http"
 )
 
 type OperateController struct{}
 
 func (w OperateController) Add(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/operate/add").WriteTpl()
+	util.BuildTpl(c, "demo/operate/add").WriteTpl()
 }
 
 func (w OperateController) Detail(c *gin.Context) {
@@ -24,7 +24,7 @@ func (w OperateController) Detail(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	lv_web.BuildTpl(c, "demo/operate/detail").WriteTpl(gin.H{"user": tmp})
+	util.BuildTpl(c, "demo/operate/detail").WriteTpl(gin.H{"user": tmp})
 }
 
 type User struct {
@@ -50,7 +50,7 @@ func (w OperateController) EditSave(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	lv_web.SucessResp(c).SetData(tmp).Log("demo演示", gin.H{"UserId": 1}).WriteJsonExit()
+	util.SucessResp(c).SetData(tmp).Log("demo演示", gin.H{"UserId": 1}).WriteJsonExit()
 }
 
 func (w OperateController) Edit(c *gin.Context) {
@@ -64,15 +64,15 @@ func (w OperateController) Edit(c *gin.Context) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	lv_web.BuildTpl(c, "demo/operate/edit").WriteTpl(gin.H{"user": tmp})
+	util.BuildTpl(c, "demo/operate/edit").WriteTpl(gin.H{"user": tmp})
 }
 
 func (w OperateController) Other(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/operate/other").WriteTpl()
+	util.BuildTpl(c, "demo/operate/other").WriteTpl()
 }
 
 func (w OperateController) Table(c *gin.Context) {
-	lv_web.BuildTpl(c, "demo/operate/table").WriteTpl()
+	util.BuildTpl(c, "demo/operate/table").WriteTpl()
 }
 
 func (w OperateController) List(c *gin.Context) {
@@ -90,7 +90,7 @@ func (w OperateController) List(c *gin.Context) {
 		tmp.UserEmail = "111@qq.com"
 		rows = append(rows, tmp)
 	}
-	c.JSON(http.StatusOK, dto.TableDataInfo{
+	c.JSON(http.StatusOK, lv_dto.TableDataInfo{
 		Code:  200,
 		Msg:   "操作成功",
 		Total: len(rows),

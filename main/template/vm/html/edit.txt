@@ -14,7 +14,7 @@ LV自动生成修改页面代码,只生成一次,按需修改.
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content   ibox-content">
-    <form class="form-horizontal m" id="form-{{.table.BusinessName}}-edit">
+    <form class="form-horizontal m" id="formEdit">
         <input name="{{.table.PkColumn.HtmlField}}" value="{{printf "{{.%v.%v}}" .table.BusinessName .table.PkColumn.GoField}}" type="hidden">
         {{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}} {{if and (ne $treeParentCode "") (eq $column.HtmlField $treeParentCode)}}
             <div class="form-group">
@@ -92,15 +92,22 @@ LV自动生成修改页面代码,只生成一次,按需修改.
 <script src="{{printf `{{OssUrl}}`}}/resource/ajax/libs/datapicker/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
     var prefix = ctx + "/{{.table.PackageName}}/{{.table.BusinessName}}";
-    $("#form-{{.table.BusinessName}}-edit").validate({
+    $("#formEdit").validate({
         focusCleanup: true
     });
 
-    function submitHandler() {
+    function submitHandler(index,layero,callback) {
+        console.log(callback)
         if ($.validate.form()) {
-            $.operate.save(prefix + "/edit", $('#form-{{.table.BusinessName}}-edit').serialize());
+            let form =  $('#formEdit').serialize()
+            $.operate.save(prefix + "/edit",form,function (result){
+                $.modal.closeAll()
+                console.log(callback)
+                callback(result) //通知父页面刷新
+            });
         }
     }
+
     {{range $index, $column := .table.Columns}}  {{if eq $column.HtmlType "datetime"}}
     $("input[name='{{$column.HtmlField}}']").datetimepicker({
         format: "yyyy-mm-dd",

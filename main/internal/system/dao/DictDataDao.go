@@ -1,12 +1,12 @@
 package dao
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
+	"common/model"
 	"errors"
-	"github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
 	"github.com/lostvip-com/lv_framework/utils/lv_office"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"main/internal/system/model"
 	"xorm.io/builder"
 )
 
@@ -14,102 +14,56 @@ type DictDataDao struct {
 }
 
 // 根据条件分页查询数据
-func (dao *DictDataDao) SelectListByPage(param *cm_vo.SelectDictDataPageReq) (*[]model.SysDictData, *lv_web.Paging, error) {
-	db := db.GetInstance().Engine()
-	p := new(lv_web.Paging)
-	if db == nil {
-		return nil, p, errors.New("获取数据库连接失败")
-	}
-
-	tb := db.Table("sys_dict_data").Alias("t")
-
+func (dao *DictDataDao) SelectListByPage(param *common_vo.SelectDictDataPageReq) (*[]model.SysDictData, int64, error) {
+	db := lv_db.GetMasterGorm()
+	tb := db.Table("sys_dict_data t")
 	if param != nil {
 		if param.DictLabel != "" {
 			tb.Where("t.dict_label like ?", "%"+param.DictLabel+"%")
 		}
 
 		if param.Status != "" {
-			tb.Where("t.status = ", param.Status)
+			tb.Where("t.status = ?", param.Status)
 		}
 
 		if param.DictType != "" {
 			tb.Where("t.dict_type like ?", "%"+param.DictType+"%")
 		}
-
-		if param.BeginTime != "" {
-			tb.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
-		}
-
-		if param.EndTime != "" {
-			tb.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
-		}
 	}
-
-	totalModel := tb.Clone()
-
-	total, err := totalModel.Count()
-
-	if err != nil {
-		return nil, p, errors.New("读取行数失败")
-	}
-
-	p = lv_web.CreatePaging(param.PageNum, param.PageSize, int64(total))
-
-	tb.Limit(p.PageSize, p.StartNum)
-
+	var total int64
 	var result []model.SysDictData
-	tb.Find(&result)
-	return &result, p, nil
+	tb.Count(&total).Offset(param.GetStartNum()).Limit(param.GetPageSize()).Order(param.SortName + " " + param.SortOrder).Find(&result)
+	return &result, total, nil
 }
 
 // 导出excel
-func (dao *DictDataDao) SelectListExport(param *cm_vo.SelectDictDataPageReq, head, col []string) (string, error) {
-	db := db.GetInstance().Engine()
-
-	if db == nil {
-		return "", errors.New("获取数据库连接失败")
-	}
-
+func (dao *DictDataDao) SelectListExport(param *common_vo.SelectDictDataPageReq, head, col []string) (string, error) {
+	db := lv_db.GetMasterGorm()
 	build := builder.Select(col...).From("sys_dict_data", "t")
-
 	if param != nil {
 		if param.DictLabel != "" {
 			build.Where(builder.Like{"t.dict_label", param.DictLabel})
 		}
-
 		if param.Status != "" {
 			build.Where(builder.Eq{"t.status": param.Status})
 		}
-
 		if param.DictType != "" {
 			build.Where(builder.Like{"t.dict_type", param.DictType})
 		}
-
-		if param.BeginTime != "" {
-			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
-		}
-
-		if param.EndTime != "" {
-			build.Where(builder.Lte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.EndTime + "','%y%m%d')"})
-		}
 	}
-
-	sqlStr, _, _ := build.ToSQL()
-	arr, err := db.SQL(sqlStr).QuerySliceString()
-
-	path, err := lv_office.DownlaodExcel(head, arr)
-
+	sqlStr, _ := build.ToBoundSQL()
+	arr, err := namedsql.ListArrStr(db, sqlStr, nil)
+	path, err := lv_office.DownlaodExcel(head, *arr)
 	return path, err
 }
 
 // 获取所有数据
-func (dao *DictDataDao) SelectListAll(param *cm_vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
-	db := db.GetInstance().Engine()
-
+func (dao *DictDataDao) SelectListAll(param *common_vo.SelectDictDataPageReq) ([]model.SysDictData, error) {
+	db := lv_db.GetMasterGorm()
 	if db == nil {
 		return nil, errors.New("获取数据库连接失败")
 	}
-	tb := db.Table("sys_dict_data").Alias("t")
+	tb := db.Table("sys_dict_data t ")
 
 	if param != nil {
 		if param.DictLabel != "" {
@@ -117,23 +71,27 @@ func (dao *DictDataDao) SelectListAll(param *cm_vo.SelectDictDataPageReq) ([]mod
 		}
 
 		if param.Status != "" {
-			tb.Where("t.status = ", param.Status)
+			tb.Where("t.status =? ", param.Status)
 		}
 
 		if param.DictType != "" {
-			tb.Where("t.dict_type like ?", "%"+param.DictType+"%")
+			tb.Where("t.dict_type =?", param.DictType)
 		}
-
-		if param.BeginTime != "" {
-			tb.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
-		}
-
-		if param.EndTime != "" {
-			tb.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
-		}
+		tb.Order("dict_sort asc")
 	}
-
 	var result []model.SysDictData
-	tb.Find(&result)
-	return result, nil
+	err := tb.Find(&result).Error
+	return result, err
+}
+
+// 批量删除
+func (d *DictDataDao) DeleteBatch(ids ...int64) error {
+	err := lv_db.GetMasterGorm().Delete(&model.SysDictData{}, ids).Error
+	return err
+}
+
+// 批量删除
+func (d *DictDataDao) DeleteByType(dictType string) error {
+	err := lv_db.GetMasterGorm().Delete(&model.SysDictData{}, "dict_type=?", dictType).Error
+	return err
 }

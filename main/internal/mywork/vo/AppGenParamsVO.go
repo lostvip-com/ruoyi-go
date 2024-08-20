@@ -6,7 +6,7 @@
 package vo
 
 import (
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 )
 
 // 新增页面请求参数
@@ -44,5 +44,5 @@ type PageAppGenParamsReq struct {
 	Remark        string `form:"remark"`        //排序
 	SortOrder     string `form:"sortOrder"`     //排序
 	UseFlag       string `form:"useFlag"`       //排序
-	lv_web.Paging
+	lv_dto.Paging
 }

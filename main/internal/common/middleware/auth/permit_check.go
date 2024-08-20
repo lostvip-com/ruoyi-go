@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/myconf"
 	"main/internal/system/service"
@@ -44,7 +44,7 @@ func PermitCheck(c *gin.Context) {
 	if !hasPermission {
 		ajaxString := c.Request.Header.Get("X-Requested-With")
 		if strings.EqualFold(ajaxString, "XMLHttpRequest") {
-			c.JSON(http.StatusOK, dto.CommonRes{
+			c.JSON(http.StatusOK, lv_dto.CommonRes{
 				Code: 403,
 				Msg:  "您没有操作权限",
 			})

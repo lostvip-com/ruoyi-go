@@ -1,12 +1,12 @@
 package controller
 
 import (
+	"common/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	ip2 "github.com/lostvip-com/lv_framework/utils/lv_net"
 	time2 "github.com/lostvip-com/lv_framework/utils/lv_time"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
@@ -113,7 +113,7 @@ func (w *ServiceController) Server(c *gin.Context) {
 		}
 	}
 
-	lv_web.BuildTpl(c, "monitor/server/server").WriteTpl(gin.H{
+	util.BuildTpl(c, "monitor/server").WriteTpl(gin.H{
 		"cpuNum":          cpuNum,
 		"cpuUsed":         cpuUsed,
 		"cpuAvg5":         cpuAvg5,
@@ -144,7 +144,7 @@ func (w *ServiceController) Server(c *gin.Context) {
  * 健康监测端点
  */
 func (w *ServiceController) Health(c *gin.Context) {
-	logme.Info("----> invoke: /monitor/health")
+	lv_log.Info("----> invoke: /monitor/health")
 	ret := map[string]string{
 		"status": "UP",
 	}

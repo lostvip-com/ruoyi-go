@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"common/cm_vo"
+	"common/common_vo"
 	"common/session"
+	util2 "common/util"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"main/internal/system/service"
 	"net/http"
 )
@@ -16,16 +16,16 @@ type DeptController struct {
 
 // List 列表页
 func (w *DeptController) List(c *gin.Context) {
-	lv_web.BuildTpl(c, "system/dept/list").WriteTpl()
+	util2.BuildTpl(c, "system/dept/list").WriteTpl()
 }
 
 // ListAjax 列表分页数据
 func (w *DeptController) ListAjax(c *gin.Context) {
 	var service service.DeptService
-	var req = cm_vo.DeptPageReq{}
+	var req = common_vo.DeptPageReq{}
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		util2.ErrorResp(c).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 	result, err := service.SelectListAll(&req)
@@ -46,31 +46,31 @@ func (w *DeptController) Add(c *gin.Context) {
 	service := service.DeptService{}
 	tmp := service.SelectDeptById(pid)
 
-	lv_web.BuildTpl(c, "system/dept/add").WriteTpl(gin.H{"dept": tmp})
+	util2.BuildTpl(c, "system/dept/add").WriteTpl(gin.H{"dept": tmp})
 }
 
 // AddSave 新增页面保存
 func (w *DeptController) AddSave(c *gin.Context) {
-	var req *cm_vo.AddDeptReq
+	var req *common_vo.AddDeptReq
 	var service service.DeptService
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).SetMsg(err.Error()).WriteJsonExit()
+		util2.ErrorResp(c).SetBtype(lv_dto.Buniss_Add).SetMsg(err.Error()).WriteJsonExit()
 		return
 	}
 	rid, err := service.AddSave(req, c)
 	if err != nil || rid <= 0 {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Add).WriteJsonExit()
+		util2.ErrorResp(c).SetBtype(lv_dto.Buniss_Add).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetBtype(dto.Buniss_Add).WriteJsonExit()
+	util2.SucessResp(c).SetBtype(lv_dto.Buniss_Add).WriteJsonExit()
 }
 
 // Edit 修改页面
 func (w *DeptController) Edit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
 	if id <= 0 {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util2.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "参数错误",
 		})
 		return
@@ -79,13 +79,13 @@ func (w *DeptController) Edit(c *gin.Context) {
 	dept := service.SelectDeptById(id)
 
 	if dept == nil || dept.DeptId <= 0 {
-		lv_web.BuildTpl(c, dto.ERROR_PAGE).WriteTpl(gin.H{
+		util2.BuildTpl(c, lv_dto.ERROR_PAGE).WriteTpl(gin.H{
 			"desc": "部门不存在",
 		})
 		return
 	}
 
-	lv_web.BuildTpl(c, "system/dept/edit").WriteTpl(gin.H{
+	util2.BuildTpl(c, "system/dept/edit").WriteTpl(gin.H{
 		"dept": dept,
 	})
 }
@@ -94,20 +94,20 @@ func (w *DeptController) Edit(c *gin.Context) {
 func (w *DeptController) EditSave(c *gin.Context) {
 	var service service.DeptService
 
-	var req *cm_vo.EditDeptReq
+	var req *common_vo.EditDeptReq
 	//获取参数
 	if err := c.ShouldBind(&req); err != nil {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
+		util2.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 		return
 	}
 
 	rs, err := service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
-		lv_web.ErrorResp(c).SetBtype(dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+		util2.ErrorResp(c).SetBtype(lv_dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 		return
 	}
-	lv_web.SucessResp(c).SetData(rs).SetBtype(dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
+	util2.SucessResp(c).SetData(rs).SetBtype(lv_dto.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 }
 
 // 删除数据
@@ -116,9 +116,9 @@ func (w *DeptController) Remove(c *gin.Context) {
 	service := service.DeptService{}
 	err := service.DeleteDeptById(id)
 	if err != nil {
-		lv_web.Fail(c, err.Error())
+		util2.Fail(c, err.Error())
 	} else {
-		lv_web.Success(c, id, "success")
+		util2.Success(c, id, "success")
 	}
 }
 
@@ -137,11 +137,11 @@ func (w *DeptController) SelectDeptTree(c *gin.Context) {
 	deptPoint := service.SelectDeptById(deptId)
 
 	if deptPoint != nil {
-		lv_web.BuildTpl(c, "system/dept/tree").WriteTpl(gin.H{
+		util2.BuildTpl(c, "system/dept/tree").WriteTpl(gin.H{
 			"dept": *deptPoint,
 		})
 	} else {
-		lv_web.BuildTpl(c, "system/dept/tree").WriteTpl()
+		util2.BuildTpl(c, "system/dept/tree").WriteTpl()
 	}
 }
 
@@ -153,7 +153,7 @@ func (w *DeptController) RoleDeptTreeData(c *gin.Context) {
 	result, err := service.RoleDeptTreeData(roleId, tenantId)
 
 	if err != nil {
-		lv_web.ErrorResp(c).SetMsg(err.Error()).Log("菜单树", gin.H{"roleId": roleId})
+		util2.ErrorResp(c).SetMsg(err.Error()).Log("菜单树", gin.H{"roleId": roleId})
 		return
 	}
 

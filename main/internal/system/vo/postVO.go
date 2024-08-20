@@ -1,6 +1,8 @@
 package vo
 
-import "github.com/lostvip-com/lv_framework/utils/lv_web"
+import (
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
+)
 
 // 新增页面请求参数
 type AddPostReq struct {
@@ -31,7 +33,7 @@ type SelectPostPageReq struct {
 	SortName  string `form:"sortName"`  //排序字段
 	SortOrder string `form:"sortOrder"` //排序方式
 	Remark    string `form:"remark"`    //每页数
-	lv_web.Paging
+	lv_dto.Paging
 }
 
 // 检查编码请求参数

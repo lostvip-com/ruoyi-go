@@ -2,7 +2,7 @@ package lv_err
 
 import (
 	"github.com/lostvip-com/lv_framework/utils/lv_conv"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"log"
 	"runtime"
 )
@@ -23,7 +23,7 @@ func HasErrAndPanic(err error) {
 // 若 msg 为空，则默认为 error 中的内容
 func Assert1(conditionYes bool, msg string) {
 	if conditionYes {
-		var res dto.Resp
+		var res lv_dto.Resp
 		res.Msg = msg
 		res.Code = 1
 		json, _ := lv_conv.ToJsonStr(res)
@@ -42,7 +42,7 @@ func HasErrorMsg(err error, msg string) {
 		}
 		_, file, line, _ := runtime.Caller(1)
 		log.Printf("%s:%v error: %#v", file, line, err)
-		var res dto.Resp
+		var res lv_dto.Resp
 		res.Msg = msg
 		res.Code = 1
 		panic(res)
@@ -53,7 +53,7 @@ func HasError1(err error) {
 	if err != nil {
 		_, file, line, _ := runtime.Caller(1)
 		log.Printf("%s:%v error: %#v", file, line, err)
-		var res dto.Resp
+		var res lv_dto.Resp
 		res.Msg = err.Error()
 		res.Code = 1
 		panic(res)

@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"common/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lostvip-com/lv_framework/logme"
+	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/utils/lv_err"
-	"github.com/lostvip-com/lv_framework/utils/lv_web"
-	"github.com/lostvip-com/lv_framework/web/dto"
+	"github.com/lostvip-com/lv_framework/web/lv_dto"
 	"net/http"
 	"strings"
 )
@@ -21,23 +21,23 @@ func RecoverError(c *gin.Context) {
 					c.String(http.StatusOK, errTypeObj)
 					c.Abort()
 				} else {
-					lv_web.Err(c, errTypeObj)
+					util.Err(c, errTypeObj)
 				}
-			case dto.Resp: //封装过的
+			case lv_dto.Resp: //封装过的
 				c.AbortWithStatusJSON(http.StatusOK, errTypeObj)
-				lv_web.ErrResp(c, errTypeObj)
+				util.ErrResp(c, errTypeObj)
 			case error: // 原始的错误
 				if gin.IsDebugging() {
 					lv_err.PrintStackTrace(errTypeObj)
 				}
-				logme.Error(c, "CustomError XXXXXXXXXX: ", errTypeObj)
-				lv_web.Error(c, errTypeObj)
+				lv_log.Error(c, "CustomError XXXXXXXXXX: ", errTypeObj)
+				util.Error(c, errTypeObj)
 			default:
-				logme.Error(c, "default CustomErrorXXXXXXXXXX: ", errTypeObj)
-				lv_web.Err(c, "未知错误!")
+				lv_log.Error(c, "default CustomErrorXXXXXXXXXX: ", errTypeObj)
+				util.Err(c, "未知错误!")
 			}
 		} else {
-			logme.Info(c, "-----------request over----------")
+			lv_log.Info(c, "-----------request over----------")
 		}
 	}()
 	c.Next()
