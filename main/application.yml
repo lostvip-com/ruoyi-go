@@ -1,18 +1,27 @@
 go:
   application:
     debug: true
+    cache-tpl: false # 默认不缓存模板,省内存，方便开发
   log:
-    output: stdout # stdout：只写控制台，file:只写文件，默认：双写
-  cache: ram  # ram , redis
+    output: stdout,file # stdout：只写控制台，file:只写文件，默认：双写
+  cache: ram # redis ram
 #  redis:
 #    host: ${REDIS_HOST:192.168.81.228}
-#    password: ${REDIS_PWD:qwer1234}
+#    host: ${REDIS_HOST:lostvip.com}
+#    port: ${REDIS_PORT:6379}
+#    password: ${REDIS_PWD:Ssz123456!}
+#    password: ${REDIS_PWD:dpctest}
+#    password:
   datasource:
+    auto-migrate: none # update/none 同步表结构，见 init.go
+    show-sql: true
     driver: sqlite3
     master: data.db
 #    driver: mysql
-#    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:3306)/test?charset=utf8"}
+#    master: ${MYSQL_MASTER:"vip:Ssz123456!@tcp(lostvip.com:3307)/test?charset=utf8"}
+#    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.88.114:3307)/dpc?charset=utf8"}
     slave: ""
+
  #代理转发
 #  proxy:
 #    enable: true
@@ -21,12 +30,12 @@ go:
 #      - /lostvip=lostvip.com
 #代码生成器配置
 gen:
-  author: lostvip
+  author: lv
   #大模块，如lv_framework、main、demo
   moduleName: main
   #小模块，业务包
-  packageName: myowrk
+  packageName: iot_dev
   #覆盖旧的代码
-  overwrite: false
+  overwrite: true
   #新生成的菜单挂到哪个菜单下
   parent_menu_id: 4
