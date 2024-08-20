@@ -7,7 +7,6 @@ use (
 	./main
 	./samples
 	./plugins
-	./chromedp
 )
 
 // 方便本地库与github库的代码切换
