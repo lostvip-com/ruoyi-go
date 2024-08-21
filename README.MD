@@ -125,7 +125,7 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 ~~~
 ## 演示图
 
-<img alt="" height="400" src="bak/readme/1.jpg" width="600" />
+<img alt="" height="400" src="bak/readme/login.jpg" width="600" />
 <img alt="" height="400" src="bak/readme/2.jpg" width="600" />
 <img alt="" height="400" src="bak/readme/3.png" width="600" />
 <img alt="" height="400" src="bak/readme/4.png" width="600" />
