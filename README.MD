@@ -2,7 +2,7 @@
 	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-dd77653d7c9f197dd9d93684f3c8dcfbab6.png">
 </p>
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">ruoyi-go</h1>
-<h4 align="center">go语言版轻量级快速开发框架</h4>
+<h4 align="center">Go语言版轻量级快速开发框架</h4>
 
 
 ## 框架简介
@@ -16,7 +16,7 @@
     host: ${REDIS_HOST:lostvip.com}
     如: 环境变量添加 REDIS_HOST=192.168.88.114;REDIS_PORT=6379;REDIS_PWD=dpctest
 ~~~
-* 1.x版本是基于xorm开发，2.0之后的版本将全面切换到gorm。
+
 ## 核心技术及组件
 
 * DAO层架: gorm,简单易用,支持namedSQL占位符查询.</br>
@@ -57,8 +57,10 @@
 
 ~~~
 main[]()     
-├── docs               // 资料备份
-│   └── deploy-swarm-ry.yml      // docker swarm 服务编排脚本
+├── bak               // 资料备份
+│   └── local         // 本地配置文件备份
+│   └── script        // 发布相关的脚本备份
+│   └── sql           // 数据库文件备份
 ├── main               // 系统管理
 │   └── internal                 // 源码存放目录,internal禁止其它模块引用
 │   └── static                   // 静态文件目录
@@ -72,12 +74,12 @@ main[]()
 │   └── data.db                  // 使用sqlite数据库时有用，只使用mysql可删除                             
 │   └── Dockerfile               // Docker镜像文件
 ├── lv_framework       // 框架通用模块
-│       └── cache               // 通用缓存处理
-│       └── conf                // 通用配置处理
-│       └── db                  // 数据库配置处理
-│       └── utils               // 通用工具类
-│       └── logme               // 通用日志处理，统一风格，方便切换第三方日志库
-│       └── web                 // 通用web组件
+│       └── lv_cache               // 通用缓存
+│       └── lv_conf                // 通用配置
+│       └── lv_db                  // 数据库相关
+│       └── lv_log                 // 通用日志处理，统一风格，方便切换第三方日志库
+│       └── utils                  // 通用工具类
+│       └── web                    // 通用web组件
 │       
 ├── go.work            // 项目模块配置
 ├── build-linux.bat    // 编译脚本
@@ -145,8 +147,7 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 
 如有兴趣一起完善，进QQ群 43862272
 
-<img alt="" height="389" src="https://github.com/lostvip-com/ruoyi-go/blob/main/docs/qq.png" width="300" />
-
+<img alt="" height="389" src="bak/readme/qq.png" width="300" />
+ <p>Github(主) <a href="https://github.com/lostvip-com/ruoyi-go">https://github.com/lostvip-com/ruoyi-go</a></p>
  <p>Gitee <a href="https://gitee.com/lostvip_com/ruoyi-go">https://gitee.com/lostvip_com/ruoyi-go</a></p>
- <p>Github <a href="https://github.com/lostvip-com/ruoyi-go">https://github.com/lostvip-com/ruoyi-go</a></p>
  <p>Gitcode <a href="https://gitcode.com/lostvip-com1/ruoyi-go/tree/main">https://gitcode.com/lostvip-com1/ruoyi-go/tree/main</a></p>
