@@ -23,7 +23,7 @@ func (d AppGenParamsDao) ListMapByPage(req *vo.PageAppGenParamsReq) (*[]map[stri
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	limitSQL, err := ibatis.GetLimitSql("ListAppGenParams", req)
 	//查询数据
-	rows, err := lv_dao.ListMapByNamedSql(limitSQL, req, true)
+	rows, err := lv_dao.ListMapStrByNamedSql(limitSQL, req, true)
 	lv_err.HasErrAndPanic(err)
 	count, err := lv_dao.CountByNamedSql(ibatis.GetCountSql(), req)
 	lv_err.HasErrAndPanic(err)
@@ -50,7 +50,7 @@ func (d AppGenParamsDao) ListAll(req *vo.PageAppGenParamsReq, isCamel bool) (*[]
 	sql, err := ibatis.GetSql("ListAppGenParams", req)
 	lv_err.HasErrAndPanic(err)
 
-	arr, err := lv_dao.ListMapByNamedSql(sql, req, isCamel)
+	arr, err := lv_dao.ListMapStrByNamedSql(sql, req, isCamel)
 	return arr, err
 }
 

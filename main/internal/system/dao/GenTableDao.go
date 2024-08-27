@@ -98,7 +98,7 @@ func (r *GenTableDao) SelectDbTableList(req *vo.GenTablePageReq) ([]model.GenTab
 func (r *GenTableDao) SelectDbTableListByNames(tableNames []string) ([]model.GenTable, error) {
 	db := lv_db.GetMasterGorm()
 	tb := db.Table("information_schema.tables")
-	tb.Select("0 as table_id, table_name, table_comment,'' as class_name,'' as tpl_category,'' as package_name,'' as module_name,'' as business_name,'' as function_name,'' as function_author,'' as options,'' as create_by, create_time,'' as update_by, update_time,'' as remark")
+	tb.Select("0 as TableId, table_name as TbName,ifnull(table_comment,table_name) as TableComment")
 	tb.Where("table_name NOT LIKE 'qrtz_%'")
 	tb.Where("table_name NOT LIKE 'gen_%'")
 	tb.Where("table_schema = (select database())")
@@ -115,7 +115,7 @@ func (r *GenTableDao) SelectDbTableListByNames(tableNames []string) ([]model.Gen
 func (r *GenTableDao) SelectTableByName(tableName string) (*model.GenTable, error) {
 	db := lv_db.GetMasterGorm()
 	tb := db.Table("information_schema.tables")
-	tb.Select("0 as table_id, table_name, table_comment,'' as class_name,'' as tpl_category,'' as package_name,'' as module_name,'' as business_name,'' as function_name,'' as function_author,'' as options,'' as create_by, create_time,'' as update_by, update_time,'' as remark")
+	tb.Select("0 as TableId, table_name TbName, table_comment TableComment")
 	tb.Where("table_comment <> ''")
 	tb.Where("table_schema = (select database())")
 	if tableName != "" {

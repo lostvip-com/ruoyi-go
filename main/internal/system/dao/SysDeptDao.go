@@ -85,7 +85,7 @@ func (dao SysDeptDao) SelectRoleDeptTree(roleId int64) ([]string, error) {
              `
 	param := map[string]any{}
 	param["roleId"] = roleId
-	listMap, err := lv_dao.ListMapByNamedSql(sql, param, false)
+	listMap, err := lv_dao.ListMapStrByNamedSql(sql, param, false)
 	var result []string
 	var rs = *listMap
 	if err == nil && rs != nil && len(rs) > 0 {

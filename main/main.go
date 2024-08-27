@@ -10,7 +10,6 @@ import (
 	"main/internal/common/myconf"
 	"os"
 	"os/signal"
-	_ "plugins"
 	"syscall"
 )
 

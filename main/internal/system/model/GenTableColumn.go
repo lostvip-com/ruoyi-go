@@ -1,9 +1,11 @@
 package model
 
 import (
-	"common/model"
 	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
+	"github.com/lostvip-com/lv_framework/utils/lv_time"
+	"gorm.io/gorm"
+	"time"
 )
 
 type GenTableColumn struct {
@@ -25,12 +27,29 @@ type GenTableColumn struct {
 	QueryType     string `gorm:"type:varchar(200);comment:查询方式（等于、不等于、大于、小于、范围）;" json:"queryType"`
 	HtmlType      string `gorm:"type:varchar(200);comment:显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）;" json:"htmlType"`
 	DictType      string `gorm:"type:varchar(200);comment:字典类型;" json:"dictType"`
-	model.BaseModel
+
+	CreateTime time.Time `gorm:"type:datetime;comment:创建日期" time_format:"2006-01-02 15:04:05" json:"createTime"`
+	UpdateTime time.Time `gorm:"type:datetime;comment:更新日期" time_format:"2006-01-02 15:04:05" json:"updateTime"`
+	UpdateBy   string    `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
+	CreateBy   string    `gorm:"type:varchar(64);comment:创建者;" json:"createBy"`
 }
 
 // 映射数据表
 func (GenTableColumn) TableName() string {
 	return "gen_table_column"
+}
+
+// BeforeCreate 实现钩子
+func (u *GenTableColumn) BeforeCreate(db *gorm.DB) error {
+	u.CreateTime = lv_time.GetCurrentTime() // 设置创建时的更新时间
+	u.UpdateTime = u.CreateTime             // 设置创建时的更新时间
+	return nil
+}
+
+// BeforeUpdate 实现 BeforeUpdate 钩子
+func (u *GenTableColumn) BeforeUpdate(db *gorm.DB) error {
+	u.CreateTime = lv_time.GetCurrentTime() // 设置更新时的更新时间
+	return nil
 }
 
 // 增

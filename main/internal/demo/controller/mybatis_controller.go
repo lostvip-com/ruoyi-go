@@ -26,7 +26,7 @@ func (w DemoController) MybatisMap(c *gin.Context) {
 	ibatis := lv_batis.NewInstance(SQL_FILE_POST)
 	sql, err := ibatis.GetLimitSql("listSql", &req)
 	lv_err.HasErrAndPanic(err)
-	listMap, err := lv_dao.ListMapByNamedSql(sql, &req, true)
+	listMap, err := lv_dao.ListMapStrByNamedSql(sql, &req, true)
 	lv_err.HasErrAndPanic(err)
 	count, err := lv_dao.CountByNamedSql(ibatis.GetCountSql(), &req)
 	lv_err.HasErrAndPanic(err)

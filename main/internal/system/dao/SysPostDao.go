@@ -23,7 +23,7 @@ func (d SysPostDao) SelectPageList(param *vo.SelectPostPageReq) (*[]map[string]s
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.post_id desc "
 	limitSql += "  limit " + cast.ToString(param.GetStartNum()) + "," + cast.ToString(param.GetPageSize())
-	result, err := namedsql.ListMap(db, limitSql, sqlParams, true)
+	result, err := namedsql.ListMapStr(db, limitSql, sqlParams, true)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -75,7 +75,7 @@ func (d SysPostDao) ListAllMap(param *vo.SelectPostPageReq, camel bool) (*[]map[
 	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	allSql := sql + " order by u.post_id desc "
-	result, err := namedsql.ListMap(db, allSql, &sqlParams, camel)
+	result, err := namedsql.ListMapStr(db, allSql, &sqlParams, camel)
 	return result, err
 }
 

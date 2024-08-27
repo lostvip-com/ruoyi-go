@@ -30,7 +30,7 @@ func (d SysUserDao) SelectPageList(param *common_vo.SelectUserPageReq) (*[]map[s
 	lv_log.Info("============sqlParams:", sqlParams)
 	limitSql := sql + " order by u.user_id desc "
 	limitSql += "  limit " + cast.ToString(param.GetStartNum()) + "," + cast.ToString(param.GetPageSize())
-	result, err := namedsql.ListMap(db, limitSql, sqlParams, true)
+	result, err := namedsql.ListMapStr(db, limitSql, sqlParams, true)
 	countSql := "select count(*) from (" + sql + ") t "
 	total, err := namedsql.Count(db, countSql, sqlParams)
 	return result, total, err
@@ -88,7 +88,7 @@ func (d SysUserDao) SelectExportList(param *common_vo.SelectUserPageReq) (*[]map
 	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.user_id desc "
-	result, err := namedsql.ListMap(db, limitSql, &sqlParams, true)
+	result, err := namedsql.ListMapStr(db, limitSql, &sqlParams, true)
 	return result, err
 }
 
@@ -114,7 +114,7 @@ func (d SysUserDao) SelectAllocatedList(roleId int64, loginName, phonenumber str
 		sqlParams["phonenumber"] = "%" + phonenumber + "%"
 	}
 
-	result, err := namedsql.ListMap(db, sql, &sqlParams, true)
+	result, err := namedsql.ListMapStr(db, sql, &sqlParams, true)
 	return result, err
 }
 
@@ -137,7 +137,7 @@ func (d SysUserDao) SelectUnallocatedList(roleId int64, loginName, phonenumber s
 		sqlParams["phonenumber"] = "%" + phonenumber + "%"
 	}
 
-	result, err := namedsql.ListMap(db, sql, &sqlParams, true)
+	result, err := namedsql.ListMapStr(db, sql, &sqlParams, true)
 	return result, err
 }
 

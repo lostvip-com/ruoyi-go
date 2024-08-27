@@ -1,9 +1,11 @@
 package model
 
 import (
-	"common/model"
 	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
+	"github.com/lostvip-com/lv_framework/utils/lv_time"
+	"gorm.io/gorm"
+	"time"
 )
 
 type GenTable struct {
@@ -19,14 +21,30 @@ type GenTable struct {
 	FunctionAuthor string `gorm:"type:varchar(50);comment:生成功能作者;" json:"functionAuthor"`
 	Options        string `gorm:"type:varchar(1000);comment:其它生成选项;" json:"options"`
 	Remark         string `gorm:"type:varchar(500);comment:备注;" json:"remark"`
-	model.BaseModel
 
-	HasEditTime string `gorm:"-"` //1需要导入time.Time 0 不需要
+	CreateTime  time.Time `gorm:"type:datetime;comment:创建日期" time_format:"2006-01-02 15:04:05" json:"createTime"`
+	UpdateTime  time.Time `gorm:"type:datetime;comment:更新日期" time_format:"2006-01-02 15:04:05" json:"updateTime"`
+	UpdateBy    string    `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
+	CreateBy    string    `gorm:"type:varchar(64);comment:创建者;" json:"createBy"`
+	HasEditTime string    `gorm:"-"` //1需要导入time.Time 0 不需要
 }
 
 // TableName 映射数据表
 func (r *GenTable) TableName() string {
 	return "gen_table"
+}
+
+// BeforeCreate 实现钩子
+func (u *GenTable) BeforeCreate(db *gorm.DB) error {
+	u.CreateTime = lv_time.GetCurrentTime() // 设置创建时的更新时间
+	u.UpdateTime = u.CreateTime             // 设置创建时的更新时间
+	return nil
+}
+
+// BeforeUpdate 实现 BeforeUpdate 钩子
+func (u *GenTable) BeforeUpdate(db *gorm.DB) error {
+	u.CreateTime = lv_time.GetCurrentTime() // 设置更新时的更新时间
+	return nil
 }
 
 // Save 增

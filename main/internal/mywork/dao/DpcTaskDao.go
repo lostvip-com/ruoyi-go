@@ -39,7 +39,7 @@ func (e DpcTaskDao) ListAll(req *vo.PageDpcTaskReq, isCamel bool) (*[]map[string
 	sql, err := ibatis.GetLimitSql(lv_reflect.GetMethodName(), req)
 	lv_err.HasErrAndPanic(err)
 
-	arr, err := lv_dao.ListMapByNamedSql(sql, req, isCamel)
+	arr, err := lv_dao.ListMapStrByNamedSql(sql, req, isCamel)
 	return arr, err
 }
 

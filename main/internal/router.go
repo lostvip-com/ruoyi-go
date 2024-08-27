@@ -4,7 +4,6 @@ import (
 	"github.com/lostvip-com/lv_framework/web/router"
 	"main/internal/common/middleware/auth"
 	_ "main/internal/demo"
-	_ "main/internal/iot_dev"
 	_ "main/internal/mywork"
 	_ "main/internal/system"
 	sysController "main/internal/system/controller"

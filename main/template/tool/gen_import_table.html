@@ -44,7 +44,7 @@
             showColumns: false,
             clickToSelect: true,
             rememberSelected: true,
-            uniqueId: "table_name",
+            uniqueId: "tableName",
             columns: [{
                 field: 'state',
                 checkbox: true
@@ -86,7 +86,7 @@
 
     /* 导入表结构-选择表结构-提交 */
     function submitHandler() {
-        var rows = $.table.selectColumns("table_name");
+        var rows = $.table.selectColumns("tableName");
         console.log("=============rows======>"+JSON.stringify(rows))
         if (rows.length == 0) {
             $.modal.alertWarning("请至少选择一条记录");
@@ -95,7 +95,7 @@
         var data = {"tables": rows.join()};
         console.log("===================>"+JSON.stringify(data))
         $.operate.save(prefix + "/importTable", data);
-        // var rows = $.table.selectColumns("table_name");
+        // var rows = $.table.selectColumns("tableName");
         // if (rows.length == 0) {
         //     $.modal.alertWarning("请至少选择一条记录");
         //     return;
@@ -104,5 +104,15 @@
         // $.operate.save(prefix + "/importTable", data);
     }
 </script>
+
+<script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Enter") {
+            // 执行操作
+            $.table.search()
+        }
+    });
+</script>
+
 </body>
 </html>

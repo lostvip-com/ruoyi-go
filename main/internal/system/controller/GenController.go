@@ -45,22 +45,22 @@ func (w *GenController) ExecSqlFile(c *gin.Context) {
 
 	//err = lv_db.ExecSqlFile(sqlFile)
 	// Loads queries from file
-	lvBatis, err := lv_batis.LoadFromFile(curDir + "/tmp/sql/" + po.PackageName + "/" + po.TbName + "_menu.sql")
+	batis, err := lv_batis.LoadFromFile(curDir + "/tmp/sql/" + po.PackageName + "/" + po.TbName + "_menu.sql")
 	// Run queries
 	tb := lv_db.GetMasterGorm()
 	//cfg := global.GetConfigInstance()
-	lvBatis.Exec(tb, "menu")
+	batis.Exec(tb, "menu")
 	menuName := po.FunctionName
 	sysmenu := menuModel.SysMenu{}
 	sysmenu.MenuName = menuName
 	err = sysmenu.FindLastOne()
 	lv_err.HasErrAndPanic(err)
 	pmenuId := sysmenu.MenuId
-	_, err = lvBatis.Exec(tb, "menu_button_create", pmenuId)
-	_, err = lvBatis.Exec(tb, "menu_button_retrieve", pmenuId)
-	_, err = lvBatis.Exec(tb, "menu_button_update", pmenuId)
-	_, err = lvBatis.Exec(tb, "menu_button_delete", pmenuId)
-	_, err = lvBatis.Exec(tb, "menu_button_export", pmenuId)
+	_, err = batis.Exec(tb, "menu_button_create", pmenuId)
+	_, err = batis.Exec(tb, "menu_button_retrieve", pmenuId)
+	_, err = batis.Exec(tb, "menu_button_update", pmenuId)
+	_, err = batis.Exec(tb, "menu_button_delete", pmenuId)
+	_, err = batis.Exec(tb, "menu_button_export", pmenuId)
 	if err != nil {
 		panic(err)
 	}
@@ -129,7 +129,7 @@ func (w *GenController) GenList(c *gin.Context) {
 
 // 导入数据表
 func (w *GenController) ImportTable(c *gin.Context) {
-	util2.WriteTpl(c, "tool/gen_import_able")
+	util2.WriteTpl(c, "tool/gen_import_table")
 }
 
 // 删除数据

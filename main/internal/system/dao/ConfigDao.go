@@ -33,7 +33,7 @@ func (d ConfigDao) SelectPageList(param *common_vo.SelectConfigPageReq) (*[]map[
 	lv_err.HasErrAndPanic(err)
 	limitSql := sql + " order by u.config_id desc "
 	limitSql += "  limit " + cast.ToString(param.GetStartNum()) + "," + cast.ToString(param.GetPageSize())
-	result, err := namedsql.ListMap(db, limitSql, sqlParams, true)
+	result, err := namedsql.ListMapStr(db, limitSql, sqlParams, true)
 	lv_err.HasErrAndPanic(err)
 	return result, total, err
 }
@@ -124,7 +124,7 @@ func (d ConfigDao) SelectExportList(param *common_vo.SelectConfigPageReq) (*[]ma
 	db := lv_db.GetMasterGorm()
 	sqlParams, sql := d.GetSql(param)
 	limitSql := sql + " order by u.user_id desc "
-	result, err := namedsql.ListMap(db, limitSql, &sqlParams, false)
+	result, err := namedsql.ListMapStr(db, limitSql, &sqlParams, false)
 	return result, err
 }
 

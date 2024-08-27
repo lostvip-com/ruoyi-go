@@ -68,3 +68,10 @@ function lv_add_center(title, url,width,height,callback){
         }
     });
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Enter") {
+        // 执行操作
+        $.table.search()
+    }
+});

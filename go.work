@@ -6,7 +6,6 @@ use (
 	./lv_framework
 	./main
 	./samples
-	./plugins
 )
 
 // 方便本地库与github库的代码切换
