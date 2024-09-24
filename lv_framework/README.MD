@@ -1,7 +1,7 @@
 <p align="center">
 	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-dd77653d7c9f197dd9d93684f3c8dcfbab6.png">
 </p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;"> lv-framework v1.1.3 </h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;"> lv-framework v1.1.4 </h1>
 <h4 align="center">Go语言版轻量级快速开发框架</h4>
 
 
