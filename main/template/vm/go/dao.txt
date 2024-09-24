@@ -6,18 +6,17 @@
 package dao
 
 import (
-    "github.com/lostvip-com/lv_framework/db"
-    "github.com/lostvip-com/lv_framework/db/lv_batis"
-    "github.com/lostvip-com/lv_framework/db/lv_dao"
-    "github.com/lostvip-com/lv_framework/utils/lv_err"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_batis"
+	"github.com/lostvip-com/lv_framework/lv_db/lv_dao"
+	"github.com/lostvip-com/lv_framework/utils/lv_err"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/vo"
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/model"
 )
 
-//新增页面请求参数
 type {{.table.ClassName}}Dao struct { }
 
-// 根据条件分页查询数据
+// ListMapByPage 根据条件分页查询数据
 func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}Req) (*[]map[string]any, int64, error) {
 	ibatis := lv_batis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.sql") //under the mapper directory
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
@@ -29,7 +28,8 @@ func (d {{.table.ClassName}}Dao) ListMapByPage(req *vo.Page{{.table.ClassName}}R
 	lv_err.HasErrAndPanic(err)
 	return rows, count, nil
 }
-// 根据条件分页查询数据
+
+// ListByPage 根据条件分页查询数据
 func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req) (*[]vo.{{.table.ClassName}}Resp, int64, error) {
 	ibatis := lv_batis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.sql") //under the mapper directory
 	// 对应sql文件中的同名tagName
@@ -43,25 +43,26 @@ func (d {{.table.ClassName}}Dao) ListByPage(req *vo.Page{{.table.ClassName}}Req)
 }
 
 // ListAll 导出excel使用
-func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]string, error) {
+func (d {{.table.ClassName}}Dao) ListAll(req *vo.Page{{.table.ClassName}}Req, isCamel bool) (*[]map[string]any, error) {
 	ibatis := lv_batis.NewInstance("{{.table.PackageName}}/{{.table.TbName}}_mapper.sql")
 	// 约定用方法名ListByPage对应sql文件中的同名tagName
 	sql, err := ibatis.GetSql("List{{.table.ClassName}}", req)
 	lv_err.HasErrAndPanic(err)
 
-	arr, err := lv_dao.ListMapStrByNamedSql(sql, req, isCamel)
+	arr, err := lv_dao.ListMapByNamedSql(sql, req, isCamel)
 	return arr, err
 }
 
-// FindByWhere 根据条件查询
+// Find 根据条件查询
 func (d {{.table.ClassName}}Dao) Find(where, order string) (*[]model.{{.table.ClassName}}, error) {
 	var list []model.{{.table.ClassName}}
-	err := db.GetMasterGorm().Table("{{.table.TbName}}").Where(where).Order(order).Find(&list).Error
+	err := lv_db.GetMasterGorm().Table("{{.table.TbName}}").Where(where).Order(order).Find(&list).Error
 	return &list, err
 }
 
+// Find 通过主键批量删除
 func (d {{.table.ClassName}}Dao) DeleteByIds(ida []int64) int64 {
-	db := db.GetMasterGorm().Table("{{.table.TbName}}").Where("{{.table.PkColumn.ColumnName}} in ? ", ida).Update("del_flag", 1)
+	db := lv_db.GetMasterGorm().Table("{{.table.TbName}}").Where("{{.table.PkColumn.ColumnName}} in ? ", ida).Update("del_flag", 1)
     if db.Error != nil {
         panic(db.Error)
     }

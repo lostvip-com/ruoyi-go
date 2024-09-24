@@ -69,7 +69,7 @@ func (w *OnlineController) ListAjax(c *gin.Context) {
 	}
 	var total int64
 	tb = tb.Count(&total)
-	tb.Order("t.login_time desc").Offset((param.PageNum - 1) * param.PageSize).Limit(param.PageSize).Find(&rows)
+	tb.Order("t.last_access_time desc").Offset((param.PageNum - 1) * param.PageSize).Limit(param.PageSize).Find(&rows)
 	err = tb.Error
 	lv_err.HasErrAndPanic(err)
 	util.SucessPage(c, rows, total)

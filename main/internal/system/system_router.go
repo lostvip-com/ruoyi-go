@@ -126,6 +126,7 @@ func init() {
 	groupMenu.GET("/", "system:menu:view", menuController.List)
 	groupMenu.POST("/list", "system:menu:list", menuController.ListAjax)
 	groupMenu.GET("/add", "system:menu:add", menuController.Add)
+
 	groupMenu.POST("/add", "system:menu:add", menuController.AddSave)
 	groupMenu.GET("/remove", "system:menu:remove", menuController.Remove)
 	groupMenu.POST("/remove", "system:menu:remove", menuController.Remove)
@@ -135,8 +136,6 @@ func init() {
 	groupMenu.GET("/selectMenuTree", "system:menu:view", menuController.SelectMenuTree)
 	groupMenu.GET("/roleMenuTreeData", "system:menu:view", menuController.RoleMenuTreeData)
 	groupMenu.GET("/menuTreeData", "system:menu:view", menuController.MenuTreeData)
-	groupMenu.POST("/checkMenuNameUnique", "system:menu:view", menuController.CheckMenuNameUnique)
-	groupMenu.POST("/checkMenuNameUniqueAll", "system:menu:view", menuController.CheckMenuNameUniqueAll)
 	// 岗位路由
 	groupPost := router.New("/system/post", auth.TokenCheck(), auth.PermitCheck)
 	postController := controller.PostController{}

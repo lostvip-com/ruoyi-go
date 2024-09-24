@@ -1,12 +1,12 @@
 package myconf
 
 import (
-	"github.com/alecthomas/template"
 	"github.com/gin-gonic/gin"
 	"github.com/lostvip-com/lv_framework/lv_conf"
 	"github.com/lostvip-com/lv_framework/lv_global"
 	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/utils/lv_logic"
+	"html/template"
 	"os"
 	"simples/internal/common/functions"
 )

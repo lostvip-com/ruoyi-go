@@ -18,9 +18,9 @@ import (
 type {{.table.ClassName}}Service struct{}
 // FindById 根据主键查询数据
 func (svc {{.table.ClassName}}Service) FindById(id {{.table.PkColumn.GoType}}) (*model.{{.table.ClassName}}, error) {
-	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
-	err := entity.FindById()
-	return entity, err
+	var po = new(model.{{.table.ClassName}})
+    po,err := po.FindById(id)
+	return po, err
 }
 
 // DeleteById 根据主键删除数据
@@ -51,13 +51,13 @@ func (svc {{.table.ClassName}}Service) AddSave(req *vo.Add{{.table.ClassName}}Re
 
 // EditSave 修改数据
 func (svc {{.table.ClassName}}Service) EditSave(req *vo.Edit{{.table.ClassName}}Req) error {
-	entity := &model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
-	err := entity.FindById()
+	var po  *model.{{.table.ClassName}}
+	po,err := po.FindById(req.{{.table.PkColumn.GoField}})
     lv_err.HasErrAndPanic(err)
-	lv_reflect.CopyProperties(req, entity)
-	entity.UpdateTime = time.Now()
-	entity.UpdateBy = req.UpdateBy
-	return entity.Updates()
+	lv_reflect.CopyProperties(req, po)
+	po.UpdateTime = time.Now()
+	po.UpdateBy = req.UpdateBy
+	return po.Updates()
 }
 
 // ListByPage 根据条件分页查询数据
@@ -70,7 +70,7 @@ func (svc {{.table.ClassName}}Service) ListByPage(params *vo.Page{{.table.ClassN
 func (svc {{.table.ClassName}}Service) ExportAll(param *vo.Page{{.table.ClassName}}Req) (string, error) {
     var d dao.{{.table.ClassName}}Dao
     var err error
-    var listMap *[]map[string]string
+    var listMap *[]map[string]any
     if param.PageNum > 0 { //分页导出
         listMap, _, err = d.ListMapByPage(param)
     } else { //全部导出

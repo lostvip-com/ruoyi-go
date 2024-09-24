@@ -231,48 +231,6 @@ func (svc *MenuService) InitChildMap(menus []model.SysMenu) map[int64][]*model.S
 	return childrenMap
 }
 
-// 检查菜单名是否唯一
-func (svc *MenuService) CheckMenuNameUniqueAll(menuName string, parentId int64) bool {
-	var dao dao.MenuDao
-	return dao.CheckMenuNameExists(menuName, parentId)
-}
-
-// 检查菜单名是否唯一
-func (svc *MenuService) CheckMenuNameUnique(menuName string, menuId, parentId int64) string {
-	var dao dao.MenuDao
-	exist := dao.CheckMenuNameExists(menuName, parentId)
-	if exist {
-		return "1"
-	}
-	return "0"
-}
-
-// 检查权限键是否唯一
-func (svc *MenuService) CheckPermsUniqueAll(perms string) string {
-	var dao dao.MenuDao
-	entity, err := dao.CheckPermsUniqueAll(perms)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.MenuId > 0 {
-		return "1"
-	}
-	return "0"
-}
-
-// 检查权限键是否唯一
-func (svc *MenuService) CheckPermsUnique(perms string, menuId int64) string {
-	var dao dao.MenuDao
-	entity, err := dao.CheckPermsUniqueAll(perms)
-	if err != nil {
-		return "1"
-	}
-	if entity != nil && entity.MenuId > 0 && entity.MenuId != menuId {
-		return "1"
-	}
-	return "0"
-}
-
 // 根据角色ID查询菜单
 func (svc *MenuService) RoleMenuTreeData(roleId, userId int64) (*[]lv_dto.Ztree, error) {
 	var result *[]lv_dto.Ztree

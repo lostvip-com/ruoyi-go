@@ -95,6 +95,6 @@ func (svc DpcTaskService) ExportAll(param *vo.PageDpcTaskReq) (string, error) {
 	lv_err.HasErrAndPanic(err)
 	heads := []string{"", "工号", "密码", "项  目  号", "任务内容", "开始日期", "结束日期", "本月工时", "自动提交", "任务状态", "排序，大的优先", "更新者", "更新时间", "创建时间", "创建人", "删除标记"}
 	cols := []string{"id", "username", "password", "prj_code", "task_content", "start_date", "end_date", "work_days", "auto_submit", "status", "sort", "update_by", "update_time", "create_time", "create_by", "del_flag"}
-	url, err := lv_office.DownlaodExcelByListMap(&heads, &cols, listMap)
+	url, err := lv_office.DownlaodExcelByListMapStr(&heads, &cols, listMap)
 	return url, err
 }

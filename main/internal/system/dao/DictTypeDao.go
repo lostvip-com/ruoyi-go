@@ -113,6 +113,7 @@ func (dao *DictTypeDao) SelectListAll(param *common_vo.DictTypePageReq) ([]model
 			tb.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
+	tb.Order(" t.dict_id desc ")
 	var result []model.SysDictType
 	tb = tb.Find(&result)
 	return result, tb.Error

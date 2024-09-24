@@ -26,12 +26,6 @@ func (w {{.table.ClassName}}Controller) ListAjax(c *gin.Context) {
 	req := new(vo.Page{{.table.ClassName}}Req)
 	err := c.ShouldBind(req)
 	lv_err.HasErrAndPanic(err)
-	if req.PageSize == 0 {
-    	req.PageSize = util.PageSize
-    }
-    if req.PageNum == 0 {
-    	req.PageNum = 1
-    }
 	var svc service.{{.table.ClassName}}Service
 	result, total, _ := svc.ListByPage(req)
 	util.SucessPage(c, result, total)

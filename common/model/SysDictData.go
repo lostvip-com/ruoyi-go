@@ -8,26 +8,21 @@ package model
 import (
 	"github.com/lostvip-com/lv_framework/lv_db"
 	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
-	"time"
 )
 
 // SysDictData 字典数据
 type SysDictData struct {
-	DictCode   int64     `gorm:"type:bigint(20);primary_key;auto_increment;字典编码;" json:"dictCode"`
-	DictSort   int       `gorm:"type:int(11);comment:字典排序;" json:"dictSort"`
-	DictLabel  string    `gorm:"type:varchar(100);comment:字典标签;" json:"dictLabel"`
-	DictValue  string    `gorm:"type:varchar(100);comment:字典键值;" json:"dictValue"`
-	DictType   string    `gorm:"type:varchar(100);comment:字典类型;" json:"dictType"`
-	CssClass   string    `gorm:"type:varchar(100);comment:样式属性（其他样式扩展）;" json:"cssClass"`
-	ListClass  string    `gorm:"type:varchar(100);comment:表格回显样式;" json:"listClass"`
-	IsDefault  string    `gorm:"type:char(1);comment:是否默认（Y是 N否）;" json:"isDefault"`
-	Status     string    `gorm:"type:char(1);comment:状态（0正常 1停用）;" json:"status"`
-	UpdateBy   string    `gorm:"type:varchar(64);comment:更新者;" json:"updateBy"`
-	UpdateTime time.Time `gorm:"type:datetime;comment:更新时间;" json:"updateTime" time_format:"2006-01-02 15:04:05"`
-	Remark     string    `gorm:"type:varchar(500);comment:备注;" json:"remark"`
-	CreateTime time.Time `gorm:"type:datetime;comment:创建时间;column:create_time;" json:"createTime" time_format:"2006-01-02 15:04:05"`
-	CreateBy   string    `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
-	DelFlag    int       `gorm:"type:tinyint(1);default:0;comment:删除标记;column:del_flag;" json:"delFlag"`
+	DictCode  int64  `gorm:"type:bigint(20);primary_key;auto_increment;字典编码;" json:"dictCode"`
+	DictSort  int    `gorm:"type:int(11);comment:字典排序;" json:"dictSort"`
+	DictLabel string `gorm:"type:varchar(100);comment:字典标签;" json:"dictLabel"`
+	DictValue string `gorm:"type:varchar(100);comment:字典键值;" json:"dictValue"`
+	DictType  string `gorm:"type:varchar(100);comment:字典类型;" json:"dictType"`
+	CssClass  string `gorm:"type:varchar(100);comment:样式属性（其他样式扩展）;" json:"cssClass"`
+	ListClass string `gorm:"type:varchar(100);comment:表格回显样式;" json:"listClass"`
+	IsDefault string `gorm:"type:char(1);comment:是否默认（Y是 N否）;" json:"isDefault"`
+	Status    string `gorm:"type:char(1);comment:状态（0正常 1停用）;" json:"status"`
+	Remark    string `gorm:"type:varchar(500);comment:备注;" json:"remark"`
+	BaseModel
 }
 
 func (e *SysDictData) TableName() string {

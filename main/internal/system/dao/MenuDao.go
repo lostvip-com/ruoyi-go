@@ -177,24 +177,3 @@ func (dao *MenuDao) SelectMenuTree(roleId int64) ([]string, error) {
 
 	return result, err
 }
-
-// 校验菜单名称是否唯一
-func (dao *MenuDao) CheckMenuNameExists(menuName string, parentId int64) bool {
-	var entity model.SysMenu
-	entity.MenuName = menuName
-	entity.ParentId = parentId
-	err := entity.FindOne()
-	if err == nil && entity.MenuId > 0 {
-		return true
-	} else {
-		return false
-	}
-}
-
-// 校验菜单名称是否唯一
-func (dao *MenuDao) CheckPermsUniqueAll(perms string) (*model.SysMenu, error) {
-	var entity model.SysMenu
-	entity.Perms = perms
-	err := entity.FindOne()
-	return &entity, err
-}

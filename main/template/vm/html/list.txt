@@ -67,6 +67,7 @@ LV自动生成列表页面代码,只生成一次,按需修改.
 
     $(function () {
         var options = {
+            uniqueId:"{{.table.PkColumn.HtmlField}}",
             url: prefix + "/list",
             createUrl: prefix + "/add",
             removeUrl: prefix + "/remove",
@@ -104,20 +105,15 @@ LV自动生成列表页面代码,只生成一次,按需修改.
 </script>
 
 <script>
-    $(document).keydown(function (event) {
-        if(event.keyCode == 13){
-            $.table.search()
-        }
-    })
 
    function add() {
-           let url = prefix + "/add";
+           let url = prefix + "/preAdd";
            lv_add_center("添加" + table.options.modalName, url,'800px','600px',function (){
                $.table.search()
            });
    }
    function editRight(id) {
-        let url = prefix + "/edit?id=" + id
+        let url = prefix + "/preEdit?id=" + id
         lv_edit_right("修改"+table.options.modalName ,url,'500px','100%',function (){
             $.table.search()
         });

@@ -13,21 +13,21 @@ import (
     "{{.table.ModuleName}}/internal/{{.table.PackageName}}/service"
 )
 
-// List 查询页
-func (w {{.table.ClassName}}Controller) List(c *gin.Context) {
+// PreList 查询页
+func (w {{.table.ClassName}}Controller) PreList(c *gin.Context) {
 	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/list.html")
 }
-// Add 新增页
-func (w {{.table.ClassName}}Controller) Add(c *gin.Context) {
+// PreAdd 新增页
+func (w {{.table.ClassName}}Controller) PreAdd(c *gin.Context) {
 	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/add.html")
 }
-// Edit 修改页
-func (w {{.table.ClassName}}Controller) Edit(c *gin.Context) {
+// PreEdit 修改页
+func (w {{.table.ClassName}}Controller) PreEdit(c *gin.Context) {
 	id := lv_conv.Int64(c.Query("id"))
     {{.table.BusinessName}}Service :=service.{{.table.ClassName}}Service{}
 	entity, err := {{.table.BusinessName}}Service.FindById(id)
 	if err != nil || entity == nil {
-		lv_web.ErrorTpl(c).WriteTpl(gin.H{"desc": "数据不存在",})
+		util.WriteErrorTPL(c, gin.H{"desc": "数据不存在"})
 		return
 	}
 	util.WriteTpl(c, "{{.table.PackageName}}/{{.table.BusinessName}}/edit.html",gin.H{

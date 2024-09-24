@@ -22,9 +22,11 @@ var httpSvr *server.MyServer
 // @BasePath /
 func main() {
 	cfg := myconf.GetConfigInstance()
-	lv_log.InitLog("logru.log")
+	lv_log.InitLog(cfg.GetAppName() + ".log")
 	if lv_global.IsDebug {
-		gin.SetMode("debug")
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
 	httpSvr = server.New("0.0.0.0:" + cast.ToString(cfg.GetServerPort()))
 	go httpSvr.Start()

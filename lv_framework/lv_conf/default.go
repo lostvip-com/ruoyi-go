@@ -18,7 +18,7 @@ type ConfigDefault struct {
 	proxyEnable bool
 	cacheTpl    bool //默认不缓存模板，方便调试
 	contextPath string
-	debug       string
+	logLevel    string
 	autoMigrate string
 }
 
@@ -198,11 +198,11 @@ func (e *ConfigDefault) GetSlave() string {
 }
 
 // IsDebug todo
-func (e *ConfigDefault) IsDebug() string {
-	if e.debug == "" {
-		e.debug = e.GetValueStr("go.application.debug")
+func (e *ConfigDefault) GetLogLevel() string {
+	if e.logLevel == "" {
+		e.logLevel = e.GetValueStr("go.log.level")
 	}
-	return e.debug
+	return e.logLevel
 }
 
 func (e *ConfigDefault) GetAutoMigrate() string {

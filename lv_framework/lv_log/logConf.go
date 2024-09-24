@@ -42,14 +42,25 @@ func InitLog(fileName string) {
 		DisableColors: true,
 		FullTimestamp: true,
 	})
-	if lv_global.Config().IsDebug() == "true" {
-		fmt.Println("============ debug模式，输出日志到控制台 ============")
+	level := lv_global.Config().GetLogLevel()
+	switch level {
+	case "":
+		log.SetLevel(logrus.ErrorLevel)
+	case "debug":
 		lv_global.IsDebug = true
 		log.SetLevel(logrus.DebugLevel)
-	} else {
+		fmt.Println("============ debug模式，输出日志到控制台 ============")
+	case "info":
 		log.SetLevel(logrus.InfoLevel)
-		lv_global.IsDebug = false
-		fmt.Println("============ release模式，输出日志json到文件============")
+	case "warn":
+		log.SetLevel(logrus.WarnLevel)
+	case "fatal":
+		log.SetLevel(logrus.FatalLevel)
+		break
+	case "error":
+		log.SetLevel(logrus.ErrorLevel)
+	default:
+		panic("log level is not support: " + level)
 	}
 	maxSize := lv_global.Config().GetValueStr("go.log.max-size")
 	maxBackups := lv_global.Config().GetValueStr("go.log.max-backups")

@@ -103,7 +103,7 @@ func (svc SysPostService) Export(param *vo.SelectPostPageReq) (string, error) {
 	col := []string{"post_id", "post_name", "post_code", "post_sort", "status"}
 	var d dao.SysPostDao
 	result, err := d.ListAllMap(param, false)
-	url, err := lv_office.DownlaodExcelByListMap(&head, &col, result)
+	url, err := lv_office.DownlaodExcelByListMapStr(&head, &col, result)
 	return url, err
 }
 

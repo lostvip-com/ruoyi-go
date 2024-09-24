@@ -149,7 +149,7 @@ func (svc *ConfigService) Export(param *common_vo.SelectConfigPageReq) (string, 
 	var d dao2.ConfigDao
 	listMap, err := d.SelectExportList(param)
 	lv_err.HasErrAndPanic(err)
-	return lv_office.DownlaodExcelByListMap(&head, &col, listMap)
+	return lv_office.DownlaodExcelByListMapStr(&head, &col, listMap)
 }
 
 func (svc *ConfigService) CountKey(key string) (int64, error) {

@@ -184,33 +184,3 @@ func (w *MenuController) RoleMenuTreeData(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
-
-// 检查菜单名是否已经存在不包括自身
-func (w *MenuController) CheckMenuNameUnique(c *gin.Context) {
-	var req *vo.CheckMenuNameReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var service service.MenuService
-	result := service.CheckMenuNameUnique(req.MenuName, req.MenuId, req.ParentId)
-
-	c.Writer.WriteString(result)
-}
-
-// 检查菜单名是否已经存在
-func (w *MenuController) CheckMenuNameUniqueAll(c *gin.Context) {
-	var req *vo.CheckMenuNameALLReq
-	if err := c.ShouldBind(&req); err != nil {
-		c.Writer.WriteString("1")
-		return
-	}
-	var dao dao.MenuDao
-	exists := dao.CheckMenuNameExists(req.MenuName, req.ParentId)
-	if exists {
-		c.Writer.WriteString(req.MenuName)
-	} else {
-		c.Writer.WriteString("")
-	}
-
-}

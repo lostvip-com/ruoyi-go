@@ -6,7 +6,8 @@
 package model
 
 import (
-    "github.com/lostvip-com/lv_framework/db"
+	"github.com/lostvip-com/lv_framework/lv_db"
+	"github.com/lostvip-com/lv_framework/lv_db/namedsql"
 	"time"
 )
 
@@ -41,19 +42,17 @@ func (e *{{.table.ClassName}}) TableName() string {
 	return "{{.table.TbName}}"
 }
 
-// 增
 func (e *{{.table.ClassName}}) Save() error {
-	return db.GetMasterGorm().Save(e).Error
+	return lv_db.GetMasterGorm().Save(e).Error
 }
-// 查
+
 func (e *{{.table.ClassName}}) FindById(id int64) (*{{.table.ClassName}},error) {
-	err := db.GetMasterGorm().Take(e,id).Error
+	err := lv_db.GetMasterGorm().Take(e,id).Error
 	return e,err
 }
 
-// 查第一条
 func (e *{{.table.ClassName}}) FindOne() (*{{.table.ClassName}},error) {
-    tb := db.GetMasterGorm().Table(e.TbName())
+    tb := lv_db.GetMasterGorm().Table(e.TableName())
 {{range $index, $column := .table.Columns -}}
 {{if eq $column.IsQuery "0"}}
     {{- continue -}}
@@ -73,13 +72,12 @@ func (e *{{.table.ClassName}}) FindOne() (*{{.table.ClassName}},error) {
     return e,err
 }
 
-// 改
 func (e *{{.table.ClassName}}) Updates() error {
-	return db.GetMasterGorm().Updates(e).Error
+	return lv_db.GetMasterGorm().Updates(e).Error
 }
-// 删
+
 func (e *{{.table.ClassName}}) Delete() error {
-	return db.GetMasterGorm().Delete(e).Error
+	return lv_db.GetMasterGorm().Delete(e).Error
 }
 
 func (e *{{.table.ClassName}}) Count() (int64, error) {
@@ -101,5 +99,5 @@ func (e *{{.table.ClassName}}) Count() (int64, error) {
     {{- end -}}
     {{- end }}
 
-	return namedsql.Count(db.GetMasterGorm(), sql, e)
+	return namedsql.Count(lv_db.GetMasterGorm(), sql, e)
 }

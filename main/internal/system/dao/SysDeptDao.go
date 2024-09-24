@@ -70,7 +70,7 @@ func (d SysDeptDao) SelectDeptList(parentId int64, deptName, status string, tena
 		param["tenantId"] = tenantId
 		sql += " and d.tenant_id = @tenantId "
 	}
-	sql += " order by d.parent_id, d.order_num "
+	sql += " order by d.parent_id, d.order_num desc "
 
 	return lv_dao.ListByNamedSql[model.SysDept](sql, param)
 }

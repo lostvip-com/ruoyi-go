@@ -53,9 +53,6 @@ func GetMasterGorm() *gorm.DB {
 		master = createGorm(driverName, config.GetMaster())
 		GetInstance().gormMap["master"] = master
 	}
-	if lv_global.IsDebug {
-		master = master.Debug()
-	}
 	return master
 }
 
@@ -93,6 +90,9 @@ func createGorm(driverName, url string) *gorm.DB {
 	if showSql {
 		config.Logger = logger.Default.LogMode(logger.Info)
 	}
+	//if lv_global.IsDebug {
+	//	master = master.Debug() //会开启sql打印
+	//}
 	gormDB, err := gorm.Open(dialector, config)
 	if err != nil {
 		panic("连接数据库失败" + err.Error())

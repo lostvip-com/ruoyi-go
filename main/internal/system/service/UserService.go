@@ -48,7 +48,7 @@ func (svc UserService) Export(param *common_vo.SelectUserPageReq) (string, error
 	var d dao.SysUserDao
 	listMap, err := d.SelectExportList(param)
 	lv_err.HasErrAndPanic(err)
-	return lv_office.DownlaodExcelByListMap(&head, &col, listMap)
+	return lv_office.DownlaodExcelByListMapStr(&head, &col, listMap)
 }
 
 // 新增用户

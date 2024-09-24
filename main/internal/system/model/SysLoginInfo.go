@@ -35,9 +35,6 @@ type SysLoginInfo struct {
 	Status        string    `gorm:"type:char(1);comment:登录状态（0成功 1失败）;" json:"status"`
 	Msg           string    `gorm:"type:varchar(255);comment:提示消息;" json:"msg"`
 	LoginTime     time.Time `gorm:"type:datetime;comment:访问时间;" json:"loginTime" time_format:"2006-01-02 15:04:05"`
-	CreateTime    time.Time `gorm:"type:datetime;comment:创建时间;column:create_time;" json:"createTime" time_format:"2006-01-02 15:04:05"`
-	CreateBy      string    `gorm:"type:varchar(32);comment:创建人;column:create_by;"  json:"createBy"`
-	DelFlag       int       `gorm:"type:tinyint(1);default:0;comment:删除标记;column:del_flag;" json:"delFlag"`
 }
 
 // 映射数据表

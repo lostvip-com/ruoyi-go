@@ -98,7 +98,7 @@ func (svc AppGenParamsService) ExportAll(param *vo.PageAppGenParamsReq) (string,
 	lv_err.HasErrAndPanic(err)
 	heads := []string{"ID", "是否使用", "参量号", "参量名称", "参量类型", "单位", "备注信息", "监控类型", ""}
 	keys := []string{"id", "useFlag", "paramNo", "paramName", "paramType", "unit", "remark", "monitorTypeId", "createTime"}
-	url, err := lv_office.DownlaodExcelByListMap(&heads, &keys, listMap)
+	url, err := lv_office.DownlaodExcelByListMapStr(&heads, &keys, listMap)
 	return url, err
 }
 

@@ -1,4 +1,21 @@
 server:
   port: ${PORT:8081}
   context-path: /samples
-copyright: © 2024 robiv.com Copyright
+copyright: © 2024 lostvip.com Copyright
+
+# 开启后会加载nacos中的 go-ruoyi-dev.yml
+#go:
+#  application:
+#    name:  samples     # 微服务名
+#    active: dev
+#    debug: true
+#  log:
+#    output: stdout,file # stdout：只写控制台，file:只写文件，默认：双写
+#    max-size: 20 # 单位M
+#    max-age: 7 # 单位天
+#    max-backups: 5 # 单位天
+#  cloud:
+#    nacos:
+#      discovery:       # 服务注册地址
+#        server-addr:  192.168.88.106
+#        port: 8848

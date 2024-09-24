@@ -46,7 +46,7 @@ func (e *MyConfig) LoadConf() {
 	//	nacos.LoadRemoteConfig(e.ConfigDefault, resetCfg)
 	//}
 	//日志
-	lv_global.IsDebug = lv_logic.IfTrue(e.IsDebug() == "true", true, false).(bool)
+	lv_global.IsDebug = lv_logic.IfTrue(e.GetLogLevel() == "debug", true, false).(bool)
 	lv_global.LogOutputType = e.GetLogOutput()
 	return
 }
@@ -62,7 +62,7 @@ func resetCfg() {
 		gin.SetMode(gin.ReleaseMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "off")
 	}
-	if conig.IsDebug() == "true" {
+	if conig.GetLogLevel() == "debug" {
 		lv_log.Warn(conig.GetAppName() + " ============ gin debug模式,swagger 开启 ==========")
 		gin.SetMode(gin.DebugMode)
 		os.Setenv(lv_global.KEY_SWAGGER_OFF, "")

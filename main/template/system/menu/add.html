@@ -1,4 +1,3 @@
-{{define "system/menu/add"}}
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -92,19 +91,7 @@
                 required: true,
             },
             menuName: {
-                remote: {
-                    url: prefix + "/checkMenuNameUniqueAll",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "parentId": function () {
-                            return $("input[name='parentId']").val();
-                        },
-                        "menuName": function () {
-                            return $.common.trim($("#menuName").val());
-                        }
-                    }
-                }
+                required: true,
             },
             orderNum: {
                 digits: true
@@ -184,4 +171,3 @@
 </script>
 </body>
 </html>
-{{end}}

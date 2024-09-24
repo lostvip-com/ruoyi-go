@@ -31,7 +31,7 @@ type IConfig interface {
 	GetGroupDefault() string
 
 	GetDataId() string
-	IsDebug() string
+	GetLogLevel() string
 	IsCacheTpl() bool
 	GetVipperCfg() *viper.Viper
 	GetConf(key string) string

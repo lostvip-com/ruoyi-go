@@ -11,19 +11,17 @@ import (
         "{{.table.ModuleName}}/internal/{{.table.PackageName}}/controller"
 )
 
-//加载路由
 func init() {
-	// 参数路由
-	g1 := router.New( "/{{.table.PackageName}}/{{.table.BusinessName}}", auth.TokenCheck())
+	group_{{.table.BusinessName}} := router.New( "/{{.table.PackageName}}/{{.table.BusinessName}}", auth.TokenCheck())
 
-	web := controller.{{.table.ClassName}}Controller{}
-	g1.GET("/", "{{.table.PackageName}}:{{.table.BusinessName}}:view", web.List)
-	g1.GET("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.Add)
-	g1.GET("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit", web.Edit)
+	{{.table.BusinessName}} := controller.{{.table.ClassName}}Controller{}
+	group_{{.table.BusinessName}}.GET("/", "{{.table.PackageName}}:{{.table.BusinessName}}:view", {{.table.BusinessName}}.PreList)
+	group_{{.table.BusinessName}}.GET("/preAdd", "{{.table.PackageName}}:{{.table.BusinessName}}:add", {{.table.BusinessName}}.PreAdd)
+	group_{{.table.BusinessName}}.GET("/preEdit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit", {{.table.BusinessName}}.PreEdit)
 	// api
-	g1.POST("/list", "{{.table.PackageName}}:{{.table.BusinessName}}:list", web.ListAjax)
-	g1.POST("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", web.AddSave)
-	g1.POST("/remove", "{{.table.PackageName}}:{{.table.BusinessName}}:remove", web.Remove)
-	g1.POST("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit",web.EditSave)
-	g1.POST("/export", "{{.table.PackageName}}:{{.table.BusinessName}}:export", web.Export)
+	group_{{.table.BusinessName}}.POST("/list", "{{.table.PackageName}}:{{.table.BusinessName}}:list", {{.table.BusinessName}}.ListAjax)
+	group_{{.table.BusinessName}}.POST("/add", "{{.table.PackageName}}:{{.table.BusinessName}}:add", {{.table.BusinessName}}.AddSave)
+	group_{{.table.BusinessName}}.POST("/remove", "{{.table.PackageName}}:{{.table.BusinessName}}:remove", {{.table.BusinessName}}.Remove)
+	group_{{.table.BusinessName}}.POST("/edit", "{{.table.PackageName}}:{{.table.BusinessName}}:edit",{{.table.BusinessName}}.EditSave)
+	group_{{.table.BusinessName}}.POST("/export", "{{.table.PackageName}}:{{.table.BusinessName}}:export", {{.table.BusinessName}}.Export)
 }

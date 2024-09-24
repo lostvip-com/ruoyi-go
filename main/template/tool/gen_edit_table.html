@@ -365,17 +365,17 @@
                         isQuery = 1;
                     }
                     var column = {
-                        "column_id": Number(columnId),
-                        "column_comment": columnComment,
-                        "go_type": goType,
-                        "html_type": htmlType,
-                        "go_field": goField,
-                        "dict_type": dictType,
-                        "query_type": queryType,
-                        "is_insert": isInsert.toString(),
-                        "is_edit": isEdit.toString(),
-                        "is_list": isList.toString(),
-                        "is_query": isQuery.toString(),
+                        "columnId": Number(columnId),
+                        "columnComment": columnComment,
+                        "goType": goType,
+                        "htmlType": htmlType,
+                        "goField": goField,
+                        "dictType": dictType,
+                        "queryType": queryType,
+                        "isInsert": isInsert.toString(),
+                        "isEdit": isEdit.toString(),
+                        "isList": isList.toString(),
+                        "isQuery": isQuery.toString(),
                     }
 
                     columns.push(column);
@@ -405,9 +405,9 @@
                 width: "5%",
                 formatter: function (value, row, index) {
                     // 编号隐藏域
-                    var columnIdHtml = $.common.sprintf("<input type='hidden' name='columns[%s].columnId' value='%s'>", index, row.column_id);
+                    var columnIdHtml = $.common.sprintf("<input type='hidden' name='columns[%s].columnId' value='%s'>", index, row.columnId);
                     // 排序隐藏域
-                    var sortHtml = $.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.column_id);
+                    var sortHtml = $.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.columnId);
                     return columnIdHtml + sortHtml + $.table.serialNumber(index);
                 },
                 cellStyle: function (value, row, index) {
@@ -532,8 +532,8 @@
                     title: '字典类型',
                     width: "13%",
                     formatter: function (value, row, index) {
-                        var html = $.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.column_id);
-                        return "<div class='input-group'>" + html + "<span class='input-group-addon input-sm' onclick='selectDictTree(" + row.column_id + ", this)'><i class='fa fa-search'></i></span></div>";
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.columnId);
+                        return "<div class='input-group'>" + html + "<span class='input-group-addon input-sm' onclick='selectDictTree(" + row.columnId + ", this)'><i class='fa fa-search'></i></span></div>";
                     },
                     cellStyle: function (value, row, index) {
                         return {css: {"cursor": "default"}};

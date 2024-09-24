@@ -53,7 +53,7 @@
 
 					{{if le (len $cmenu.Children) 0}}
 					<li>
-						<a class="menu-content menuItem" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
+						<a class="menu-content {{ if eq $cmenu.Target "menuBlank" }} menuBlank {{ else }} menuItem {{ end }}" href="{{getCtxPath $cmenu.Url}}" data-refresh="false">
 							<i class="{{$cmenu.Icon}}"></i> <span class="nav-label">{{$cmenu.MenuName}}</span>
 						</a>
 					</li>
@@ -65,7 +65,7 @@
 						<li>
 							{{if le (len $emenu.Children) 0}}
 						<li>
-							<a class="menu-content menuItem" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
+							<a class="menu-content {{ if eq $emenu.Target "menuBlank" }} menuBlank {{ else }} menuItem {{ end }}" href="{{getCtxPath $emenu.Url}}" data-refresh="false">
 								<i class="{{$emenu.Icon}}"></i> <span>{{$emenu.MenuName}}</span>
 							</a>
 						</li>
@@ -74,7 +74,7 @@
 						<ul class="nav nav-second-level collapse">
 							{{range $index, $fmenu := $emenu.Children}}
 							<li>
-								<a class="{{$fmenu.Target}}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
+								<a class="{{$fmenu.Target}} {{ if eq $fmenu.Target "menuBlank" }} menuBlank {{ else }} menuItem {{ end }}" href="{{getCtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
 							</li>
 							{{end}}
 						</ul>

@@ -93,8 +93,10 @@ func (svc TableService) SaveEdit(req *vo.GenTableEditReq, c *gin.Context) error 
 		}
 		for _, column := range columnList {
 			po := new(model.GenTableColumn)
-			po.ColumnId = column.ColumnId
-			po, err = po.FindOne()
+			if column.ColumnId == 0 {
+				continue
+			}
+			po, err = po.FindById(column.ColumnId)
 			lv_err.HasErrAndPanic(err)
 			lv_reflect.CopyProperties(column, po)
 			err = po.Updates()

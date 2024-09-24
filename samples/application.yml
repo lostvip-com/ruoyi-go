@@ -5,6 +5,7 @@ go:
     cache-tpl: false # 默认不缓存模板,省内存，方便开发
   log:
     output: stdout # stdout：只写控制台，file:只写文件，默认：双写
+    level: debug
   cache: ram
   datasource:
     auto-migrate: update

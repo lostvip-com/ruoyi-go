@@ -6,8 +6,8 @@
 package vo
 
 import (
- "github.com/lostvip-com/lv_framework/utils/lv_web"
-{{ if eq .table.HasEditTime "1" -}}  "time" {{- end }}
+  "github.com/lostvip-com/lv_framework/web/lv_dto"
+  "time"
 )
 
 //新增页面请求参数
@@ -49,7 +49,7 @@ type Page{{.table.ClassName}}Req struct {
 {{- end}}
 	BeginTime  string `form:"beginTime"`  //开始时间
 	EndTime    string `form:"endTime"`    //结束时间
-	lv_web.Paging
+	lv_dto.Paging
 }
 
 
