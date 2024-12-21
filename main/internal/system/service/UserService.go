@@ -374,14 +374,6 @@ func (svc UserService) UpdatePassword(profile *common_vo.PasswordReq, c *gin.Con
 		return errors.New("确认密码不一致")
 	}
 
-	//校验密码
-	token := user.LoginName + profile.OldPassword + user.Salt
-	token = lv_secret.MustEncryptString(token)
-
-	if token != user.Password {
-		return errors.New("原密码不正确")
-	}
-
 	//新校验密码
 	newSalt := lv_gen.GenerateSubId(6)
 	newToken := user.LoginName + profile.NewPassword + newSalt

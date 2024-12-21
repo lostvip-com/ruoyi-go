@@ -42,16 +42,6 @@
 			rules:{
 				oldPassword:{
 					required:true,
-					remote: {
-	                    url: ctx + "/system/user/profile/checkPassword",
-	                    type: "post",
-	                    dataType: "json",
-	                    data: {
-	                        password: function() {
-	                            return $("input[name='oldPassword']").val();
-	                        }
-	                    }
-	                }
 				},
 				newPassword: {
 	                required: true,
@@ -84,7 +74,11 @@
 		
 		function submitHandler() {
 	        if ($.validate.form()) {
-	        	$.operate.save(ctx + "/system/user/profile/resetSavePwd", $('#form-user-resetPwd').serialize());
+	        	let url = ctx + "/system/user/profile/resetSavePwd";
+                let form = $('#form-user-resetPwd').serialize();
+				$.operate.save(url,form,function (result){
+					$.modal.closeAll()
+				});
 	        }
 	    }
 	</script>

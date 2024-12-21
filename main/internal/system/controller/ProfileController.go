@@ -53,6 +53,7 @@ func (w *ProfileController) UpdatePassword(c *gin.Context) {
 	lv_err.HasErrAndPanic(err)
 	var userService service.UserService
 	err = userService.UpdatePassword(&req, c)
+	lv_err.HasErrAndPanic(err)
 	util.SuccessData(c, nil)
 }
 
