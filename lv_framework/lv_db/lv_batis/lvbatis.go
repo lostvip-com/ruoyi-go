@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"github.com/lostvip-com/lv_framework/lv_log"
 	"github.com/lostvip-com/lv_framework/utils/lv_file"
+	"github.com/lostvip-com/lv_framework/utils/lv_reflect"
 	"github.com/lostvip-com/lv_framework/utils/lv_tpl"
 	"github.com/morrisxyang/xreflect"
 	"github.com/spf13/cast"
@@ -21,6 +22,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -36,6 +38,7 @@ type ExecerContext interface {
 
 type LvBatis struct {
 	Queries     map[string]string
+	Vars        map[string]map[string]any
 	TplFile     string
 	CurrBaseSql string
 }
@@ -43,7 +46,7 @@ type LvBatis struct {
 /**
  * 从mapper目录解析sql文件
  */
-func NewInstance(relativePath string) (string *LvBatis) {
+func NewInstance(relativePath string) *LvBatis {
 	basePath, _ := os.Getwd()
 	absolutePath := basePath + "/mapper" //为了方便管理，必须把映射文件放到mapper目录
 	if strings.HasPrefix(relativePath, "/") {
@@ -77,34 +80,57 @@ func (e *LvBatis) GetSql(tagName string, params interface{}) (string, error) {
 /**
  * 从mapper目录解析sql文件
  */
-func (e *LvBatis) GetLimitSql(tagName string, params interface{}) (string, error) {
-	sql, err := e.GetSql(tagName, params)
-	if err != nil {
-		panic(err)
-	}
+
+/**
+ * 从mapper目录解析sql文件
+ */
+func (e *LvBatis) GetLimitSqlParams(tagName string, params interface{}) (string, map[string]any, error) {
+	var pageNum, pageSize any
 	paramType := reflect.TypeOf(params).Kind()
+	sqlParams := e.Vars[tagName]
 	if paramType == reflect.Map {
 		paramMap := params.(map[string]interface{})
-		pageNum := paramMap["pageNum"]
-		pageSize := paramMap["pageSize"]
-		if pageSize == nil || pageNum == nil {
-			panic("???????????分页信息错误" + sql)
-		} else {
-			start := cast.ToInt64(pageSize) * (cast.ToInt64(pageNum) - 1)
-			sql = sql + " limit  " + cast.ToString(start) + "," + cast.ToString(pageSize)
+		pageNum = paramMap["pageNum"]
+		pageSize = paramMap["pageSize"]
+		for key, value := range paramMap { //合并参数
+			sqlParams[key] = value // 覆盖或新增键值对
 		}
 	} else {
-		pageNum, err1 := xreflect.FieldValue(params, "PageNum")
-		pageSize, err2 := xreflect.FieldValue(params, "PageSize")
-		if pageSize == 0 || pageNum == 0 || err1 != nil || err2 != nil {
-			lv_log.Info("XXXX=====>pageSize:", pageSize, " pageNum:", pageNum)
-			panic("分页参数错误，请检查分页参数pageSize和pageNum的值")
-		} else {
-			start := cast.ToInt64(pageSize) * (cast.ToInt64(pageNum) - 1)
-			sql = sql + " limit  " + cast.ToString(start) + "," + cast.ToString(pageSize)
-		}
+		pageNum, _ = xreflect.FieldValue(params, "PageNum")
+		pageSize, _ = xreflect.FieldValue(params, "PageSize")
+		lv_reflect.CopyProperties2Map(params, sqlParams) //合并参数
 	}
+	if pageSize == nil || pageNum == nil {
+		panic("???????????分页信息错误")
+	}
+	sql, err := e.GetSql(tagName, sqlParams)
+	start := cast.ToInt64(pageSize) * (cast.ToInt64(pageNum) - 1)
+	sql = sql + " limit  " + cast.ToString(start) + "," + cast.ToString(pageSize)
+	return sql, sqlParams, err
+}
 
+func (e *LvBatis) GetLimitSql(tagName string, params interface{}) (string, error) {
+	var pageNum, pageSize any
+	paramType := reflect.TypeOf(params).Kind()
+	sqlParams := e.Vars[tagName]
+	if paramType == reflect.Map {
+		paramMap := params.(map[string]interface{})
+		pageNum = paramMap["pageNum"]
+		pageSize = paramMap["pageSize"]
+		for key, value := range paramMap { //合并参数
+			sqlParams[key] = value // 覆盖或新增键值对
+		}
+	} else {
+		pageNum, _ = xreflect.FieldValue(params, "PageNum")
+		pageSize, _ = xreflect.FieldValue(params, "PageSize")
+		lv_reflect.CopyProperties2Map(params, sqlParams) //合并参数
+	}
+	if pageSize == nil || pageNum == nil {
+		panic("???????????分页信息错误")
+	}
+	sql, err := e.GetSql(tagName, sqlParams)
+	start := cast.ToInt64(pageSize) * (cast.ToInt64(pageNum) - 1)
+	sql = sql + " limit  " + cast.ToString(start) + "," + cast.ToString(pageSize)
 	return sql, err
 }
 
@@ -162,12 +188,33 @@ func (e *LvBatis) getTplFile() string {
 func Load(r io.Reader) (*LvBatis, error) {
 	scanner := &Scanner{}
 	queries := scanner.Run(bufio.NewScanner(r))
-
-	dotsql := &LvBatis{
+	varMap := parseVarName(queries)
+	dotSql := &LvBatis{
 		Queries: queries,
+		Vars:    varMap,
 	}
 
-	return dotsql, nil
+	return dotSql, nil
+}
+
+func parseVarName(funSql map[string]string) map[string]map[string]any {
+	//re := regexp.MustCompile(`\.\w+`)
+	// 使用正则匹配模板中的变量
+	re := regexp.MustCompile(`{{[^{}]*\.\s*([a-zA-Z_][a-zA-Z0-9_]*)[^{}]*}}`)
+	mp := make(map[string]map[string]any)
+	for funcKey, sql := range funSql {
+		matches := re.FindAllStringSubmatch(sql, -1)
+		varMap := make(map[string]any) //变量去重
+		mp[funcKey] = varMap
+		for _, match := range matches {
+			if len(match) > 1 {
+				key := match[1]
+				varMap[key] = nil
+			}
+		} //end for
+
+	} //end for
+	return mp
 }
 
 // LoadFromFile imports SQL Queries from the file.

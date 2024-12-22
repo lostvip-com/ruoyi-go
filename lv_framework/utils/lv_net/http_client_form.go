@@ -42,6 +42,15 @@ func PostForm(url string, data url.Values) (string, error) {
 	return string(body), nil
 }
 
+func PostFormMap(httpUrl string, mp map[string]string) (string, error) {
+	//把post表单发送给目标服务器
+	params := url.Values{}
+	for k, v := range mp {
+		params.Add(k, v)
+	}
+	return PostForm(httpUrl, params)
+}
+
 func Get(url string) (string, error) {
 	//把post表单发送给目标服务器
 	res, err := http.Get(url)
