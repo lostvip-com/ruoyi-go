@@ -1,0 +1,78 @@
+{{define "system/config/add"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content   ibox-content">
+    <form class="form-horizontal m" id="form-config-add" name="form-config-add">
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">参数名称：</label>
+            <div class="col-sm-8">
+                <input id="configName" name="configName" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">参数键名：</label>
+            <div class="col-sm-8">
+                <input id="configKey" name="configKey" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">参数键值：</label>
+            <div class="col-sm-8">
+                <input id="configValue" name="configValue" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">系统内置：</label>
+            <div class="col-sm-8">
+                {{DictRadio "sys_yes_no" "configType" ""}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea id="remark" name="remark" class="form-control"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script type="text/javascript">
+    var prefix = ctx + "/system/config";
+
+    $("#form-config-add").validate({
+        onkeyup: false,
+        rules: {
+            configKey: {
+                remote: {
+                    url: prefix + "/checkConfigKeyUnique",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        "configKey": function () {
+                            return $.common.trim($("#configKey").val());
+                        }
+                    }
+                }
+            },
+        },
+        messages: {
+            "configKey": {
+                remote: "参数键名已经存在"
+            }
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-config-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>
+{{end}}

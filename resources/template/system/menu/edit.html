@@ -1,0 +1,199 @@
+{{define "system/menu/edit"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {{template "header" (OssUrl)}}
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content   ibox-content">
+    <form class="form-horizontal m" id="form-menu-edit">
+        <input id="menuId" name="menuId" type="hidden" value="{{.menu.MenuId}}"/>
+        <input id="treeId" name="parentId" type="hidden" value="{{.menu.ParentId}}"/>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label ">上级菜单：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input class="form-control" type="text" onclick="selectMenuTree()" id="treeName" readonly="true"
+                           value="{{if eq (len .menu.ParentName) 0}}无{{else}}{{.menu.ParentName}}{{end}}">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">菜单类型：</label>
+            <div class="col-sm-8">
+                <label class="radio-box"> <input type="radio" {{if eq .menu.MenuType "M"}}checked{{end}} name="menuType"
+                                                 value="M"/> 目录
+                </label>
+                <label class="radio-box"> <input type="radio" {{if eq .menu.MenuType "C"}}checked{{end}} name="menuType"
+                                                 value="C"/> 菜单
+                </label>
+                <label class="radio-box"> <input type="radio" {{if eq .menu.MenuType "F"}}checked{{end}} name="menuType"
+                                                 value="F"/> 按钮
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">菜单名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="menuName" id="menuName" value="{{.menu.MenuName}}"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">请求地址：</label>
+            <div class="col-sm-8">
+                <input id="url" name="url" class="form-control" type="text" value="{{.menu.Url}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">打开方式：</label>
+            <div class="col-sm-8">
+                <select id="target" name="target" class="form-control m-b">
+                    <option value="menuItem" value="{{.menu.Target}}">页签</option>
+                    <option value="menuBlank" {{if eq .menu.Target "menuBlank"}}selected{{end}}>新窗口</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">权限标识：</label>
+            <div class="col-sm-8">
+                <input id="perms" name="perms" class="form-control" type="text" value="{{.menu.Perms}}">
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 控制器中定义的权限标识，如：@RequiresPermissions("")</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">显示排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="orderNum" value="{{.menu.OrderNum}}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">图标：</label>
+            <div class="col-sm-8">
+                <input id="icon" name="icon" class="form-control" type="text" placeholder="选择图标" value="{{.menu.Icon}}">
+                <div class="ms-parent" style="width: 100%;">
+                    <div class="icon-drop animated flipInX" style="display: none;max-height:200px;overflow-y:auto">
+                        <div>
+                            {{template "system/menu/icon"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-4 col-lg-4 col-xl-4 control-label control-label">菜单状态：</label>
+            <div class="col-sm-8">
+                {{DictRadio "sys_show_hide" "visible" .menu.Visible}}
+            </div>
+        </div>
+    </form>
+</div>
+{{template "footer" (OssUrl)}}
+<script>
+    var prefix = ctx + "/system/menu";
+
+    $(function () {
+        var menuType = $('input[name="menuType"]:checked').val();
+        menuVisible(menuType);
+    });
+
+    $("#form-menu-edit").validate({
+        onkeyup: false,
+        rules: {
+            menuType: {
+                required: true,
+            },
+            orderNum: {
+                digits: true
+            },
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-menu-edit').serialize());
+        }
+    }
+
+    $(function () {
+        $("input[name='icon']").focus(function () {
+            $(".icon-drop").show();
+        });
+        $("#form-menu-edit").click(function (event) {
+            var obj = event.srcElement || event.target;
+            if (!$(obj).is("input[name='icon']")) {
+                $(".icon-drop").hide();
+            }
+        });
+        $(".icon-drop").find(".ico-list i").on("click",
+            function () {
+                $('#icon').val($(this).attr('class'));
+            });
+        $('input').on('ifChecked',
+            function (event) {
+                var menuType = $(event.target).val();
+                menuVisible(menuType);
+            });
+    });
+
+    function menuVisible(menuType) {
+        if (menuType == "M") {
+            $("#url").parents(".form-group").hide();
+            $("#perms").parents(".form-group").hide();
+            $("#icon").parents(".form-group").show();
+            $("#target").parents(".form-group").hide();
+            $("input[name='visible']").parents(".form-group").show();
+        } else if (menuType == "C") {
+            $("#url").parents(".form-group").show();
+            $("#perms").parents(".form-group").show();
+            $("#icon").parents(".form-group").show();
+            $("#target").parents(".form-group").show();
+            $("input[name='visible']").parents(".form-group").show();
+        } else if (menuType == "F") {
+            $("#url").parents(".form-group").show();
+            $("#perms").parents(".form-group").show();
+            $("#icon").parents(".form-group").hide();
+            $("#target").parents(".form-group").hide();
+            $("input[name='visible']").parents(".form-group").hide();
+        }
+    }
+
+    /*菜单管理-修改-选择菜单树*/
+    function selectMenuTree() {
+        var menuId = $("#treeId").val();
+        if (menuId > 0) {
+            var url = prefix + "/selectMenuTree?menuId=" + menuId;
+            $.modal.open("选择菜单", url, '380', '380');
+        } else {
+            $.modal.alertError("主菜单不能选择");
+        }
+    }
+
+    function selectMenuTree() {
+        var menuId = $("#treeId").val();
+        if (menuId > 0) {
+            var url = prefix + "/selectMenuTree?menuId=" + menuId;
+            var options = {
+                title: '菜单选择',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        } else {
+            $.modal.alertError("主菜单不能选择");
+        }
+    }
+
+    function doSubmit(index, layero){
+        var body = $.modal.getChildFrame(index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        $.modal.close(index);
+    }
+</script>
+</body>
+</html>
+{{end}}

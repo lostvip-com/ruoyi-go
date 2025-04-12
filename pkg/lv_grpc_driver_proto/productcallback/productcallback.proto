@@ -1,0 +1,32 @@
+syntax = "proto3";
+package productcallback;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/productcallback";
+import "google/protobuf/empty.proto";
+import public "google/protobuf/timestamp.proto";
+
+import "driverproduct/product.proto";
+
+
+message createProductCallbackRequest {
+  driverproduct.Product Data = 1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+message updateProductCallbackRequest {
+  driverproduct.Product Data = 1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+message deleteProductCallbackRequest {
+  int64  productId  =1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+service ProductCallBackService {
+  // 创建设备回调 edge c driver s
+  rpc CreateProductCallback(createProductCallbackRequest) returns (google.protobuf.Empty) {}
+  // 更新设备回调
+  rpc UpdateProductCallback(updateProductCallbackRequest) returns (google.protobuf.Empty) {}
+  // 删除设备回调
+  rpc DeleteProductCallback(deleteProductCallbackRequest) returns (google.protobuf.Empty) {}
+}

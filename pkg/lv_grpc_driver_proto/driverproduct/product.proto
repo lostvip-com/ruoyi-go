@@ -1,0 +1,149 @@
+syntax = "proto3";
+package driverproduct;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/driverproduct";
+
+message QueryProductListRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+}
+
+message QueryProductListResponse {
+  message Data {
+    uint32 total = 1;
+    repeated Product products = 2;
+  }
+  string TraceId = 1;
+  string Msg = 2;
+  int32  Code = 3;
+  bool Success = 4;
+  Data data = 5;
+}
+
+message QueryProductByIdRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64 id = 7;
+}
+
+enum ProductNodeType {
+  UnKnow = 0; //未知类型
+  Gateway = 1; //网关
+  Device = 2;  //直连设备
+  SubDevice = 3; //网关子设备
+}
+
+enum ProductNetType {
+  Other = 0;
+  Cellular = 1;
+  Wifi = 2;
+  Ethernet = 3;
+  NB = 4;
+}
+
+message Product {
+  uint64 createAt = 1;
+  int64 id = 2;
+  string name = 3;
+  string description = 4;
+  ProductNodeType NodeType = 5;//产品的节点类型
+  string dataFormat = 6;//上报数据的格式
+  string Platform = 7;
+  ProductNetType netType = 8;//联网方式
+  string protocolType = 13;//协议类型
+  repeated Properties properties = 9;//属性
+  repeated Events events = 10;//事件
+  repeated Actions actions = 11; //动作
+  string key = 12;
+}
+
+message Properties {
+  string modelName = 1;
+  int64  productId = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  bool required = 9;
+  string accessMode = 6;
+  TypeSpec typeSpec = 7;
+  map<string, string> Extend = 8;
+}
+
+message Events {
+  string ModelName = 1;
+  int64  productId = 2;
+  string name = 3;
+  string code = 4;
+  bool required = 8;
+  string type = 9;
+  string description = 5;
+  repeated OutputParams OutputParams = 6;
+}
+
+
+message InputParams {
+  string code = 1;
+  string name = 2;
+  TypeSpec typeSpec = 3;
+}
+
+message OutputParams {
+  string code = 1;
+  string name = 2;
+  TypeSpec typeSpec = 3;
+}
+
+
+enum DataType {
+  INT = 0;
+  FLOAT = 1;
+  TEXT = 2;
+  DATE = 3;
+  BOOL = 4;
+  ENUM = 5;
+  STRUCT = 6;
+  ARRAY = 7;
+}
+
+message TypeSpec {
+  string type = 1;//设备属性的数据类型
+  string specs = 2;
+}
+
+
+message Actions {
+  string ModelName = 1;
+  int64  productId = 2;
+  string name = 3;
+  string code = 4;
+  bool required = 9;
+  string callType = 10;
+  string description = 5;
+  repeated InputParams InputParams = 6;
+  repeated OutputParams OutputParams = 7;
+}
+
+message QueryProductByIdResponse {
+  message Data {
+    Product product = 1;
+  }
+  string TraceId = 1;
+  string Msg = 2;
+  int32  Code = 3;
+  bool Success = 4;
+  Data data = 5;
+}
+
+service RpcProduct {
+  // 获取所有设备 edge s driver c
+  rpc QueryProductList(QueryProductListRequest) returns (QueryProductListResponse) {}
+  // 获取设备 edge s driver c
+  rpc QueryProductById(QueryProductByIdRequest) returns (QueryProductByIdResponse) {}
+}

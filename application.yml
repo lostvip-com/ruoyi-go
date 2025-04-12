@@ -1,0 +1,41 @@
+go:
+  application:
+    cache-tpl: false # 默认不缓存模板,省内存，方便开发
+    resources-path: resources # 默认资源目录，存放配置文件、静态资源、模板
+    upload-path: resources/static/upload # 默认资源目录，存放配置文件、静态资源、模板
+  log:
+    level: debug        # debug info warn error
+    output: stdout,file # stdout：只写控制台，file:只写文件，默认：双写
+    path: tmp/logs # 日志目录
+    max-size: 100 # 单个日志文件最大100M
+    max-backups: 10 # 最多保留10个备份
+    max-age: 7 # 保留7天
+  cache: redis # redis ram
+  redis:
+    host: ${REDIS_HOST:192.168.81.228}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PWD:dpctest}
+  datasource:
+    show-sql: true   # 打印SQL到日志
+    auto-migrate: update # update/none 同步表结构，见 init.go
+    #    driver: sqlite3
+    #    master: data.db
+    driver: mysql
+    master: ${MYSQL_MASTER:"root:qwer1234@tcp(192.168.81.228:13306)/lv-iot?charset=utf8"}
+
+#代理转发
+#  proxy:
+#    enable: true
+#    prefix:
+#      - /video=192.168.100.110
+#代码生成器配置
+gen:
+  author: lv
+  #大模块，如lv_framework、main、demo
+  moduleName: things
+  #小模块，业务包
+  packageName: iot_driver
+  #覆盖旧的代码
+  overwrite: true
+  #新生成的菜单挂到哪个菜单下
+  parent_menu_id: 4

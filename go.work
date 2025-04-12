@@ -1,12 +1,14 @@
-go 1.20
+go 1.24
 
 
 use (
-	./common
-	./lv_framework
-	./main
-	./samples
+    ./pkg/lv_framework
+    ./pkg/lv_grpc_driver_proto
+	./modules/common
+	./modules/system
+	./modules/demo
+	. //根目录也做为一个module
 )
 
 // 方便本地库与github库的代码切换
-replace github.com/lostvip-com/lv_framework v1.1.8 => ./lv_framework
+//replace github.com/lostvip-com/lv_framework v1.1.9 => ./pkg/lv_framework

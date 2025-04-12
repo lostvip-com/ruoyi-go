@@ -1,0 +1,15 @@
+syntax = "proto3";
+package gateway;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/gateway";
+import "google/protobuf/empty.proto";
+
+
+service RpcGateway {
+  rpc GetGatewayInfo(google.protobuf.Empty) returns (GateWayInfoResponse) {}
+}
+
+message GateWayInfoResponse {
+  string env = 2;
+  int64  gwId = 3;
+  string localKey = 4;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+package cloudinstancecallback;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/cloudinstancecallback";
+import "google/protobuf/empty.proto";
+import public "google/protobuf/timestamp.proto";
+
+message cloudInstanceStatueCallbackRequest {
+  string cloudInstanceName = 1;
+  string status = 2;
+  google.protobuf.Timestamp happenTime = 3;
+}
+
+service CloudInstanceCallBackService {
+  // 云实例状态回调 edge = c driver = s
+  rpc CloudInstanceStatueCallback(cloudInstanceStatueCallbackRequest) returns (google.protobuf.Empty) {}
+}
+

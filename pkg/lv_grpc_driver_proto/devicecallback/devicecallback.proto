@@ -1,0 +1,31 @@
+syntax = "proto3";
+package devicecallback;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/devicecallback";
+import "driverdevice/device.proto";
+import "google/protobuf/empty.proto";
+import public "google/protobuf/timestamp.proto";
+
+
+message createDeviceCallbackRequest {
+  driverdevice.Device Data = 1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+message updateDeviceCallbackRequest {
+  driverdevice.Device Data = 1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+message deleteDeviceCallbackRequest {
+  int64  deviceId  =1;
+  google.protobuf.Timestamp happenTime = 2;
+}
+
+service DeviceCallBackService {
+  // 创建设备回调 edge = c driver = s
+  rpc CreateDeviceCallback(createDeviceCallbackRequest) returns (google.protobuf.Empty) {}
+  // 更新设备回调 edge = c driver = s
+  rpc UpdateDeviceCallback(updateDeviceCallbackRequest) returns (google.protobuf.Empty) {}
+  // 删除设备回调 edge = c driver = s
+  rpc DeleteDeviceCallback(deleteDeviceCallbackRequest) returns (google.protobuf.Empty) {}
+}

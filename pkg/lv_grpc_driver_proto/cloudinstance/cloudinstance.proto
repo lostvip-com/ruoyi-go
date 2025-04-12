@@ -1,0 +1,40 @@
+syntax = "proto3";
+package cloudinstance;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/cloudinstance";
+
+message QueryCloudInstanceByPlatformRequest {
+  string iotPlatform = 1;
+}
+
+message QueryCloudInstanceByPlatformResponse {
+  int64 CloudInstanceId = 1;
+  string Address = 2;
+  string CloudInstanceName = 3;
+  string Status = 4;
+}
+
+message DriverRegisterRequest {
+  string TraceId = 1;
+  int64  DriverInstanceId = 2;// 驱动唯一标识,可以为空
+  string DriverAddress = 3;   // 服务器推送数据使用
+  string DriverType  = 4;     // 使用的云平台
+  string IotPlatform = 5;     // 使用的云平台
+  string DriverName  = 6;     // 使用的云平台
+  string Extra = 7; //备用字段
+}
+
+message DriverRegisterResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32  Code = 3;
+  bool   Success = 4;
+  int64  DriverInstanceId = 5;// 驱动唯一标识,可以为空
+  string Extra = 6; //备用字段
+}
+
+service CloudInstanceService {
+  // 查询云服务示例信息 edge = s driver = c
+  rpc QueryCloudInstanceByPlatform(QueryCloudInstanceByPlatformRequest) returns (QueryCloudInstanceByPlatformResponse) {}
+  // 上报驱动使用云实例
+  rpc DriverReportPlatformInfo(DriverRegisterRequest) returns (DriverRegisterResponse) {}
+}

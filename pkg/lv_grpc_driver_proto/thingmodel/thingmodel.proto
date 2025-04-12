@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package thingmodel;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/thingmodel";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "drivercommon/common.proto";
+
+
+enum OperationType {
+  UNSPECIFIED = 0;
+  //下发相关
+  PROPERTY_SET = 1;   // 下发属性设置请求
+  PROPERTY_GET = 2;   // 下发属性查询请求
+  SERVICE_EXECUTE = 3;     // 下发设备动作执行请求
+  PROPERTY_REPORT_RESPONSE = 4;   // 云端响应上报属性消息
+  EVENT_REPORT_RESPONSE = 5;  // 云端响应上报事件消息
+  DATA_BATCH_REPORT_RESPONSE = 6;   // 云端响应批量上报消息
+  PROPERTY_DESIRED_GET_RESPONSE = 7;  // 云端响应设备上报向云端获取属性期望值请求
+  PROPERTY_DESIRED_DELETE_RESPONSE = 8;  // 云端响应设备上报向云端发送清除属性期望值请求
+  CUSTOM_MQTT_PUBLISH = 9; //云端自定义topic 消息下发
+  //上报相关
+  PROPERTY_REPORT = 20;    // 属性上报
+  PROPERTY_SET_RESPONSE = 21;   // 响应云端下发属性请求
+  PROPERTY_GET_RESPONSE = 22;   // 响应云端下发属性查询请求
+  SERVICE_EXECUTE_RESPONSE = 23;     // 响应云端下发设备服务调用请求
+  EVENT_REPORT = 24;  // 事件上报
+  DATA_BATCH_REPORT = 25;     // 设备批量上报数据
+  PROPERTY_DESIRED_GET = 26;  // 设备上报向云端获取属性期望值请求
+  PROPERTY_DESIRED_DELETE = 27;  // 设备上报向云端发送清除属性期望值请求
+
+}
+// ThingModelIssueMsg 消息下发
+message ThingModelIssueMsg {
+  OperationType operationType = 1;
+  string traceId  = 2;  // 唯一标识
+  int64  gatewayId = 3; // 下发的目标设备id
+  int64  deviceId  = 4; // 下发的目标设备id
+  bool   needAck =  5; // 0:不用确认 1:需要确认，否则重发
+  repeated Point listData = 6;
+}
+// ThingModelResp 消息响应
+message ThingModelResp {
+  string TraceId = 1;
+  string Msg = 2;
+  int32  Code = 3;
+  bool Success = 4;
+  string Extra = 5;
+  int64  deviceId  = 6; // 下发的目标设备id
+  repeated Point listData = 7;
+}
+
+message Point {
+  string code  = 1; //参量号
+  string value = 2; //参量值
+  google.protobuf.Timestamp  time = 3; //采集时间
+  //下发数据时使用，上传数据忽略
+  string dataType = 4;//数据类型 int32/float32/string/bool/byte
+  string rate = 5;//倍率，默认1，100表示把设备采集值放大100倍
+}
+
+// edge 物模型消息下发 sdk
+service ThingModelDownService {
+  rpc ThingModelMsgIssue(ThingModelIssueMsg) returns (ThingModelResp) {}
+}
+
+// sdk 物模型消息上报 edge
+service ThingModelUpService {
+  rpc ThingModelMsgReport(ThingModelIssueMsg) returns (drivercommon.CommonResponse) {}
+}

@@ -53,7 +53,7 @@
 
 
 ## 目录结构
-本着简单易用的原则，简化工程结构，没有dao层。
+本着简单易用的原则，简化工程结构。
 
 ~~~
 main[]()     
@@ -61,35 +61,39 @@ main[]()
 │   └── local         // 本地配置文件备份
 │   └── script        // 发布相关的脚本备份
 │   └── sql           // 数据库文件备份
-├── common            // 共享模块，适用微于服务分拆后资源的共享，如用户，权限，字典等   
-├── samples           // 微服务分拆举例，注册到可注册到nacos，若只开发单体服务可删除此模块    
-├── main              // 主工程模块，可做为单体服务，也可改为微服务，见bootstrap.yml
-│   └── internal                 // 源码存放目录,internal禁止其它模块引用
-│   └── static                   // 静态文件目录
-│   └── mapper                   // 类mybatis映射文件存放目录
-│   └── template                 // 模板存放目录
-│   └── bootstrap.yml            // 项目根配置文件，模仿springboot
-│   └── application.ym           // 项目配置文件，模仿springboot
 │   └── build.sh                 // 编译脚本，方便打包
 │   └── build-cgo.sh             // 编译脚本，启用cgo,需要打包sqlite时有用
 │   └── build-linux.bat          // 编译脚本，windows环境交叉编译用
 │   └── data.db                  // 使用sqlite数据库时有用，只使用mysql可删除                             
-│   └── Dockerfile               // Docker镜像文件
-├── lv_framework       // 依赖库，通用框架，简单封装了数据库，web等常用功能
-│       └── lv_cache               // 通用缓存
-│       └── lv_conf                // 通用配置
-│       └── lv_db                  // 数据库相关
-│       └── lv_log                 // 通用日志处理，统一风格，方便切换第三方日志库
-│       └── utils                  // 通用工具类
-│       └── web                    // 通用web组件  
+├── modules                          // 模块存放目录
+│   └── common                       // 通用模块
+│   └── demo                         // 示例模块
+│   └── things                       // 物联业务网模块
+│   └── system                       // 系统核心模块
+│       └── internal                 // 源码存放目录,internal禁止其它模块引用
+│       └── static                   // 静态文件目录
+│       └── mapper                   // 类mybatis映射文件存放目录
+│       └── template                 // 模板存放目录
+│       └── bootstrap.yml            // 项目根配置文件，模仿springboot
+│       └── application.ym           // 项目配置文件，模仿springboot
+├── pkg                              // 第三方开源组件存放目录
+│    └── lv_framework                 // 框架通用模块
+│          └── lv_cache              // 通用缓存
+│          └── lv_conf               // 通用配置
+│          └── lv_db                 // 数据库相关
+│          └── lv_log                // 通用日志处理，统一风格，方便切换第三方日志库
+│          └── utils                 // 通用工具类
+│          └── web                   // 通用web组件
+│       
 ├── go.work            // 项目模块配置
 ├── build-linux.bat    // 编译脚本
+├── Dockerfile         // Docker镜像文件
+├── main.go            // 程序入口文件
 ~~~
 
 ## 启动
 前置条件：
-> 1. linux环境，可配置GO_PROXY环境变量，如：export GO_PROXY=https://goproxy.cn
-> 2. windows环境，可在环境变量 GO_PROXY 值为： https://goproxy.cn
+> 1. 配置GO_PROXY环境变量，如：export GO_PROXY=https://goproxy.cn
 安装相关依赖！
 ### 1. 修改应该的数据库及缓存配置
 * sqlite：默认使用sqlite数据库，可不做任何修改
@@ -102,7 +106,7 @@ go run main.go
 ~~~
 启动完成后，在控制台会打印出访问地址： http://127.0.0.1:8080
 * 方式二： 使用第三方热加载组件
-> 前置条件： cd 到 [main](main) 目录，安装热加载框架：
+> 前置条件： cd 到 main 目录，安装热加载框架：
 > <br>  go get github.com/pilu/fresh
 > <br>  go install github.com/pilu/fresh
 
@@ -142,6 +146,7 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 > RuoYi https://github.com/yangzongzhuan/RuoYi
 > SQL文件解析: https://github.com/qustavo/dotsql
 > 热加载框架  http://github.com/pilu/fresh
+> 规则引擎 https://github.com/dop251/goja
 ## 项目支持
 
 

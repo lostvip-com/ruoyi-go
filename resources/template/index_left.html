@@ -1,0 +1,271 @@
+{{define "index_left"}}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>LV业务快捷开发框架</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <link href="{{OssUrl}}/favicon.ico" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/jquery.contextMenu.min.css" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource//css/style.css" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/css/skins.css" rel="stylesheet"/>
+    <link href="{{OssUrl}}/resource/ruoyi/css/ry-ui.css?v=4.6.0" rel="stylesheet"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+<div id="wrapper">
+
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close">
+            <i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <a href="/index">
+                    <li class="logo">
+                        <span class="logo-lg">LV</span>
+                    </li>
+                </a>
+                <li>
+                    <div class="user-panel">
+                        <a class="menuItem" title="个人中心" href="/system/user/profile">
+                            <div class="hide">个人中心</div>
+                            <div class="pull-left image">
+                                <img src="{{OssUrl}}{{.avatar}}" class="img-circle" alt="User Image">
+                            </div>
+                        </a>
+                        <div class="pull-left info">
+                            <p>{{.loginname}}</p>
+                            <a href="javascript:void(0)"><i class="fa fa-circle text-success"></i> 在线</a>
+                            <a href="{{Ctx}}/logout" style="padding-left:5px;"><i class="fa fa-sign-out text-danger"></i>
+                                注销</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="javascript:void(0)"><i class="fa fa-home"></i> <span class="nav-label">首页</span>
+                        <span  class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="menuItem" href="{{Ctx}}/system/main">Dashboard</a></li>
+                    </ul>
+                </li>
+
+                {{range $index, $menu := .menus}}
+                <li>
+                    {{if eq $menu.ParentId 0}}
+                    <a href="javascript:void(0)">
+                        <i class="{{$menu.Icon}}"></i>
+                        <span class="nav-label">{{$menu.MenuName}}</span>
+                        <span class="fa arrow"></span>
+                    </a>
+
+                    <ul class="nav nav-second-level collapse">
+                        {{range $index, $cmenu := $menu.Children}}
+                        <li>
+                            {{if le (len $cmenu.Children) 0}}
+                                <a class="{{$cmenu.Target}}" href="{{$cmenu.Url}}">{{$cmenu.MenuName}}</a>
+                            {{else}}
+                                <a href="javascript:void(0)">{{$cmenu.MenuName}}<span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    {{range $index, $emenu := $cmenu.Children}}
+                                    <li>
+                                        {{if le (len $emenu.Children) 0}}
+                                        <a class="{{$emenu.Target}}"
+                                           href="{{CtxPath $emenu.Url}}">{{$emenu.MenuName}}</a>
+                                        {{else}}
+                                        <a href="javascript:void(0)">{{$emenu.MenuName}}<span
+                                                class="fa arrow"></span></a>
+                                        <ul class="nav nav-four-level">
+                                            {{range $index, $fmenu := $emenu.Children}}
+                                            <li>
+                                                <a class="{{$fmenu.Target}}"
+                                                   href="{{CtxPath $fmenu.Url}}">{{$fmenu.MenuName}}</a>
+                                            </li>
+                                            {{end}}
+                                        </ul>
+                                        {{end}}
+                                    </li>
+                                    {{end}}
+                                </ul>
+                            {{end}}
+                        </li>
+                        {{end}}
+                    </ul>
+
+                    {{end}}
+                </li>
+                {{end}}
+
+
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2" style="color:#FFF;" href="javascript:void(0)" title="收起菜单">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right welcome-message">
+                    <li><a title="全屏显示" href="javascript:void(0)" id="fullScreen"><i class="fa fa-arrows-alt"></i> 全屏显示</a>
+                    </li>
+
+                    <li class="dropdown user-menu">
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-hover="dropdown">
+                            <img src="{{OssUrl}}{{.avatar}}" class="user-image">
+                            <span class="hidden-xs">{{.username}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="mt5">
+                                <a href="{{Ctx}}/system/user/profile" class="menuItem">
+                                    <i class="fa fa-user"></i> 个人中心</a>
+                            </li>
+                            <li>
+                                <a onclick="resetPwd()">
+                                    <i class="fa fa-key"></i> 修改密码</a>
+                            </li>
+                            <li>
+                                <a onclick="switchSkin()">
+                                    <i class="fa fa-dashboard"></i> 切换主题</a>
+                            </li>
+                            <li>
+                                <a onclick="toggleMenu()">
+                                    <i class="fa fa-toggle-off"></i> 顶部菜单</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{{Ctx}}/logout">
+                                    <i class="fa fa-sign-out"></i> 退出登录</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left tabLeft">
+                <i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active menuTab" data-id="{{Ctx}}/system/main">首页</a>
+                </div>
+            </nav>
+            <button class="roll-nav roll-right tabRight">
+                <i class="fa fa-forward"></i>
+            </button>
+            <a href="javascript:void(0);" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+        </div>
+        <a id="ax_close_max" class="ax_close_max" href="javascript:void(0)" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
+        <div class="row mainContent" id="content-main">
+            <iframe class="YunFan_iframe" name="iframe0" width="100%" height="100%" data-id="{{Ctx}}/system/main"
+                    src="{{Ctx}}/system/home" frameborder="0" seamless></iframe>
+        </div>
+
+        <div class="footer">
+            <div class="pull-right">Copyright©2019 长沙云捷网络科技有限公司</div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+<!-- 全局js -->
+<script src="{{OssUrl}}/resource/js/jquery.min.js"></script>
+<script src="{{OssUrl}}/resource/js/bootstrap.min.js"></script>
+<script src="{{OssUrl}}/resource/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="{{OssUrl}}/resource/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="{{OssUrl}}/resource/js/jquery.contextMenu.min.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/blockUI/jquery.blockUI.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/layer/layer.min.js"></script>
+<script src="{{OssUrl}}/resource/ruoyi/js/ry-ui.js?v=4.1.0"></script>
+<script src="{{OssUrl}}/resource/ruoyi/js/common.js?v=4.1.0"></script>
+<script src="{{OssUrl}}/resource/ruoyi/index.js"></script>
+<script src="{{OssUrl}}/resource/ajax/libs/fullscreen/jquery.fullscreen.js"></script>
+<script type="application/javascript">
+    var ctx = "\/";
+    // 皮肤缓存
+    var skin = storage.get("skin");
+    // history（表示去掉地址的#）否则地址以"#"形式展示
+    var mode = "history";
+    // 历史访问路径缓存
+    var historyPath = storage.get("historyPath");
+    // 排除非左侧菜单链接
+    var excludesUrl = ["/system/user/profile"];
+
+    // 本地主题优先，未设置取系统配置
+    if ($.common.isNotEmpty(skin)) {
+        $("body").addClass(skin.split('|')[0]);
+        $("body").addClass(skin.split('|')[1]);
+    } else {
+        var sideTheme = '{{.sideTheme}}';
+        var skinName = '{{.skinName}}';
+        $("body").addClass(sideTheme);
+        $("body").addClass(skinName);
+    }
+
+    /* 用户管理-重置密码 */
+    function resetPwd() {
+        var url = ctx + '/system/user/profile/resetPwd';
+        $.modal.open("重置密码", url, '770', '380');
+    }
+
+    /* 切换主题 */
+    function switchSkin() {
+        layer.open({
+            type: 2,
+            shadeClose: true,
+            title: "切换主题",
+            area: ["530px", "386px"],
+            content: [ctx + "/system/switchSkin", 'no']
+        })
+    }
+
+    /** 刷新时访问路径页签 */
+    function applyPath(url) {
+        $('a[href$="' + decodeURI(url) + '"]').click();
+        if ($.inArray(url, excludesUrl)) {
+            $('a[href$="' + url + '"]').parent("li").addClass("selected").parents("li").addClass("active").end().parents("ul").addClass("in");
+        }
+    }
+
+    $(function () {
+        if ($.common.equals("history", mode) && window.performance.navigation.type == 1) {
+            var url = storage.get('publicPath');
+            if ($.common.isNotEmpty(url)) {
+                applyPath(url);
+            }
+        } else {
+            var hash = location.hash;
+            if ($.common.isNotEmpty(hash)) {
+                var url = hash.substring(1, hash.length);
+                applyPath(url);
+            }
+        }
+    });
+
+    /* 切换菜单 */
+    function toggleMenu() {
+        $.modal.confirm("确认要切换成左侧菜单吗？", function() {
+            // $.get(ctx + '/system/menuStyle/default', function(result) {
+            // 	window.location.reload();
+            // });
+            window.location.href="/?menuStyle=index";
+        })
+    }
+</script>
+</body>
+</html>
+{{end}}

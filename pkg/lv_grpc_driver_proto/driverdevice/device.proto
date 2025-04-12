@@ -1,0 +1,202 @@
+syntax = "proto3";
+package driverdevice;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/driverdevice";
+
+message ConnectIotPlatformRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64  deviceId = 7;
+}
+
+message ConnectIotPlatformResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+  Data data =5 ;
+
+  message Data {
+    ConnectStatus Status = 1;
+  }
+
+}
+
+message DisconnectIotPlatformRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64  deviceId = 7;
+}
+
+
+message DisconnectIotPlatformResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+  Data data =5 ;
+  message Data {
+    ConnectStatus Status = 1;
+  }
+}
+
+message QueryDeviceByIdRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64 id = 7;
+}
+
+
+message QueryDeviceByIdResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+  Data data =5 ;
+  message Data {
+    Device device = 1;
+  }
+}
+
+enum DeviceStatus {
+  UnKnowStatus = 0;
+  OnLine = 1;
+  OffLine = 2;
+  UnActive = 3;
+  Disable = 4;
+}
+
+message Device {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64  productId = 4;
+  string status = 5;
+  string platform = 6;
+  string deviceSn   = 7;
+  string secret = 8;
+  map<string, string> External = 9;
+}
+
+
+message AddDevice {
+  string name        = 1;
+  int64  productId   = 2;
+  string description = 3;
+  string deviceSn    = 4;
+  int32  addr        = 5; //从机地址,子设备用
+  map<string, string> External = 6;
+}
+
+
+message CreateDeviceRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  AddDevice device = 7;
+}
+
+message CreateDeviceRequestResponse {
+  message Data {
+    Device device = 2;
+  }
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+  Data data =5 ;
+}
+
+message CreateDeviceAndConnectRequest {
+  AddDevice device = 1;
+}
+
+message CreateDeviceAndConnectRequestResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+  Data data =5 ;
+  message Data {
+    Device device = 1;
+  }
+}
+
+message DeleteDeviceRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64  deviceId = 7;
+}
+
+message DeleteDeviceResponse {
+  string TraceId = 1;
+  string Msg = 2;
+  int32 Code = 3;
+  bool Success = 4;
+
+}
+
+message GetDeviceConnectStatusRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64  deviceId = 7;
+}
+
+enum ConnectStatus {
+  ONLINE = 0;//在线
+  OFFLINE = 1;//离线
+  UnACTIVE = 2;//未激活
+  DISABLE = 3;//禁用
+  UnKnow = 4;//未知
+
+}
+
+message GetDeviceConnectStatusResponse {
+  message Data {
+    ConnectStatus Status = 1;
+  }
+  string TraceId = 1;
+  string Msg = 2;
+  int32  Code = 3;
+  bool Success = 4;
+  Data data = 5;
+}
+
+service RpcDevice {
+  // 设备连接云服务 edge s driver c
+  rpc ConnectIotPlatform(ConnectIotPlatformRequest) returns (ConnectIotPlatformResponse) {}
+  // 设备断开连接云服务
+  rpc DisconnectIotPlatform(DisconnectIotPlatformRequest) returns (DisconnectIotPlatformResponse) {}
+  // 设备连接状态
+  rpc GetDeviceConnectStatus (GetDeviceConnectStatusRequest) returns(GetDeviceConnectStatusResponse){}
+  // 获取设备
+  rpc QueryDeviceById(QueryDeviceByIdRequest) returns (QueryDeviceByIdResponse) {}
+  // 创建设备
+  rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceRequestResponse) {}
+  // 创建设备并且建立连接
+  rpc CreateDeviceAndConnect(CreateDeviceAndConnectRequest) returns (CreateDeviceAndConnectRequestResponse) {}
+  // 删除设备
+  rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {}
+}

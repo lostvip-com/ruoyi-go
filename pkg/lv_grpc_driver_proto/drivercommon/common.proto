@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package drivercommon;
+import "google/protobuf/empty.proto";
+import public "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/drivercommon";
+
+
+message CloudInstanceInfo {
+   int64 cloudInstanceId = 2;
+   string baseAddress = 3;
+   string cloudInstanceName = 4;
+   string iotPlatform = 5;
+}
+
+message BaseRequestMessage {
+   string traceId = 1;
+   int64 cloudInstanceId = 2;
+   string baseAddress = 3;
+   string cloudInstanceName = 4;
+   string iotPlatform = 5;
+   int64 driverInstanceId = 6;
+}
+
+message CommonResponse {
+   string TraceId = 1;
+   string Msg = 2;
+   int32  Code = 3;
+   bool Success = 4;
+   string Extra = 5;
+}
+
+message Pong {
+   string timestamp = 2;
+}
+
+message VersionResponse {
+   string version = 2;
+}
+
+service Common {
+   // Ping tests whether the service is working
+   rpc Ping(google.protobuf.Empty) returns (Pong) {}
+   // Version obtains version information from the target service.
+   rpc Version(google.protobuf.Empty) returns (VersionResponse) {}
+}

@@ -1,0 +1,53 @@
+syntax = "proto3";
+package custommqttmessage;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/custommqttmessage";
+import "drivercommon/common.proto";
+
+message PlatformCustomPublishRequest{
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+  int64  deviceId = 7;
+  string topic = 8;
+  int32 qos = 9;
+  bool retained = 10;
+  string payload = 11;
+}
+
+message PlatformCustomSubscribeRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+
+  int64  deviceId = 7;
+  string topic = 8;
+  int32 qos = 9;
+}
+
+message PlatformCustomUnSubscribeRequest {
+  string traceId = 1;
+  int64 cloudInstanceId = 2;
+  string baseAddress = 3;
+  string cloudInstanceName = 4;
+  string iotPlatform = 5;
+  int64 driverInstanceId = 6;
+
+  int64  deviceId = 7;
+  repeated string topics = 8;
+}
+
+// 自定义mqtt消息入口
+service RpcCustomMqttMessage {
+  // 平台自定义消息推Public
+  rpc PlatformCustomPublish(PlatformCustomPublishRequest) returns (drivercommon.CommonResponse) {}
+  // 平台自定义消息推Subscribe
+  rpc PlatformCustomSubscribe(PlatformCustomSubscribeRequest) returns (drivercommon.CommonResponse) {}
+  // 平台自定义消息UnSubscribe
+  rpc PlatformCustomUnSubscribe(PlatformCustomUnSubscribeRequest) returns (drivercommon.CommonResponse) {}
+}

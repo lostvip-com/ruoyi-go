@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package driverstorage;
+option go_package = "github.com/lostvip-com/lv_grpc_driver_proto/driverstorage";
+import "google/protobuf/empty.proto";
+
+message PutReq {
+  int64 driver_service_id = 1;
+  repeated KV data = 2;
+}
+
+message GetReq {
+  int64 driver_service_id = 1;
+  repeated string keys = 2;
+}
+
+message AllReq {
+  int64 driver_service_id = 1;
+}
+
+message DeleteReq {
+  int64 driver_service_id = 1;
+  repeated string keys = 2;
+}
+
+message KVs {
+  repeated KV kvs = 1;
+}
+
+message KV {
+  string key = 1;
+  bytes value = 2;
+}
+
+service DriverStorage {
+  // all
+  rpc All(AllReq) returns(KVs);
+  // get
+  rpc Get(GetReq) returns (KVs);
+  // put
+  rpc Put(PutReq) returns (google.protobuf.Empty);
+  // delete
+  rpc Delete(DeleteReq) returns (google.protobuf.Empty);
+}
