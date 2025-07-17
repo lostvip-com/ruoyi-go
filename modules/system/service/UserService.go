@@ -263,7 +263,7 @@ func (svc UserService) SignIn(loginnName, password string) (*model.SysUser, erro
 
 	pwdNew = lv_secret.MustEncryptString(pwdNew)
 
-	if strings.Compare(user.Password, pwdNew) == -1 {
+	if user.Password != pwdNew {
 		return nil, errors.New("密码错误")
 	}
 	return &user, nil
@@ -382,15 +382,12 @@ func (svc UserService) UpdatePassword(profile *common_vo.PasswordReq, c *gin.Con
 	if profile.Confirm != profile.NewPassword {
 		return errors.New("确认密码不一致")
 	}
-
 	//校验密码
-	token := user.LoginName + profile.OldPassword + user.Salt
-	token = lv_secret.MustEncryptString(token)
-
-	if token != user.Password {
+	pwdNew := user.LoginName + profile.OldPassword + user.Salt
+	pwdNew = lv_secret.MustEncryptString(pwdNew)
+	if pwdNew != user.Password {
 		return errors.New("原密码不正确")
 	}
-
 	//新校验密码
 	newSalt := lv_gen.GenerateSubId(6)
 	newToken := user.LoginName + profile.NewPassword + newSalt
