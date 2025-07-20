@@ -1,4 +1,11 @@
+<<<<<<< HEAD
    *.go linguist-language=golang
    *.sql linguist-language=golang
    *.html linguist-language=golang
    *.js linguist-language=golang
+=======
+   *.go linguist-language=golang
+   *.sql linguist-language=golang
+   *.html linguist-language=golang
+   *.js linguist-language=golang
+>>>>>>> 6ad0c31467e66b7b773aceebef0f59b49c443af2

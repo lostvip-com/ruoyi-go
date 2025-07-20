@@ -150,11 +150,14 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 ## 项目支持
 
 
-## QQ交流群
 
-如有兴趣一起完善，进QQ群 43862272
+## 交流社区
+## 交流社区
+| 微信公众号 lostvip666 | QQ群 43862272 |
+|-----------------------|---------------|
+| ![微信公众号二维码](bak/readme/wechat-mp-258.jpg) | ![QQ群二维码](bak/readme/qq.png) |
 
-<img alt="" height="389" src="bak/readme/qq.png" width="300" />
+
 
 *  Github(主) <p><a href="https://github.com/lostvip-com/ruoyi-go">https://github.com/lostvip-com/ruoyi-go</a></p>
 *  Gitcode<p> <a href="https://gitcode.com/lostvip-com1/ruoyi-go/tree/main">https://gitcode.com/lostvip-com1/ruoyi-go/tree/main</a></p>
