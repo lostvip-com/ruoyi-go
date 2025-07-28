@@ -147,8 +147,9 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 > SQL文件解析: https://github.com/qustavo/dotsql
 > 热加载框架  http://github.com/pilu/fresh
 > 规则引擎 https://github.com/dop251/goja
-## 项目支持
-
+## 项目前后端分离版
+* golang + Vue3 实现
+Gitcode<p> <a href="https://github.com/lostvip-com/ruoyi-go-vue">https://github.com/lostvip-com/ruoyi-go-vue</a></p>
 
 
 ## 交流社区
