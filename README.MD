@@ -19,7 +19,7 @@
 
 ## 核心技术及组件
 
-* DAO层架: gorm,简单易用,支持namedSQL占位符查询.</br>
+* DAO层框架: gorm,简单易用,支持namedSQL占位符查询.</br>
 * Web服务框架: Gin 简单高效，模板可热加载.</br>
 * 前端技术: 模板引擎，服务端渲染.</br>
 * 缓存支持: redis .</br>
@@ -75,7 +75,7 @@ main[]()
 │       └── mapper                   // 类mybatis映射文件存放目录
 │       └── template                 // 模板存放目录
 │       └── bootstrap.yml            // 项目根配置文件，模仿springboot
-│       └── application.ym           // 项目配置文件，模仿springboot
+│       └── application.yml           // 项目配置文件，模仿springboot
 ├── pkg                              // 第三方开源组件存放目录
 │    └── lv_framework                 // 框架通用模块
 │          └── lv_cache              // 通用缓存
@@ -137,7 +137,7 @@ xgo -ldflags "-w -s"  -out svc-$(date '+%Y%m%d_%H%M%S') --targets=linux/arm-7 .
 <img alt="" height="400" src="bak/readme/4.png" width="600" />
 
 ## 感谢(排名不分先后)
-> GORM  https://https://gorm.io/
+> GORM  https://gorm.io/
 > Tealeg https://github.com/tealeg/xlsx
 > Swaggo https://github.com/swaggo/swag
 > WEB框架 https://github.com/gin-gonic/gin
